@@ -35,6 +35,14 @@
       </div>
     </div>
   </section>
+  <nav
+   class="flex flex-col min-h-screen absolute right-0 bg-purple-900
+   [&>*]:m-5 [&>*]:text-white md:hidden" 
+  :class="{ hidden: !isHamburgerShowing }"
+  >   
+        <a href="#">Home</a>
+        <a href="#">My Work</a>
+        <a href="#">Hire me</a></nav>
 </template>
 <script>
 export default {
