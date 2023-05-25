@@ -36,7 +36,6 @@ export default {
     methods: {
     toggleHamburgerMenu() {
       this.isHamburgerVisible = !this.isHamburgerVisible;
-      this.$emit('hamburger-changed', this.isHamburgerVisible)
     },
   },
     
