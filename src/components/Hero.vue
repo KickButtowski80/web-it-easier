@@ -1,9 +1,11 @@
 <template lang="">
   <section class="bg-purple-500 h-screen md:h-[%50]
                  flex flex-col md:flex-row-reverse
-                 md:justify-evenly">
+                 md:justify-evenly md:py-20" >
     <img
-      class="w-64 md:w-1/2 md:aspect-[2/2] mx-auto bg-purple-500 pt-20"
+      class=" max-w-full md:w-1/2 h-auto md:aspect-[2/3]
+       mx-auto bg-purple-500 pt-20 rounded-full
+      "
       src="/it-min.png"
       alt=""
     />
@@ -12,7 +14,7 @@
               text-center md:flex md:items-center">
       The door 🚪
       <br />
-      to an easier 🚀
+      to an easier ...🚀
       <br />
       future ▶️
     </p>
