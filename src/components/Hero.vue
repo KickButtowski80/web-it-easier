@@ -10,7 +10,7 @@
       alt=""
     />
     <p class="max-w-xl mx-auto text-3xl md:text-5xl
-              font-semibold text-white mt-24 leading-loose md:leading-[6rem]
+              font-semibold text-white md:leading-[6rem]
               text-center md:flex md:items-center">
       The door 🚪
       <br />
