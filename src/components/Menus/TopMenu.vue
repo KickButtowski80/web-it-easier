@@ -1,18 +1,19 @@
 <template lang="">
   <section class="bg-purple-400 sticky top-0 ">
-    <div class="p-2 flex md:items-center  relative">
-      <span class="text-xl font-semibold md:text-7xl"> IT 🚪 </span>
+    <div class="p-2 flex md:justify-between md:items-center">
+      <span class="text-xl font-semibold md:text-5xl"> IT 🚪 </span>
       <nav
-        class="hidden md:[&>*]:pr-5 md:[&>*]:text-4xl md:[&>*]:p-2
-         md:[&>*]:font-semibold md:flex md:absolute md:right-0"
+        class="hidden md:[&>*]:pr-5 md:[&>*]:text-2xl md:[&>*]:p-5
+         md:[&>*]:font-semibold md:flex md:justify-between md:items-center
+         "
         aria-label="main"
       >
         <a href="#">Home</a>
         <a href="#">My Work</a>
         <a href="#"
-           class="border rounded-xl bg-purple-950 text-white">Hire me</a>
+           class="border rounded-xl bg-purple-950 text-white
+           ">Hire me</a>
       </nav>
-
     </div>
   </section>
 </template>
