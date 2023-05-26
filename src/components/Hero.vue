@@ -4,7 +4,7 @@
                  md:justify-evenly md:py-20" >
     <img
       class=" max-w-full md:w-1/2 h-auto md:aspect-[2/3]
-       mx-auto bg-purple-500 pt-20 rounded-full
+       mx-auto bg-purple-500 md:pt-20 rounded-full
       "
       src="/it-min.png"
       alt=""
