@@ -1,15 +1,16 @@
 <template lang="">
   <section class="bg-purple-400  ">
-    <div class="p-2 flex max-w-2xl mx-auto relative">
-      <span class="text-xl md:text-2xl"> IT 🚪 </span>
+    <div class="p-2 flex md:items-center max-w-2xl mx-auto relative">
+      <span class="text-xl font-semibold md:text-7xl"> IT 🚪 </span>
       <nav
-        class="hidden md:[&>*]:pr-5 md:[&>*]:text-xl
+        class="hidden md:[&>*]:pr-5 md:[&>*]:text-4xl md:[&>*]:p-2
          md:[&>*]:font-semibold md:flex md:absolute md:right-0"
         aria-label="main"
       >
         <a href="#">Home</a>
         <a href="#">My Work</a>
-        <a href="#">Hire me</a>
+        <a href="#"
+           class="border rounded-xl bg-purple-950 text-white">Hire me</a>
       </nav>
 
     </div>
