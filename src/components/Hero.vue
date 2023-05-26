@@ -3,7 +3,7 @@
                  flex flex-col md:flex-row-reverse
                  md:justify-evenly md:py-20" >
     <img
-      class=" max-w-full md:w-1/2 h-auto md:aspect-[13/12]
+      class=" w-64 sm:w-72 md:w-96  md:aspect-[13/12]
        mx-auto bg-purple-500 md:pt-20 rounded-full
       "
       src="/it-min.png"
