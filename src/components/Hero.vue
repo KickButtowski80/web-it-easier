@@ -3,13 +3,13 @@
                  flex flex-col md:flex-row-reverse
                  md:justify-evenly md:py-20" >
     <img
-      class=" max-w-full md:w-1/2 h-auto md:aspect-[2/3]
+      class=" max-w-full md:w-1/2 h-auto md:aspect-[13/12]
        mx-auto bg-purple-500 md:pt-20 rounded-full
       "
       src="/it-min.png"
       alt=""
     />
-    <p class="max-w-xl mx-auto text-3xl md:text-5xl
+    <p class="max-w-xl mx-auto text-3xl md:text-5xl mt-5 md:mt-20
               font-semibold text-white md:leading-[6rem]
               text-center md:flex md:items-center">
       The door 🚪
