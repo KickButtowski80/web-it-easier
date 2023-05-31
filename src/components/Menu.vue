@@ -1,7 +1,9 @@
 <template lang="">
-  <TopMenu />
-  <HamburgerMenu :hideIt="true" />
-  <BottomMenu :hideIt="false" />
+
+    <TopMenu />
+    <HamburgerMenu :hideIt="true" />
+    <BottomMenu :hideIt="false" />
+  
 </template>
 <script>
 import BottomMenu from "./Menus/BottomMenu.vue";
