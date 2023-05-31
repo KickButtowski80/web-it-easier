@@ -1,5 +1,6 @@
 <template lang="">
-  <section class="bg-purple-400 sticky top-0 ">
+  <section class="bg-purple-400 fixed top-0 
+  w-full z-50">
     <div class="p-2 flex md:justify-between md:items-center">
       <span class="text-xl font-semibold md:text-5xl"> IT 🚪 </span>
       <nav
