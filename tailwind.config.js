@@ -50,9 +50,9 @@ export default {
       animation: {
         'open-menu': 'open-menu 2s ease-in-out forwards',
         'close-menu': 'close-menu 0.5s ease-in-out forwards',
-        'rotate-letter-right': 'rotate-letter-right 1s ease forwards',
-        'rotate-letter-left':'rotate-letter-left 1s ease forwards',
-        'appear-door-knob':'appear-door-knob 3s ease forwards'
+        'rotate-letter-right': 'rotate-letter-right 3s ease forwards',
+        'rotate-letter-left':'rotate-letter-left 3s ease forwards',
+        'appear-door-knob':'appear-door-knob 9s ease forwards'
       }
     },
   },
