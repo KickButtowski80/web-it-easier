@@ -17,7 +17,7 @@
                   animate-rotate-letter-right
                   ">I</div>
       <div class="inline-block text-7xl absolute bottom-[80px]
-      right-[53px] animate-appear-door-knob">,</div>          
+      right-[53px] animate-appear-door-knob">.</div>          
       <div class="inline-block animate-rotate-letter-left ">T</div>
     </div>
     <p class="max-w-xl mx-auto text-3xl md:text-5xl
