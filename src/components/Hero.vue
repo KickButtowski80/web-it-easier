@@ -1,6 +1,7 @@
 <template lang="">
   <section
-    class="bg-purple-500 h-screen text-white flex flex-col items-center justify-center md:flex-row mx-auto"
+    class="bg-purple-500 h-screen text-white flex flex-col items-center
+     justify-center md:flex-row md:gap-20 md:text-9xl mx-auto"
   >
     <!-- <img
       class=" w-64 sm:w-72 md:w-96  md:aspect-[13/12]
@@ -10,12 +11,12 @@
       alt=""
     /> -->
 
-    <div class="font-bold text-[9rem] relative text-center">
+    <div class="font-bold text-[11rem] md:text-[22rem] relative text-center">
       <div class="inline-block mx-auto animate-rotate-letter-right">I</div>
       <div
-        class="inline-block text-7xl absolute bottom-[80px] right-[55px] animate-appear-door-knob"
-      >
-        .
+        class="inline-block text-9xl md:text-[10rem]
+         absolute bottom-20 md:bottom-[80px] md:right-[145px] animate-appear-door-knob"
+      >        .
       </div>
       <div class="inline-block animate-rotate-letter-left">T</div>
     </div>
