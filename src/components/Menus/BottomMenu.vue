@@ -1,11 +1,10 @@
 <template lang="">
-  <footer class="fixed left-0 bottom-0 w-full">
+  <footer class="fixed bottom-0 w-full">
     <nav
       :class="{ hidden: hideIt }"
       class="md:hidden bg-purple-900
-       [&>*]:text-white [&>*]:text-sm
-    
-       flex justify-around items-center
+       [&>*]:text-white [&>*]:text-sm    
+       flex justify-evenly items-center
        h-10"
     >
       <a href="#">Home 🏠</a>
