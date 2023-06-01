@@ -1,6 +1,5 @@
 <template lang=""> 
-<div class="overflow-scroll md:overflow-auto">
-
+<div class="overflow-scroll md:overflow-visible">
   <Menu></Menu>
   <Hero/>
   <p class="max-w-2xl mx-auto">
