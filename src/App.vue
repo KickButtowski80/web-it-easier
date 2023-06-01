@@ -1,5 +1,5 @@
 <template lang=""> 
-<div class="overflow-scroll">
+<div class="overflow-scroll md:overflow-auto">
 
   <Menu></Menu>
   <Hero/>
