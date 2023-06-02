@@ -44,6 +44,22 @@ export default {
           '100%': {
             opacity:1
             },
+        },
+        'open-door':{
+          '0%':{
+            width: '10rem',
+            position: 'absolute',
+            top: '19px',
+            // 'clip-path':' polygon(0 0, 100% 0, 100% 102%, 0 calc(100% - 6vw))'
+          },
+              
+          '100%': {
+            width: '8rem',
+            transform: 'skewY(17deg)',
+            position: 'absolute',
+            top: '37px',
+            // 'clip-path':' polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 6vw))'
+            },
 
         }
       },
@@ -52,7 +68,8 @@ export default {
         'close-menu': 'close-menu 0.5s ease-in-out forwards',
         'rotate-letter-right': 'rotate-letter-right 3s ease forwards',
         'rotate-letter-left':'rotate-letter-left 3s ease forwards',
-        'appear-door-knob':'appear-door-knob 9s ease forwards'
+        'appear-door-knob':'appear-door-knob 9s ease forwards',
+        'open-door':'open-door 9s ease forwards',
       }
     },
   },
