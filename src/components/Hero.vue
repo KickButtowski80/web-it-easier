@@ -30,23 +30,25 @@
         </div>
       </div>
 
-      <!--<div class="font-bold text-[16rem] md:text-[22rem] text-center">
+      <div class="font-bold text-[16rem] md:text-[22rem] text-center">
         <div
-          class="inline-block mx-auto animate-rotate-letter-right mr1-10 absolute top-[-121px] left-[17px]"
+          class="inline-block mx-auto animate-rotate-letter-right
+            absolute top-[-121px] left-[17px]"
         >
           I
         </div>
-         <div
+         <!-- <div
           class="inline-block text-9xl md:text-[10rem] absolute bottom-20 md:bottom-[80px] md:right-[145px] animate-appear-door-knob"
         >
           .
-        </div> 
+        </div>  -->
         <div
-          class="inline-block animate-rotate-letter-left transform scale-y-110 absolute top-[-121px] left-[134px]"
+          class="inline-block animate-rotate-letter-left 
+           absolute top-[-121px] left-[134px]"
         >
           T
         </div>
-      </div>-->
+      </div>
     </div>
     <!-- <div class="font-bold text-[11rem] md:text-[22rem] relative text-center">
       <div class="inline-block mx-auto animate-rotate-letter-right mr1-10">
