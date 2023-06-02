@@ -49,7 +49,7 @@ export default {
           '0%':{
             width: '10rem',
             position: 'absolute',
-            top: '19px',
+            top: '0px',
             // 'clip-path':' polygon(0 0, 100% 0, 100% 102%, 0 calc(100% - 6vw))'
           },
               
@@ -57,7 +57,7 @@ export default {
             width: '8rem',
             transform: 'skewY(17deg)',
             position: 'absolute',
-            top: '37px',
+            top: '17px',
             // 'clip-path':' polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 6vw))'
             },
 
