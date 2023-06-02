@@ -30,7 +30,7 @@
         </div>
       </div>
 
-      <div class="font-bold text-[22rem] md:text-[22rem] text-center">
+      <div class="font-normal text-[22rem] md:text-[22rem] text-center">
         <div
           class="inline-block mx-auto animate-rotate-letter-right
             absolute top-[-123px] md:top-[-37px] left-0"
@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="font-bold text-[11rem] md:text-[22rem] relative text-center">
+    <!-- <div class="font-semibold text-[11rem] md:text-[22rem] relative text-center">
       <div class="inline-block mx-auto animate-rotate-letter-right mr1-10">
         I
       </div>
