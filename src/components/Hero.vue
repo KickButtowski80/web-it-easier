@@ -11,8 +11,7 @@
     /> -->
     <div class="relative">
       <div
-        class="frame p-10 m-10 border-2 border-purple-800
-        rounded-xl 
+        class="frame p-10 m-10 
         clip-your-needful-style w-40 h-[15rem] md:h-[16rem]"
       ></div>
 
