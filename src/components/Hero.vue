@@ -18,7 +18,7 @@
 
       <div
         class="door p-10 m-10 border-2 border-purple-800
-        rounded-xl relative  w-40 h-[15rem]
+        rounded-xl relative  z-50 w-40 h-[15rem]
         md:h-[16rem] animate-open-door"
       >
         <div
@@ -30,10 +30,10 @@
         </div>
       </div>
 
-      <div class="font-bold text-[16rem] md:text-[22rem] text-center">
+      <div class="font-bold text-[22rem] md:text-[22rem] text-center">
         <div
           class="inline-block mx-auto animate-rotate-letter-right
-            absolute top-[-121px] left-[17px]"
+            absolute top-[-123px] md:top-[-37px] left-0"
         >
           I
         </div>
@@ -44,7 +44,7 @@
         </div>  -->
         <div
           class="inline-block animate-rotate-letter-left 
-           absolute top-[-121px] left-[134px]"
+           absolute top-[-123px] md:top-[-37px] left-[97px]"
         >
           T
         </div>
