@@ -9,7 +9,7 @@
       src="/it-min.png"
       alt=""
     /> -->
-    <div class="relative border">
+    <div class="relative">
       <div
         class="frame p-10 m-10 border-2 border-purple-800
         rounded-xl 
