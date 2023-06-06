@@ -17,9 +17,9 @@
 
       <div
         class="door border-2 border-purple-800
-         rounded-xl
+         rounded-xl opacity-0
          absolute top-[3.75rem] left-[4.25rem] z-50
-         w-[7rem] h-[14.25rem]
+         w-[6.5rem] h-[14.25rem]
          md:h-[16rem] animate-open-door"
       >
         <div
@@ -31,7 +31,10 @@
         </div>
       </div>
 
-      <div class="font-normal text-[22rem] md:text-[22rem] text-center">
+      <div class="font-normal text-[22rem] md:text-[22rem] 
+      text-stroke-purple 
+      absolute top-0 -left-1
+      ">
         <div
           class="inline-block mx-auto animate-rotate-letter-right
             absolute top-[-123px] md:top-[-37px] left-0"
@@ -63,7 +66,9 @@
       <div class="inline-block animate-rotate-letter-left ml1-10">T</div>
     </div> -->
     <p
-      class="text-3xl md:text-5xl font-semibold md:leading-[4rem] text-center animate-appear-door-knob delay-3000"
+      class="text-3xl md:text-5xl font-semibold md:leading-[4rem]
+      opacity-0
+       text-center animate-slogan"
     >
       The door 🚪
       <br />

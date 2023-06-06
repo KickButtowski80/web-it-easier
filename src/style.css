@@ -16,6 +16,14 @@
     .clip-your-needful-style {
          clip-path: polygon(0 0, 100% 0, 100% 102%, 0 calc(100% - 6vw)); 
     }
+    .text-stroke-purple{
+      text-shadow:
+        -1px -1px 0 hsl(285, 90%, 46%),
+        1px -1px 0 hsl(285, 90%, 46%),
+        -1px 1px 0 hsl(285, 90%, 46%),
+        1px 1px 0 hsl(285, 90%, 46%);
+    }
+    
  
  }
   

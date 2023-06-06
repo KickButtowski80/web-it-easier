@@ -47,7 +47,8 @@ export default {
         },
         'open-door':{
           '0%':{
-            width: '7rem',
+            width: '6.5rem',
+          opacity: 0,
           },
               
           '100%': {
@@ -55,10 +56,9 @@ export default {
             height: '13.25rem',
             transform: 'skewY(-17deg)',
             'border-color': 'purple',
-           'border-bottom': '30px solid transparent',
-            'border-Top': '30px solid purple',
-            'border-left': '60px solid white',        
-            top: '4rem',          
+            'background-color': 'white',     
+            top: '4.25rem',   
+            opacity: 1,       
             },
         },
         'open-door-knob':{
@@ -71,19 +71,28 @@ export default {
             height: '0.75rem',
             transform: 'skewY(-17deg)',
             position: 'absolute',
-            left: '-1.5rem',    
+            left: '2.25rem',    
             bottom: '4rem',        
             },
+        },
+        'slogan':{
+          '0%':{
+          opacity: 0
+          },
+          '100%':{
+          opacity: 1
+          },
         }
       },
       animation: {
         'open-menu': 'open-menu 2s ease-in-out forwards',
         'close-menu': 'close-menu 0.5s ease-in-out forwards',
-        'rotate-letter-right': 'rotate-letter-right 3s ease forwards',
-        'rotate-letter-left':'rotate-letter-left 3s ease forwards',
-        'appear-door-knob':'appear-door-knob 9s ease forwards',
-        'open-door':'open-door 9s ease forwards',
-        'open-door-knob':'open-door-knob 9s ease forwards',
+        'rotate-letter-right': 'rotate-letter-right 3s ease 1s forwards',
+        'rotate-letter-left':'rotate-letter-left 3s  ease 1s forwards',
+        'appear-door-knob':'appear-door-knob 6s ease 3s forwards',
+        'open-door':'open-door 6s ease 4s forwards',
+        'open-door-knob':'open-door-knob 6s ease 4s forwards',
+        'slogan': 'slogan 3s ease 6s forwards'
       }
     },
   },
