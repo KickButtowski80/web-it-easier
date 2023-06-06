@@ -47,20 +47,33 @@ export default {
         },
         'open-door':{
           '0%':{
-            width: '10rem',
-            position: 'absolute',
-            top: '0px',
-            // 'clip-path':' polygon(0 0, 100% 0, 100% 102%, 0 calc(100% - 6vw))'
+            width: '7rem',
           },
               
           '100%': {
-            width: '8rem',
-            transform: 'skewY(17deg)',
-            position: 'absolute',
-            top: '17px',
-            // 'clip-path':' polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 6vw))'
+            width: '4rem',
+            height: '13.25rem',
+            transform: 'skewY(-17deg)',
+            'border-color': 'purple',
+           'border-bottom': '30px solid transparent',
+            'border-Top': '30px solid purple',
+            'border-left': '60px solid white',        
+            top: '4rem',          
             },
-
+        },
+        'open-door-knob':{
+          '0%':{
+            // width: '7rem',
+          },
+              
+          '100%': {
+            width: '0.75rem',
+            height: '0.75rem',
+            transform: 'skewY(-17deg)',
+            position: 'absolute',
+            left: '-1.5rem',    
+            bottom: '4rem',        
+            },
         }
       },
       animation: {
@@ -70,6 +83,7 @@ export default {
         'rotate-letter-left':'rotate-letter-left 3s ease forwards',
         'appear-door-knob':'appear-door-knob 9s ease forwards',
         'open-door':'open-door 9s ease forwards',
+        'open-door-knob':'open-door-knob 9s ease forwards',
       }
     },
   },

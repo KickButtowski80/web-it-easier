@@ -9,23 +9,25 @@
       src="/it-min.png"
       alt=""
     /> -->
-    <div class="relative">
+    <div class="relative border">
       <div
         class="frame p-10 m-10 
         clip-your-needful-style w-40 h-[15rem] md:h-[16rem]"
       ></div>
 
       <div
-        class="door p-10 m-10 border-2 border-purple-800
-        rounded-xl relative  z-50 w-40 h-[15rem]
-        md:h-[16rem] animate-open-door"
+        class="door border-2 border-purple-800
+         rounded-xl
+         absolute top-[3.75rem] left-[4.25rem] z-50
+         w-[7rem] h-[14.25rem]
+         md:h-[16rem] animate-open-door"
       >
         <div
-          class="inline-block text-9xl md:text-[10rem]
-          absolute bottom-24 left-[5.5rem] md:bottom-[80px]
-          md:right-[145px]"
-        >
-          .
+          class="knob inline-block text-9xl md:text-[10rem]          
+          border-xl rounded-full bg-purple-800 h-5 w-5
+          absolute bottom-24 left-[4.5rem] animate-open-door-knob
+          md:bottom-[80px] md:right-[145px] "
+        >          
         </div>
       </div>
 
