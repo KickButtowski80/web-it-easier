@@ -9,7 +9,7 @@
       src="/it-min.png"
       alt=""
     /> -->
-    <div class="relative border">
+    <div class="relative">
       <div
         class="frame p-10 m-10 
         clip-your-needful-style w-40 h-[15rem] md:h-[16rem]"
@@ -17,15 +17,15 @@
 
       <div
         class="door border-2 border-purple-800
-         rounded-xl opacity-0
-         absolute top-[3.75rem] left-[4.25rem] z-50
+         rounded-xl opacity-1
+         absolute top-[3.75rem] left-[3.25rem] z-50
          w-[6.5rem] h-[14.25rem]
-         md:h-[16rem] animate-open-door"
+         md:h-[16rem] animate-open-door1"
       >
         <div
           class="knob inline-block text-9xl md:text-[10rem]          
           border-xl rounded-full bg-purple-800 h-5 w-5
-          absolute bottom-24 left-[4.5rem] animate-open-door-knob
+          absolute bottom-24 left-[4.5rem] animate-open-door-knob1
           md:bottom-[80px] md:right-[145px] "
         >          
         </div>
@@ -33,7 +33,7 @@
 
       <div class="font-normal text-[22rem] md:text-[22rem] 
       text-stroke-purple 
-      absolute top-0 -left-1
+      absolute top-0 -left-5
       ">
         <div
           class="inline-block mx-auto animate-rotate-letter-right
