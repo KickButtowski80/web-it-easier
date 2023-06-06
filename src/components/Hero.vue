@@ -17,7 +17,7 @@
 
       <div
         class="door border-2 border-purple-800
-         rounded-xl opacity-0
+         opacity-0
          absolute top-[3.75rem] left-[3.25rem] z-50
          w-[6.5rem] h-[14.25rem]
          md:h-[14rem] animate-open-door"
