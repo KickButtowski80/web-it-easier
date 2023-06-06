@@ -51,15 +51,17 @@ export default {
           '0%':{
             width: '6.5rem',
            opacity: 0,
+          
           },
               
           '100%': {
             width: '4rem',
             height: '13.25rem',
-            transform: 'skewY(-17deg)',
+            transform: 'perspective(200px) rotateY(40deg) ',
             'border-color': 'purple',
             'background-color': 'white',     
-            top: '4.25rem',   
+            top: '4.25rem', 
+            left: '2.85rem',  
             opacity: 1,       
             },
         },
@@ -71,9 +73,9 @@ export default {
           '100%': {
             width: '0.75rem',
             height: '0.75rem',
-            transform: 'skewY(-17deg)',
+            transform: 'perspective(200px) rotateY(40deg)',
             position: 'absolute',
-            left: '2.25rem',    
+            left: '2.75rem',    
             bottom: '4rem',        
             },
         },
