@@ -20,7 +20,7 @@
          rounded-xl opacity-0
          absolute top-[3.75rem] left-[3.25rem] z-50
          w-[6.5rem] h-[14.25rem]
-         md:h-[16rem] animate-open-door"
+         md:h-[14rem] animate-open-door"
       >
         <div
           class="knob inline-block text-9xl md:text-[10rem]          
