@@ -48,7 +48,7 @@ export default {
         'open-door':{
           '0%':{
             width: '6.5rem',
-          opacity: 0,
+           opacity: 0,
           },
               
           '100%': {

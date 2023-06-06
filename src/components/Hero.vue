@@ -17,15 +17,15 @@
 
       <div
         class="door border-2 border-purple-800
-         rounded-xl opacity-1
+         rounded-xl opacity-0
          absolute top-[3.75rem] left-[3.25rem] z-50
          w-[6.5rem] h-[14.25rem]
-         md:h-[16rem] animate-open-door1"
+         md:h-[16rem] animate-open-door"
       >
         <div
           class="knob inline-block text-9xl md:text-[10rem]          
           border-xl rounded-full bg-purple-800 h-5 w-5
-          absolute bottom-24 left-[4.5rem] animate-open-door-knob1
+          absolute bottom-24 left-[4.5rem] animate-open-door-knob
           md:bottom-[80px] md:right-[145px] "
         >          
         </div>
