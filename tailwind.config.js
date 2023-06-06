@@ -73,7 +73,7 @@ export default {
           '100%': {
             width: '0.75rem',
             height: '0.75rem',
-            transform: 'perspective(200px) rotateY(40deg)',
+            transform: 'perspective(100px) rotateY(70deg)',
             position: 'absolute',
             left: '2.75rem',    
             bottom: '4rem',        
