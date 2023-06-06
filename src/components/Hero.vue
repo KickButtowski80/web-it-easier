@@ -36,7 +36,7 @@
       absolute top-0 -left-5
       ">
         <div
-          class="inline-block mx-auto animate-rotate-letter-right
+          class="inline-block mx-auto opacity-0 animate-rotate-letter-right
             absolute top-[-123px] md:top-[-37px] left-0"
         >
           I
@@ -47,7 +47,7 @@
           .
         </div>  -->
         <div
-          class="inline-block animate-rotate-letter-left 
+          class="inline-block opacity-0 animate-rotate-letter-left 
            absolute top-[-123px] md:top-[-37px] left-[97px]"
         >
           T

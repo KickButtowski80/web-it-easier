@@ -22,6 +22,7 @@ export default {
                  },
      
           '100%': {
+            opacity: 1,
              transform:'rotate(0deg)',
              },
         },
@@ -33,6 +34,7 @@ export default {
                  },
      
           '100%': {
+            opacity: 1,
              transform:'rotate(0deg)',
              },
         },
