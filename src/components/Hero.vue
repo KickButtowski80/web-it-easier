@@ -30,11 +30,21 @@
         >          
         </div>      
       </div>
-      <div class="sun text-[5rem] absolute bottom-[85px] left-[11rem]
+      <div class="sun text-[5rem] absolute bottom-[85px] left-[4rem]
             opacity-0
             animate-sun-appears">
           ☀️
        </div>
+       <div class="background border w-[8rem] h-[5.5rem]
+       absolute bottom-[35px] md:bottom-[53px] left-[3rem]
+       opacity-0 animate-slogan">
+       <hr class="border-b-3 border-red-500 w-28
+        transform -rotate-45 origin-right -translate-x-6
+        ">
+        <hr class="border-b-3 border-red-500 w-28
+        transform -rotate-45 origin-center translate-x-6 translate-y-12
+        ">
+      </div>
       <div class="font-normal text-[22rem] md:text-[22rem] 
       text-stroke-purple 
       absolute top-0 -left-5
