@@ -93,6 +93,12 @@ export default {
           },
           '100%': {
             opacity: 1,
+//             vertically by a calculated value of 100% - 200px.
+
+// 100% refers to the full height of the parent container.
+// 200px is subtracted from that height to create the vertical translation. 
+// This means the element will be moved up by 200 pixels less than the full 
+// height of its parent container.
             transform: 'translate(0px,calc(100% - 200px)) scale(1) '
           },
         }
