@@ -35,16 +35,15 @@
             animate-sun-appears">
           ☀️
        </div>
-       <div class="background border w-[8rem] h-[5.5rem]
-       absolute bottom-[35px] md:bottom-[53px] left-[3rem]
+       <div class="background  w-[8rem] h-[5.5rem]
+       absolute bottom-[44px] md:bottom-[53px] left-[3rem]
        opacity-0 animate-slogan">
-       <hr class="border-b-3 border-red-500 w-28
-        transform -rotate-45 origin-right -translate-x-6
-        ">
-        <hr class="border-b-3 border-red-500 w-28
-        transform -rotate-45 origin-center translate-x-6 translate-y-12
-        ">
-      </div>
+          <img
+      class=""
+      src="/nature-road-nobg.png"
+      alt=""
+    />
+       </div>
       <div class="font-normal text-[22rem] md:text-[22rem] 
       text-stroke-purple 
       absolute top-0 -left-5
