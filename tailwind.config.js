@@ -83,6 +83,21 @@ export default {
           '100%': {
             opacity: 1
           },
+        },
+        'sun-appears': {
+          '0%': {
+            opacity: 0,
+            // perspective: '200px',
+            'transform-origin': 'bottom right',
+            transform: 'rotate(360deg)  translate(-90px,-90px) ',
+
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'rotate(0deg)  translate(-90px,-90px) '
+            // bottom: '150px',
+            // left: '5rem',
+          },
         }
       },
       animation: {
@@ -93,7 +108,8 @@ export default {
         'rotate-letter-left': 'rotate-letter-left 3s  ease 1s forwards',
         'open-door': 'open-door 3s ease 4s forwards',
         'open-door-knob': 'open-door-knob 3s ease 4s forwards',
-        'slogan': 'slogan 3s ease-in-out 6s forwards'
+        'slogan': 'slogan 3s ease-in-out 6s forwards',
+        'sun-appears': 'sun-appears 3s ease-in-out 4s forwards',
       }
     },
   },

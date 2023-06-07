@@ -28,9 +28,13 @@
           absolute bottom-24 left-[4.5rem] animate-open-door-knob
           md:bottom-[80px] md:right-[145px] "
         >          
-        </div>
+        </div>      
       </div>
-
+      <div class="sun text-[5rem] absolute bottom-[85px] left-[11rem]
+            opacity-0
+            animate-sun-appears">
+          ☀️
+       </div>
       <div class="font-normal text-[22rem] md:text-[22rem] 
       text-stroke-purple 
       absolute top-0 -left-5
@@ -70,11 +74,11 @@
       opacity-0
        text-center animate-slogan"
     >
-      The door 🚪
+      The door
       <br />
-      to an easier ...🚀
+      to an easier
       <br />
-      future ▶️
+      future
     </p>
   </section>
 </template>
