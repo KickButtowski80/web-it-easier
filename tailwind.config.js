@@ -93,7 +93,7 @@ export default {
           },
           '100%': {
             opacity: 1,
-            transform: 'translate(0px,-70px) scale(1) '
+            transform: 'translate(0px,calc(100% - 200px)) scale(1) '
           },
         }
       },
