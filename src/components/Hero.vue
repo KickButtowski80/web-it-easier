@@ -40,7 +40,7 @@
        opacity-0 animate-slogan">
           <img
       class=""
-      src="/nature-road-nobg.png"
+      src="/nature-road-bg.png"
       alt=""
     />
        </div>
