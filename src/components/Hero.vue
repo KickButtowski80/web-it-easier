@@ -37,7 +37,7 @@
        </div>
        <div class="background  w-[8rem] h-[5.5rem]
        absolute bottom-[44px] md:bottom-[53px] left-[3rem]
-       opacity-0 animate-slogan">
+       opacity-0 animate-bg-appears">
           <img
       class=""
       src="/nature-road-bg.png"

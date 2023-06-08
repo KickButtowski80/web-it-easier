@@ -84,12 +84,22 @@ export default {
             opacity: 1
           },
         },
+        'bg-appears': {
+          '0%': {
+            opacity: 0,
+            transform: 'perspective(0px)',
+
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'perspective(50rem)',
+          },
+        },
         'sun-appears': {
           '0%': {
             opacity: 0,
             'transform-origin': 'bottom right',
             transform: ' translate(0px,50px) scale(0)',
-
           },
           '100%': {
             opacity: 1,
@@ -107,8 +117,9 @@ export default {
         'rotate-letter-left': 'rotate-letter-left 2s  ease 1s forwards',
         'open-door': 'open-door 3s ease 2.5s forwards',
         'open-door-knob': 'open-door-knob 3s ease 2.5s forwards',
-        'slogan': 'slogan 3s ease-in-out 3.5s forwards',
+        'slogan': 'slogan 3s ease-in-out 3.75s forwards',
         'sun-appears': 'sun-appears 5s ease-in-out 3.75s forwards',
+        'bg-appears': 'bg-appears 5s ease-in-out 3.25s forwards',
       }
     },
   },
