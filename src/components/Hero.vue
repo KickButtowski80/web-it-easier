@@ -22,10 +22,11 @@
         >          
         </div>      
       </div>
-      <div class="sun text-[5rem] absolute bottom-[85px] left-[4rem]
+      <div class="sun w-[5rem] absolute bottom-[70px] left-[5.5rem]
             opacity-0
             animate-sun-appears">
-          ☀️
+          <!-- ☀️ -->
+          <img src="/sun.svg" alt="">
        </div>
        <div class="background  w-[8rem] h-[5.5rem]
        absolute bottom-[44px] md:bottom-[53px] left-[3rem]
