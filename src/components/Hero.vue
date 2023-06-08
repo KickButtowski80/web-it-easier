@@ -2,19 +2,11 @@
   <section
     class="bg-purple-500 h-screen text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto"
   >
-    <!-- <img
-      class=" w-64 sm:w-72 md:w-96  md:aspect-[13/12]
-       mx-auto bg-purple-500 md:pt-20 rounded-full
-      "
-      src="/it-min.png"
-      alt=""
-    /> -->
     <div class="relative">
       <div
         class="frame p-10 m-10 
         clip-your-needful-style w-40 h-[15rem] md:h-[16rem]"
       ></div>
-
       <div
         class="door border-2 border-purple-800
          opacity-0

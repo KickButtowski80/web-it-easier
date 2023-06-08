@@ -87,19 +87,20 @@ export default {
         'bg-appears': {
           '0%': {
             opacity: 0,
-            transform: 'perspective(0px)',
+            // transform: 'scale(0,0)',
 
           },
           '100%': {
+            // transform: 'scale(1,1.5)',
             opacity: 1,
-            transform: 'perspective(50rem)',
+            // transform: 'perspective(50rem)',
           },
         },
         'sun-appears': {
           '0%': {
             opacity: 0,
             'transform-origin': 'bottom right',
-            transform: ' translate(0px,50px) scale(0)',
+            transform: ' translate(0px,5px) scale(0)',
           },
           '100%': {
             opacity: 1,
