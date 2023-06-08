@@ -93,26 +93,22 @@ export default {
           },
           '100%': {
             opacity: 1,
-//             vertically by a calculated value of 100% - 200px.
-
-// 100% refers to the full height of the parent container.
-// 200px is subtracted from that height to create the vertical translation. 
-// This means the element will be moved up by 200 pixels less than the full 
-// height of its parent container.
+            //             vertically by a calculated value of 100% - 200px.
+            // 100% refers to the full height of the parent container.
+            // 200px is subtracted from that height to create the vertical translation. 
+            // This means the element will be moved up by 200 pixels less than the full 
+            // height of its parent container.
             transform: 'translate(0px,calc(100% - 200px)) scale(1) '
           },
         }
       },
       animation: {
-        // 'open-menu': 'open-menu 2s ease-in-out forwards',
-        // 'close-menu': 'close-menu 0.5s ease-in-out forwards',
-        // 'appear-door-knob': 'appear-door-knob 6s ease 2s forwards',
-        'rotate-letter-right': 'rotate-letter-right 3s ease 1s forwards',
-        'rotate-letter-left': 'rotate-letter-left 3s  ease 1s forwards',
-        'open-door': 'open-door 3s ease 4s forwards',
-        'open-door-knob': 'open-door-knob 3s ease 4s forwards',
-        'slogan': 'slogan 3s ease-in-out 6s forwards',
-        'sun-appears': 'sun-appears 5s ease-in-out 4s forwards',
+        'rotate-letter-right': 'rotate-letter-right 2s ease 1s forwards',
+        'rotate-letter-left': 'rotate-letter-left 2s  ease 1s forwards',
+        'open-door': 'open-door 3s ease 2s forwards',
+        'open-door-knob': 'open-door-knob 3s ease 2s forwards',
+        'slogan': 'slogan 3s ease-in-out 3s forwards',
+        'sun-appears': 'sun-appears 5s ease-in-out 3s forwards',
       }
     },
   },
