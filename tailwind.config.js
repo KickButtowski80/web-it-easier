@@ -59,7 +59,7 @@ export default {
             transform: 'perspective(200px) rotateY(40deg) ',
             'border-color': 'purple',
             'background-color': 'white',
-            top: '3.70rem',
+            top: '3.80rem',
             left: '2.95rem',
             opacity: 1,
           },

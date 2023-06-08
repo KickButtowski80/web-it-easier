@@ -54,11 +54,6 @@
         >
           I
         </div>
-         <!-- <div
-          class="inline-block text-9xl md:text-[10rem] absolute bottom-20 md:bottom-[80px] md:right-[145px] animate-appear-door-knob"
-        >
-          .
-        </div>  -->
         <div
           class="inline-block opacity-0 animate-rotate-letter-left 
            absolute top-[-123px] md:top-[-37px] left-[97px]"
@@ -67,17 +62,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="font-semibold text-[11rem] md:text-[22rem] relative text-center">
-      <div class="inline-block mx-auto animate-rotate-letter-right mr1-10">
-        I
-      </div>
-      <div
-        class="inline-block text-9xl md:text-[10rem] absolute bottom-20 md:bottom-[80px] md:right-[145px] animate-appear-door-knob"
-      >
-        .
-      </div>
-      <div class="inline-block animate-rotate-letter-left ml1-10">T</div>
-    </div> -->
     <p
       class="text-3xl md:text-5xl font-semibold md:leading-[4rem]
       opacity-0
