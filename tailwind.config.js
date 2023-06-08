@@ -105,10 +105,10 @@ export default {
       animation: {
         'rotate-letter-right': 'rotate-letter-right 2s ease 1s forwards',
         'rotate-letter-left': 'rotate-letter-left 2s  ease 1s forwards',
-        'open-door': 'open-door 3s ease 2s forwards',
-        'open-door-knob': 'open-door-knob 3s ease 2s forwards',
-        'slogan': 'slogan 3s ease-in-out 3s forwards',
-        'sun-appears': 'sun-appears 5s ease-in-out 3s forwards',
+        'open-door': 'open-door 3s ease 2.5s forwards',
+        'open-door-knob': 'open-door-knob 3s ease 2.5s forwards',
+        'slogan': 'slogan 3s ease-in-out 3.5s forwards',
+        'sun-appears': 'sun-appears 5s ease-in-out 3.75s forwards',
       }
     },
   },
