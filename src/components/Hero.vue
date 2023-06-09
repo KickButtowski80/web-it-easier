@@ -40,11 +40,17 @@
       text-stroke-purple 
       absolute top-0 -left-5
       ">
+      <!-- absolute top-[-123px] md:top-[-37px] left-0 
+      -translate-y-[5.25rem] -translate-x-[4.5rem]
+         
+      -->
         <div
-          class="inline-block mx-auto opacity-0 animate-rotate-letter-right
-            absolute top-[-123px] md:top-[-37px] left-0"
-        >
-          I
+          class="CapitalI inline-block mx-auto opacity-1
+          animate-rotate-letter-right1 relative 
+          scale-100
+           "
+        >          
+        <img src="/I.svg" alt=""/>
         </div>
         <div
           class="inline-block opacity-0 animate-rotate-letter-left 

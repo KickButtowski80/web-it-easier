@@ -7,6 +7,8 @@
     html {
       scroll-behavior: smooth;
       /* font-family: system-ui; */
+      font-family: 'ABeeZee', sans-serif;
+      font-family: 'Abhaya Libre', serif;
       font-family: 'Alata', sans-serif;
     }
   }
