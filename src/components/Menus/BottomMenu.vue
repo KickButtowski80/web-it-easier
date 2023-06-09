@@ -1,5 +1,5 @@
 <template lang="">
-  <footer class="fixed bottom-0 w-full">
+  <footer class="fixed bottom-0 w-full z-50">
     <nav
       :class="{ hidden: hideIt }"
       class="md:hidden bg-purple-900
