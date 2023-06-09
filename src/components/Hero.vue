@@ -46,6 +46,11 @@
         >
           I
         </div>
+        <div class="w-[8.25rem] h-[2rem] border z-10
+         translate-x-[4.5rem] translate-y-[1.75rem]
+        bg-black">
+
+        </div>
         <div
           class="inline-block opacity-0 animate-rotate-letter-left 
            absolute top-[-123px] md:top-[-37px] left-[97px]"
