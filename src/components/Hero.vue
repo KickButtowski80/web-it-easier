@@ -25,7 +25,6 @@
       <div class="sun w-[5rem] absolute bottom-[70px] left-[5.5rem]
             opacity-0
             animate-sun-appears">
-          <!-- ☀️ -->
           <img src="/sun.svg" alt="">
        </div>
        <div class="background  w-[8rem] h-[5.5rem]
@@ -64,7 +63,9 @@
       <br />
       to an easier
       <br />
-      future
+      Future on the Web
+      <br>
+      
     </p>
   </section>
 </template>
