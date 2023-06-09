@@ -2,7 +2,7 @@
   <section
     class="bg-purple-500 h-screen text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto"
   >
-    <div class="relative border">
+    <div class="relative">
       <div
         class="frame p-10 m-10 
         clip-your-needful-style w-40 h-[15rem] md:h-[16rem]"
