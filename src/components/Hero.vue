@@ -28,11 +28,11 @@
           <img src="/sun.svg" alt="">
        </div>
        <div class="background  w-[8rem] h-[5.5rem]
-       absolute bottom-[160px] md:bottom-[180px] left-[3rem]
+       absolute bottom-[122px] md:bottom-[140px] left-[3rem]
        opacity-0 animate-bg-appears">
           <img
       class=""
-      src="/road-nature.png"
+      src="/nature-road-bg-pres.png"
       alt=""
     />
        </div>
