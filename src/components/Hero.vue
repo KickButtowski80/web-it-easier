@@ -28,7 +28,7 @@
           <img src="/sun.svg" alt="">
        </div>
        <div class="background  w-[8rem] h-[5.5rem]
-       absolute bottom-[160px] md:bottom-[53px] left-[3rem]
+       absolute bottom-[160px] md:bottom-[180px] left-[3rem]
        opacity-0 animate-bg-appears">
           <img
       class=""
@@ -63,7 +63,7 @@
     <br>
     to
     <br>
-    an easier Future Web
+    an Easier Future Web
     <br>     
     <span class="text-xl md:text-2xl">
        One Line of Code at a Time
