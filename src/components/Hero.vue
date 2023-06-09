@@ -59,7 +59,6 @@
       opacity-0
        text-center animate-slogan"
     >
-    Opening    
     the Door
     <br>
     to
