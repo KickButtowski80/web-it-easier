@@ -109,7 +109,7 @@ export default {
             // 200px is subtracted from that height to create the vertical translation. 
             // This means the element will be moved up by 200 pixels less than the full 
             // height of its parent container.
-            transform: 'translate(-20px,calc(100% - 80px)) scale(1.75) '
+            transform: 'translate(-20px,calc(100% - 90px)) scale(1.75) '
           },
         }
       },
