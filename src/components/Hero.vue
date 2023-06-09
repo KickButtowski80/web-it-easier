@@ -55,17 +55,20 @@
       </div>
     </div>
     <p
-      class="text-3xl md:text-5xl font-semibold md:leading-[4rem]
+      class="text-3xl md:text-4xl font-semibold md:leading-[4rem]
       opacity-0
        text-center animate-slogan"
     >
-      The door
-      <br />
-      to an easier
-      <br />
-      Future on the Web
-      <br>
-      
+    Opening    
+    the Door
+    <br>
+    to
+    <br>
+    an easier Future Web
+    <br>     
+    <span class="text-xl md:text-2xl">
+       One Line of Code at a Time
+     </span>       
     </p>
   </section>
 </template>
