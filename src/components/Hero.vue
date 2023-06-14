@@ -61,9 +61,9 @@
     >
     The Door
     <br>
-    To
+    to
     <br>
-    A Futurstic Web Desing
+    a Futuristic Web Design
     <br>     
      
     </p>
