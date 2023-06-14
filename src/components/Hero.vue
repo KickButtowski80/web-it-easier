@@ -2,7 +2,7 @@
   <section
     class="bg-purple-500 h-screen text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto"
   >
-    <div class="relative">
+    <div class="relative border">
       <div
         class="frame p-10 m-10 
         clip-your-needful-style w-40 h-[15rem] md:h-[16rem]"
@@ -38,16 +38,16 @@
        </div>
       <div class="font-normal text-[22rem] md:text-[22rem] 
       text-stroke-purple 
-      absolute top-0 -left-5
+      
       ">
         <div
-          class="inline-block mx-auto opacity-0 animate-rotate-letter-right
-            absolute top-[-123px] md:top-[-37px] left-0"
+          class="inline-block mx-auto opacity-1 animate-rotate-letter-right
+            absolute md:top-[-37px]"
         >
-          I
+        <img src="/letter-i.svg" alt="">
         </div>
         <div
-          class="inline-block opacity-0 animate-rotate-letter-left 
+          class="inline-block opacity-1 animate-rotate-letter-left 
            absolute top-[-123px] md:top-[-37px] left-[97px]"
         >
           T
