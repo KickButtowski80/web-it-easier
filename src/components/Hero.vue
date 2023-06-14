@@ -59,15 +59,13 @@
       opacity-0
        text-center animate-slogan"
     >
-    the Door
+    The Door
     <br>
-    to
+    To
     <br>
-    an Easier Future Web
+    A Futurstic Web Desing
     <br>     
-    <span class="text-xl md:text-2xl">
-       One Line of Code at a Time
-     </span>       
+     
     </p>
   </section>
 </template>
