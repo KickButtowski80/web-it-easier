@@ -59,11 +59,9 @@
       opacity-0
        text-center animate-slogan"
     >
-    The Door
+    The Door to
     <br>
-    to
-    <br>
-    a Futuristic Web Design
+    your future on the web
     <br>     
      
     </p>
