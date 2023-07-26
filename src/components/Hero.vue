@@ -60,10 +60,10 @@
        text-center animate-slogan"
     >
     The Door to
-    <br>
-    your future on the web
+    <!-- <br> -->
+    an easier future 
     <br>     
-     
+     <span class='font-thin text-xl'>one website at a time</span>
     </p>
   </section>
 </template>
