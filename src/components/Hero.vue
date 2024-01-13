@@ -1,6 +1,7 @@
 <template lang="">
   <section
-    class="bg-purple-500 h-screen text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto"
+    class="bg-purple-500 h-screen md:h-1/2 md:mt-20
+     text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto"
   >
     <div class="relative">
       <div
