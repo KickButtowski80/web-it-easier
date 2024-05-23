@@ -1,0 +1,60 @@
+{
+  "freelancerProjectHistory": [
+    {
+      "projectId": 1,
+      "projectTitle": "E-commerce Website Development",
+      "clientName": "ABC Retail Ltd.",
+      "description": "Developed a full-featured e-commerce website with shopping cart, product catalog, and payment gateway integration.",
+      "technologiesUsed": ["React", "Node.js", "Express", "MongoDB", "Stripe API"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Implemented a custom shopping cart and checkout process.",
+        "Integrated Stripe for secure payment processing.",
+        "Optimized website for SEO and performance, resulting in a 25% increase in organic traffic."
+      ]
+    },
+    {
+      "projectId": 2,
+      "projectTitle": "Mobile App for Fitness Tracking",
+      "clientName": "FitnessPro Inc.",
+      "description": "Developed a cross-platform mobile app for tracking fitness activities, including running, cycling, and swimming.",
+      "technologiesUsed": ["Flutter", "Dart", "Firebase", "Google Maps API"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Integrated GPS tracking and Google Maps for route mapping.",
+        "Implemented real-time data sync with Firebase.",
+        "Designed user-friendly UI/UX, leading to a 4.8-star rating on app stores."
+      ]
+    },
+    {
+      "projectId": 3,
+      "projectTitle": "Custom CMS Development",
+      "clientName": "Digital Agency Co.",
+      "description": "Developed a custom content management system (CMS) tailored to the client's specific needs, including role-based access control and a WYSIWYG editor.",
+      "technologiesUsed": ["Laravel", "PHP", "MySQL", "Vue.js"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Implemented role-based access control to manage user permissions.",
+        "Developed a custom WYSIWYG editor for easy content creation.",
+        "Optimized database queries, resulting in a 30% improvement in load times."
+      ]
+    },
+    {
+      "projectId": 4,
+      "projectTitle": "Responsive Portfolio Website",
+      "clientName": "John Doe",
+      "description": "Created a responsive portfolio website for showcasing the client's work and professional experience.",
+      "technologiesUsed": ["HTML", "CSS", "JavaScript", "Bootstrap"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Designed a modern, responsive layout compatible with all devices.",
+        "Integrated contact form with backend email service.",
+        "Achieved high scores in Lighthouse audits for performance and accessibility."
+      ]
+    }
+  ]
+}
