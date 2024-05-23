@@ -10,7 +10,7 @@
         aria-label="main"
       >
         <a href="#">Home</a>
-        <a href="#">My Work</a>
+        <a href="#my-works">My Work</a>
         <a href="#"
            class="border rounded-xl bg-purple-950 text-white
            ">Hire me</a>

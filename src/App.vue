@@ -2,7 +2,7 @@
 <div class="overflow-scroll md:overflow-visible">
   <Menu></Menu>
   <Hero/>
-  <Works/>
+  <Works  />
   <p class="max-w-2xl mx-auto">
 
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt eligendi ex ipsa quae dolore hic, illum exercitationem reiciendis sit, quia nemo aliquam expedita est laboriosam commodi assumenda temporibus nulla saepe!
