@@ -2,7 +2,8 @@
   "freelancerProjectHistory": [
     {
       "projectId": 1,
-      "image": "src/assets/images/universal-pain.webp",
+      "image": "./src/assets/images/universal-pain.webp",
+      "imageAlt": "universal pain management screen shot picture",
       "projectTitle": "Universal Pain Management",
       "clientName": "Universal Pain Management",
       "description": "Developed an informative website for a pain clinic aimed at helping patients understand the services and treatments offered. The website includes comprehensive information on various pain management options, and a user-friendly interface to facilitate easy navigation and access to resources. Additionally, the website supports accessibility features to ensure it is usable by all patients, including those with disabilities.",
