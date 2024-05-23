@@ -8,7 +8,7 @@
        h-10"
     >
       <a href="#">Home 🏠</a>
-      <a href="#my-work">My Work 🖥️</a>
+      <a href="#my-works">My Works 🖥️</a>
       <a href="#">Hire me 🔈</a>
     </nav>
   </footer>
