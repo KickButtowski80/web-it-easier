@@ -3,6 +3,7 @@
     <img
       class="w-full h-64 object-cover border rounded-lg border-purple-800 my-5  "
       :src="image"
+      :title="imageAlt"
       :alt="imgeAlt"
     />
     <div class="px-2 py-4 gray-bg-card">
