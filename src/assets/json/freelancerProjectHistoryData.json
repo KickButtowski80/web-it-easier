@@ -2,17 +2,20 @@
   "freelancerProjectHistory": [
     {
       "projectId": 1,
-      "projectTitle": "E-commerce Website Development",
-      "clientName": "ABC Retail Ltd.",
-      "description": "Developed a full-featured e-commerce website with shopping cart, product catalog, and payment gateway integration.",
-      "technologiesUsed": ["React", "Node.js", "Express", "MongoDB", "Stripe API"],
+      "image": "src/assets/images/universal-pain.webp",
+      "projectTitle": "Universal Pain Management",
+      "clientName": "Universal Pain Management",
+      "description": "Developed an informative website for a pain clinic aimed at helping patients understand the services and treatments offered. The website includes comprehensive information on various pain management options, and a user-friendly interface to facilitate easy navigation and access to resources. Additionally, the website supports accessibility features to ensure it is usable by all patients, including those with disabilities.",
+      "technologiesUsed": ["Parcel.js", "JavaScript", "Tailwind.css"],
       "startDate": "",
       "endDate": "",
       "highlights": [
-        "Implemented a custom shopping cart and checkout process.",
-        "Integrated Stripe for secure payment processing.",
-        "Optimized website for SEO and performance, resulting in a 25% increase in organic traffic."
-      ]
+        "Add  comprehensive library of educational resources including videos with full explanation on pain management and treatment options.(ViewMedica)",
+        "Mobile first design",
+        "Optimized website for SEO, and accessability and performance."
+      ],
+      "liveView": "https://www.universalpain.com/",
+      "codeView": "https://github.com/KickButtowski80/universal-pain"
     },
     {
       "projectId": 2,
