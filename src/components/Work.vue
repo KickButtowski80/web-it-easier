@@ -3,7 +3,7 @@
     <img
       class="w-full h-64 object-cover border rounded-lg border-purple-800 my-5  "
       :src="image"
-      alt="Sunset in the mountains"
+      :alt="imgeAlt"
     />
     <div class="px-2 py-4 gray-bg-card">
       <div class="font-bold text-xl mb-2 text-blue-600">{{ projectTitle }}</div>
@@ -67,6 +67,7 @@ export default {
       const {
         projectId,
         image,
+        imageAlt,
         projectTitle,
         clientName,
         description,
@@ -80,6 +81,7 @@ export default {
       return {
         projectId,
         image,
+        imageAlt,
         projectTitle,
         clientName,
         description,
