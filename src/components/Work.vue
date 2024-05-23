@@ -1,48 +1,96 @@
 <template>
-  <div class="max-w-sm rounded overflow-hidden shadow-lg">
+  <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
     <img
-      class="w-full"
-      src="https://v1.tailwindcss.com/img/card-top.jpg"
+      class="w-full h-64 object-cover border rounded-lg border-purple-800 my-5  "
+      :src="image"
       alt="Sunset in the mountains"
     />
-    <div class="px-3 py-2">
-      <div class="font-bold text-xl mb-2">Project Title</div>
-
-      <p class="text-black text-base">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
-        quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
-        nihil.
+    <div class="px-2 py-4 gray-bg-card">
+      <div class="font-bold text-xl mb-2 text-blue-600">{{ projectTitle }}</div>
+      <p class="text-gray-700 text-base ">
+        {{ description }}
       </p>
     </div>
-    <div class="px-3 pt-4 pb-2">
+    <div class="px-6 pt-4 pb-2">
       <span
+        v-for="( tec, index ) in technologiesUsed"
+        :key="index"
         class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-        >#javascript</span
       >
-      <span
-        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-        >#tailwindcss</span
-      >
-      <span
-        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-        >#html</span
-      >
-      <p class="text-gray-900 leading-none">Role: Developer</p>
-      <p class="text-gray-600">Completed: January 2024</p>
+        #{{ tec }}
+      </span>
+      <p class="text-gray-900 leading-none mt-2">
+        <span class="font-bold">Role:</span> Developer
+      </p>
+      <p class="text-gray-600">
+        <span class="font-bold">Completed:</span> January 2024
+      </p>
     </div>
-    <div class="px-3 py-2 flex gap-2">
+    <div class="gray-bg-card">
+      <h3 class="font-bold text-lg mb-2 text-blue-600">Highlights</h3>
+      <ul class="list-disc pl-5 space-y-1 text-gray-600">
+        <li v-for="(highlight, index) in highlights" :key="index">
+          {{ highlight }}
+        </li>
+      </ul>
+    </div>
+    <div class="px-6 py-4 flex gap-2">
       <a
-        class="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
+        class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-blue-600 text-white shadow-md hover:shadow-lg hover:bg-blue-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
         type="button"
+        :href="liveView"
+        target="_blank"
       >
-        live view
+        Live View 
       </a>
       <a
-        class="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-gray-900 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none"
+        class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-green-600 text-white shadow-md hover:shadow-lg hover:bg-green-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
         type="button"
+        :href="codeView"
+        target="_blank"
       >
-        code view
+        Code View
       </a>
     </div>
   </div>
 </template>
+
+<script>
+import { toRefs, toRef } from "vue";
+
+export default {
+  props: {
+    projectInfo: Object,
+  },
+  setup(props) { 
+    if (props.projectInfo) {
+      const {
+        projectId,
+        image,
+        projectTitle,
+        clientName,
+        description,
+        technologiesUsed,
+        startDate,
+        endDate,
+        highlights,
+        liveView,
+        codeView
+      } = toRefs(props.projectInfo);
+      return {
+        projectId,
+        image,
+        projectTitle,
+        clientName,
+        description,
+        technologiesUsed,
+        startDate,
+        endDate,
+        highlights,
+        liveView,
+        codeView
+      };
+    }
+  },
+};
+</script>
