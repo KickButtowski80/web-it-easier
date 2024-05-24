@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+  <div class="max-w-sm mx-2 rounded overflow-hidden shadow-lg bg-white">
     <img
       class="w-full h-64 object-cover border rounded-lg border-purple-800 my-5  "
       :src="image"
@@ -12,11 +12,12 @@
         {{ description }}
       </p>
     </div>
-    <div class="px-6 pt-4 pb-2">
+    <div class="px-3 pt-4 pb-2">
       <span
         v-for="( tec, index ) in technologiesUsed"
         :key="index"
-        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+        class="inline-block bg-gray-200 rounded-full px-3
+         py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
       >
         #{{ tec }}
       </span>
@@ -35,7 +36,7 @@
         </li>
       </ul>
     </div>
-    <div class="px-6 py-4 flex gap-2">
+    <div class="px-3 py-4 flex gap-2">
       <a
         class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-blue-600 text-white shadow-md hover:shadow-lg hover:bg-blue-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
         type="button"
