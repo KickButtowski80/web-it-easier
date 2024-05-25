@@ -7,7 +7,7 @@
       "projectTitle": "Universal Pain Management",
       "clientName": "Universal Pain Management",
       "description": "Developed an informative website for a pain clinic aimed at helping patients understand the services and treatments offered. The website includes comprehensive information on various pain management options, and a user-friendly interface to facilitate easy navigation and access to resources. Additionally, the website supports accessibility features to ensure it is usable by all patients, including those with disabilities.",
-      "technologiesUsed": ["Parcel.js", "JavaScript", "Tailwind.css"],
+      "technologiesUsed": ["Parcel.js", "JavaScript", "Tailwind.css", "HTML"],
       "startDate": "",
       "endDate": "",
       "highlights": [
@@ -20,17 +20,21 @@
     },
     {
       "projectId": 2,
-      "projectTitle": "Mobile App for Fitness Tracking",
-      "clientName": "FitnessPro Inc.",
-      "description": "Developed a cross-platform mobile app for tracking fitness activities, including running, cycling, and swimming.",
-      "technologiesUsed": ["Flutter", "Dart", "Firebase", "Google Maps API"],
+      "image": "/images/acme-rocket.webp",
+      "imageAlt": "Acme Rocket screen shot picture",
+      "projectTitle": "Acme Rocket",
+      "clientName": "Acme Rocket",
+      "description": "Developed an informative static website for a imaginary rocket company aimed at helping its customer to  understand the services and types of rockets are offered.They're building rockets for the next century today. From the moon to Mars, Jupiter and beyond ...🚀 Think Acme Rockets. The website includes comprehensive information on various rocket models, and a user-friendly interface to facilitate easy navigation and access to resources of the company.",
+      "technologiesUsed": ["Vue 3.js", "JavaScript", "Tailwind.css", "HTML"],
       "startDate": "",
       "endDate": "",
       "highlights": [
-        "Integrated GPS tracking and Google Maps for route mapping.",
-        "Implemented real-time data sync with Firebase.",
-        "Designed user-friendly UI/UX, leading to a 4.8-star rating on app stores."
-      ]
+        "Add animation to enhance user experience by make pages more dynamic and engaging",
+        "Mobile first design",
+        "Optimized website accessability and performance."
+      ],
+      "liveView": "https://github.com/KickButtowski80/acme-rockets/",
+      "codeView": "https://github.com/KickButtowski80/acme-rockets"
     },
     {
       "projectId": 3,
