@@ -1,23 +1,23 @@
 <template>
-  <div class="max-w-sm mx-2 rounded overflow-hidden shadow-lg bg-white">
+ <div class="flex flex-wrap min-h-[70rem] justify-center  shadow-md">
+  <div class="max-w-sm mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col">
     <img
-      class="w-full h-64 object-cover border rounded-lg border-purple-800 my-5  "
+      class="w-full h-64 object-cover border rounded-lg border-purple-800 my-5"
       :src="image"
       :title="imageAlt"
-      :alt="imgeAlt"
+      :alt="imageAlt"
     />
-    <div class="px-2 py-4 gray-bg-card">
+    <div class="gray-bg-card flex-grow">
       <div class="font-bold text-xl mb-2 text-blue-600">{{ projectTitle }}</div>
-      <p class="text-gray-700 text-base ">
+      <p class="text-gray-700 text-base">
         {{ description }}
       </p>
     </div>
     <div class="px-3 pt-4 pb-2">
       <span
-        v-for="( tec, index ) in technologiesUsed"
+        v-for="(tec, index) in technologiesUsed"
         :key="index"
-        class="inline-block bg-gray-200 rounded-full px-3
-         py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
       >
         #{{ tec }}
       </span>
@@ -28,7 +28,7 @@
         <span class="font-bold">Completed:</span> January 2024
       </p>
     </div>
-    <div class="gray-bg-card">
+    <div class=" gray-bg-card">
       <h3 class="font-bold text-lg mb-2 text-blue-600">Highlights</h3>
       <ul class="list-disc pl-5 space-y-1 text-gray-600">
         <li v-for="(highlight, index) in highlights" :key="index">
@@ -43,7 +43,7 @@
         :href="liveView"
         target="_blank"
       >
-        Live View 
+        Live View
       </a>
       <a
         class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-green-600 text-white shadow-md hover:shadow-lg hover:bg-green-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
@@ -55,6 +55,8 @@
       </a>
     </div>
   </div>
+</div>
+
 </template>
 
 <script>
