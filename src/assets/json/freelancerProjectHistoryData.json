@@ -33,36 +33,26 @@
         "Mobile first design",
         "Optimized website accessability and performance."
       ],
-      "liveView": "https://github.com/KickButtowski80/acme-rockets/",
+      "liveView": "https://acme-rockets-eight.vercel.app/#hero",
       "codeView": "https://github.com/KickButtowski80/acme-rockets"
     },
     {
-      "projectId": 3,
-      "projectTitle": "Custom CMS Development",
-      "clientName": "Digital Agency Co.",
-      "description": "Developed a custom content management system (CMS) tailored to the client's specific needs, including role-based access control and a WYSIWYG editor.",
-      "technologiesUsed": ["Laravel", "PHP", "MySQL", "Vue.js"],
-      "startDate": "",
-      "endDate": "",
-      "highlights": [
-        "Implemented role-based access control to manage user permissions.",
-        "Developed a custom WYSIWYG editor for easy content creation.",
-        "Optimized database queries, resulting in a 30% improvement in load times."
-      ]
-    },
-    {
-      "projectId": 4,
-      "projectTitle": "Responsive Portfolio Website",
-      "clientName": "John Doe",
-      "description": "Created a responsive portfolio website for showcasing the client's work and professional experience.",
-      "technologiesUsed": ["HTML", "CSS", "JavaScript", "Bootstrap"],
+      "projectId": 2,
+      "image": "",
+      "imageAlt": "add checkout service in the process <----",
+      "projectTitle": "Cicero Pizza",
+      "clientName": "Cicero Pizza",
+      "description": "Cicero Pizzeria is a dynamic and user-friendly web application that offers a seamless online pizza ordering experience. Built with modern web technologies, the website showcases a clean and intuitive interface that makes navigation effortless. The project demonstrates proficiency in js for frontend development and Tailwind CSS for responsive and modern design. The website features an interactive menu, secure online payment system, and a user-friendly order tracking feature. It stands as a testament to my ability to create engaging, efficient, and scalable web applications",
+      "technologiesUsed": ["Parcel.js", "JavaScript", "Tailwind.css", "HTML"],
       "startDate": "",
       "endDate": "",
       "highlights": [
         "Designed a modern, responsive layout compatible with all devices.",
         "Integrated contact form with backend email service.",
         "Achieved high scores in Lighthouse audits for performance and accessibility."
-      ]
+      ],
+      "liveView": "https://cicero-pizzeria.vercel.app/",
+      "codeView": "https://github.com/KickButtowski80/cicero-pizzeria"
     }
   ]
 }
