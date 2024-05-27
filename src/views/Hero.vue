@@ -61,7 +61,7 @@ export default {};
 }
 .diagonal {
   position: relative;
-  z-index: 1;
+ 
   isolation: isolate;
   background-image: linear-gradient(315deg, #7612e9, #c471ed, #f64f59);
 }
@@ -78,9 +78,10 @@ export default {};
 
 
 .diagonal::after{
-  bottom: -38px;
+  bottom: -75px;
   background: linear-gradient(-145deg, #7612e9, #c471ed, #f64f59);
-  transform: skewY(-535deg);
+  transform: skewY(-538deg);
+  z-index: -1 !important;
  
 }
 </style>
