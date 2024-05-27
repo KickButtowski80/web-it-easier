@@ -81,7 +81,7 @@ export default {};
   bottom: -75px;
   background: linear-gradient(-145deg, #7612e9, #c471ed, #f64f59);
   transform: skewY(-538deg);
-  z-index: -1 !important;
+  z-index: -2;
  
 }
 </style>
