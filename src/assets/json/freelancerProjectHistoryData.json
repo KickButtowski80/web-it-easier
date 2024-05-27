@@ -1,0 +1,58 @@
+{
+  "freelancerProjectHistory": [
+    {
+      "projectId": 1,
+      "image": "/images/universal-pain.webp",
+      "imageAlt": "universal pain management screen shot picture",
+      "projectTitle": "Universal Pain Management",
+      "clientName": "Universal Pain Management",
+      "description": "Developed an informative website for a pain clinic aimed at helping patients understand the services and treatments offered. The website includes comprehensive information on various pain management options, and a user-friendly interface to facilitate easy navigation and access to resources. Additionally, the website supports accessibility features to ensure it is usable by all patients, including those with disabilities.",
+      "technologiesUsed": ["Parcel.js", "JavaScript", "Tailwind.css", "HTML"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Add  comprehensive library of educational resources including videos with full explanation on pain management and treatment options.(ViewMedica)",
+        "Mobile first design",
+        "Optimized website for SEO, and accessability and performance."
+      ],
+      "liveView": "https://www.universalpain.com/",
+      "codeView": "https://github.com/KickButtowski80/universal-pain"
+    },
+    {
+      "projectId": 2,
+      "image": "/images/acme-rocket.webp",
+      "imageAlt": "Acme Rocket screen shot picture",
+      "projectTitle": "Acme Rocket",
+      "clientName": "Acme Rocket",
+      "description": "Developed an informative static website for a imaginary rocket company aimed at helping its customer to  understand the services and types of rockets are offered.They're building rockets for the next century today. From the moon to Mars, Jupiter and beyond ...🚀 Think Acme Rockets. The website includes comprehensive information on various rocket models, and a user-friendly interface to facilitate easy navigation and access to resources of the company.",
+      "technologiesUsed": ["Vue 3.js", "JavaScript", "Tailwind.css", "HTML"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Add animation to enhance user experience by make pages more dynamic and engaging",
+        "Mobile first design",
+        "Optimized website accessability and performance."
+      ],
+      "liveView": "https://acme-rockets-eight.vercel.app/#hero",
+      "codeView": "https://github.com/KickButtowski80/acme-rockets"
+    },
+    {
+      "projectId": 2,
+      "image": "",
+      "imageAlt": "add hero animation && add checkout service in the process <----",
+      "projectTitle": "Cicero Pizza",
+      "clientName": "Cicero Pizza",
+      "description": "Cicero Pizzeria is a dynamic and user-friendly web application that offers a seamless online pizza ordering experience. Built with modern web technologies, the website showcases a clean and intuitive interface that makes navigation effortless. The project demonstrates proficiency in js for frontend development and Tailwind CSS for responsive and modern design. The website features an interactive menu, secure online payment system, and a user-friendly order tracking feature. It stands as a testament to my ability to create engaging, efficient, and scalable web applications",
+      "technologiesUsed": ["Parcel.js", "JavaScript", "Tailwind.css", "HTML"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Designed a modern, responsive layout compatible with all devices.",
+        "Integrated contact form with backend email service.",
+        "Achieved high scores in Lighthouse audits for performance and accessibility."
+      ],
+      "liveView": "https://cicero-pizzeria.vercel.app/",
+      "codeView": "https://github.com/KickButtowski80/cicero-pizzeria"
+    }
+  ]
+}

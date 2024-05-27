@@ -2,6 +2,7 @@
 <div class="overflow-scroll md:overflow-visible">
   <Menu></Menu>
   <Hero/>
+  <Works  />
   <p class="max-w-2xl mx-auto">
 
     Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt eligendi ex ipsa quae dolore hic, illum exercitationem reiciendis sit, quia nemo aliquam expedita est laboriosam commodi assumenda temporibus nulla saepe!
@@ -17,11 +18,13 @@
 </template>
 <script>
 import Menu from './components/Menu.vue';
-import Hero from './components/Hero.vue'
+import Hero from './views/Hero.vue';
+import Works from './views/Works.vue'
 export default {
   components:{
     Menu,
     Hero,
+    Works,
   }
 };
 </script>

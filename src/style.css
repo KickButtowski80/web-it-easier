@@ -23,6 +23,10 @@
         -1px 1px 0 hsl(285, 90%, 46%),
         1px 1px 0 hsl(285, 90%, 46%);
     }
+
+    .gray-bg-card {
+      @apply px-6 py-4 bg-gray-200  mx-2 rounded-md shadow-sm
+    }
     
  
  }
