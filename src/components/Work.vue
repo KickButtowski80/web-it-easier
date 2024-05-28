@@ -87,7 +87,7 @@ export default {
     projectInfo: Object,
   },
   setup(props) {
-    const readMoreStatus = ref(true);
+    const readMoreStatus = ref(false);
     if (props.projectInfo) {
       const {
         projectId,
