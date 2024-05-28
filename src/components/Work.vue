@@ -157,6 +157,7 @@ details summary::-webkit-details-marker {
 .slide-fade-enter-from,
 .slide-fade-leave-to {
   transform: translateX(-200px);
-  opacity: 1;
+  opacity: 0;
+  visibility: hidden;
 }
 </style>
