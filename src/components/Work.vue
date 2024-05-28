@@ -131,7 +131,6 @@ export default {
               behavior: "smooth",
               inline: "center",
             });
-            // cardInfo.value.style.marginTop = '5rem'
           });
         }
       };
