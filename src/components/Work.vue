@@ -18,7 +18,6 @@
         </div>
       </Transition>
       <section
-
         class="font-bold text-xl mb-2 text-blue-600 flex justify-center items-center"
       >
         <button
@@ -32,8 +31,8 @@
         </button>
       </section>
 
-      <Transition name="slide-fade" ref="cardInfo">
-        <div v-show="readMoreStatus" >
+      <Transition name="slide-fade" ref="cardInfo" class="cardInfo">
+        <div v-show="readMoreStatus">
           <div class="gray-bg-card flex-grow">
             <div class="font-bold text-xl mb-2 text-blue-600">
               {{ projectTitle }}
@@ -127,7 +126,11 @@ export default {
         if (readMoreStatus.value) {
           // If read more is clicked (going to "Read Less"), scroll to the card info
           nextTick(() => {
-            cardInfo.value.scrollIntoView({ behavior: "smooth", block: 'nearest', inline: 'start'  });
+            
+            cardInfo.value.scrollIntoView({
+              behavior: "smooth",
+              inline: "center",
+            });
             // cardInfo.value.style.marginTop = '5rem'
           });
         }
@@ -156,6 +159,15 @@ export default {
 </script>
 
 <style scoped>
+
+.cardInfo{
+  scroll-margin-top: 110px;
+}
+@media screen and (max-width: 768px) {
+  .cardInfo {
+    scroll-margin-top: 40px; /* Adjust margin for medium screens */
+  }
+}
 summary {
   list-style: none; /* Remove the default list-style */
   cursor: pointer; /* Optional: change the cursor to pointer */
