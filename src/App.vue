@@ -1,5 +1,5 @@
 <template lang=""> 
-<div class="overflow-scroll md:overflow-visible">
+<main class="overflow-scroll md:overflow-visible">
   <Menu></Menu>
   <Hero/>
   <Works  />
@@ -14,7 +14,7 @@
     Accusamus sequi aliquid, vel magnam laborum impedit deserunt temporibus nisi porro dicta ipsam sapiente totam, sed nobis. Nemo atque aliquid eaque ad voluptatum velit fugit incidunt a! Accusamus, dolor sint?
     Delectus vitae mollitia reiciendis minima! Eligendi commodi sapiente ipsam sed dolorum consectetur quas consequatur natus exercitationem aliquid, inventore, explicabo voluptatum nulla repellendus labore libero cumque perferendis ullam odio, corporis eum?
   </p>
-</div> 
+</main> 
 </template>
 <script>
 import Menu from './components/Menu.vue';
