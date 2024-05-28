@@ -18,6 +18,7 @@
         </div>
       </Transition>
       <section
+
         class="font-bold text-xl mb-2 text-blue-600 flex justify-center items-center"
       >
         <button
@@ -31,8 +32,8 @@
         </button>
       </section>
 
-      <Transition name="slide-fade">
-        <div v-show="readMoreStatus" ref="cardInfo" id="cardInfo">
+      <Transition name="slide-fade" ref="cardInfo">
+        <div v-show="readMoreStatus" >
           <div class="gray-bg-card flex-grow">
             <div class="font-bold text-xl mb-2 text-blue-600">
               {{ projectTitle }}
@@ -93,7 +94,7 @@
 </template>
 
 <script>
-import { toRefs, toRef, ref, computed, onMounted } from "vue";
+import { toRefs, toRef, ref, computed, nextTick } from "vue";
 
 export default {
   props: {
@@ -123,18 +124,14 @@ export default {
       });
       const toggleReadMoreStatus = () => {
         readMoreStatus.value = !readMoreStatus.value;
-
         if (readMoreStatus.value) {
           // If read more is clicked (going to "Read Less"), scroll to the card info
-          cardInfo.value.scrollIntoView({ behavior: "smooth" });
-        } else {
-          // If read less is clicked (going to "Read More"), set card info to null
-          // cardInfo.value = null;
+          nextTick(() => {
+            cardInfo.value.scrollIntoView({ behavior: "smooth", block: 'nearest', inline: 'start'  });
+            // cardInfo.value.style.marginTop = '5rem'
+          });
         }
       };
-      // onMounted(() => {
-      //   cardInfo.value = document.getElementById("cardInfo");
-      // });
       return {
         projectId,
         image,
