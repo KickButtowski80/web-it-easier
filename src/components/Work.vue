@@ -9,10 +9,11 @@
         :title="imageAlt"
         :alt="imageAlt"
       />
-      <div class="font-bold text-xl mb-2 text-blue-600 text-center">
+      <Transition name="slide-fade">
+      <div  v-if="!readMoreStatus" class="font-bold text-xl mb-2 text-blue-600 text-center">
         {{ projectTitle }}
       </div>
-
+      </Transition>
         <div
           class="font-bold text-xl mb-2 text-blue-600 flex justify-center items-center"
         >
@@ -27,7 +28,8 @@
         <Transition name="slide-fade">
           <div v-if="readMoreStatus">
             <div class="gray-bg-card flex-grow">
-              <!-- <div class="font-bold text-xl mb-2 text-blue-600">{{ projectTitle }}</div> -->
+              <div class="font-bold text-xl mb-2
+               text-blue-600">{{ projectTitle }}</div>
               <p class="text-gray-700 text-base">
                 {{ description }}
               </p>
