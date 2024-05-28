@@ -12,7 +12,7 @@
       <div class="font-bold text-xl mb-2 text-blue-600 text-center">
         {{ projectTitle }}
       </div>
-      <!-- <details class=""> -->
+
         <div
           class="font-bold text-xl mb-2 text-blue-600 flex justify-center items-center"
         >
@@ -75,7 +75,6 @@
             </div>
           </div>
         </Transition>
-      <!-- </details> -->
     </div>
   </div>
 </template>
