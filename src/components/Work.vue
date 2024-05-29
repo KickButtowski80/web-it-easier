@@ -37,7 +37,7 @@
             <div class="font-bold text-xl mb-2 text-blue-600">
               {{ projectTitle }}
             </div>
-            <p class="text-gray-700 text-base">
+            <p class="text-gray-700 text-base h-80 overflow-y-auto">
               {{ description }}
             </p>
           </div>
@@ -56,7 +56,7 @@
               <span class="font-bold">Completed:</span> January 2024
             </p>
           </div>
-          <div class="gray-bg-card">
+          <div class="gray-bg-card h-48  overflow-y-auto">
             <h3 class="font-bold text-lg mb-2 text-blue-600">Highlights</h3>
             <ul class="list-disc pl-5 space-y-1 text-gray-600">
               <li v-for="(highlight, index) in highlights" :key="index">
