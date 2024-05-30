@@ -1,8 +1,7 @@
-<template lang="">
+<template>
   <section
     id="hero"
-    class="bg-purple-500 h-screen md:mt-20 md:h-[40rem]
-     text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
+    class="bg-purple-500 h-screen md:mt-20 md:h-[40rem] text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
   >
     <div class="relative">
       <div
@@ -50,18 +49,57 @@
       <span class="font-thin text-xl">one website at a time</span>
     </p>
   </section>
+  <div class="flex items-center justify-center">
+    
+    <button
+    type="button"
+      @click="replayAnimation"
+      class=" ml-6 -translate-y-28 z-1 focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 flex item-center w-fit"
+      role="button"
+    >
+      Replay Animation
+    </button>
+  </div>
 </template>
+
 <script>
-export default {};
+
+export default {
+  name: "Hero",
+  setup() {
+    const replayAnimation = () => {
+      const elements = [
+        "open-door",
+        "open-door-knob",
+        "sun-appears",
+        "bg-appears",
+        "rotate-letter-right",
+        "rotate-letter-left",
+        "slogan",
+      ];
+
+      elements.forEach((element) => {
+        const node = document.querySelector(`.animate-${element}`);
+
+        node.classList.remove(`animate-${element}`);
+        void node.offsetWidth; // Trigger reflow to restart the animation
+        node.classList.add(`animate-${element}`);
+      });
+    };
+
+    return {
+      replayAnimation,
+    };
+  },
+};
 </script>
+
 <style scoped lang="css">
 #hero {
   /* background-image: linear-gradient(55deg, #7612e9, #c471ed, #f64f59); */
-
 }
 .diagonal {
   position: relative;
- 
   isolation: isolate;
   background-image: linear-gradient(315deg, #7612e9, #c471ed, #f64f59);
 }
@@ -70,18 +108,14 @@ export default {};
 .diagonal::after {
   content: "";
   width: 100%;
-  height: 200px; 
+  height: 200px;
   position: absolute;
- 
-
 }
 
-
-.diagonal::after{
+.diagonal::after {
   bottom: -75px;
   background: linear-gradient(-145deg, #7612e9, #c471ed, #f64f59);
   transform: skewY(-538deg);
   z-index: -2;
- 
 }
 </style>
