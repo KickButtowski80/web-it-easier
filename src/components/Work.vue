@@ -56,7 +56,7 @@
               <span class="font-bold">Completed:</span> January 2024
             </p>
           </div>
-          <div class="gray-bg-card h-48  overflow-y-auto">
+          <div class="gray-bg-card h-48 overflow-y-auto">
             <h3 class="font-bold text-lg mb-2 text-blue-600">Highlights</h3>
             <ul class="list-disc pl-5 space-y-1 text-gray-600">
               <li v-for="(highlight, index) in highlights" :key="index">
@@ -76,9 +76,15 @@
               Live View
             </a>
             <a
-              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-green-600 text-white shadow-md hover:shadow-lg hover:bg-green-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
+              :class="[
+                privateRepo
+                  ? 'bg-gray-400 text-gray-300 cursor-not-allowed pointer-events-none'
+                  : 'bg-green-600 text-white hover:shadow-lg hover:bg-green-700',
+              ]"
+              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none 
+              disabled:pointer-events-none text-xs py-3 px-6 rounded-lg shadow-md  focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
               type="button"
-              :href="codeView"
+              :href="privateRepo ? null : codeView"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Code View of {{ projectTitle }}"
@@ -116,6 +122,7 @@ export default {
         highlights,
         liveView,
         codeView,
+        privateRepo,
       } = toRefs(props.projectInfo);
 
       const readMoreText = computed(() => {
@@ -126,7 +133,6 @@ export default {
         if (readMoreStatus.value) {
           // If read more is clicked (going to "Read Less"), scroll to the card info
           nextTick(() => {
-            
             cardInfo.value.scrollIntoView({
               behavior: "smooth",
               inline: "center",
@@ -147,6 +153,7 @@ export default {
         highlights,
         liveView,
         codeView,
+        privateRepo,
         readMoreText,
         readMoreStatus,
         toggleReadMoreStatus,
@@ -158,8 +165,7 @@ export default {
 </script>
 
 <style scoped>
-
-.cardInfo{
+.cardInfo {
   scroll-margin-top: 110px;
 }
 @media screen and (max-width: 768px) {
