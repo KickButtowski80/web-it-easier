@@ -16,7 +16,8 @@
         "Optimized website for SEO, and accessability and performance."
       ],
       "liveView": "https://www.universalpain.com/",
-      "codeView": "https://github.com/KickButtowski80/universal-pain"
+      "codeView": "https://github.com/KickButtowski80/universal-pain",
+      "privateRepo": true
     },
     {
       "projectId": 2,
@@ -34,7 +35,8 @@
         "Optimized website accessability and performance."
       ],
       "liveView": "https://acme-rockets-eight.vercel.app/#hero",
-      "codeView": "https://github.com/KickButtowski80/acme-rockets"
+      "codeView": "https://github.com/KickButtowski80/acme-rockets",
+      "privateRepo": false
     },
     {
       "projectId": 2,
@@ -52,7 +54,8 @@
         "Achieved high scores in Lighthouse audits for performance and accessibility."
       ],
       "liveView": "https://cicero-pizzeria.vercel.app/",
-      "codeView": "https://github.com/KickButtowski80/cicero-pizzeria"
+      "codeView": "https://github.com/KickButtowski80/cicero-pizzeria",
+      "privateRepo": false
     }
   ]
 }
