@@ -21,33 +21,23 @@
           >
             🟣</span
           >
-        </a>
+      </a>
       </div>
     </div>
   </button>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 
 export default {
   setup() {
     const door = ref(null);
-
     const doorWay = ref(null);
     const openDoor = ref(null);
 
     const handleScroll = () => {
-      // door.value.style.transform = "rotateY(0deg)";
-      if (window.location.hash) {
-        history.replaceState(
-          null,
-          document.title,
-          window.location.pathname + window.location.search,
-        );
-      }
       if (window.scrollY > 30) {
-        door.value.style = "";
         door.value.classList.remove("hidden");
         door.value.classList.add("show");
         openDoor.value.classList.remove("hidden");
@@ -64,14 +54,30 @@ export default {
 
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
-   
+      nextTick(() => {
+        // Assuming doorRef is defined and used similarly to the back-to-top button
+        if (door.value) {
+          door.value.style.transform = "rotateY(0deg)";
+        }
+        if (window.location.hash) {
+          history.replaceState(
+            null,
+            document.title,
+            window.location.pathname + window.location.search
+          );
+        }
+      });
     };
-
+    const handleTouchStart = () => {
+      console.log('i am touched')
+      door.value.style.transform = 'rotateY(55deg)'
+    };
     onMounted(() => {
       openDoor.value.classList.add("hidden");
       door.value.classList.add("hidden");
       doorWay.value.classList.add("hidden");
       window.addEventListener("scroll", handleScroll);
+      document.addEventListener("touchstart", handleTouchStart, true);
     });
 
     return {
@@ -98,7 +104,7 @@ export default {
   display: inline-flex;
   position: fixed;
   bottom: 40px;
-  right: 40px;
+  right: 5px;
 }
 
 .doorway {
@@ -122,7 +128,7 @@ export default {
   transform-origin: left;
 }
 
-.door:hover{
+.door:hover, .door:active, .door:focus{
   transform: rotateY(55deg);
 }
 </style>
