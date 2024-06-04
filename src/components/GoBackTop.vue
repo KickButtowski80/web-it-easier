@@ -38,6 +38,14 @@ export default {
     const openDoor = ref(null);
 
     const handleScroll = () => {
+      // door.value.style.transform = "rotateY(0deg)";
+      if (window.location.hash) {
+        history.replaceState(
+          null,
+          document.title,
+          window.location.pathname + window.location.search,
+        );
+      }
       if (window.scrollY > 30) {
         door.value.style = "";
         door.value.classList.remove("hidden");
@@ -51,26 +59,12 @@ export default {
         doorWay.value.classList.add("hidden");
         door.value.classList.remove("show");
         door.value.classList.add("hidden");
-        if (window.location.hash) {
-          door.value.style = "";
-          // Use history.replaceState to remove the hash fragment from the URL
-          history.replaceState(
-            null,
-            document.title,
-            window.location.pathname + window.location.search,
-          );
-        }
-        //     else {
-        //     // ... other class manipulations
-        //     if (!window.location.hash) {
-        //       door.value.style = '';
-        //     }
-        //   }
       }
     };
 
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
+   
     };
 
     onMounted(() => {
@@ -128,7 +122,7 @@ export default {
   transform-origin: left;
 }
 
-.door:hover {
+.door:hover{
   transform: rotateY(55deg);
 }
 </style>
