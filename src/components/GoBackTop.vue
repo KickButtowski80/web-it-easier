@@ -1,33 +1,33 @@
 <template>
-  <button
-    type="button"
-    class="doorgroup"
-    @click="scrollToTop"
-    aria-label="Go to top of page"
-  >
-    <div class="doorway" ref="doorWay">
-      <div id="openDoor" class="door" ref="door">
-        <a
-          href="#openDoor"
-          ref="openDoor"
-          aria-label="Open Door"
-          class="flex justify-center text-center mt-2 w-full h-full text-xl"
-        >
-          <span>go</span>
-          <span role="img" aria-label="Up Arrow">⬆️</span>
-          <span
-            class="flex justify-end items-center mt-3 text-sm"
-            aria-label="door knob"
+  <div>
+    <div
+      class="doorgroup"
+      @click="scrollToTop"
+      aria-label="Go to top of page"
+    >
+      <div class="doorway" ref="doorWay">
+        <div id="openDoor" class="door" ref="door">
+          <a
+            href="#openDoor"
+            ref="openDoor"
+            aria-label="Open Door"
+            class="flex justify-center text-center mt-2 w-full h-full text-xl"
           >
-            🟣</span
-          >
-      </a>
+            <span>go</span>
+            <span role="img" aria-label="Up Arrow">⬆️</span>
+            <span
+              class="flex justify-end items-center mt-3 text-sm"
+              aria-label="door knob"
+            >
+              🟣</span
+            >
+          </a>
+        </div>
       </div>
     </div>
-  </button>
+  </div>
 </template>
-
-<script>
+ <script>
 import { ref, onMounted, nextTick } from "vue";
 
 export default {
@@ -57,7 +57,7 @@ export default {
       nextTick(() => {
         // Assuming doorRef is defined and used similarly to the back-to-top button
         if (door.value) {
-          door.value.style.transform = "rotateY(0deg)";
+          // door.value.style.transform = "rotateY(0deg)";
         }
         if (window.location.hash) {
           history.replaceState(
@@ -99,12 +99,12 @@ export default {
 }
 
 .doorgroup {
-  perspective: 200px;
   cursor: pointer;
   display: inline-flex;
   position: fixed;
   bottom: 40px;
   right: 5px;
+
 }
 
 .doorway {
@@ -112,6 +112,7 @@ export default {
   height: 110px;
   width: 66px;
   position: relative;
+  perspective: 200px;
 }
 
 .door {
@@ -123,12 +124,13 @@ export default {
   background: rgb(146, 47, 153);
   font-size: 24px;
   border-left: none;
-  transition: 60ms transform ease-in-out;
+  transition: transform 0.6s ease-in-out;
   transform: rotateY(0deg);
-  transform-origin: left;
+  transform-origin: left center;
+
 }
 
-.door:hover, .door:active, .door:focus{
-  transform: rotateY(55deg);
+.door:hover {
+  transform: rotateY(40deg);
 }
 </style>
