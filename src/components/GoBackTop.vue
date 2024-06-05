@@ -77,7 +77,7 @@ export default {
         console.log("i am end of the touched");
         door.value.style.transform = "rotateY(0deg)";
         scrollToTop();
-      }, 500);
+      }, 400);
     };
     onMounted(() => {
       openDoor.value.classList.add("hidden");
