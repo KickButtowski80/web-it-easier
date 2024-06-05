@@ -3,7 +3,6 @@
     <div class="doorgroup" @click="scrollToTop" aria-label="Go to top of page">
       <div class="doorway" ref="doorWay">
         <div id="openDoor" class="door" ref="door">
-          <!-- href="#openDoor" -->
           <div
             ref="openDoor"
             aria-label="Open Door"
@@ -24,7 +23,7 @@
   </div>
 </template>
 <script>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted } from "vue";
 
 export default {
   setup() {
@@ -52,29 +51,13 @@ export default {
 
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      // nextTick(() => {
-      // //
-      //   // Assuming doorRef is defined and used similarly to the back-to-top button
-      //   if (door.value) {
-      //     // door.value.style.transform = "rotateY(0deg)";
-      //   }
-      //   if (window.location.hash) {
-      //     history.replaceState(
-      //       null,
-      //       document.title,
-      //       window.location.pathname + window.location.search
-      //     );
-      //   }
-      // });
     };
-    const handleTouchStart = () => {
-      console.log("i am touched");
+    const handleTouchStart = () => {     
       door.value.style.transform = "rotateY(55deg)";
     };
 
     const handleTouchEnd = () => {
-      setTimeout(() => {
-        console.log("i am end of the touched");
+      setTimeout(() => {     
         door.value.style.transform = "rotateY(0deg)";
         scrollToTop();
       }, 400);
