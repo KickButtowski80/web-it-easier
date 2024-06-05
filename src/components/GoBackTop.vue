@@ -68,16 +68,23 @@ export default {
         }
       });
     };
-    const handleTouchStart = () => {
+    const handleTouchStart = (event) => {
       console.log('i am touched')
       door.value.style.transform = 'rotateY(55deg)'
     };
+
+    const handleTouchEnd = (event) => {
+      console.log('i am end of the touched')
+      door.value.style.transform ='rotateY(0deg)'
+      scrollToTop();
+    }
     onMounted(() => {
       openDoor.value.classList.add("hidden");
       door.value.classList.add("hidden");
       doorWay.value.classList.add("hidden");
       window.addEventListener("scroll", handleScroll);
       document.addEventListener("touchstart", handleTouchStart, true);
+      document.addEventListener("touchend", handleTouchEnd, true);
     });
 
     return {
@@ -130,7 +137,8 @@ export default {
 
 }
 
-.door:hover {
+.door:hover,
+.door:focus {
   transform: rotateY(40deg);
 }
 </style>
