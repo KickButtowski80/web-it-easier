@@ -83,8 +83,8 @@ export default {
       door.value.classList.add("hidden");
       doorWay.value.classList.add("hidden");
       window.addEventListener("scroll", handleScroll);
-      document.addEventListener("touchstart", handleTouchStart, true);
-      document.addEventListener("touchend", handleTouchEnd, true);
+      door.value.addEventListener("touchstart", handleTouchStart, true);
+      door.value.addEventListener("touchend", handleTouchEnd, true);
     });
 
     return {
