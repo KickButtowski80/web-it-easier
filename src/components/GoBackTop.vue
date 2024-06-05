@@ -45,16 +45,19 @@ export default {
         doorWay.value.classList.remove("hidden");
         doorWay.value.classList.add("show");
       } else {
-        doorWay.value.classList.remove("show");
-        doorWay.value.classList.add("hidden");
         door.value.classList.remove("show");
         door.value.classList.add("hidden");
+        openDoor.value.classList.remove("show");
+        openDoor.value.classList.add("hidden");
+        doorWay.value.classList.remove("show");
+        doorWay.value.classList.add("hidden");
       }
     };
 
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
       nextTick(() => {
+      // 
         // Assuming doorRef is defined and used similarly to the back-to-top button
         if (door.value) {
           // door.value.style.transform = "rotateY(0deg)";
