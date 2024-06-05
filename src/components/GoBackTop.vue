@@ -134,6 +134,7 @@ export default {
   transition: transform 0.6s ease-in-out;
   transform: rotateY(0deg);
   transform-origin: left center;
+  user-select: none
 
 }
 
