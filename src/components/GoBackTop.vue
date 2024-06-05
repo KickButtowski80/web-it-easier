@@ -143,6 +143,6 @@ export default {
 
 .door:hover,
 .door:focus {
-  transform: rotateY(40deg);
+  transform: rotateY(55deg);
 }
 </style>
