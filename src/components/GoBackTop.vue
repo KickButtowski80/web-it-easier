@@ -112,7 +112,7 @@ export default {
   height: 110px;
   width: 66px;
   position: relative;
-  perspective: 200px;
+  perspective: 200px;/* Apply perspective to the parent */
 }
 
 .door {
