@@ -68,12 +68,12 @@ export default {
         }
       });
     };
-    const handleTouchStart = (event) => {
+    const handleTouchStart = () => {
       console.log('i am touched')
       door.value.style.transform = 'rotateY(55deg)'
     };
 
-    const handleTouchEnd = (event) => {
+    const handleTouchEnd = () => {
       console.log('i am end of the touched')
       door.value.style.transform ='rotateY(0deg)'
       scrollToTop();
