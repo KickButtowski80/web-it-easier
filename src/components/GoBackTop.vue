@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="doorgroup" @click="scrollToTop"
-                     @mouseleave="scrollToTop" aria-label="Go to top of page">
+                     @mouseenter="scrollToTop" aria-label="Go to top of page">
       <div class="doorway" ref="doorWay">
         <div id="openDoor" class="door" ref="door">
           <div
