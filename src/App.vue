@@ -2,6 +2,7 @@
   <main class="overflow-scroll md:overflow-visible">
     <Menu></Menu>
     <Hero />
+    <GoBackTop />
     <Works />
     <p class="max-w-2xl mx-auto">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt eligendi
@@ -37,11 +38,13 @@
 import Menu from "./components/Menu.vue";
 import Hero from "./views/Hero.vue";
 import Works from "./views/Works.vue";
+import GoBackTop from "./components/GoBackTop.vue";
 export default {
   components: {
     Menu,
     Hero,
     Works,
+    GoBackTop,
   },
 };
 </script>
