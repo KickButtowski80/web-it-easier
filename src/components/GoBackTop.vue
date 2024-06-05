@@ -1,14 +1,10 @@
 <template>
   <div>
-    <div
-      class="doorgroup"
-      @click="scrollToTop"
-      aria-label="Go to top of page"
-    >
+    <div class="doorgroup" @click="scrollToTop" aria-label="Go to top of page">
       <div class="doorway" ref="doorWay">
         <div id="openDoor" class="door" ref="door">
-          <a
-            href="#openDoor"
+          <!-- href="#openDoor" -->
+          <div
             ref="openDoor"
             aria-label="Open Door"
             class="flex justify-center text-center mt-2 w-full h-full text-xl"
@@ -21,13 +17,13 @@
             >
               🟣</span
             >
-          </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
- <script>
+<script>
 import { ref, onMounted, nextTick } from "vue";
 
 export default {
@@ -56,31 +52,33 @@ export default {
 
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
-      nextTick(() => {
-      // 
-        // Assuming doorRef is defined and used similarly to the back-to-top button
-        if (door.value) {
-          // door.value.style.transform = "rotateY(0deg)";
-        }
-        if (window.location.hash) {
-          history.replaceState(
-            null,
-            document.title,
-            window.location.pathname + window.location.search
-          );
-        }
-      });
+      // nextTick(() => {
+      // //
+      //   // Assuming doorRef is defined and used similarly to the back-to-top button
+      //   if (door.value) {
+      //     // door.value.style.transform = "rotateY(0deg)";
+      //   }
+      //   if (window.location.hash) {
+      //     history.replaceState(
+      //       null,
+      //       document.title,
+      //       window.location.pathname + window.location.search
+      //     );
+      //   }
+      // });
     };
     const handleTouchStart = () => {
-      console.log('i am touched')
-      door.value.style.transform = 'rotateY(55deg)'
+      console.log("i am touched");
+      door.value.style.transform = "rotateY(55deg)";
     };
 
     const handleTouchEnd = () => {
-      console.log('i am end of the touched')
-      door.value.style.transform ='rotateY(0deg)'
-      scrollToTop();
-    }
+      setTimeout(() => {
+        console.log("i am end of the touched");
+        door.value.style.transform = "rotateY(0deg)";
+        scrollToTop();
+      }, 200);
+    };
     onMounted(() => {
       openDoor.value.classList.add("hidden");
       door.value.classList.add("hidden");
@@ -114,7 +112,6 @@ export default {
   position: fixed;
   bottom: 40px;
   right: 5px;
-
 }
 
 .doorway {
@@ -122,7 +119,7 @@ export default {
   height: 110px;
   width: 66px;
   position: relative;
-  perspective: 200px;/* Apply perspective to the parent */
+  perspective: 200px; /* Apply perspective to the parent */
 }
 
 .door {
@@ -137,8 +134,7 @@ export default {
   transition: transform 0.6s ease-in-out;
   transform: rotateY(0deg);
   transform-origin: left center;
-  user-select: none
-
+  user-select: none;
 }
 
 .door:hover,
