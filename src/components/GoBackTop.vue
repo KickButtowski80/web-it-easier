@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="doorgroup" @click="scrollToTop"
-                     @mouseenter="scrollToTop" aria-label="Go to top of page">
+                     aria-label="Go to top of page">
       <div class="doorway" ref="doorWay">
         <div id="openDoor" class="door" ref="door">
           <div
@@ -9,8 +9,8 @@
             aria-label="Open Door"
             class="flex justify-center text-center mt-2 w-full h-full text-xl"
           >
-            <span>go</span>
-            <span role="img" aria-label="Up Arrow">⬆️</span>
+          
+            <span class="text-2xl" role="img" aria-label="Up Arrow">⬆️</span>
             <span
               class="flex justify-end items-center mt-3 text-sm"
               aria-label="door knob"
