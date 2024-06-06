@@ -8,8 +8,7 @@
             aria-label="Open Door"
             class="flex justify-center text-center mt-2 w-full h-full text-xl"
           >
-            <span>go</span>
-            <span role="img" aria-label="Up Arrow">⬆️</span>
+            <span class="text-2xl" role="img" aria-label="Up Arrow">⬆️</span>
             <span
               class="flex justify-end items-center mt-3 text-sm"
               aria-label="door knob"
@@ -40,6 +39,7 @@ export default {
         doorWay.value.classList.remove("hidden");
         doorWay.value.classList.add("show");
       } else {
+        door.value.style.transform = "rotateY(0deg)";
         door.value.classList.remove("show");
         door.value.classList.add("hidden");
         openDoor.value.classList.remove("show");
@@ -50,14 +50,15 @@ export default {
     };
 
     const scrollToTop = () => {
+      door.value.style.transform = "rotateY(55deg)";
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
-    const handleTouchStart = () => {     
+    const handleTouchStart = () => {
       door.value.style.transform = "rotateY(55deg)";
     };
 
     const handleTouchEnd = () => {
-      setTimeout(() => {     
+      setTimeout(() => {
         door.value.style.transform = "rotateY(0deg)";
         scrollToTop();
       }, 400);
@@ -120,7 +121,6 @@ export default {
   user-select: none;
 }
 
-.door:hover,
 .door:focus {
   transform: rotateY(55deg);
 }
