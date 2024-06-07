@@ -3,7 +3,8 @@
     <Menu></Menu>
     <Hero />
     <GoBackTop />
-    <Works />
+    <Works class='mb-20' />
+    
   </main>
 </template>
 <script>
