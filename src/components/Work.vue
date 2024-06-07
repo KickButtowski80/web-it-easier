@@ -1,5 +1,5 @@
 <template>
-  <div class="grid place-items-center shadow-md mx1-9">
+  <div class="grid place-items-center shadow-md">
     <div
       class="max-w-sm mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col"
     >
