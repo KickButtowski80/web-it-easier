@@ -1,13 +1,14 @@
 <template>
-  <div class="flex flex-wrap justify-center shadow-md">
+  <div class="grid place-items-center shadow-md mx1-9">
     <div
       class="max-w-sm mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col"
     >
       <img
-        class="w-full h-64 object-cover border rounded-lg border-purple-800 my-5"
+        class="w-full min-w-[390px]  h-64 object-cover border rounded-lg border-purple-800 my-5"
         :src="image"
         :title="imageAlt"
         :alt="imageAlt"
+        width="500"
       />
       <Transition name="slide-fade">
         <div
@@ -18,7 +19,8 @@
         </div>
       </Transition>
       <section
-        class="font-bold text-xl mb-2 text-blue-600 flex justify-center items-center"
+        class="font-bold text-xl mb-2 text-blue-600 
+        flex justify-center items-center"
       >
         <button
           @click="toggleReadMoreStatus"

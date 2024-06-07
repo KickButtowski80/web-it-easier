@@ -40,8 +40,8 @@
     },
     {
       "projectId": 2,
-      "image": "",
-      "imageAlt": "add hero animation && add checkout service in the process <----",
+      "image": "https://img.freepik.com/free-photo/slice-crispy-pizza-with-meat-cheese_140725-6974.jpg?w=740&t=st=1717728482~exp=1717729082~hmac=7f4c3aa817dbc978ac274c875e3031173a5d13b7ee9b0e8261723f35a1217cd2",
+      "imageAlt": "slice of pizza was lift off from the plate",
       "projectTitle": "Cicero Pizza",
       "clientName": "Cicero Pizza",
       "description": "Cicero Pizzeria is a dynamic and user-friendly web application that offers a seamless online pizza ordering experience. Built with modern web technologies, the website showcases a clean and intuitive interface that makes navigation effortless. The project demonstrates proficiency in js for frontend development and Tailwind CSS for responsive and modern design. The website features an interactive menu, secure online payment system, and a user-friendly order tracking feature. It stands as a testament to my ability to create engaging, efficient, and scalable web applications",
