@@ -1,14 +1,13 @@
 <template>
-  <div class="grid place-items-center shadow-md mx1-9">
+  <div class="grid place-items-center shadow-md">
     <div
-      class="max-w-sm mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col"
+      class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col"
     >
       <img
-        class="w-full min-w-[390px]  h-64 object-cover border rounded-lg border-purple-800 my-5"
+        class="min-w-full h-64 object-cover border rounded-lg border-purple-800 my-5"
         :src="image"
         :title="imageAlt"
         :alt="imageAlt"
-        width="500"
       />
       <Transition name="slide-fade">
         <div
@@ -19,8 +18,7 @@
         </div>
       </Transition>
       <section
-        class="font-bold text-xl mb-2 text-blue-600 
-        flex justify-center items-center"
+        class="font-bold text-xl mb-2 text-blue-600 flex justify-center items-center"
       >
         <button
           @click="toggleReadMoreStatus"
@@ -83,8 +81,7 @@
                   ? 'bg-gray-400 text-gray-300 cursor-not-allowed pointer-events-none'
                   : 'bg-green-600 text-white hover:shadow-lg hover:bg-green-700',
               ]"
-              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none 
-              disabled:pointer-events-none text-xs py-3 px-6 rounded-lg shadow-md  focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
+              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg shadow-md focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
               type="button"
               :href="privateRepo ? null : codeView"
               target="_blank"
