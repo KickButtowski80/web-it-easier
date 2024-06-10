@@ -51,7 +51,7 @@ export default {
         },
         "open-door": {
           "0%": {
-            width: "6.5rem",
+            // width: "6.5rem",
             opacity: 0,
           },
 
@@ -61,7 +61,7 @@ export default {
             transform: "perspective(200px) rotateY(40deg) translateX(-0.25rem)",
             "border-color": "purple",
             "background-color": "white",
-            top: "3.80rem",
+            // top: "3.80rem",
             // left: '2.95rem',
             opacity: 1,
           },
