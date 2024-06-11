@@ -57,7 +57,7 @@ export default {
 
           "100%": {
             width: "4rem",
-            height: "13.25rem",
+            height: "13.10rem",
             transform: "perspective(200px) rotateY(40deg) translateX(-0.25rem)",
             "border-color": "purple",
             "background-color": "white",
