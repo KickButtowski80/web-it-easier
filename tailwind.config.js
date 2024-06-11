@@ -51,7 +51,6 @@ export default {
         },
         "open-door": {
           "0%": {
-            // width: "6.5rem",
             opacity: 0,
           },
 
@@ -61,8 +60,6 @@ export default {
             transform: "perspective(200px) rotateY(40deg) translateX(-0.25rem)",
             "border-color": "purple",
             "background-color": "white",
-            // top: "3.80rem",
-            // left: '2.95rem',
             opacity: 1,
           },
         },
@@ -70,13 +67,7 @@ export default {
           "0%": {},
 
           "100%": {
-            // background: 'white',
-            // width: "0.5rem",
-            // height: "0.5rem",
             transform: "scale(1) rotateY(70deg) translateZ(-2.25rem)",
-            // position: "absolute",
-            // left: '2.75rem',
-            // bottom: "6rem",perspective(100px)
           },
         },
         slogan: {
@@ -90,12 +81,9 @@ export default {
         "bg-appears": {
           "0%": {
             opacity: 0,
-            // transform: 'scale(0,0)',
           },
           "100%": {
-            // transform: 'scale(1,1.5)',
             opacity: 1,
-            // transform: 'perspective(50rem)',
           },
         },
         "sun-appears": {
