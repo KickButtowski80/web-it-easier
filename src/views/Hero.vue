@@ -3,16 +3,24 @@
     id="hero"
     class="bg-purple-500 h-screen md:mt-20 md:h-[40rem] text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
   >
-    <div class="relative">
+    <div class="relative" style="perspective: 1000px;">
       <div
-        class="frame p-10 m-10 clip-your-needful-style w-40 h-[15rem] md:h-[16rem]"
+        class="frame p-10 m-10 clip-your-needful-style 
+        w-40 h-[15rem] md:h-[16rem]"
       ></div>
       <div
-        class="door border-2 border-purple-800 opacity-0 absolute top-[3.75rem] left-[3.25rem] z-50 w-[6.5rem] h-[14.25rem] md:h-[14rem] animate-open-door"
+        style="perspective: 1000px;"
+        class="door border-2 border-purple-800 opacity-0
+        absolute top-[3.75rem] left-[3.25rem] z-50 w-[6.5rem]
+         h-[14.25rem] md:h-[14rem] animate-open-door"
       >
         <div
-          class="knob inline-block text-9xl md:text-[10rem] border-xl rounded-full bg-purple-800 h-5 w-5 absolute bottom-24 left-[4.5rem] animate-open-door-knob md:bottom-[80px] md:right-[145px]"
-        ></div>
+          class="knob inline-block text-9xl md:text-[10rem] border-xl 
+          rounded-full bg-purple-800 h-5 w-5
+           absolute bottom-24 left-[4.5rem] animate-open-door-knob 
+           md:bottom-[80px] md:right-[145px]"
+        >
+      </div>
       </div>
       <div
         class="sun w-[2.5rem] absolute bottom-[173px] left-[8.5rem] opacity-0 animate-sun-appears"
