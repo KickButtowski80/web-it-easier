@@ -29,6 +29,7 @@ export default {
     const door = ref(null);
     const doorWay = ref(null);
     const openDoor = ref(null);
+    const animationFrameId = ref(null);
 
     const handleScroll = () => {
       if (window.scrollY > 30) {
@@ -58,7 +59,13 @@ export default {
     };
 
     const handleTouchEnd = () => {
-      requestAnimationFrame(() => {
+      // Cancel any previous animation frame (if needed)
+      if (animationFrameId.value) {
+        cancelAnimationFrame(animationFrameId.value);
+        animationFrameId.value = null;
+      }
+
+      animationFrameId.value = requestAnimationFrame(() => {
         door.value.style.transform = "rotateY(0deg)";
         scrollToTop();
       });
