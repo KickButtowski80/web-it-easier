@@ -58,10 +58,10 @@ export default {
     };
 
     const handleTouchEnd = () => {
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         door.value.style.transform = "rotateY(0deg)";
         scrollToTop();
-      }, 400);
+      });
     };
     onMounted(() => {
       openDoor.value.classList.add("hidden");
@@ -115,7 +115,7 @@ export default {
   background: rgb(146, 47, 153);
   font-size: 24px;
   border-left: none;
-  transition: transform 0.6s ease-in-out;
+  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
   transform: rotateY(0deg);
   transform-origin: left center;
   user-select: none;
