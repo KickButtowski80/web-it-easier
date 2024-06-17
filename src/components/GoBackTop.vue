@@ -99,6 +99,7 @@ export default {
   cursor: pointer;
   display: inline-flex;
   position: fixed;
+  z-index: 5;
   bottom: 40px;
   right: 5px;
 }
