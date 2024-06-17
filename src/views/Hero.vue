@@ -1,7 +1,7 @@
 <template>
   <section
     id="hero"
-    class="bg-purple-500 h-[100svh] md:mt-20 md:h-[40rem] text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
+    class="bg-purple-500 h-[90vh] md:mt-20 md:h-[40rem] text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
   >
     <div class="relative" style="perspective: 1000px;">
       <div
@@ -62,11 +62,11 @@
     <button
     type="button"
       @click="replayAnimation"
-      class="my-3 ml-6 -translate-y-28 z-1 focus:outline-none text-white
+      class="my-9 mx-6 -translate-y-28 z-1 focus:outline-none text-white
        bg-purple-700 hover:bg-purple-800 focus:ring-4
         focus:ring-purple-300 font-medium rounded-lg text-sm 
         px-5 py-2.5  dark:bg-purple-600 dark:hover:bg-purple-700
-         dark:focus:ring-purple-900 flex item-center w-fit"
+         dark:focus:ring-purple-900  w-fit"
       role="button"
     >
       Replay Animation
