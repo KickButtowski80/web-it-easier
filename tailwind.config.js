@@ -108,7 +108,7 @@ export default {
         "rotate-letter-left": "rotate-letter-left 2s  ease 1s forwards",
         "open-door": "open-door 3s ease 2.5s forwards",
         "open-door-knob": "open-door-knob 3s ease 2.5s forwards",
-        slogan: "slogan 3s ease-in-out 3.75s forwards",
+        "slogan": "slogan 3s ease-in-out 3.75s forwards",
         "sun-appears": "sun-appears 5s ease-in-out 3.75s forwards",
         "bg-appears": "bg-appears 5s ease-in-out 3.25s forwards",
       },
