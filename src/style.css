@@ -6,6 +6,7 @@
 @layer base {
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 40px;
       /* font-family: system-ui; */
       font-family: 'Alata', sans-serif;
     }
