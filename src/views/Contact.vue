@@ -1,30 +1,27 @@
 <template>
   <section class="grid place-items-center min-h-screen">
-    <div id="contact"></div>
-    <h1 class="text-center font-bold py-6 text-3xl mt-20">Hire Us</h1>
-    <div
-      class="relative grid grid-cols-2 max-w-sm md:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
+    <header class="text-center mt-20">
+      <div id="contact" aria-label="Contact Section"></div>
+      <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
+    </header>
+    <article
+      class="relative grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
     >
-      <div class="cols-span-1"></div>
-      <div>
+      <div class="col-span-1"></div>
+      <section>
         <h2 class="text-center font-semibold text-2xl text-[#146cba]">
-          the place to make your dream a reality
+          The place to make your dream a reality
         </h2>
         <p class="font-normal text-gray-700 pb-32">
-          Here are the biggest enterprise technology acquisitions of 2024 so
-          far, in reverse chronological order.
+          Here are the biggest enterprise technology acquisitions of 2024 so far, in reverse chronological order.
         </p>
-      </div>
-      <div
+      </section>
+      <aside
         id="hire-us-info"
-        class="max-w-sm bg-blue-600 p-6 rounded-xl
-         absolute bottom-9 -left-9 min-h-full"
+        class="max-w-sm md:max-w-md bg-purple-700 p-6 rounded-xl absolute -bottom-full md:bottom-9 md:-left-28 min-h-full"
       >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea facere
-        quaerat ipsam soluta reprehenderit, nesciunt quos nobis suscipit
-        consequatur sit voluptas maiores ab tenetur illum obcaecati, dolor nulla
-        provident fuga!
-      </div>
-    </div>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea facere quaerat ipsam soluta reprehenderit, nesciunt quos nobis suscipit consequatur sit voluptas maiores ab tenetur illum obcaecati, dolor nulla provident fuga!
+      </aside>
+    </article>
   </section>
 </template>
