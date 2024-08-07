@@ -1,6 +1,10 @@
 <template>
   <section
-    class="grid place-items-center min-h-screen1 bg-[url('/layered-steps-haikei-bg.svg')] bg-cover bg-center h-full w-full"
+    class="grid place-items-center min-h-screen
+     bg-[url('/layered-steps-haikei-bg.svg')] bg-cover 
+    bg-right-bottom
+    md:bg-center h-full w-full"
+   
   >
     <header class="text-center mb-20 mt-10">
       <div id="hire-us" aria-label="Hire Us Section"></div>
