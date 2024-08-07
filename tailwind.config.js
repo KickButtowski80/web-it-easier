@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       backgroundPosition: {
-        "right-bottom": "bottom 50% right 40%",
+        "right-bottom": "bottom 50% right 35%",
         'center-top': 'right top 1rem',
       },
       keyframes: {
