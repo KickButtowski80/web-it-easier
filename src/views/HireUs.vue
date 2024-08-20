@@ -28,7 +28,7 @@
         class="w-96 bg-purple-400 p-6 rounded-xl md:absolute relative -top-[-20%] md:-top-9 md:-left-28 min-h-full text-blue-700"
       >
         <div v-for="memberinfo in membersInfo" :key="memberinfo.name">
-          <MemberProfile :member="memberinfo" />
+          <MemberProfile :memberInfo="memberinfo" />
         </div>
       </aside>
     </article>
