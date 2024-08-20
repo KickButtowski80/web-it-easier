@@ -1,5 +1,5 @@
 <template>
-  <figure class="clear-both">
+  <figure class="clear-both mb-20">
     <img
       :src="image"
       :alt="imgAlt"
@@ -10,7 +10,7 @@
     <figcaption>
       <details>
         <summary>
-          <h2 class="text-black text-xl font-bold">{{ fullName }}</h2>
+          <h2 class="text-black text-lg md:text-xl font-bold">{{ fullName }}</h2>
           <h3 class="text-gray-700 text-lg font-semibold">{{ title }}</h3>
         </summary>
         <div class="text-justify mb-3">
