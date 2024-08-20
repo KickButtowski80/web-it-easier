@@ -16,11 +16,9 @@
         </h2>
         <div class="font-normal text-gray-900 pb-32">
           <div class="my-9 font-bold text-xl text-gray-900">
-
-            Tel:<a href="tel:+1 (424)-442-0591">(424)-442-0591 </a> 
+            Tel:<a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
           </div>
           <div class="text-gray-900 font-bold text-xl">
-
             Email: <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
           </div>
         </div>
@@ -29,65 +27,35 @@
         id="hire-us-info"
         class="w-96 bg-purple-400 p-6 rounded-xl md:absolute relative -top-[-20%] md:-top-9 md:-left-28 min-h-full text-blue-700"
       >
-        <figure class="clear-both">
-          <img
-            src="/programmers/skman-tyler.svg"
-            alt="picture of Samuel Tyler, lead developer "
-            class="rounded-full float-left"
-            style="shape-outside: circle()"
-          />
-
-          <figcaption>
-            <summary>
-              <h2 class="text-black text-xl font-bold">Samuel C. Tyler</h2>
-              <h3 class="text-gray-700 text-lg font-semibold">Team Lead</h3>
-              <details>
-                <div class="text-justify mb-3">
-                  Web Application Developer with 10+ years experience in modern,
-                  full-stack, component-based design with a focus on reliability
-                  via automated testing. Extremely diverse history in getting up
-                  to speed quickly and utilizing many different technologies to
-                  solve real-world problems. Diverse portfolio of applications
-                  includes an online document viewer, inventory management
-                  software, online health care tracking apps, and social network
-                  visualization and analysis.
-                </div>
-              </details>
-            </summary>
-          </figcaption>
-        </figure>
-
-        <figure class="clear-both">
-          <img
-            src="/programmers/skman-tyler.svg"
-            alt="picture of Samuel Tyler, lead developer "
-            class="rounded-full float-left"
-            style="shape-outside: circle()"
-          />
-
-          <figcaption>
-            <summary>
-              <h2 class="text-black text-xl font-bold">Izak Tarashandegan</h2>
-              <h3 class="text-gray-700 text-lg font-semibold">Team Lead</h3>
-              <details>
-                <div class="text-justify mb-3">
-                  Web Application Developer with 10+ years experience in modern,
-                  full-stack, component-based design with a focus on reliability
-                  via automated testing. Extremely diverse history in getting up
-                  to speed quickly and utilizing many different technologies to
-                  solve real-world problems. Diverse portfolio of applications
-                  includes an online document viewer, inventory management
-                  software, online health care tracking apps, and social network
-                  visualization and analysis.
-                </div>
-              </details>
-            </summary>
-          </figcaption>
-        </figure>
+{{ membersInfo }}
+      <!-- <MemberProfile /> -->
+        
       </aside>
     </article>
   </section>
 </template>
+
+<script>
+import membersInfoData from '../assets/json/membersInfoData.json';
+import MemberProfile from "../components/MemberProfile.vue";
+import { ref, onMounted } from "vue";
+export default {
+  components: { MemberProfile },
+  setup() {
+   
+    const membersInfo = ref([]);
+    onMounted(()=> {
+      membersInfo.value = membersInfoData.membersInfo
+      
+    })
+    return {
+      membersInfo,
+    };
+    
+  },
+};
+</script>
+
 <style scoped lang="css">
 .glass {
   backdrop-filter: blur(10px);
