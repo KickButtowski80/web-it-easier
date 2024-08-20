@@ -1,7 +1,7 @@
 <template>
   <figure class="clear-both">
     <img
-      :src="img"
+      :src="image"
       :alt="imgAlt"
       class="rounded-full float-left"
       style="shape-outside: circle()"
