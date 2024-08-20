@@ -27,10 +27,14 @@ export default {
   },
   setup(props) {
     if (props.memberInfo) {
-      const { image, alt, name, title, bio } = toRefs(props.memberInfo);
+      const { image, alt, fullName, title, bio } = toRefs(props.memberInfo);
     }
     return {
-      
+      image,
+      alt,
+      fullName,
+      title,
+      bio,
     };
   },
 };
