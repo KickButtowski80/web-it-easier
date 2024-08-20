@@ -1,5 +1,5 @@
 <template lang="">
-  <main class="overflow-scroll md:overflow-visible">
+  <main class="overflow-scroll md:overflow-visible pb-[50px] md:pb-0">
     <Menu></Menu>
     <Hero />
     <GoBackTop />
