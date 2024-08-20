@@ -2,7 +2,7 @@
   <figure class="clear-both">
     <img
       :src="img"
-      :alt="alt"
+      :alt="imgAlt"
       class="rounded-full float-left"
       style="shape-outside: circle()"
     />
