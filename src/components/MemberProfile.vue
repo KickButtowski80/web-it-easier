@@ -28,7 +28,7 @@ export default {
     memberInfo: Object,
   },
   setup(props) {
-    if (props.memberInfo) {
+
       const { 
         image,
         imgAlt,
@@ -36,7 +36,7 @@ export default {
         title,
         bio,
          } = toRefs(props.memberInfo);
-    }
+   
     return {
       image,
       imgAlt,
