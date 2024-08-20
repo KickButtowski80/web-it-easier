@@ -2,14 +2,14 @@
     "membersInfo": [
         {
             "image": "/programmers/skman-tyler.svg",
-            "alt": "picture of Samuel Tyler, lead developer",
+            "imgAlt": "picture of Samuel Tyler, lead developer",
             "fullName": "Samuel C. Tyler",
             "title": "Team Lead",
-            "bio": "Web Application Developer with 10+ years experience in modern, full-stack, component-based design with a focus on reliability via automated testing. Extremely diverse history in getting up to speed quickly and utilizing many different technologies to solve real-world problems. Diverse portfolio of applications includes an online document viewer, inventory management software, online health care tracking apps, and social network visualization and analysis."
+            "bio": "Web Application Developer with 10+ years experience in modern, full-stack, component-based design with a focus on reliability via automated testing. Extremely diverse history in getting up to speed quickly and utilizing many different technologies to solve real-world problems. Diverse portfolio of applications includes an online document viewer, inventory management software, online heimgA care tracking apps, and social network visualization and analysis."
           },
           {
             "image": "/programmers/skman-tyler.svg",
-            "alt": "picture of Izak Tarashandegan, founder, developer",
+            "imgAlt": "picture of Izak Tarashandegan, founder, developer",
             "fullName": "Izak Tarashandegan",
             "title": "Founder, Developer",
             "bio": "Web Application Developer with 10+ years experience in modern, full-stack, component-based design with a focus on reliability via automated testing. Extremely diverse history in getting up to speed quickly and utilizing many different technologies to solve real-world problems. Diverse portfolio of applications includes an online document viewer, inventory management software, online health care tracking apps, and social network visualization and analysis."

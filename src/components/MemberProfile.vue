@@ -21,13 +21,21 @@
   </figure>
 </template>
 <script>
+
+import { toRefs, toRef, ref, computed, nextTick } from "vue";
 export default {
   props: {
     memberInfo: Object,
   },
   setup(props) {
     if (props.memberInfo) {
-      const { image, alt, fullName, title, bio } = toRefs(props.memberInfo);
+      const { 
+        image,
+        alt,
+        fullName,
+        title,
+        bio,
+         } = toRefs(props.memberInfo);
     }
     return {
       image,
