@@ -13,7 +13,7 @@
         <h3 class="text-gray-700 text-lg font-semibold">{{ title }}</h3>
         <details>
           <div class="text-justify mb-3">
-            {{ info }}
+            {{ bio }}
           </div>
         </details>
       </summary>
