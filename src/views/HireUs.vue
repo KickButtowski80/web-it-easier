@@ -1,10 +1,6 @@
 <template>
   <section
-    class="grid place-items-center min-h-screen
-     bg-[url('/layered-steps-haikei-bg.svg')] bg-cover 
-    bg-right-bottom
-    md:bg-center h-full w-full"
-   
+    class="grid place-items-center min-h-screen bg-[url('/layered-steps-haikei-bg.svg')] bg-cover bg-right-bottom md:bg-center w-full"
   >
     <header class="text-center mb-20 mt-10">
       <div id="hire-us" aria-label="Hire Us Section"></div>
@@ -16,21 +12,78 @@
       <div class="col-span-1"></div>
       <section class="">
         <h2 class="text-center font-semibold text-2xl text-blue-700">
-          The place to make your dream a reality
+          Contact Us to make your dream a reality
         </h2>
-        <p class="font-normal text-gray-900 pb-32">
-          Here are the biggest enterprise technology acquisitions of 2024 so
-          far, in reverse chronological order.
-        </p>
+        <div class="font-normal text-gray-900 pb-32">
+          <div class="my-9 font-bold text-xl text-gray-900">
+
+            Tel:<a href="tel:+1 (424)-442-0591">(424)-442-0591 </a> 
+          </div>
+          <div class="text-gray-900 font-bold text-xl">
+
+            Email: <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
+          </div>
+        </div>
       </section>
       <aside
         id="hire-us-info"
-        class="max-w-sm bg-purple-400 p-6 rounded-xl md:absolute relative bottom-[-20%] md:bottom-9 md:-left-28 min-h-full text-blue-700"
+        class="w-96 bg-purple-400 p-6 rounded-xl md:absolute relative -top-[-20%] md:-top-9 md:-left-28 min-h-full text-blue-700"
       >
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea facere
-        quaerat ipsam soluta reprehenderit, nesciunt quos nobis suscipit
-        consequatur sit voluptas maiores ab tenetur illum obcaecati, dolor nulla
-        provident fuga!
+        <figure class="clear-both">
+          <img
+            src="/programmers/skman-tyler.svg"
+            alt="picture of Samuel Tyler, lead developer "
+            class="rounded-full float-left"
+            style="shape-outside: circle()"
+          />
+
+          <figcaption>
+            <summary>
+              <h2 class="text-black text-xl font-bold">Samuel C. Tyler</h2>
+              <h3 class="text-gray-700 text-lg font-semibold">Team Lead</h3>
+              <details>
+                <div class="text-justify mb-3">
+                  Web Application Developer with 10+ years experience in modern,
+                  full-stack, component-based design with a focus on reliability
+                  via automated testing. Extremely diverse history in getting up
+                  to speed quickly and utilizing many different technologies to
+                  solve real-world problems. Diverse portfolio of applications
+                  includes an online document viewer, inventory management
+                  software, online health care tracking apps, and social network
+                  visualization and analysis.
+                </div>
+              </details>
+            </summary>
+          </figcaption>
+        </figure>
+
+        <figure class="clear-both">
+          <img
+            src="/programmers/skman-tyler.svg"
+            alt="picture of Samuel Tyler, lead developer "
+            class="rounded-full float-left"
+            style="shape-outside: circle()"
+          />
+
+          <figcaption>
+            <summary>
+              <h2 class="text-black text-xl font-bold">Izak Tarashandegan</h2>
+              <h3 class="text-gray-700 text-lg font-semibold">Team Lead</h3>
+              <details>
+                <div class="text-justify mb-3">
+                  Web Application Developer with 10+ years experience in modern,
+                  full-stack, component-based design with a focus on reliability
+                  via automated testing. Extremely diverse history in getting up
+                  to speed quickly and utilizing many different technologies to
+                  solve real-world problems. Diverse portfolio of applications
+                  includes an online document viewer, inventory management
+                  software, online health care tracking apps, and social network
+                  visualization and analysis.
+                </div>
+              </details>
+            </summary>
+          </figcaption>
+        </figure>
       </aside>
     </article>
   </section>
@@ -44,5 +97,9 @@
   padding: 1.5rem; /* Padding */
   color: #fff; /* Text color */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+
+figure {
+  width: 100%;
 }
 </style>
