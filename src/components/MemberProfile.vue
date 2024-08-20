@@ -31,7 +31,7 @@ export default {
     if (props.memberInfo) {
       const { 
         image,
-        alt,
+        imgAlt,
         fullName,
         title,
         bio,
@@ -39,7 +39,7 @@ export default {
     }
     return {
       image,
-      alt,
+      imgAlt,
       fullName,
       title,
       bio,
