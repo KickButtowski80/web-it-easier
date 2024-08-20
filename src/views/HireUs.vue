@@ -27,31 +27,28 @@
         id="hire-us-info"
         class="w-96 bg-purple-400 p-6 rounded-xl md:absolute relative -top-[-20%] md:-top-9 md:-left-28 min-h-full text-blue-700"
       >
-{{ membersInfo }}
-      <!-- <MemberProfile /> -->
-        
+        <div v-for="memberinfo in membersInfo" :key="memberinfo.name">
+          <MemberProfile :member="memberinfo" />
+        </div>
       </aside>
     </article>
   </section>
 </template>
 
 <script>
-import membersInfoData from '../assets/json/membersInfoData.json';
+import membersInfoData from "../assets/json/membersInfoData.json";
 import MemberProfile from "../components/MemberProfile.vue";
 import { ref, onMounted } from "vue";
 export default {
   components: { MemberProfile },
   setup() {
-   
     const membersInfo = ref([]);
-    onMounted(()=> {
-      membersInfo.value = membersInfoData.membersInfo
-      
-    })
+    onMounted(() => {
+      membersInfo.value = membersInfoData.membersInfo;
+    });
     return {
       membersInfo,
     };
-    
   },
 };
 </script>
