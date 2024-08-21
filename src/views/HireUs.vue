@@ -1,13 +1,15 @@
 <template>
   <section
-    class="grid place-items-center min-h-screen bg-[url('/layered-steps-haikei-bg.svg')] bg-cover bg-right-bottom md:bg-center w-full"
+    id="hire-us"
+    aria-label="Hire Us Section"
+    class="grid place-items-center min1-h-screen bg1-[url('/layered-steps-haikei-bg.svg')] bg1-cover bg1-right-bottom md1:bg-center w1-full"
   >
-    <header class="text-center mb-20 mt-10">
-      <div id="hire-us" aria-label="Hire Us Section"></div>
+    <header class="text-center mb-20 mt1-10">
+      <div></div>
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
     </header>
     <article
-      class="relative md:left-9 grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+      class="hire-us-article relative md:left-9 grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
     >
       <div class="col-span-1"></div>
       <section class="">
@@ -63,8 +65,19 @@ export default {
   color: #fff; /* Text color */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
-
-figure {
-  width: 100%;
+#hire-us {
+  display: flex;
+  flex-direction: column;
+  background-image: url("/layered-steps-haikei-bg.svg");
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  min-height: 100vh; 
+  height:125vh; 
+}
+#hire-us:has(details[open])#hire-us {
+ transition: all 0.2s;
+ 
+ flex-grow: 1;
 }
 </style>
