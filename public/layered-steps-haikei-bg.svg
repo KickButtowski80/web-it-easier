@@ -1,6 +1,6 @@
-<svg id="visual" viewBox="0 0 900 300" width="900" height="600" xmlns="http://www.w3.org/2000/svg"
+<svg id="visual" viewBox="0 0 900 100" width="900" height="100" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
-    <rect x="0" y="0" width="900" height="600" fill="#eff"></rect>
+    <!-- <rect x="0" y="0" width="900" height="600" fill="#eff"></rect> -->
     <path
         d="M499 600L460 600L460 533L626 533L626 467L539 467L539 400L512 400L512 333L566 333L566 267L506 267L506 200L637 200L637 133L528 133L528 67L524 67L524 0L900 0L900 67L900 67L900 133L900 133L900 200L900 200L900 267L900 267L900 333L900 333L900 400L900 400L900 467L900 467L900 533L900 533L900 600L900 600Z"
         fill="#9900ff"></path>
