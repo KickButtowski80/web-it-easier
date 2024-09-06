@@ -5,6 +5,10 @@ export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      spacing: {
+        'navbar-height': '3rem',
+        'md-navbar-height': '6rem',
+      },
       backgroundPosition: {
         "right-bottom": "bottom 50% right 35%",
         'center-top': 'right top 1rem',
