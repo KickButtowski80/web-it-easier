@@ -75,11 +75,11 @@ header h1 {
 .glass {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.3); /* Adjust the transparency */
-  border-radius: 1rem; /* Rounded corners */
-  padding: 1.5rem; /* Padding */
-  color: #fff; /* Text color */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+  background-color: rgba(255, 255, 255, 0.3); 
+  border-radius: 1rem; 
+  padding: 1.5rem; 
+  color: #fff; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
 }
 #hire-us {
   isolation: isolate;
