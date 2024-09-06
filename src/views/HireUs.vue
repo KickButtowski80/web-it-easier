@@ -2,9 +2,9 @@
   <section
     id="hire-us"
     aria-label="Hire Us Section"
-    class="grid place-items-center min1-h-screen bg1-[url('/layered-steps-haikei-bg.svg')] bg1-cover bg1-right-bottom md1:bg-center w1-full"
+    class="grid place-items-center"
   >
-    <header class="text-center mb-20 mt1-10">
+    <header class="text-center mb-20">
       <div></div>
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
     </header>
@@ -25,15 +25,15 @@
           </div>
         </div>
       </section>
-      <aside
-        id="hire-us-info"
-        class="w-96 bg-purple-400 p-6 rounded-xl md:absolute relative -top-[-20%] md:-top-9 md:-left-28 min-h-full text-blue-700"
-      >
-        <div v-for="memberinfo in membersInfo" :key="memberinfo.fullName">
-          <MemberProfile :memberInfo="memberinfo" />
-        </div>
-      </aside>
     </article>
+    <div
+      id="hire-us-info"
+      class="w-96 bg-purple-400 p-6 rounded-xl relative -top-[-20%] md:-top-[31rem] md:-left-48 min-h-full text-blue-700"
+    >
+      <div v-for="memberinfo in membersInfo" :key="memberinfo.fullName">
+        <MemberProfile :memberInfo="memberinfo" class="member-profile" />
+      </div>
+    </div>
   </section>
 </template>
 
@@ -43,6 +43,7 @@ import MemberProfile from "../components/MemberProfile.vue";
 import { ref, onMounted } from "vue";
 export default {
   components: { MemberProfile },
+
   setup() {
     const membersInfo = ref([]);
     onMounted(() => {
@@ -56,28 +57,58 @@ export default {
 </script>
 
 <style scoped lang="css">
+header h1 {
+  animation: slide-in 0.8s ease-in-out;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .glass {
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
   background-color: rgba(255, 255, 255, 0.3); /* Adjust the transparency */
   border-radius: 1rem; /* Rounded corners */
   padding: 1.5rem; /* Padding */
   color: #fff; /* Text color */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
-#hire-us {
-  display: flex;
-  flex-direction: column;
-  background-image: url("/layered-steps-haikei-bg.svg");
-  background-size: cover;
-  background-position: right center;
-  background-repeat: no-repeat;
-  min-height: 100vh; 
-  height:125vh; 
-}
-#hire-us:has(details[open])#hire-us {
- transition: all 0.2s;
+
+#hire-us::before {
+  content: "";
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  background-image: linear-gradient(
+    135deg,
+    transparent 50%,
+    rgb(189, 128, 250) 50%
+  );
+  background-size: 768px 768px;
  
- flex-grow: 1;
+  transition: background-position 0.2s;
+  background-attachment: fixed;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+}
+
+#hire-us:has(details[open])#hire-us {
+  transition: all 0.2s;
+}
+
+#hire-us-info .member-profile {
+  transition: transform 0.3s ease-in-out;
+}
+
+#hire-us-info .member-profile:hover {
+  transform: translateY(-10px);
 }
 </style>
