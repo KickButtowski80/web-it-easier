@@ -7,7 +7,7 @@
     scroll-behavior: smooth;
     /* font-family: system-ui; */
     font-family: "Alata", sans-serif;
-    @apply scroll-p-12  md:scroll-p-24;
+    @apply scroll-p-navbar-height  md:scroll-p-md-navbar-height;
   }
 }
 
