@@ -2,33 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 40px;
-      /* font-family: system-ui; */
-      font-family: 'Alata', sans-serif;
-    }
+  html {
+    scroll-behavior: smooth;
+
+    /* font-family: system-ui; */
+    font-family: "Alata", sans-serif;
+    @apply scroll-p-12  md:scroll-p-24;
+  }
+}
+
+@layer utilities {
+  .clip-your-needful-style {
+    clip-path: polygon(0 0, 100% 0, 100% 102%, 0 calc(100% - 6vw));
+  }
+  .text-stroke-purple {
+    text-shadow:
+      -1px -1px 0 hsl(285, 90%, 46%),
+      1px -1px 0 hsl(285, 90%, 46%),
+      -1px 1px 0 hsl(285, 90%, 46%),
+      1px 1px 0 hsl(285, 90%, 46%);
   }
 
-  @layer utilities {
-
-    .clip-your-needful-style {
-         clip-path: polygon(0 0, 100% 0, 100% 102%, 0 calc(100% - 6vw)); 
-    }
-    .text-stroke-purple{
-      text-shadow:
-        -1px -1px 0 hsl(285, 90%, 46%),
-        1px -1px 0 hsl(285, 90%, 46%),
-        -1px 1px 0 hsl(285, 90%, 46%),
-        1px 1px 0 hsl(285, 90%, 46%);
-    }
-
-    .gray-bg-card {
-      @apply px-6 py-4 bg-gray-200  mx-2 rounded-md shadow-sm
-    }
-    
- 
- }
-  
+  .gray-bg-card {
+    @apply px-6 py-4 bg-gray-200  mx-2 rounded-md shadow-sm;
+  }
+}
