@@ -81,10 +81,15 @@ header h1 {
   color: #fff; /* Text color */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
 }
-
+#hire-us {
+  isolation: isolate;
+  position: relative;
+}
 #hire-us::before {
   content: "";
   position: absolute;
+  top: 0;
+  left:0;
   height: 100vh;
   width: 100%;
   background-image: linear-gradient(

@@ -39,3 +39,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* Define the closed state of the details */
+details {
+  overflow: hidden;
+  transition: max-height 0.4s ease-out;
+  max-height: 5rem; /* Adjust this to fit the closed summary height */
+}
+
+details[open] {
+  max-height: 100vh; /* This allows the content to fully expand when opened */
+}
+
+</style>
