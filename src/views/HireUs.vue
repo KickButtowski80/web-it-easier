@@ -192,7 +192,7 @@ header h1 {
   transition: transform 2s ease-in-out, opacity 2s ease-in-out;
   height: 100%;
 }
-.hire-us-info .members{
+.card:has(.member) .member{
   opacity: 0;
 }
 .hire-us-info:has(:target) #contact {
@@ -202,7 +202,7 @@ header h1 {
 }
 
 
-/*  */
+ 
 
 .card div a {
   cursor: pointer;
