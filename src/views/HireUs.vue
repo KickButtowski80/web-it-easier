@@ -8,31 +8,29 @@
       <div></div>
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
     </header>
-    <article
+    <section
       class="hire-us-article relative md:left-9 grid grid-cols-2
-      md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16
-      md:mb-8 bg-white border border-gray-200 rounded-lg shadow
-      hover:bg-gray-100 glass"
+       md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6
+        mb-16 md:mb-8 bg-white border border-gray-200
+         rounded-lg shadow hover:bg-gray-100 glass"
     >
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card members-info">
-          <div id="contact" class="font-normal text-gray-900  ">
+          <div id="contact" class="font-normal text-gray-900">
             <h2 class="text-center font-semibold text-2xl text-blue-700">
               Contact Us to make your dream a reality
             </h2>
-             
-              <div class="flex flex-col ">
-                <div>
-                  Tel:<a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
-                </div>
-                <div>
-                  Email: <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
-                </div>
+
+            <div class="flex flex-col">
+              <div>Tel:<a href="tel:+1 (424)-442-0591">(424)-442-0591 </a></div>
+              <div>
+                Email:
+                <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
               </div>
-       
+            </div>
           </div>
-          
+
           <div id="izak-info" class="member">
             <a href="#close"> X </a>
             <h1>Izak Info</h1>
@@ -55,7 +53,7 @@
           </div>
         </div>
       </section>
-    </article>
+    </section>
 
     <div
       id="hire-us-info"
@@ -74,7 +72,6 @@
           </div>
         </section>
       </div>
-   
     </div>
   </section>
 </template>
@@ -103,8 +100,6 @@ header h1 {
   animation: slide-in 0.8s ease-in-out;
 }
 
-
-
 .glass {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -113,7 +108,18 @@ header h1 {
   padding: 1.5rem;
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 1;
+  z-index: 0;
+  transform: translateX(0%);
+  transition:
+  transform 2s ease-in-out,
+  opacity 2s ease-in-out;
+  
 }
+
+.glass:has(:target) {
+}
+
 #hire-us {
   isolation: isolate;
   position: relative;
@@ -131,31 +137,25 @@ header h1 {
     rgb(189, 128, 250) 50%
   );
   background-size: 768px 768px;
-
   transition: background-position 0.2s;
   background-attachment: fixed;
   background-position: bottom right;
   background-repeat: no-repeat;
 }
 
- 
-
 .card {
   width: calc(300px - 0px);
   height: 350px;
-  border: 1px solid gray;
   display: flex;
   flex-direction: column;
   justify-content: center;
   place-items: center;
   gap: 2rem;
- 
 }
 
-.card:has(.members) .members {
+.members {
   display: flex;
   gap: 1rem;
- 
 }
 
 .card .members div {
@@ -164,7 +164,6 @@ header h1 {
   border-radius: 10%;
 }
 .card div {
-
   width: calc(100% - 3rem);
   padding: 1rem;
   opacity: 1;
@@ -182,26 +181,28 @@ header h1 {
 .members-info div {
   position: absolute;
   display: block;
-  opacity: 0;
+  opacity: 1;
   color: black;
   transition: all 2s ease-in-out;
 }
 
-  #contact  {
-  opacity: 1 ;
-  display: block;
+#contact {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: transform 2s ease-in-out, opacity 2s ease-in-out;
   height: 100%;
 }
- 
-.card:has(:target) #contact {
-  display: none;
+.hire-us-info .members{
   opacity: 0;
 }
-div:has(.member) div:target {
-  /* display: inline-block; */
-  opacity: 1;
-  transform: scale(1);
+.hire-us-info:has(:target) #contact {
+  border: 1px solid black;
+  opacity: 0;
+  transform: translateX(-120%);
 }
+
+
+/*  */
 
 .card div a {
   cursor: pointer;
@@ -211,11 +212,7 @@ a[href="#close"] {
   padding: 5px;
   border-radius: 5px;
   text-decoration: none;
-  display: inline-block;
+  
 }
-.card:has(#close:target) div {
-  opacity: 0;
-  height: 0;
-  display: none;
-}
+
 </style>
