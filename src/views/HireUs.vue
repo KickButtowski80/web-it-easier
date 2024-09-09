@@ -155,6 +155,13 @@ header h1 {
 .card:has(.members) .members {
   display: flex;
   gap: 1rem;
+ 
+}
+
+.card .members div {
+  background: white;
+  border: 1px solid gray;
+  border-radius: 10%;
 }
 .card div {
 
