@@ -221,8 +221,10 @@ header h1 {
   gap: 2rem;
 }
 #members-cards-info .contact-info {
+
   opacity: 0;
   width: 384px;
+  top: 0;
   left: 0;
   z-index: -1;
 }
