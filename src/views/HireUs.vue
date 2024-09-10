@@ -87,33 +87,51 @@
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-          <div id="izak-info">
+          <div
+            id="izak-info"
+            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
+          >
             <a href="#close"> X </a>
-            <h1>Izak Info</h1>
+            <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
+            <h2>Founder / Coder</h2>
+            <img
+              src="/programmers/skman-tyler.svg"
+              alt="izak tarashandegan the founder and coder"
+              class="float-right"
+            />
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe
-              velit magni illo deserunt iusto voluptatem rem cumque
-              necessitatibus eius tempora. Corporis, modi. Nisi quia iusto
-              mollitia ex porro esse recusandae?
+              At IT, we specialize in helping businesses build a strong internet
+              presence. With a degree in Computer Science from CSUN and years of
+              experience as a freelance web developer, I’ve had the pleasure of
+              supporting various companies in bringing their digital visions to
+              life. Our mission is simple: to make your life easier by crafting
+              websites that are not only functional but also impactful. We
+              believe in opening doors of opportunity, one website at a time,
+              and we’re committed to helping you achieve your online goals.
             </p>
           </div>
-          <div id="sam-info">
+          <div
+            id="sam-info"
+            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
+          >
             <a href="#close"> X </a>
-            <h1>Sam Info</h1>
+            <h1 class="font-bold py-3 text-3xl">Skman Tyler</h1>
+            <h2>Code Leader</h2>
             <img
               src="/programmers/skman-tyler.svg"
               alt="skman tyler the leader coder"
               class="float-right"
             />
-            <p class="bg-gradient-to-r from-blue-100 to-purple-200 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed">
-  Web Application Developer with 10+ years experience in modern, full-stack, 
-  component-based design with a focus on reliability via automated testing. 
-  Extremely diverse history in getting up to speed quickly and utilizing many 
-  different technologies to solve real-world problems. Diverse portfolio of 
-  applications includes an online document viewer, inventory management software, 
-  online health care tracking apps, and social network visualization and analysis.
-</p>
-
+            <p>
+              Web Application Developer with 10+ years experience in modern,
+              full-stack, component-based design with a focus on reliability via
+              automated testing. Extremely diverse history in getting up to
+              speed quickly and utilizing many different technologies to solve
+              real-world problems. Diverse portfolio of applications includes an
+              online document viewer, inventory management software, online
+              health care tracking apps, and social network visualization and
+              analysis.
+            </p>
           </div>
         </div>
       </section>
@@ -215,13 +233,14 @@ header h1 {
     opacity 0.5s ease-in-out;
 }
 .members-info .card div {
-  width: calc(65% - 0rem);
-  height: calc(350px - 0rem);
+  width: calc(60% - 0rem);
+  height: calc(500px - 0rem);
   padding: 1rem;
   opacity: 0;
   color: black;
   transition: all 2s ease-in-out;
   position: absolute;
+  top: -4%;
 }
 .contact-info {
   transition:
