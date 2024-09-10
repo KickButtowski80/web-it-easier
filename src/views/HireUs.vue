@@ -87,7 +87,7 @@
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-          <div id="izak-info" >
+          <div id="izak-info">
             <a href="#close"> X </a>
             <h1>Izak Info</h1>
             <p>
@@ -97,16 +97,23 @@
               mollitia ex porro esse recusandae?
             </p>
           </div>
-          <div id="sam-info" >
+          <div id="sam-info">
             <a href="#close"> X </a>
             <h1>Sam Info</h1>
-            <img src="../../public/programmers/skman-tyler.svg" alt="skman tyler the leader coder">
-            <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod
-              voluptatem deserunt hic maxime. Doloribus exercitationem
-              distinctio veritatis voluptatibus, adipisci amet possimus ullam
-              dolores facere rem numquam eveniet accusamus vitae? Nobis.
-            </p>
+            <img
+              src="/programmers/skman-tyler.svg"
+              alt="skman tyler the leader coder"
+              class="float-right"
+            />
+            <p class="bg-gradient-to-r from-blue-100 to-purple-200 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed">
+  Web Application Developer with 10+ years experience in modern, full-stack, 
+  component-based design with a focus on reliability via automated testing. 
+  Extremely diverse history in getting up to speed quickly and utilizing many 
+  different technologies to solve real-world problems. Diverse portfolio of 
+  applications includes an online document viewer, inventory management software, 
+  online health care tracking apps, and social network visualization and analysis.
+</p>
+
           </div>
         </div>
       </section>
@@ -208,8 +215,8 @@ header h1 {
     opacity 0.5s ease-in-out;
 }
 .members-info .card div {
-  width: calc(50% - 0.5rem);
-  height: calc(300px - 0.5rem);
+  width: calc(65% - 0rem);
+  height: calc(350px - 0rem);
   padding: 1rem;
   opacity: 0;
   color: black;
