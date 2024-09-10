@@ -11,7 +11,7 @@
 
     <div
       id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-xl relative min-h-full text-blue-700 z-[2] left-[-20%] md:left-[-14rem]"
+      class="w-96 bg-purple-400 p-6 rounded-xl relative  text-blue-700 z-[2] left-[-20%] md:left-[-14rem]"
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
@@ -28,34 +28,30 @@
       </div>
 
       <section
-      class="contact-info absolute opacity-0 grid grid-cols-2 md1:grid-cols-2
-       max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white 
-       border border-gray-200 rounded-lg shadow hover:bg-gray-100
-        glass"
-    >
- 
-      <section class="col-span-1">
-        <div class="card">
-          <div class="font-normal text-gray-900">
-            <h2
-              class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
-            >
-              Contact Us to make your dream a reality
-            </h2>
-            <div class="flex flex-col gap-5 mt-16">
-              <div>
-                Tel:
-                <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
-              </div>
-              <div>
-                Email:
-                <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
+        class="contact-info absolute opacity-0 grid grid-cols-2 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+      >
+        <section class="col-span-1">
+          <div class="card">
+            <div class="font-normal text-gray-900">
+              <h2
+                class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
+              >
+                Contact Us to make your dream a reality
+              </h2>
+              <div class="flex flex-col gap-5 mt-16">
+                <div>
+                  Tel:
+                  <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
+                </div>
+                <div>
+                  Email:
+                  <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </section>
-    </section>
     </div>
 
     <section
@@ -152,11 +148,7 @@ header h1 {
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   opacity: 1;
-  /* z-index: 0;
-  transform: translateX(0%);
-  transition:
-    transform 2s ease-in-out,
-    opacity 2s ease-in-out; */
+
 }
 
 .card {
@@ -171,7 +163,7 @@ header h1 {
 #hire-us {
   isolation: isolate;
   position: relative;
- 
+
 }
 #hire-us::before {
   content: "";
@@ -201,9 +193,8 @@ header h1 {
   justify-content: center;
   place-items: center;
   gap: 2rem;
-  
 }
-#members-cards-info .contact-info{
+#members-cards-info .contact-info {
   opacity: 0;
 }
 #members-cards-info .members div {
@@ -239,12 +230,11 @@ header h1 {
   left: 100%;
   opacity: 1;
   width: 100%;
-  background-color:#BD80FA
+  background-color: #bd80fa;
 }
 
-:has(:target):has(.members-info) #members-cards-info + .card{
+:has(:target):has(.members-info) #members-cards-info + .card {
   opacity: 0;
-   
 }
 
 .members-info .card div:target {
