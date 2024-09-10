@@ -11,7 +11,7 @@
 
     <div
       id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-xl relative  text-blue-700 z-[2] left-[-20%] md:left-[-14rem]"
+      class="w-96 bg-purple-400 p-6 rounded-xl relative text-blue-700 z-[2] left-[-20%] md:left-[-14rem]"
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
@@ -148,13 +148,11 @@ header h1 {
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   opacity: 1;
-
 }
 
 .card {
   width: 300px;
   height: 300px;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -163,7 +161,6 @@ header h1 {
 #hire-us {
   isolation: isolate;
   position: relative;
-
 }
 #hire-us::before {
   content: "";
@@ -196,6 +193,9 @@ header h1 {
 }
 #members-cards-info .contact-info {
   opacity: 0;
+  width: 384px;
+  left: 0;
+  z-index: -1;
 }
 #members-cards-info .members div {
   background: white;
@@ -229,6 +229,7 @@ header h1 {
   top: 0%;
   left: 100%;
   opacity: 1;
+  z-index: 1;
   width: 100%;
   background-color: #bd80fa;
 }
