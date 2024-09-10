@@ -2,80 +2,18 @@
   <section
     id="hire-us"
     aria-label="Hire Us Section"
-    class="grid place-items-center "
+    class="grid place-items-center"
   >
     <header class="text-center mb-20">
       <div></div>
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
     </header>
 
-<!-- 
-      <section
-        class="contact-info absolute md:left-9 grid grid-cols-2
-         md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6
-          mb-16 md:mb-8 bg-white border border-gray-200
-           rounded-lg shadow hover:bg-gray-100 glass"
-      >
-        <div class="col-span-1"></div>
-        <section class="col-span-1">
-          <div class="card">
-            <div  class="font-normal text-gray-900">
-              <h2 class="text-center font-semibold text-2xl text-blue-700">
-                Contact Us to make your dream a reality
-              </h2>
-              <div class="flex flex-col">
-                <div>Tel: <br>
-                  <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a></div>
-                <div>
-                  Email:
-                  <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </section>
-      <section
-        class="members-info absolute md:left-9 grid grid-cols-2
-         md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6
-          mb-16 md:mb-8 bg-white border border-gray-200
-           rounded-lg shadow hover:bg-gray-100 glass"
-      >
-        <div class="col-span-1"></div>
-        <section class="col-span-1">
-          <div class="card">
-         
-  
-            <div id="izak-info" class="member">
-              <a href="#close"> X </a>
-              <h1>Izak Info</h1>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe
-                velit magni illo deserunt iusto voluptatem rem cumque
-                necessitatibus eius tempora. Corporis, modi. Nisi quia iusto
-                mollitia ex porro esse recusandae?
-              </p>
-            </div>
-            <div id="sam-info" class="member">
-              <a href="#close"> X </a>
-              <h1>Sam Info</h1>
-              <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod
-                voluptatem deserunt hic maxime. Doloribus exercitationem
-                distinctio veritatis voluptatibus, adipisci amet possimus ullam
-                dolores facere rem numquam eveniet accusamus vitae? Nobis.
-              </p>
-            </div>
-          </div>
-        </section>
-      </section> -->
-
     <div
       id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-xl  relative 
-        min-h-full text-blue-700 z-[1] left-[-20%] md:left-[-11rem]"
+      class="w-96 bg-purple-400 p-6 rounded-xl relative min-h-full text-blue-700 z-[2] left-[-20%] md:left-[-14rem]"
     >
-      <div class="card">
+      <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
         <section class="members flex items-center justify-center gap-2">
           <div>
@@ -88,33 +26,94 @@
           </div>
         </section>
       </div>
-    </div>
 
-    <section
-        class="contact-info absolute  grid grid-cols-2
-         md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6
-          mb-16 md:mb-8 bg-white border border-gray-200
-           rounded-lg shadow hover:bg-gray-100 glass"
-      >
-        <div class="col-span-1"></div>
-        <section class="col-span-1">
-          <div class="card">
-            <div  class="font-normal text-gray-900">
-              <h2 class="text-center font-semibold text-2xl text-blue-700">
-                Contact Us to make your dream a reality
-              </h2>
-              <div class="flex flex-col">
-                <div>Tel: <br>
-                  <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a></div>
-                <div>
-                  Email:
-                  <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
-                </div>
+      <section
+      class="contact-info absolute opacity-0 grid grid-cols-2 md1:grid-cols-2
+       max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white 
+       border border-gray-200 rounded-lg shadow hover:bg-gray-100
+        glass"
+    >
+ 
+      <section class="col-span-1">
+        <div class="card">
+          <div class="font-normal text-gray-900">
+            <h2
+              class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
+            >
+              Contact Us to make your dream a reality
+            </h2>
+            <div class="flex flex-col gap-5 mt-16">
+              <div>
+                Tel:
+                <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
+              </div>
+              <div>
+                Email:
+                <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </section>
+    </section>
+    </div>
+
+    <section
+      class="contact-info absolute z-[1] grid grid-cols-2 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+    >
+      <div class="col-span-1"></div>
+      <section class="col-span-1">
+        <div class="card">
+          <div class="font-normal text-gray-900">
+            <h2
+              class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
+            >
+              Contact Us to make your dream a reality
+            </h2>
+            <div class="flex flex-col gap-5 mt-16">
+              <div>
+                Tel:
+                <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
+              </div>
+              <div>
+                Email:
+                <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section
+      class="members-info absolute grid grid-cols-2 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+    >
+      <div class="col-span-1"></div>
+      <section class="col-span-1">
+        <div class="card">
+          <div id="izak-info" class="member">
+            <a href="#close"> X </a>
+            <h1>Izak Info</h1>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe
+              velit magni illo deserunt iusto voluptatem rem cumque
+              necessitatibus eius tempora. Corporis, modi. Nisi quia iusto
+              mollitia ex porro esse recusandae?
+            </p>
+          </div>
+          <div id="sam-info" class="member">
+            <a href="#close"> X </a>
+            <h1>Sam Info</h1>
+            <p>
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod
+              voluptatem deserunt hic maxime. Doloribus exercitationem
+              distinctio veritatis voluptatibus, adipisci amet possimus ullam
+              dolores facere rem numquam eveniet accusamus vitae? Nobis.
+            </p>
+          </div>
+        </div>
+      </section>
+    </section>
   </section>
 </template>
 
@@ -142,7 +141,6 @@ header h1 {
   animation: slide-in 0.8s ease-in-out;
 }
 .container {
-  
   position: relative;
 }
 .glass {
@@ -154,18 +152,26 @@ header h1 {
   color: #fff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   opacity: 1;
-  z-index: 0;
+  /* z-index: 0;
   transform: translateX(0%);
   transition:
-  transform 2s ease-in-out,
-  opacity 2s ease-in-out;
-  
+    transform 2s ease-in-out,
+    opacity 2s ease-in-out; */
 }
 
+.card {
+  width: 300px;
+  height: 300px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 #hire-us {
   isolation: isolate;
   position: relative;
+ 
 }
 #hire-us::before {
   content: "";
@@ -195,45 +201,57 @@ header h1 {
   justify-content: center;
   place-items: center;
   gap: 2rem;
+  
 }
-
- 
-
-#members-cards-info  .members div {
+#members-cards-info .contact-info{
+  opacity: 0;
+}
+#members-cards-info .members div {
   background: white;
   border: 1px solid gray;
   border-radius: 10%;
+  padding: 2rem;
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
 }
-.card div {
-  width: calc(100% - 0.5rem);
+.members-info .card div {
+  width: calc(50% - 0.5rem);
+  height: calc(300px - 0.5rem);
   padding: 1rem;
-  opacity: 1;
+  opacity: 0;
+  color: black;
   transition: all 2s ease-in-out;
-}
-/* .members-info {
-  position: relative;
-}
-.members-info #contact div {
-  width: 100%;
-  opacity: 1;
-  position: relative;
-} */
-
-/* .members-info div {
   position: absolute;
-  transform: translateX(-120%);
-  opacity: 1;
-  transition: all 2s ease-in-out;
-} */
-
-#contact-info {
-  opacity: 1;
-  transform: translateX(0%);
-  transition: transform 2s ease-in-out, opacity 2s ease-in-out;
-  height: 100%;
-  width: 100%;
+}
+.contact-info {
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
+}
+:has(:target):has(.members-info) .contact-info {
+  transform: translateX(-100%);
+  opacity: 0;
 }
 
+:has(:target):has(.members-info) #members-cards-info .contact-info {
+  top: 0%;
+  left: 100%;
+  opacity: 1;
+  width: 100%;
+  background-color:#BD80FA
+}
+
+:has(:target):has(.members-info) #members-cards-info + .card{
+  opacity: 0;
+   
+}
+
+.members-info .card div:target {
+  transform: translateX(0%);
+  opacity: 1;
+  color: black;
+}
 
 .card div a {
   cursor: pointer;
@@ -243,7 +261,5 @@ a[href="#close"] {
   padding: 5px;
   border-radius: 5px;
   text-decoration: none;
-  
 }
-
 </style>
