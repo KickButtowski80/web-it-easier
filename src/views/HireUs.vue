@@ -23,7 +23,8 @@
             </h2>
 
             <div class="flex flex-col">
-              <div>Tel:<a href="tel:+1 (424)-442-0591">(424)-442-0591 </a></div>
+              <div>Tel: <br>
+                <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a></div>
               <div>
                 Email:
                 <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
@@ -31,7 +32,7 @@
             </div>
           </div>
 
-          <div id="izak-info" class="member">
+          <!-- <div id="izak-info" class="member">
             <a href="#close"> X </a>
             <h1>Izak Info</h1>
             <p>
@@ -50,7 +51,7 @@
               distinctio veritatis voluptatibus, adipisci amet possimus ullam
               dolores facere rem numquam eveniet accusamus vitae? Nobis.
             </p>
-          </div>
+          </div> -->
         </div>
       </section>
     </section>
@@ -117,8 +118,6 @@ header h1 {
   
 }
 
-.glass:has(:target) {
-}
 
 #hire-us {
   isolation: isolate;
@@ -164,45 +163,42 @@ header h1 {
   border-radius: 10%;
 }
 .card div {
-  width: calc(100% - 3rem);
+  width: calc(100% - 0.5rem);
   padding: 1rem;
   opacity: 1;
   transition: all 2s ease-in-out;
 }
-.members-info {
+/* .members-info {
   position: relative;
 }
 .members-info #contact div {
   width: 100%;
   opacity: 1;
   position: relative;
-}
+} */
 
-.members-info div {
+/* .members-info div {
   position: absolute;
-  display: block;
+  transform: translateX(-120%);
   opacity: 1;
-  color: black;
   transition: all 2s ease-in-out;
-}
+} */
 
 #contact {
   opacity: 1;
   transform: translateX(0%);
   transition: transform 2s ease-in-out, opacity 2s ease-in-out;
   height: 100%;
+  width: 100%;
 }
-.card:has(.member) .member{
+/* .card:has(.member) .member{
   opacity: 0;
-}
-.hire-us-info:has(:target) #contact {
-  border: 1px solid black;
+} */
+/* .hire-us-info:has(:target) #contact {
   opacity: 0;
   transform: translateX(-120%);
 }
-
-
- 
+  */
 
 .card div a {
   cursor: pointer;
