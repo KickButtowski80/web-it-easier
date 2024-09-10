@@ -12,7 +12,7 @@
     <div
       id="members-cards-info"
       class="w-96 bg-purple-400 p-6 rounded-xl relative text-blue-700 z-[2] 
-      left-0  md:left-[-14rem]"
+      left-0  md:left-[-14rem] border-white border-1"
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
@@ -248,12 +248,12 @@ header h1 {
     transform 0.5s ease-in-out,
     opacity 0.5s ease-in-out;
 }
-:has(:target):has(.members-info) .contact-info {
+#hire-us:has(:target):has(.members-info) .contact-info {
   transform: translateX(-100%);
   opacity: 0;
 }
 
-:has(:target):has(.members-info) #members-cards-info .contact-info {
+#hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
   top: 0%;
   left: 100%;
   opacity: 1;
@@ -262,7 +262,7 @@ header h1 {
   background-color: #bd80fa;
 }
 
-:has(:target):has(.members-info) #members-cards-info + .card {
+#hire-us:has(:target):has(.members-info) #members-cards-info + .card {
   opacity: 0;
 }
 
@@ -287,24 +287,22 @@ a[href="#close"] {
   #hire-us::before {
     content: "";
 
-    top: 26%;
+    top: 28%;
   }
 
   .members-info .card div {
     width: calc(100% + 1rem);
     height: 139%;
     padding: 1rem;
+  
+   
   }
 
   #members-cards-info {
     width: calc(100% - 0.5rem);
     height: calc(100% - 5.5rem);
-    border: 1px solid rgb(220, 48, 215);
-    box-shadow:
-      0 10px 20px rgba(0, 0, 0, 0.19),
-      0 6px 6px rgba(0, 0, 0, 0.23);
-    transform-style: preserve-3d;
-    transform: perspective(500px) rotateY(5deg);
+    top: 100%;
+    border: 1px solid white;
   }
 }
 </style>
