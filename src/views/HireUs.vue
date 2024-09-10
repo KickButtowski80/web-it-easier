@@ -298,6 +298,10 @@ a[href="#close"] {
    
   }
 
+  .glass{
+    top: 20%;
+  }
+
   #members-cards-info {
     width: calc(100% - 0.5rem);
     height: calc(100% - 5.5rem);
