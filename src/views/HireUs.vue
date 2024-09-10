@@ -87,7 +87,7 @@
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-          <div id="izak-info" class="member">
+          <div id="izak-info" >
             <a href="#close"> X </a>
             <h1>Izak Info</h1>
             <p>
@@ -97,9 +97,10 @@
               mollitia ex porro esse recusandae?
             </p>
           </div>
-          <div id="sam-info" class="member">
+          <div id="sam-info" >
             <a href="#close"> X </a>
             <h1>Sam Info</h1>
+            <img src="../../public/programmers/skman-tyler.svg" alt="skman tyler the leader coder">
             <p>
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod
               voluptatem deserunt hic maxime. Doloribus exercitationem
@@ -248,6 +249,7 @@ header h1 {
   cursor: pointer;
 }
 a[href="#close"] {
+  float: right;
   border: 2px solid black;
   padding: 5px;
   border-radius: 5px;
