@@ -287,4 +287,13 @@ a[href="#close"] {
   border-radius: 5px;
   text-decoration: none;
 }
+
+@media screen and (max-width: 425px) {
+
+  .members-info .card div {
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+  }
+}
 </style>
