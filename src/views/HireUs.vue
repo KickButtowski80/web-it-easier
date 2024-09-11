@@ -31,7 +31,7 @@
           <div>
             <h2 class="font-bold text-2xl">Izak T</h2>
             <img
-              src="/programmers/skman-tyler.svg"
+              src="/programmers/Samuel-C-Tyler.svg"
               alt="izak tarashandegan the founder and coder"
               class="float-right w-1/2"
             />
@@ -109,7 +109,7 @@
             <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
             <h2>Founder / Coder</h2>
             <img
-              src="/programmers/skman-tyler.svg"
+              src="/programmers/Samuel-C-Tyler.svg"
               alt="izak tarashandegan the founder and coder"
               class="float-right"
             />
@@ -131,7 +131,7 @@
             <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
             <h2>Lead Developer</h2>
             <img
-              src="/programmers/skman-tyler.svg"
+              src="/programmers/Samuel-C-Tyler.svg"
               alt="Samuel C Tyler the leader coder"
               class="float-right"
             />
