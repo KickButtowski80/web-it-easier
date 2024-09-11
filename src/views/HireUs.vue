@@ -16,20 +16,33 @@
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
-        <section class="members flex items-center justify-center gap-2">
+        <section class="members flex flex-col items-center justify-center gap-2 
+         ">
           <div>
-            <h2>Izak</h2>
-            <a href="#izak-info">more info...</a>
+            <h2 class="font-bold text-2xl">Sam T</h2>
+            <img
+              src="/programmers/skman-tyler.svg"
+              alt="izak tarashandegan the founder and coder"
+              class="float-right w-1/2"
+            />
+            <h3 class="text-lg font-semibold">Lead Coder</h3>
+            <a href="#sam-info" class="text-blue-700 underline">more info...</a>
           </div>
           <div>
-            <h2>Sam</h2>
-            <a href="#sam-info">more info...</a>
+            <h2 class="font-bold text-2xl">Izak T</h2>
+            <img
+              src="/programmers/skman-tyler.svg"
+              alt="izak tarashandegan the founder and coder"
+              class="float-right w-1/2"
+            />
+            <h3 class="text-lg font-semibold">Founder / Coder</h3>
+            <a href="#izak-info" class="text-blue-700 underline">more info...</a>
           </div>
         </section>
       </div>
 
       <section
-        class="contact-info absolute  grid grid-cols-2 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+        class="contact-info absolute  grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
       >
         <section class="col-span-1">
           <div class="card">
@@ -209,7 +222,7 @@ header h1 {
 }
 
 #members-cards-info .card {
-  width: calc(300px - 0px);
+  width: calc(100% - 0px);
   height: 350px;
   display: flex;
   flex-direction: column;
@@ -225,6 +238,7 @@ header h1 {
   z-index: -1;
 }
 #members-cards-info .members div {
+  width: 150%;
   background: white;
   border: 1px solid gray;
   border-radius: 10%;
@@ -303,10 +317,13 @@ a[href="#close"] {
   }
 
   #members-cards-info {
-    width: calc(100% - 0.5rem);
+  
+    width: calc(100% - 0rem);
     height: calc(100% - 5.5rem);
     top: 100%;
     border: 1px solid white;
   }
+
+ 
 }
 </style>
