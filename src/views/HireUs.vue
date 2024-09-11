@@ -239,6 +239,7 @@ header h1 {
 }
 #members-cards-info .members div {
   width: 150%;
+ 
   background: white;
   border: 1px solid gray;
   border-radius: 10%;
@@ -273,6 +274,7 @@ header h1 {
   opacity: 1;
   z-index: 1;
   width: 100%;
+  height: 87%;
   background-color: #bd80fa;
 }
 
@@ -322,6 +324,7 @@ a[href="#close"] {
     height: calc(100% - 5.5rem);
     top: 100%;
     border: 1px solid white;
+    margin-bottom: 10rem;
   }
 
  
