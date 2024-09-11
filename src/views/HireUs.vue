@@ -12,7 +12,7 @@
     <div
       id="members-cards-info"
       class="w-96 bg-purple-400 p-6 rounded-xl relative text-blue-700 z-[2] 
-      left-0  md:left-[-14rem] border-white border-1"
+      left-0  md:left-[-14rem] border-white border-1 h-[80%]"
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
@@ -200,6 +200,7 @@ header h1 {
 #hire-us {
   isolation: isolate;
   position: relative;
+  height: 100vh;
 }
 #hire-us::before {
   content: "";
@@ -223,7 +224,7 @@ header h1 {
 
 #members-cards-info .card {
   width: calc(100% - 0px);
-  height: 350px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -274,7 +275,7 @@ header h1 {
   opacity: 1;
   z-index: 1;
   width: 100%;
-  height: 87%;
+  height: 100%;
   background-color: #bd80fa;
 }
 
@@ -301,31 +302,35 @@ a[href="#close"] {
 
 @media screen and (max-width: 425px) {
   #hire-us::before {
-    content: "";
 
-    top: 28%;
+    top: 74%;
   }
 
   .members-info .card div {
-    width: calc(100% + 1rem);
-    height: 139%;
+    width: calc(95% - 0rem);
+    height: 150%;
     padding: 1rem;
-  
-   
+    
+    
   }
-
+  .members-info .card div:target{
+    
+    transform: translateX(-4%);
+  }
   .glass{
     top: 20%;
   }
 
   #members-cards-info {
   
-    width: calc(100% - 0rem);
+    width: calc(100% - 0.5rem);
     height: calc(100% - 5.5rem);
     top: 100%;
     border: 1px solid white;
     margin-bottom: 10rem;
   }
+
+
 
  
 }
