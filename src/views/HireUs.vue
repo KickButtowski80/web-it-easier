@@ -129,10 +129,10 @@
           >
             <a href="#close"> X </a>
             <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
-            <h2>Code Developer</h2>
+            <h2>Lead Developer</h2>
             <img
               src="/programmers/skman-tyler.svg"
-              alt="skman tyler the leader coder"
+              alt="Samuel C Tyler the leader coder"
               class="float-right"
             />
             <p>
