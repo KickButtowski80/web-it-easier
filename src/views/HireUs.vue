@@ -22,7 +22,7 @@
             <h2 class="font-bold text-2xl">Sam T</h2>
             <img
               src="/programmers/Samuel-C-Tyler.svg"
-              alt="izak tarashandegan the founder and coder"
+              alt="Izak Tarashandegan the founder and coder"
               class="float-right w-1/2"
             />
             <h3 class="text-lg font-semibold">Lead Coder</h3>
