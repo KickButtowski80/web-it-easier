@@ -128,8 +128,8 @@
             class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
           >
             <a href="#close"> X </a>
-            <h1 class="font-bold py-3 text-3xl">Skman Tyler</h1>
-            <h2>Code Leader</h2>
+            <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
+            <h2>Code Developer</h2>
             <img
               src="/programmers/skman-tyler.svg"
               alt="skman tyler the leader coder"
