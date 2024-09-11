@@ -21,7 +21,7 @@
           <div>
             <h2 class="font-bold text-2xl">Sam T</h2>
             <img
-              src="/programmers/skman-tyler.svg"
+              src="/programmers/Samuel-C-Tyler.svg"
               alt="izak tarashandegan the founder and coder"
               class="float-right w-1/2"
             />
@@ -313,8 +313,7 @@ a[href="#close"] {
     
     
   }
-  .members-info .card div:target{
-    
+  .members-info .card div:target{    
     transform: translateX(-4%);
   }
   .glass{
