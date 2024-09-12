@@ -11,13 +11,13 @@
 
     <div
       id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-xl relative text-blue-700 z-[2] 
-      left-0  md:left-[-14rem] border-white border-1 h-[80%]"
+      class="w-96 bg-purple-400 p-6 rounded-xl relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[80%]"
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
-        <section class="members flex flex-col items-center justify-center gap-2 
-         ">
+        <section
+          class="members flex flex-col items-center justify-center gap-2"
+        >
           <div>
             <h2 class="font-bold text-2xl">Sam T</h2>
             <img
@@ -36,13 +36,15 @@
               class="float-right w-1/2"
             />
             <h3 class="text-lg font-semibold">Founder / Developer</h3>
-            <a href="#izak-info" class="text-blue-700 underline">more info...</a>
+            <a href="#izak-info" class="text-blue-700 underline"
+              >more info...</a
+            >
           </div>
         </section>
       </div>
 
       <section
-        class="contact-info absolute  grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+        class="contact-info absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
       >
         <section class="col-span-1">
           <div class="card">
@@ -96,7 +98,8 @@
     </section>
 
     <section
-      class="members-info absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+      class="members-info absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8
+    "
     >
       <div class="col-span-1"></div>
       <section class="col-span-1">
@@ -209,7 +212,7 @@ header h1 {
   left: 0;
   z-index: -1;
   height: 100vh;
-  width: 100%;
+  width: 102%;
   background-image: linear-gradient(
     135deg,
     transparent 50%,
@@ -239,8 +242,8 @@ header h1 {
   z-index: -1;
 }
 #members-cards-info .members div {
-  width: 150%;
- 
+  width: 100%;
+
   background: white;
   border: 1px solid gray;
   border-radius: 10%;
@@ -264,12 +267,12 @@ header h1 {
     transform 0.5s ease-in-out,
     opacity 0.5s ease-in-out;
 }
-#hire-us:has(:target):has(.members-info) .contact-info {
+#hire-us:has(:target)  .contact-info {
   transform: translateX(-100%);
   opacity: 0;
 }
 
-#hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
+#hire-us:has(:target) #members-cards-info .contact-info {
   top: 0%;
   left: 100%;
   opacity: 1;
@@ -300,9 +303,10 @@ a[href="#close"] {
   text-decoration: none;
 }
 
+
+ 
 @media screen and (max-width: 425px) {
   #hire-us::before {
-
     top: 74%;
   }
 
@@ -310,27 +314,35 @@ a[href="#close"] {
     width: calc(95% - 0rem);
     height: 150%;
     padding: 1rem;
-    
-    
   }
-  .members-info .card div:target{    
+  .members-info .card div:target {
     transform: translateX(-4%);
   }
-  .glass{
+  .glass {
     top: 20%;
   }
 
   #members-cards-info {
-  
     width: calc(100% - 0.5rem);
     height: calc(100% - 5.5rem);
     top: 100%;
     border: 1px solid white;
     margin-bottom: 10rem;
+    top: 65%;
+  }
+  #members-cards-info{
+    top: 100%;
+  }
+  #members-cards-info .contact-info {
+    width: 75%;
   }
 
+  #members-cards-info {
+    top: 100%;
+  }
 
-
- 
+  #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
+    top: 0%;
+  }
 }
 </style>

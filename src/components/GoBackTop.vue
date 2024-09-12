@@ -51,6 +51,9 @@ export default {
     const scrollToTop = () => {
       door.value.style.transform = "rotateY(55deg)";
       window.scrollTo({ top: 0, behavior: "smooth" });
+      
+    
+      // debugger;
     };
     const handleTouchStart = () => {
       door.value.style.transform = "rotateY(55deg)";
