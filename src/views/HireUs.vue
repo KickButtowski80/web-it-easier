@@ -22,7 +22,7 @@
             <h2 class="font-bold text-2xl">Sam T</h2>
             <img
               src="/programmers/Samuel-C-Tyler.svg"
-              alt="Izak Tarashandegan the founder and coder"
+              alt="picture of Samuel C Tyler the lead developer"
               class="float-right w-1/2"
             />
             <h3 class="text-lg font-semibold">Lead Developer</h3>
@@ -32,10 +32,10 @@
             <h2 class="font-bold text-2xl">Izak T</h2>
             <img
               src="/programmers/Samuel-C-Tyler.svg"
-              alt="izak tarashandegan the founder and coder"
+              alt="pictue of Izak Tarashandegan the founder and Developer"
               class="float-right w-1/2"
             />
-            <h3 class="text-lg font-semibold">Founder / Coder</h3>
+            <h3 class="text-lg font-semibold">Founder / Developer</h3>
             <a href="#izak-info" class="text-blue-700 underline">more info...</a>
           </div>
         </section>
