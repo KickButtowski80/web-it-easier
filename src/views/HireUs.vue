@@ -98,8 +98,7 @@
     </section>
 
     <section
-      class="members-info absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8
-    "
+      class="members-info absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8"
     >
       <div class="col-span-1"></div>
       <section class="col-span-1">
@@ -209,12 +208,10 @@ header h1 {
 }
 
 #hire-us {
-  /* isolation: isolate;*/
+  overflow: auto;
   position: relative;
-  height: 100vh; 
+  height: 100%;
 }
-
-
 
 #hire-us::before {
   content: "";
@@ -276,7 +273,7 @@ header h1 {
     transform 0.5s ease-in-out,
     opacity 0.5s ease-in-out;
 }
-#hire-us:has(:target)  .contact-info {
+#hire-us:has(:target) .contact-info {
   transform: translateX(-100%);
   opacity: 0;
 }
@@ -312,49 +309,51 @@ a[href="#close"] {
   text-decoration: none;
 }
 
-
- 
-@media screen and (max-width: 425px) { 
+@media screen and (max-width: 425px) {
   #hire-us {
-    overflow: auto;
+   
     height: 100vh;
     position: relative;
   }
   #hire-us::before {
-    top: 74%;
-  }  
+    /* top: 74%; */
+    display: none;
+  }
+  #members-cards-info {
+    margin-bottom: 0rem;
+  }
 
   .members-info .card div {
-    width: calc(95% - 0rem);
+    width: calc(95% - 0.5rem);
     height: 150%;
-    padding: 1rem;
+    padding: 0.5rem;
+    left: 5%;
   }
 
   .glass {
-    top: 20%;
-  }
- /*
-  #members-cards-info {
     width: calc(95% - 0.5rem);
-    height: calc(100% - 5.5rem);
-    top: 100%;
-    border: 1px solid white;
-    margin-bottom: 10rem;
-    top: 65%;
-  }
-   #members-cards-info{
-    top: 100%;
-  }
-  #members-cards-info .contact-info {
-    width: 75%;
+    
   }
 
   #members-cards-info {
-    top: 100%;
-  }
+    border: 1px solid white;
+    width: calc(95% - 0.5rem);
+    height: calc(100% - 0.5rem);
 
+    top: 57%;
+  }  
   #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
     top: 0%;
-  } */
+  }
+  #hire-us:has(:target):has(.members-info) #members-cards-info {
+    top: 83%;
+  }
+}
+
+@media screen and (min-width: 426px) and (max-width: 769px) {
+#hire-us {
+  
+  background-color: blue;
+}
 }
 </style>
