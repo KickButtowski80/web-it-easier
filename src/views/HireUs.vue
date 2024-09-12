@@ -210,7 +210,7 @@ header h1 {
 #hire-us {
   overflow: auto;
   position: relative;
-  height: 100%;
+  height: 100vh;
 }
 
 #hire-us::before {
@@ -316,7 +316,7 @@ a[href="#close"] {
     position: relative;
   }
   #hire-us::before {
-    /* top: 74%; */
+   
     display: none;
   }
   #members-cards-info {
@@ -324,8 +324,9 @@ a[href="#close"] {
   }
 
   .members-info .card div {
+    
     width: calc(95% - 0.5rem);
-    height: 150%;
+    height: auto;
     padding: 0.5rem;
     left: 5%;
   }
@@ -339,7 +340,6 @@ a[href="#close"] {
     border: 1px solid white;
     width: calc(95% - 0.5rem);
     height: calc(100% - 0.5rem);
-
     top: 57%;
   }  
   #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
@@ -347,6 +347,7 @@ a[href="#close"] {
   }
   #hire-us:has(:target):has(.members-info) #members-cards-info {
     top: 83%;
+ 
   }
 }
 
