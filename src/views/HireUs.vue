@@ -201,18 +201,20 @@ header h1 {
 }
 
 #hire-us {
-  isolation: isolate;
+  /* isolation: isolate;*/
   position: relative;
-  height: 100vh;
+  height: 100vh; 
 }
+
+
+
 #hire-us::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
-  z-index: -1;
-  height: 100vh;
-  width: 102%;
+  height: 100%;
+  width: 100%;
   background-image: linear-gradient(
     135deg,
     transparent 50%,
@@ -243,7 +245,6 @@ header h1 {
 }
 #members-cards-info .members div {
   width: 100%;
-
   background: white;
   border: 1px solid gray;
   border-radius: 10%;
@@ -305,32 +306,35 @@ a[href="#close"] {
 
 
  
-@media screen and (max-width: 425px) {
-  #hire-us::before {
-    top: 74%;
+@media screen and (max-width: 425px) { 
+  #hire-us {
+    overflow: auto;
+    height: 100vh;
+    position: relative;
   }
+  /* #hire-us::before {
+    top: 74%;
+  }  
 
   .members-info .card div {
     width: calc(95% - 0rem);
     height: 150%;
     padding: 1rem;
   }
-  .members-info .card div:target {
-    transform: translateX(-4%);
-  }
+
   .glass {
     top: 20%;
   }
 
   #members-cards-info {
-    width: calc(100% - 0.5rem);
+    width: calc(95% - 0.5rem);
     height: calc(100% - 5.5rem);
     top: 100%;
     border: 1px solid white;
     margin-bottom: 10rem;
     top: 65%;
   }
-  #members-cards-info{
+   #members-cards-info{
     top: 100%;
   }
   #members-cards-info .contact-info {
@@ -343,6 +347,6 @@ a[href="#close"] {
 
   #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
     top: 0%;
-  }
+  } */
 }
 </style>

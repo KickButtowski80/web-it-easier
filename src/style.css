@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    overflow: auto;
+    /* overflow: auto; */
     scroll-behavior: smooth;
     /* font-family: system-ui; */
     font-family: "Alata", sans-serif;
