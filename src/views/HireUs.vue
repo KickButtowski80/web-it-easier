@@ -25,7 +25,7 @@
               alt="Izak Tarashandegan the founder and coder"
               class="float-right w-1/2"
             />
-            <h3 class="text-lg font-semibold">Lead Coder</h3>
+            <h3 class="text-lg font-semibold">Lead Developer</h3>
             <a href="#sam-info" class="text-blue-700 underline">more info...</a>
           </div>
           <div>
