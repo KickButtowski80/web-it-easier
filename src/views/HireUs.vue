@@ -178,6 +178,14 @@ export default {
 header h1 {
   animation: slide-in 0.8s ease-in-out;
 }
+@keyframes slide-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
 .container {
   position: relative;
 }
@@ -312,7 +320,7 @@ a[href="#close"] {
     height: 100vh;
     position: relative;
   }
-  /* #hire-us::before {
+  #hire-us::before {
     top: 74%;
   }  
 
@@ -325,7 +333,7 @@ a[href="#close"] {
   .glass {
     top: 20%;
   }
-
+ /*
   #members-cards-info {
     width: calc(95% - 0.5rem);
     height: calc(100% - 5.5rem);
