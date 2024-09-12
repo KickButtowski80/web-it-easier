@@ -50,6 +50,7 @@ export default {
 
     const scrollToTop = () => {
       door.value.style.transform = "rotateY(55deg)";
+      history.replaceState({}, '', location.pathname);    
       window.scrollTo({ top: 0, behavior: "smooth" });
       
     
