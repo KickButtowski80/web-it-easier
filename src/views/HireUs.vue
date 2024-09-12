@@ -266,7 +266,7 @@ header h1 {
   color: black;
   transition: all 2s ease-in-out;
   position: absolute;
-  top: -4%;
+  /* top: -4%; */
 }
 .contact-info {
   transition:
