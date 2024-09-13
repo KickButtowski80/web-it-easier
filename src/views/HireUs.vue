@@ -4,8 +4,7 @@
     aria-label="Hire Us Section"
     class="grid place-items-center"
   >
-    <header class="text-center mb-20">
-      <div></div>
+    <header class="text-center mb-20 relative z-20">
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
     </header>
 
