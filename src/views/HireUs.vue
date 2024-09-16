@@ -265,7 +265,6 @@ header h1 {
   color: black;
   transition: all 2s ease-in-out;
   position: absolute;
-  /* top: -4%; */
 }
 .contact-info {
   transition:
@@ -310,12 +309,12 @@ a[href="#close"] {
 
 @media screen and (max-width: 425px) {
   #hire-us {
-   
-    height: 100vh;
+    overflow: visible; /* This ensures the section itself won't scroll */
     position: relative;
+    height: 100vh;
+    margin-bottom: 100%;
   }
   #hire-us::before {
-   
     display: none;
   }
   #members-cards-info {
@@ -323,7 +322,6 @@ a[href="#close"] {
   }
 
   .members-info .card div {
-    
     width: calc(95% - 0.5rem);
     height: auto;
     padding: 0.5rem;
@@ -332,7 +330,6 @@ a[href="#close"] {
 
   .glass {
     width: calc(95% - 0.5rem);
-    
   }
 
   #members-cards-info {
@@ -340,20 +337,18 @@ a[href="#close"] {
     width: calc(95% - 0.5rem);
     height: calc(100% - 0.5rem);
     top: 57%;
-  }  
+  }
   #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
     top: 0%;
   }
   #hire-us:has(:target):has(.members-info) #members-cards-info {
     top: 83%;
- 
   }
 }
 
 @media screen and (min-width: 426px) and (max-width: 769px) {
-#hire-us {
-  
-  background-color: blue;
-}
+  #hire-us {
+    background-color: blue;
+  }
 }
 </style>
