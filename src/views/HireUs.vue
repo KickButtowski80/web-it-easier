@@ -347,8 +347,17 @@ a[href="#close"] {
 }
 
 @media screen and (min-width: 426px) and (max-width: 769px) {
-  #hire-us {
-    background-color: blue;
+  #members-cards-info {
+    left: -11rem;
   }
+.contact-info {
+  
+  left: 10rem;
+}
+  .members-info {
+    left: 8rem;
+  }
+
+
 }
 </style>
