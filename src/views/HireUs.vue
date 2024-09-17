@@ -10,7 +10,7 @@
 
     <div
       id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-xl relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[80%]"
+      class="w-96 bg-purple-400 p-6 rounded-[1.1rem] relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[80%]"
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
@@ -102,6 +102,7 @@
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
+          <transition name="fly-in">
           <div
             id="izak-info"
             class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
@@ -124,6 +125,8 @@
               opening doors of opportunity, one website at a time.
             </p>
           </div>
+        </transition>
+        <transition name="fly-in">
           <div
             id="sam-info"
             class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
@@ -147,6 +150,7 @@
               analysis.
             </p>
           </div>
+        </transition>
         </div>
       </section>
     </section>
@@ -173,6 +177,8 @@ export default {
 </script>
 
 <style scoped lang="css">
+
+ 
 header h1 {
   animation: slide-in 0.8s ease-in-out;
 }
