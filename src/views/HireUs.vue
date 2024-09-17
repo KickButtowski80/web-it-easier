@@ -30,7 +30,7 @@
           <div>
             <h2 class="font-bold text-2xl">Izak T</h2>
             <img
-              src="/programmers/Samuel-C-Tyler.svg"
+              src="/programmers/izak-t.svg"
               alt="pictue of Izak Tarashandegan the founder and Developer"
               class="float-right w-1/2"
             />
@@ -110,7 +110,7 @@
             <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
             <h2>Founder / Coder</h2>
             <img
-              src="/programmers/Samuel-C-Tyler.svg"
+              src="/programmers/izak-t.svg"
               alt="izak tarashandegan the founder and coder"
               class="float-right"
             />
