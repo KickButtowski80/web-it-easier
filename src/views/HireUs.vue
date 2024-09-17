@@ -2,7 +2,7 @@
   <section
     id="hire-us"
     aria-label="Hire Us Section"
-    class="grid place-items-center"
+    class="flex flex-col items-center justify-center min-h-screen md:h-screen relative"
   >
     <header class="text-center mb-20 relative z-20">
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
@@ -43,8 +43,7 @@
       </div>
 
       <section
-        class="contact-info absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border
-         border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+        class="contact-info md:absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
       >
         <section class="col-span-1">
           <div class="card">
@@ -71,7 +70,7 @@
     </div>
 
     <section
-      class="contact-info absolute z-[1] grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+      class="contact-info md:absolute z-[1] grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
     >
       <div class="col-span-1"></div>
       <section class="col-span-1">
@@ -98,62 +97,57 @@
     </section>
 
     <section
-      class="members-info absolute grid grid-cols-1 md:grid-cols-2
-       max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb1-8"
+      class="members-info md:absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb1-8"
     >
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-         
-            <div
-              id="izak-info"
-              class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
-            >
-              <a href="#close"> X </a>
-              <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
-              <h2>Founder / Coder</h2>
-              <img
-                src="/programmers/izak-t.svg"
-                alt="izak tarashandegan the founder and coder"
-                class="float-right"
-              />
-              <p>
-                At IT, we specialize in helping businesses build a strong
-                internet presence. With a degree in CS from CSUN and years of
-                experience as a freelance web developer, I’ve had the pleasure
-                of supporting various companies in bringing their digital
-                visions to life. Our mission is simple: to make your life easier
-                by crafting websites that are not only functional but also
-                impactful. We believe in opening doors of opportunity, one
-                website at a time.
-              </p>
-            </div>
-       
-           
-            <div
-              id="sam-info"
-              class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
-            >
-              <a href="#close"> X </a>
-              <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
-              <h2>Lead Developer</h2>
-              <img
-                src="/programmers/Samuel-C-Tyler.svg"
-                alt="Samuel C Tyler the leader coder"
-                class="float-right"
-              />
-              <p>
-                Web Application Developer with 10+ years experience in modern,
-                full-stack, component-based design with a focus on reliability
-                via automated testing. Extremely diverse history in getting up
-                to speed quickly and utilizing many different technologies to
-                solve real-world problems. Diverse portfolio of applications
-                includes an online document viewer, inventory management
-                software, online health care tracking apps, and social network
-                visualization and analysis.
-              </p>
-            </div>
-        
+          <div
+            id="izak-info"
+            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
+          >
+            <a href="#close"> X </a>
+            <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
+            <h2>Founder / Coder</h2>
+            <img
+              src="/programmers/izak-t.svg"
+              alt="izak tarashandegan the founder and coder"
+              class="float-right"
+            />
+            <p>
+              At IT, we specialize in helping businesses build a strong internet
+              presence. With a degree in CS from CSUN and years of experience as
+              a freelance web developer, I’ve had the pleasure of supporting
+              various companies in bringing their digital visions to life. Our
+              mission is simple: to make your life easier by crafting websites
+              that are not only functional but also impactful. We believe in
+              opening doors of opportunity, one website at a time.
+            </p>
+          </div>
+
+          <div
+            id="sam-info"
+            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
+          >
+            <a href="#close"> X </a>
+            <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
+            <h2>Lead Developer</h2>
+            <img
+              src="/programmers/Samuel-C-Tyler.svg"
+              alt="Samuel C Tyler the leader coder"
+              class="float-right"
+            />
+            <p>
+              Web Application Developer with 10+ years experience in modern,
+              full-stack, component-based design with a focus on reliability via
+              automated testing. Extremely diverse history in getting up to
+              speed quickly and utilizing many different technologies to solve
+              real-world problems. Diverse portfolio of applications includes an
+              online document viewer, inventory management software, online
+              health care tracking apps, and social network visualization and
+              analysis.
+            </p>
+          </div>
         </div>
       </section>
     </section>
@@ -191,9 +185,7 @@ header h1 {
     transform: translateX(0);
   }
 }
-.container {
-  position: relative;
-}
+ 
 .glass {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -205,11 +197,7 @@ header h1 {
   opacity: 1;
 }
 
-#hire-us {
-  
-  position: relative;
-  height: 100vh;
-}
+ 
 
 #hire-us::before {
   content: "";
@@ -309,42 +297,32 @@ a[href="#close"] {
 
 @media screen and (max-width: 425px) {
   #hire-us {
- 
-  
-    position: relative; 
-    margin-bottom: 30rem;
-    min-height: 100vh;
-    height: auto;
-
+    position: static;
   }
   #hire-us::before {
     display: none;
   }
   #members-cards-info {
     display: none;
-   
   }
- 
 
- .members-info {
-  margin: 0;
-  padding: 0;
-  position: relative;
+  .members-info {
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+  .members-info .card {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
 
- }
- .members-info .card{
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  
- }
- 
-  .members-info .card div {   
+  .members-info .card div {
     position: relative;
     opacity: 1;
     width: calc(100% - 0rem);
     height: auto;
-    padding: 0.5rem;   
+    padding: 0.5rem;
     top: 175%;
   }
   .members-info {
