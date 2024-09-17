@@ -30,6 +30,7 @@ export default {
     const animationFrameId = ref(null);
 
     const handleScroll = () => {
+  
       if (window.scrollY > 30) {
         door.value.classList.remove("hidden");
         door.value.classList.add("show");
@@ -47,14 +48,13 @@ export default {
         doorWay.value.classList.add("hidden");
       }
     };
-
+ 
     const scrollToTop = () => {
+    
       door.value.style.transform = "rotateY(55deg)";
       history.replaceState({}, '', location.pathname);    
       window.scrollTo({ top: 0, behavior: "smooth" });
-      
     
-      // debugger;
     };
     const handleTouchStart = () => {
       door.value.style.transform = "rotateY(55deg)";
