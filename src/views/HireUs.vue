@@ -31,7 +31,7 @@
             <h2 class="font-bold text-2xl">Izak T</h2>
             <img
               src="/programmers/izak-t.svg"
-              alt="pictue of Izak Tarashandegan the founder and Developer"
+              alt="picture of Izak Tarashandegan the founder and Developer"
               class="float-right w-1/2"
             />
             <h3 class="text-lg font-semibold">Founder / Developer</h3>
@@ -103,54 +103,55 @@
       <section class="col-span-1">
         <div class="card">
           <transition name="fly-in">
-          <div
-            id="izak-info"
-            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
-          >
-            <a href="#close"> X </a>
-            <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
-            <h2>Founder / Coder</h2>
-            <img
-              src="/programmers/izak-t.svg"
-              alt="izak tarashandegan the founder and coder"
-              class="float-right"
-            />
-            <p>
-              At IT, we specialize in helping businesses build a strong internet
-              presence. With a degree in CS from CSUN and years of experience as
-              a freelance web developer, I’ve had the pleasure of supporting
-              various companies in bringing their digital visions to life. Our
-              mission is simple: to make your life easier by crafting websites
-              that are not only functional but also impactful. We believe in
-              opening doors of opportunity, one website at a time.
-            </p>
-          </div>
-        </transition>
-        <transition name="fly-in">
-          <div
-            id="sam-info"
-            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
-          >
-            <a href="#close"> X </a>
-            <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
-            <h2>Lead Developer</h2>
-            <img
-              src="/programmers/Samuel-C-Tyler.svg"
-              alt="Samuel C Tyler the leader coder"
-              class="float-right"
-            />
-            <p>
-              Web Application Developer with 10+ years experience in modern,
-              full-stack, component-based design with a focus on reliability via
-              automated testing. Extremely diverse history in getting up to
-              speed quickly and utilizing many different technologies to solve
-              real-world problems. Diverse portfolio of applications includes an
-              online document viewer, inventory management software, online
-              health care tracking apps, and social network visualization and
-              analysis.
-            </p>
-          </div>
-        </transition>
+            <div
+              id="izak-info"
+              class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
+            >
+              <a href="#close"> X </a>
+              <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
+              <h2>Founder / Coder</h2>
+              <img
+                src="/programmers/izak-t.svg"
+                alt="izak tarashandegan the founder and coder"
+                class="float-right"
+              />
+              <p>
+                At IT, we specialize in helping businesses build a strong
+                internet presence. With a degree in CS from CSUN and years of
+                experience as a freelance web developer, I’ve had the pleasure
+                of supporting various companies in bringing their digital
+                visions to life. Our mission is simple: to make your life easier
+                by crafting websites that are not only functional but also
+                impactful. We believe in opening doors of opportunity, one
+                website at a time.
+              </p>
+            </div>
+          </transition>
+          <transition name="fly-in">
+            <div
+              id="sam-info"
+              class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
+            >
+              <a href="#close"> X </a>
+              <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
+              <h2>Lead Developer</h2>
+              <img
+                src="/programmers/Samuel-C-Tyler.svg"
+                alt="Samuel C Tyler the leader coder"
+                class="float-right"
+              />
+              <p>
+                Web Application Developer with 10+ years experience in modern,
+                full-stack, component-based design with a focus on reliability
+                via automated testing. Extremely diverse history in getting up
+                to speed quickly and utilizing many different technologies to
+                solve real-world problems. Diverse portfolio of applications
+                includes an online document viewer, inventory management
+                software, online health care tracking apps, and social network
+                visualization and analysis.
+              </p>
+            </div>
+          </transition>
         </div>
       </section>
     </section>
@@ -177,8 +178,6 @@ export default {
 </script>
 
 <style scoped lang="css">
-
- 
 header h1 {
   animation: slide-in 0.8s ease-in-out;
 }
@@ -305,6 +304,7 @@ header h1 {
 .card div a {
   cursor: pointer;
 }
+
 a[href="#close"] {
   float: right;
   border: 2px solid black;
@@ -356,14 +356,11 @@ a[href="#close"] {
   #members-cards-info {
     left: -11rem;
   }
-.contact-info {
-  
-  left: 10rem;
-}
+  .contact-info {
+    left: 10rem;
+  }
   .members-info {
     left: 8rem;
   }
-
-
 }
 </style>
