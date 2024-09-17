@@ -43,7 +43,8 @@
       </div>
 
       <section
-        class="contact-info absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
+        class="contact-info absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border
+         border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
       >
         <section class="col-span-1">
           <div class="card">
@@ -204,16 +205,8 @@ header h1 {
   opacity: 1;
 }
 
-.card {
-  width: 300px;
-  height: 300px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 #hire-us {
-  overflow: auto;
+  
   position: relative;
   height: 100vh;
 }
@@ -316,10 +309,13 @@ a[href="#close"] {
 
 @media screen and (max-width: 425px) {
   #hire-us {
-    overflow: visible; /* This ensures the section itself won't scroll */
-    position: relative;
-    height: 100vh;
-    margin-bottom: 100%;
+ 
+  
+    position: relative; 
+    margin-bottom: 30rem;
+    min-height: 100vh;
+    height: auto;
+
   }
   #hire-us::before {
     display: none;
@@ -329,9 +325,6 @@ a[href="#close"] {
    
   }
  
- .contact-info{
-   display: none;
- }
 
  .members-info {
   margin: 0;
@@ -352,7 +345,7 @@ a[href="#close"] {
     width: calc(100% - 0rem);
     height: auto;
     padding: 0.5rem;   
-    top: 40%;
+    top: 175%;
   }
   .members-info {
     opacity: 1;
