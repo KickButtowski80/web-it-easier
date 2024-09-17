@@ -97,12 +97,13 @@
     </section>
 
     <section
-      class="members-info absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8"
+      class="members-info absolute grid grid-cols-1 md:grid-cols-2
+       max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb1-8"
     >
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-          <transition name="fly-in">
+         
             <div
               id="izak-info"
               class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
@@ -126,8 +127,8 @@
                 website at a time.
               </p>
             </div>
-          </transition>
-          <transition name="fly-in">
+       
+           
             <div
               id="sam-info"
               class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
@@ -151,7 +152,7 @@
                 visualization and analysis.
               </p>
             </div>
-          </transition>
+        
         </div>
       </section>
     </section>
@@ -324,16 +325,38 @@ a[href="#close"] {
     display: none;
   }
   #members-cards-info {
-    margin-bottom: 0rem;
+    display: none;
+   
   }
+ 
+ .contact-info{
+   display: none;
+ }
 
-  .members-info .card div {
-    width: calc(95% - 0.5rem);
+ .members-info {
+  margin: 0;
+  padding: 0;
+  position: relative;
+
+ }
+ .members-info .card{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  
+ }
+ 
+  .members-info .card div {   
+    position: relative;
+    opacity: 1;
+    width: calc(100% - 0rem);
     height: auto;
-    padding: 0.5rem;
-    left: 5%;
+    padding: 0.5rem;   
+    top: 40%;
   }
-
+  .members-info {
+    opacity: 1;
+  }
   .glass {
     width: calc(95% - 0.5rem);
   }
@@ -344,12 +367,17 @@ a[href="#close"] {
     height: calc(100% - 0.5rem);
     top: 57%;
   }
-  #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
+
+  a[href="#close"] {
+    display: none;
+  }
+
+  /* #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
     top: 0%;
   }
   #hire-us:has(:target):has(.members-info) #members-cards-info {
     top: 83%;
-  }
+  } */
 }
 
 @media screen and (min-width: 426px) and (max-width: 769px) {
