@@ -102,8 +102,6 @@
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-
-
           <div
             id="sam-info"
             class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
@@ -150,8 +148,6 @@
               opening doors of opportunity, one website at a time.
             </p>
           </div>
-
-          
         </div>
       </section>
     </section>
@@ -202,7 +198,6 @@ header h1 {
 }
 
 #hire-us {
-  
   height: 100vh;
   position: relative;
 }
@@ -305,18 +300,15 @@ a[href="#close"] {
 }
 
 @media screen and (max-width: 425px) {
-  
   #hire-us * {
-  overflow: initial;
-  position: static;
-  transform: none;
-  height: auto;
-  width: auto;
-}
-  #hire-us {
-
+    overflow: initial;
+    position: static;
+    transform: none;
     height: auto;
-  
+    width: auto;
+  }
+  #hire-us {
+    height: auto;
   }
 
   #hire-us::before {
@@ -329,19 +321,17 @@ a[href="#close"] {
   .members-info {
     margin: 0;
     padding: 0;
-
   }
-  .members-info::before{
-    content: 'Our Team Members';
+  .members-info::before {
+    content: "Our Team Members";
     width: 100%;
     display: block;
     position: relative;
     bottom: 100%;
     z-index: 1;
     font-size: 2rem;
-    font-weight: bold;    
+    font-weight: bold;
     text-align: center;
-  
   }
   .members-info .card {
     display: flex;
@@ -356,26 +346,17 @@ a[href="#close"] {
   .members-info .card div {
     position: relative;
     opacity: 1;
-    width: calc(24rem - 2rem);
+    width: calc(19rem - 0rem) !important;
     height: auto;
     padding: 0.9rem;
-    top: 100%; 
-    
+    top: 100%;
   }
-
-
- 
-
+  .contact-info {
+    width: calc(19rem - 0rem) !important;
+  }
   a[href="#close"] {
     display: none;
   }
-
-  /* #hire-us:has(:target):has(.members-info) #members-cards-info .contact-info {
-    top: 0%;
-  }
-  #hire-us:has(:target):has(.members-info) #members-cards-info {
-    top: 83%;
-  } */
 }
 
 @media screen and (min-width: 426px) and (max-width: 769px) {
