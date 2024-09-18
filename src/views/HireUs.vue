@@ -343,16 +343,16 @@ a[href="#close"] {
     opacity: 1;
   }
 
-  .members-info .card div {
+  #hire-us .members-info .card div {
     position: relative;
     opacity: 1;
-    width: calc(19rem - 0rem) !important;
+    width: calc(19rem - 0rem);
     height: auto;
     padding: 0.9rem;
     top: 100%;
   }
-  .contact-info {
-    width: calc(19rem - 0rem) !important;
+  #hire-us .contact-info {
+    width: calc(19rem - 0rem);
   }
   a[href="#close"] {
     display: none;
