@@ -2,7 +2,7 @@
   <section
     id="hire-us"
     aria-label="Hire Us Section"
-    class="flex flex-col items-center justify-center min-h-screen md:h-screen relative"
+    class="flex flex-col items-center justify-center relative"
   >
     <header class="text-center mb-20 relative z-20">
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
@@ -185,7 +185,7 @@ header h1 {
     transform: translateX(0);
   }
 }
- 
+
 .glass {
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -197,7 +197,11 @@ header h1 {
   opacity: 1;
 }
 
- 
+#hire-us {
+  overflow: auto;
+  height: 100%;
+  position: relative;
+}
 
 #hire-us::before {
   content: "";
@@ -296,8 +300,12 @@ a[href="#close"] {
 }
 
 @media screen and (max-width: 425px) {
+
+
   #hire-us {
-    position: static;
+    z-index: auto;
+    height: 100%;
+  
   }
   #hire-us::before {
     display: none;
@@ -309,7 +317,22 @@ a[href="#close"] {
   .members-info {
     margin: 0;
     padding: 0;
+
+  }
+  .members-info::before{
+    content: 'Our Team Members';
+    width: 100%;
+    display: block;
     position: relative;
+    bottom: 100%;
+    z-index: 1;
+    font-size: 2rem;
+    font-weight: bold;
+    
+   
+    
+    
+  
   }
   .members-info .card {
     display: flex;
@@ -317,27 +340,22 @@ a[href="#close"] {
     gap: 2rem;
   }
 
-  .members-info .card div {
-    position: relative;
-    opacity: 1;
-    width: calc(100% - 0rem);
-    height: auto;
-    padding: 0.5rem;
-    top: 175%;
-  }
   .members-info {
     opacity: 1;
   }
-  .glass {
-    width: calc(95% - 0.5rem);
+
+  .members-info .card div {
+    position: relative;
+    opacity: 1;
+    width: calc(24rem - 2rem);
+    height: auto;
+    padding: 0.9rem;
+    top: 100%; 
+    
   }
 
-  #members-cards-info {
-    border: 1px solid white;
-    width: calc(95% - 0.5rem);
-    height: calc(100% - 0.5rem);
-    top: 57%;
-  }
+
+ 
 
   a[href="#close"] {
     display: none;
