@@ -198,8 +198,8 @@ header h1 {
 }
 
 #hire-us {
-  overflow: auto;
-  height: 100%;
+  
+  height: 100vh;
   position: relative;
 }
 
@@ -301,13 +301,20 @@ a[href="#close"] {
 }
 
 @media screen and (max-width: 425px) {
-
-
+  
+  #hire-us * {
+  overflow: initial;
+  position: static;
+  transform: none;
+  height: auto;
+  width: auto;
+}
   #hire-us {
-    z-index: auto;
-    height: 100%;
+
+    height: auto;
   
   }
+
   #hire-us::before {
     display: none;
   }
@@ -329,7 +336,7 @@ a[href="#close"] {
     z-index: 1;
     font-size: 2rem;
     font-weight: bold;    
-    
+    text-align: center;
   
   }
   .members-info .card {
