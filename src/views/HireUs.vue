@@ -346,13 +346,13 @@ a[href="#close"] {
   #hire-us .members-info .card div {
     position: relative;
     opacity: 1;
-    width: calc(19rem - 0rem);
+    width: calc(19rem - 0.5rem);
     height: auto;
     padding: 0.9rem;
     top: 100%;
   }
   #hire-us .contact-info {
-    width: calc(19rem - 0rem);
+    width: calc(19rem - 0.5rem);
   }
   a[href="#close"] {
     display: none;
