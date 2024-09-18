@@ -102,28 +102,7 @@
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-          <div
-            id="izak-info"
-            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
-          >
-            <a href="#close"> X </a>
-            <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
-            <h2>Founder / Coder</h2>
-            <img
-              src="/programmers/izak-t.svg"
-              alt="izak tarashandegan the founder and coder"
-              class="float-right"
-            />
-            <p>
-              At IT, we specialize in helping businesses build a strong internet
-              presence. With a degree in CS from CSUN and years of experience as
-              a freelance web developer, I’ve had the pleasure of supporting
-              various companies in bringing their digital visions to life. Our
-              mission is simple: to make your life easier by crafting websites
-              that are not only functional but also impactful. We believe in
-              opening doors of opportunity, one website at a time.
-            </p>
-          </div>
+
 
           <div
             id="sam-info"
@@ -148,6 +127,31 @@
               analysis.
             </p>
           </div>
+
+          <div
+            id="izak-info"
+            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
+          >
+            <a href="#close"> X </a>
+            <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
+            <h2>Founder / Coder</h2>
+            <img
+              src="/programmers/izak-t.svg"
+              alt="izak tarashandegan the founder and coder"
+              class="float-right"
+            />
+            <p>
+              At IT, we specialize in helping businesses build a strong internet
+              presence. With a degree in CS from CSUN and years of experience as
+              a freelance web developer, I’ve had the pleasure of supporting
+              various companies in bringing their digital visions to life. Our
+              mission is simple: to make your life easier by crafting websites
+              that are not only functional but also impactful. We believe in
+              opening doors of opportunity, one website at a time.
+            </p>
+          </div>
+
+          
         </div>
       </section>
     </section>
