@@ -256,6 +256,7 @@ header h1 {
   color: black;
   transition: all 2s ease-in-out;
   position: absolute;
+  top: -10%;
 }
 .contact-info {
   transition:
@@ -327,10 +328,7 @@ a[href="#close"] {
     bottom: 100%;
     z-index: 1;
     font-size: 2rem;
-    font-weight: bold;
-    
-   
-    
+    font-weight: bold;    
     
   
   }
