@@ -10,7 +10,7 @@
 
     <div
       id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-[1.1rem] relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[80%]"
+      class="w-96 bg-purple-400 p-6 rounded-[1.1rem] relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[60%]"
     >
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
