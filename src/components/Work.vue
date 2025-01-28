@@ -4,7 +4,7 @@
       class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col"
     >
       <img
-        class="min-w-full h-64 object-cover border rounded-lg border-purple-800 my-5"
+        class="min-w-full h-full object-contain border rounded-lg border-purple-800 my-5"
         :src="image"
         :title="imageAlt"
         :alt="imageAlt"
