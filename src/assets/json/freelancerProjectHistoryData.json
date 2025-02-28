@@ -51,6 +51,7 @@
       "highlights": [
         "Designed a modern, responsive layout compatible with all devices.",
         "Integrated contact form with backend email service.",
+        "Implemented interactive hero section illustration with animated elements.",
         "Achieved high scores in Lighthouse audits for performance and accessibility."
       ],
       "liveView": "https://cicero-pizzeria.vercel.app/",
