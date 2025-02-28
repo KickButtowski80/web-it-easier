@@ -51,6 +51,7 @@
       "highlights": [
         "Designed a modern, responsive layout compatible with all devices.",
         "Integrated contact form with backend email service.",
+        "Implemented interactive hero section illustration with animated elements.",
         "Achieved high scores in Lighthouse audits for performance and accessibility."
       ],
       "liveView": "https://cicero-pizzeria.vercel.app/",
@@ -64,12 +65,13 @@
       "projectTitle": "Jane Doe Portfolio",
       "clientName": "Jane Doe",
       "description": "The website is Jane Doe's professional portfolio, showcasing her 2 years of experience as a full-stack developer. It features an interactive workspace illustration with animated elements, a dark mode toggle, and responsive navigation. The site highlights her skills in HTML, CSS, JavaScript, Java, Node.js, and SVG through visually appealing cards, and showcases her project experience with IBM Cloud and Watson Services. With sections like About Me, Skills, Projects, and Recommendations, the portfolio emphasizes accessibility and user experience, including skip links and ARIA labels, reflecting her commitment to web development best practices.",
-      "technologiesUsed": ["Vue 3.js", "JavaScript", "Tailwind.css", "HTML"],
+      "technologiesUsed": ["HTML", "CSS", "JavaScript", "firebase.js"],
       "startDate": "",
       "endDate": "",
       "highlights": [
         "Designed a modern, responsive layout compatible with all devices.",
-        "Integrated contact form with backend email service.",
+        "Implemented interactive workspace illustration with animated elements.",
+        "Integrated recommendation form with backend abilities.",
         "Achieved high scores in Lighthouse audits for performance and accessibility."
       ],
       "liveView": "https://portfolio-it-rouge.vercel.app/",
