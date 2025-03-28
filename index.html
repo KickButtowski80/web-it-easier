@@ -4,6 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="description" content="IT Group specializes in web development, design, and SEO. We create modern, user-friendly, and search-optimized websites.">
     <meta name="keywords" content="web development, web design, SEO services, website optimization, user experience, UI design">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://izak-portfolio.vercel.app/" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://izak-portfolio.vercel.app/">
+    <meta property="og:title" content="IT Group - Web Development, Design & SEO">
+    <meta property="og:description" content="IT Group specializes in web development, design, and SEO. We create modern, user-friendly, and search-optimized websites.">
+    <meta property="og:image" content="https://izak-portfolio.vercel.app/og-image.webp">
+    <meta property="og:image:type" content="image/webp">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://izak-portfolio.vercel.app/">
+    <meta property="twitter:title" content="IT Group - Web Development, Design & SEO">
+    <meta property="twitter:description" content="IT Group specializes in web development, design, and SEO. We create modern, user-friendly, and search-optimized websites.">
+    <meta property="twitter:image" content="https://izak-portfolio.vercel.app/og-image.webp">
+    
     <link rel="icon" type="image/png" href="/open-door.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.bunny.net" />
@@ -17,5 +39,34 @@
   <body>
     <div id="app" class="min-h-screen bg-slate-50"></div>
     <script type="module" src="/src/main.js"></script>
+    
+    <!-- JSON-LD structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "IT Group",
+      "url": "https://izak-portfolio.vercel.app/",
+      "logo": "https://izak-portfolio.vercel.app/logo.png",
+      "description": "IT Group specializes in web development, design, and SEO. We create modern, user-friendly, and search-optimized websites.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Los Angeles",
+        "addressRegion": "California",
+        "addressCountry": "United States"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+1-424-442-0591",
+        "contactType": "customer service"
+      },
+      "sameAs": [
+        "https://www.facebook.com/izak-portfolio",
+        "https://www.twitter.com/izak-portfolio",
+        "https://www.linkedin.com/company/izak-portfolio",
+        "https://www.instagram.com/izak-portfolio"
+      ]
+    }
+    </script>
   </body>
 </html>
