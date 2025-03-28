@@ -18,12 +18,12 @@
       <div
         class="sun w-[2.5rem] absolute bottom-[173px] left-[8.5rem] opacity-0 animate-sun-appears"
       >
-        <img src="/sun.svg" alt="" />
+        <img src="/sun.svg" alt="Sun icon" />
       </div>
       <div
         class="background w-[8rem] h-[5.5rem] absolute bottom-[122px] md:bottom-[140px] left-[3rem] opacity-0 animate-bg-appears"
       >
-        <img class="" src="/nature-road-bg-pres.png" alt="" />
+        <img class="" src="/nature-road-bg-pres.png" alt="Nature road background" />
       </div>
       <div
         class="font-normal text-[22rem] md:text-[22rem] text-stroke-purple absolute top-0 -left-5"
