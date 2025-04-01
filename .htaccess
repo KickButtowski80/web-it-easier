@@ -3,3 +3,8 @@
     Header set Cache-Control "max-age=31536000, public"
   </FilesMatch>
 </IfModule>
+
+# Allow search engines to index the site
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "index, follow"
+</IfModule>
