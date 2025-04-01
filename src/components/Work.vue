@@ -66,7 +66,7 @@
           </div>
           <div class="px-3 py-4 flex gap-2">
             <a
-              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg bg-blue-600 text-white shadow-md hover:shadow-lg hover:bg-blue-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
+              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none text-xs py-3 px-6 rounded-lg bg-blue-600 text-white shadow-md hover:shadow-lg hover:bg-blue-700 focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
               type="button"
               :href="liveView"
               target="_blank"
@@ -75,18 +75,34 @@
             >
               Live View
             </a>
+            <!-- Hidden link for crawlers -->
+          <a
+            v-if="!privateRepo"
+            :href="codeView"
+            class="hidden"
+            aria-hidden="true"
+            rel="noopener noreferrer"
+            aria-label="Code View of {{ projectTitle }}"
+          >
+            Code View
+          </a>
             <a
               :class="[
                 privateRepo
-                  ? 'bg-gray-400 text-gray-300 cursor-not-allowed pointer-events-none'
+                  ? 'bg-gray-400 text-gray-300'
                   : 'bg-green-600 text-white hover:shadow-lg hover:bg-green-700',
               ]"
-              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 rounded-lg shadow-md focus:opacity-85 focus:shadow-none active:opacity-85 active:shadow-none"
+              class="inline-block align-middle select-none font-sans font-bold text-center uppercase transition-all
+               disabled:opacity-50 disabled:shadow-none text-xs py-3 px-6 rounded-lg shadow-md focus:opacity-85
+               focus:shadow-none active:opacity-85 active:shadow-none"
               type="button"
-              :href="privateRepo ? null : codeView"
+              :href="privateRepo ? '#' : codeView"
               target="_blank"
               rel="noopener noreferrer"
+              :tabindex="privateRepo ? -1 : 0"
+              :aria-disabled="privateRepo ? 'true' : 'false'"
               aria-label="Code View of {{ projectTitle }}"
+              @click="privateRepo ? $event.preventDefault() : null"
             >
               Code View
             </a>
@@ -196,5 +212,16 @@ details summary::-webkit-details-marker {
 .slide-fade-leave-to {
   transform: translateX(-200px);
   opacity: 0;
+}
+
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 </style>
