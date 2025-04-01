@@ -1,10 +1,5 @@
 <IfModule mod_headers.c>
   <FilesMatch "\.(js|css|html|svg|vue)\.gz$">
-    Header set Cache-Control "max-age=000, public"
+    Header set Cache-Control "max-age=31536000, public"
   </FilesMatch>
-</IfModule>
-
-# Allow search engines to index the site
-<IfModule mod_headers.c>
-  Header set X-Robots-Tag "index, follow"
 </IfModule>
