@@ -2,7 +2,9 @@
   <main class="overflow-scroll md:overflow-visible pb-[50px] md:pb-0">
     <Menu></Menu> 
     <GoBackTop /> 
-    <RouterView />
+    <transition name="fade" mode="out-in">
+      <RouterView />
+    </transition>
   </main>
 </template>
 <script>
@@ -15,4 +17,14 @@ export default {
   },
 };
 </script>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
 
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
