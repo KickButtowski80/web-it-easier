@@ -4,6 +4,7 @@ import Blog from '../components/Blog.vue'
 import BlogPost from '../components/BlogPost.vue'
 import Works from '../views/Works.vue'
 import HireUs from '../views/HireUs.vue'
+
 const routes = [
   {
     path: '/',
@@ -23,7 +24,8 @@ const routes = [
   {
     path: '/blog/:slug',
     name: 'BlogPost',
-    component: BlogPost
+    component: BlogPost,
+    props: true
   },
   {
     path: '/hire-us',
