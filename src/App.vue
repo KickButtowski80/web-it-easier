@@ -1,10 +1,12 @@
-<template lang="">
+<template>
   <main class="overflow-scroll md:overflow-visible pb-[50px] md:pb-0">
     <Menu></Menu> 
     <GoBackTop /> 
-    <transition name="fade" mode="out-in">
-      <RouterView />
-    </transition>
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </main>
 </template>
 <script>
