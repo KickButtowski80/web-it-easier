@@ -24,7 +24,7 @@ export default {
     // Sample data - will be replaced with actual data later
     const posts = ref([
       {
-        slug: 'first-post',
+        slug: 'the-business-impact-of-website-speed',
         title: 'The Business Impact of Website Speed',
         date: '2025-04-01',
         excerpt: 'In today\'s fast-paced digital world, how quickly your website loads isn\'t just a technical detail—it directly affects your business success. Let\'s explore why speed matters and how it can impact your bottom line.'
