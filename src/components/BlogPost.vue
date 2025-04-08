@@ -11,19 +11,16 @@
       <nav id="table-of-contents" class="mb-8" v-if="toc.length > 0">
         <h2 class="text-lg font-semibold mb-2">Table of Contents</h2>
         <ul class="space-y-1">
-          <li v-for="(item, index) in toc" :key="index" 
-          :class="{'ml-4': item.level === 'h3',
-           'ml-8': item.level === 'h4'}">
-            <a 
-              :href="`#${item.id}`" 
-              class="text-gray-600 hover:text-gray-900 transition-colors"
-              :class="{
-                'font-semibold': item.level === 'h2',
-                'text-sm': item.level === 'h3',
-                'text-xs': item.level === 'h4'
-              }"
-              @click="scrollToSection(item.id)"
-            >
+          <li v-for="(item, index) in toc" :key="index" :class="{
+            'ml-4': item.level === 'h3',
+            'ml-8': item.level === 'h4'
+          }">
+            <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors" :class="{
+              'font-semibold': item.level === 'h2',
+              'text-[1rem]': item.level === 'h3',
+              'text-sm': item.level === 'h4'
+            }"
+             @click="scrollToSection(item.id)">
               <span v-if="item.level === 'h3'">→ </span>
               <span v-if="item.level === 'h4'">⟶ </span>
               {{ item.text }}
@@ -202,15 +199,15 @@ const toc = computed(() => {
   const headings = []
   const parser = new DOMParser()
   const doc = parser.parseFromString(renderedContent.value, 'text/html')
-  
+
   // Get all h2, h3 and h4 elements
   const headingElements = [...doc.querySelectorAll('h2, h3, h4')]
-  
+
   headingElements.forEach(heading => {
     const id = heading.id
     const text = heading.textContent
     const level = heading.tagName.toLowerCase()
-    
+
     if (id && text) {
       headings.push({
         id,
@@ -219,7 +216,7 @@ const toc = computed(() => {
       })
     }
   })
-  
+
   return headings
 })
 
@@ -235,12 +232,16 @@ function formatDate(date) {
 function scrollToSection(id) {
   const element = document.getElementById(id);
   if (element) {
-    element.scrollIntoView({ behavior: "smooth" });
+    // Use scrollIntoView with block: "start" and a scroll margin
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }
 }
 </script>
 
-<style >
+<style>
 /* Base code block styling */
 pre {
   background-color: #f6f8fa;
@@ -255,7 +256,7 @@ pre {
 }
 
 /* Code content styling */
-pre > code {
+pre>code {
   /* all: unset; */
   display: block;
 }
@@ -315,6 +316,7 @@ pre > code {
   padding-left: 1.5rem;
   position: relative;
 }
+
 .prose p {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -428,5 +430,12 @@ h2,
 h3 {
   margin-top: 2rem;
   margin-bottom: 1rem;
+}
+
+/* Add scroll margin to headings */
+.prose h2,
+.prose h3,
+.prose h4 {
+  scroll-margin-top: 1.5rem;
 }
 </style>
