@@ -19,17 +19,34 @@
 <script>
 import { ref } from 'vue';
 
+// Helper function to create slugs from titles
+const slugify = (text) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[\W_]+/g, '-') // Replace non-word characters with hyphens
+    .replace(/\-+/g, '-') // Replace multiple hyphens with a single hyphen
+    .replace(/^-+/, '') // Remove leading hyphens
+    .replace(/-+$/, ''); // Remove trailing hyphens
+};
+
 export default {
   setup() {
     // Sample data - will be replaced with actual data later
     const posts = ref([
       {
-        slug: 'the-business-impact-of-website-speed',
         title: 'The Business Impact of Website Speed',
         date: '2025-04-01',
         excerpt: 'In today\'s fast-paced digital world, how quickly your website loads isn\'t just a technical detail—it directly affects your business success. Let\'s explore why speed matters and how it can impact your bottom line.'
       }
     ]);
+
+    // Generate slugs for each post
+    posts.value.forEach(post => {
+      post.slug = slugify(post.title);
+    });
 
     const formatDate = (date) => {
       return new Date(date).toLocaleDateString('en-US', {
@@ -46,4 +63,3 @@ export default {
   }
 };
 </script>
-
