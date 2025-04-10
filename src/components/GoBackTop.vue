@@ -77,8 +77,8 @@ export default {
       door.value.classList.add("hidden");
       doorWay.value.classList.add("hidden");
       window.addEventListener("scroll", handleScroll);
-      door.value.addEventListener("touchstart", handleTouchStart, true);
-      door.value.addEventListener("touchend", handleTouchEnd, true);
+      door.value.addEventListener("touchstart", handleTouchStart, { passive: true, capture: true });
+      door.value.addEventListener("touchend", handleTouchEnd, { passive: true, capture: true });
     });
 
     return {
