@@ -4,12 +4,10 @@ import Blog from '../views/Blog.vue'
 import BlogPost from '../components/BlogPost.vue'
 import Works from '../views/Works.vue'
 import HireUs from '../views/HireUs.vue'
-import AdminLoadingSpinner from '../components/UI/AdminLoadingSpinner.vue';
-import { isAuthenticated } from '../config/firebase';
-import { defineAsyncComponent } from 'vue';
-import Login from '../views/Login.vue';
+import AdminLoadingSpinner from '../components/UI/AdminLoadingSpinner.vue'
+import { isAuthenticated } from '../config/firebase'
+import Login from '../views/Login.vue'
 const routes = [
-
   {
     path: '/login',
     name: 'Login',
@@ -18,15 +16,7 @@ const routes = [
   {
     path: '/admin/new-post',
     name: 'NewPost',
-    component: defineAsyncComponent({
-      loader: () => import('../components/Admin/BlogPostForm.vue')
-        .catch(err => {
-          console.error("Failed to load admin component:", err);
-          // Fallback component or redirect
-        }),
-      loadingComponent: AdminLoadingSpinner,
-      delay: 200
-    }),
+    component: () => import('../components/Admin/BlogPostForm.vue'),
     meta: { requiresAuth: true, role: 'admin' }
   },
   {
