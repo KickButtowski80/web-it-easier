@@ -14,7 +14,7 @@
               <span>{{ post.readingTime }} min read</span>
             </div>
           </div>
- 
+
         </router-link>
       </div>
     </div>
@@ -22,11 +22,9 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 
-import { posts } from '../store/posts.js'
-
-
+import { getPosts } from '../config/firebase'
+import { ref, onMounted } from 'vue'
 // Helper function to create slugs from titles
 const slugify = (text) => {
   return text
@@ -42,9 +40,10 @@ const slugify = (text) => {
 
 export default {
   setup() {
-    // Sample data - will be replaced with actual data later
-
-
+    const posts = ref([])
+    onMounted(async () => {
+      posts.value = await getPosts()
+    })
     const formatDate = (date) => {
       return new Date(date).toLocaleDateString('en-US', {
         year: 'numeric',
