@@ -15,7 +15,8 @@
             'ml-4': item.level === 'h3',
             'ml-8': item.level === 'h4'
           }">
-            <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors" :class="{
+            <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors"
+             :class="{
               'font-semibold': item.level === 'h2',
               'text-[1rem]': item.level === 'h3',
               'text-sm': item.level === 'h4'
