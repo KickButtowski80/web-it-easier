@@ -35,12 +35,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { computed } from "vue";
 import { marked } from "marked";
-import { gfmHeadingId, getHeadingList } from "marked-gfm-heading-id";
+import { gfmHeadingId } from "marked-gfm-heading-id";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import { posts } from "../store/posts.js";
+import DOMPurify from "dompurify";
 
 // Props
 const props = defineProps({
@@ -68,7 +69,7 @@ const renderedContent = computed(() => {
     langPrefix: "language-none",
   });
   marked.use(gfmHeadingId());
-  return marked(post.value.content);
+  return DOMPurify.sanitize(marked(post.value.content));
 });
 
 const toc = computed(() => {
