@@ -52,17 +52,19 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  console.log("Route guard checking:", to.path, 
-    "Auth status:", isAuthenticated())
-  
-  if (to.meta.requiresAuth && !isAuthenticated()) {
-    console.log("Redirecting to login")
-    next('/login')
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.meta.requiresAuth;
+  const authStatus = requiresAuth ? await isAuthenticated() : false;
+
+  console.log("Route guard checking:", to.path, "Auth status:", authStatus);
+
+  if (requiresAuth && !authStatus) {
+    console.log("Redirecting to login");
+    next('/login');
   } else {
-    console.log("Allowing navigation")
-    next()
+    console.log("Allowing navigation");
+    next();
   }
-})
+});
 
 export default router
