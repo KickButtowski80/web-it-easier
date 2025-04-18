@@ -1,9 +1,11 @@
 <template>
   <div class="admin-form">
     <div class="admin-header">
-      <h1>New Blog Post</h1>
-      <button @click="logout" class="logout-btn">Logout</button>
+      <div class="admin-actions">
+        <button @click="logout" class="logout-btn">Logout</button>
+      </div>
     </div>
+      <h1>New Blog Post</h1>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <label for="title">Title</label>
@@ -43,15 +45,23 @@
 
       <button type="submit">Publish Post</button>
     </form>
-  </div>
+    <Notification 
+      v-model="showNotification" 
+      :message="notificationMessage" 
+      :type="notificationType" 
+      :logo="notificationLogo"
+    />
+    </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { addPost, generateSecureHash } from '@/config/firebase'
+import { addPost, signOut, auth } from '@/config/firebase'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
+import 'highlight.js/styles/github.css'
+import Notification from '@/components/UI/Notification.vue'
 
 const router = useRouter()
 const formData = ref({
@@ -62,8 +72,15 @@ const formData = ref({
   content: ''
 })
 
+const showNotification = ref(false)
+const notificationMessage = ref('')
+const notificationType = ref('info')
+const notificationLogo = ref('')
+
 // Configure marked for syntax highlighting
 marked.setOptions({
+  gfm: true,
+  breaks: true,
   highlight: function(code, lang) {
     if (lang && hljs.getLanguage(lang)) {
       return hljs.highlight(lang, code).value
@@ -78,70 +95,68 @@ const previewContent = computed(() => {
 
 // Check token expiration on component mount
 onMounted(() => {
-  const authExpires = localStorage.getItem('authExpires')
-  if (authExpires && new Date(authExpires) < new Date()) {
-    // Token expired, log out
-    logout()
+  if ( !auth.currentUser) {
+    router.push('/login')
   }
 })
 
-const logout = () => {
-  localStorage.removeItem('isAuthenticated')
-  localStorage.removeItem('authToken')
-  localStorage.removeItem('authExpires')
-  router.push('/login')
+const logout = async () => {
+  try {
+    const response = await signOut(auth)
+    console.log(response)
+    router.push('/login')
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+function showNotify(message, type = 'info', logo = '') {
+  notificationMessage.value = message
+  notificationType.value = type
+  notificationLogo.value = logo
+  showNotification.value = true
 }
 
 const handleSubmit = async () => {
   try {
     // Validate form data
     if (!formData.value.title.trim()) {
-      alert('Please enter a title')
+      showNotify('Please enter a title', 'error', '')
       return
     }
 
     if (!formData.value.content.trim()) {
-      alert('Please enter content')
+      showNotify('Please enter content', 'error', '')
       return
     }
 
-    // Get auth token
-    const authToken = localStorage.getItem('authToken')
-    if (!authToken) {
-      alert('Your session has expired. Please login again.')
-      logout()
-      return
-    }
-
-    // Generate secure hash (now async)
-    const adminHash = await generateSecureHash(import.meta.env.VITE_ADMIN_PASSWORD)
-
-    // Add post to Firestore with secure hash
+    // Add post to Firestore
     await addPost({
       ...formData.value,
       date: new Date(formData.value.date),
       createdAt: new Date(),
-      adminHash
     })
-
+    showNotify('Post published successfully!', 'success', '')
     // Redirect to blog page
     router.push('/blog')
-    alert('Post published successfully!')
   } catch (error) {
     console.error('Error publishing post:', error)
-    alert('Failed to publish post. Please try again.')
+    showNotify('Failed to publish post. Pick up unique title, and Please, try again.', 'error', '')
   }
 }
 </script>
 
 <style scoped>
 .admin-form {
+  
   max-width: 800px;
   margin: 4rem auto;
   padding: 2rem;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
+
 }
 
 h1 {
@@ -154,9 +169,30 @@ h1 {
 
 .admin-header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-block: 2rem;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.change-password-btn {
+  background-color: #4299e1;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.change-password-btn:hover {
+  background-color: #3182ce;
 }
 
 .logout-btn {
