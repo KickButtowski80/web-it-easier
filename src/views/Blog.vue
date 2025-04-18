@@ -2,8 +2,8 @@
   <div class="container mx-auto px-4 py-28">
     <h1 class="text-4xl font-bold mb-8">Blog</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div v-for="post in posts" :key="post.slug">
-        <router-link :to="'/blog/' + post.slug" class="block">
+      <div v-for="post in posts" :key="slugify(post.title)">
+        <router-link :to="'/blog/' + slugify(post.title)" class="block">
 
           <div class="bg-white rounded-lg shadow-2xl overflow-hidden post-preview hover:shadow-lg transition-shadow
         p-8">
@@ -55,6 +55,7 @@ export default {
     return {
       posts,
       formatDate,
+      slugify
     };
   }
 };
