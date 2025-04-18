@@ -5,8 +5,13 @@ import BlogPost from '../components/BlogPost.vue'
 import Works from '../views/Works.vue'
 import HireUs from '../views/HireUs.vue'
 import AdminLoadingSpinner from '../components/UI/AdminLoadingSpinner.vue'
-import { isAuthenticated } from '../config/firebase'
+import { auth } from '../config/firebase'
 import Login from '../views/Login.vue'
+import { onAuthStateChanged } from 'firebase/auth'
+
+let authResolved = false
+let currentUser = null
+
 const routes = [
   {
     path: '/login',
@@ -52,19 +57,27 @@ const router = createRouter({
   routes
 })
 
+const getAuthState = () =>
+
+  // In JavaScript, variables (unsubscribe) declared in the outer scope are accessible 
+  // inside inner functions (closures).
+  new Promise(resolve => {
+    if (authResolved) return resolve(currentUser)
+    const unsubscribe = onAuthStateChanged(auth, user => {
+      authResolved = true
+      currentUser = user
+      unsubscribe()
+      resolve(user)
+    })
+  })
+
 router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.meta.requiresAuth;
-  const authStatus = requiresAuth ? await isAuthenticated() : false;
-
-  console.log("Route guard checking:", to.path, "Auth status:", authStatus);
-
-  if (requiresAuth && !authStatus) {
-    console.log("Redirecting to login");
-    next('/login');
+  const requiresAuth = to.meta.requiresAuth
+  const user = await getAuthState()
+  if (requiresAuth && !user) {
+    next('/login')
   } else {
-    console.log("Allowing navigation");
-    next();
+    next()
   }
-});
-
+})
 export default router
