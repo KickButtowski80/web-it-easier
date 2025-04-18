@@ -1,27 +1,46 @@
 <template>
-  <div class="login-container">
-    <h1>Admin Login</h1>
-    <form @submit.prevent="login" class="login-form">
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Enter admin email"
-        autocomplete="username"
-        required
-      />
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Enter admin password"
-        autocomplete="current-password"
-        required
-      />
-      <button type="submit" :disabled="loading">
+  <main class="login-container">
+    <h1 id="login-heading">Admin Login</h1>
+    <form @submit.prevent="login" class="login-form" aria-labelledby="login-heading">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          v-model="email"
+          type="email"
+          placeholder="Enter admin email"
+          autocomplete="username"
+          required
+          aria-required="true"
+          :aria-invalid="!!emailError"
+          @blur="validateEmail"
+        />
+        <span v-if="emailError" class="field-error" role="alert">{{ emailError }}</span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          placeholder="Enter admin password"
+          autocomplete="current-password"
+          required
+          aria-required="true"
+        />
+      </div>
+
+      <button 
+        type="submit" 
+        :disabled="loading"
+        aria-busy="loading"
+      >
         {{ loading ? 'Logging in...' : 'Login' }}
       </button>
     </form>
-    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-  </div>
+    <div v-if="errorMessage" class="error-message" role="alert" aria-live="assertive">{{ errorMessage }}</div>
+  </main>
 </template>
 
 <script setup>
@@ -34,6 +53,24 @@ const password = ref('')
 const router = useRouter()
 const loading = ref(false)
 const errorMessage = ref('')
+const emailError = ref('')
+
+// Validate email format
+const validateEmail = () => {
+  if (!email.value) {
+    emailError.value = 'Email is required'
+    return false
+  }
+  
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailPattern.test(email.value)) {
+    emailError.value = 'Please enter a valid email address'
+    return false
+  }
+  
+  emailError.value = ''
+  return true
+}
 
 onMounted(() => {
   document.title = "Login Page - Admin"
@@ -42,15 +79,40 @@ onMounted(() => {
 const login = async () => {
   loading.value = true
   errorMessage.value = ''
+  emailError.value = ''
+  
   try {
+    // Validate inputs
     if (!email.value || !password.value) {
       errorMessage.value = 'Email and password are required'
+      loading.value = false
       return
     }
+    
+    // Validate email format
+    if (!validateEmail()) {
+      loading.value = false
+      return
+    }
+    
+    // Attempt login
     await signInWithEmailAndPassword(auth, email.value, password.value)
     router.push('/admin/new-post')
   } catch (err) {
-    errorMessage.value = err.message
+    // Format Firebase error messages to be more user-friendly
+    if (err.code === 'auth/invalid-credential') {
+      errorMessage.value = 'Invalid email or password. Please try again.'
+    } else if (err.code === 'auth/too-many-requests') {
+      errorMessage.value = 'Too many failed login attempts. Please try again later.'
+    } else {
+      errorMessage.value = err.message
+    }
+    
+    // Set focus to the error message for screen readers
+    setTimeout(() => {
+      const errorEl = document.querySelector('.error-message')
+      if (errorEl) errorEl.focus()
+    }, 100)
   } finally {
     loading.value = false
   }
@@ -70,21 +132,46 @@ const login = async () => {
 
 h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   color: #2d3748;
+  font-size: 1.8rem;
 }
 
 form {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+label {
+  font-weight: 500;
+  color: #4a5568;
+  font-size: 1rem;
 }
 
 input {
   padding: 12px;
-  margin-bottom: 15px;
   border: 1px solid #e2e8f0;
   border-radius: 4px;
   font-size: 16px;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+}
+
+input[aria-invalid="true"] {
+  border-color: #e53e3e;
 }
 
 button {
@@ -94,22 +181,52 @@ button {
   border: none;
   border-radius: 4px;
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-top: 10px;
 }
 
 button:hover {
   background-color: #3182ce;
 }
 
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
 button:disabled {
   background-color: #a0aec0;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .error-message {
   color: #e53e3e;
   margin-top: 15px;
   text-align: center;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #fff5f5;
+  border-left: 3px solid #e53e3e;
+}
+
+.field-error {
+  color: #e53e3e;
+  font-size: 0.875rem;
+}
+
+/* Ensure the page is accessible at different viewport sizes */
+@media (max-width: 480px) {
+  .login-container {
+    margin: 40px auto;
+    padding: 20px;
+    width: 90%;
+  }
 }
 </style>
