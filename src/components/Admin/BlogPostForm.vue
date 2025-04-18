@@ -1,61 +1,122 @@
 <template>
-  <div class="admin-form">
+  <section class="admin-form">
     <div class="admin-header">
       <div class="admin-actions">
-        <button @click="logout" class="logout-btn">Logout</button>
+        <button 
+          @click="logout" 
+          class="logout-btn"
+          type="button"
+          aria-label="Log out from admin panel"
+        >
+          Log out
+        </button>
       </div>
     </div>
-      <h1>New Blog Post</h1>
-    <form @submit.prevent="handleSubmit">
+    
+    <h1 id="form-heading">New Blog Post</h1>
+    
+    <form @submit.prevent="handleSubmit" aria-labelledby="form-heading">
       <div class="form-group">
         <label for="title">Title</label>
-        <input id="title" v-model="formData.title" type="text" placeholder="Enter post title" required>
+        <input 
+          id="title" 
+          v-model="formData.title" 
+          type="text" 
+          placeholder="Enter post title" 
+          required
+          :aria-invalid="formErrors.title ? 'true' : 'false'"
+          autocomplete="off"
+        >
+        <div v-if="formErrors.title" class="error-message" role="alert">{{ formErrors.title }}</div>
       </div>
 
       <div class="form-group">
         <label for="date">Date</label>
-        <input id="date" v-model="formData.date" type="date" required>
+        <input 
+          id="date" 
+          v-model="formData.date" 
+          type="date" 
+          required
+          :aria-invalid="formErrors.date ? 'true' : 'false'"
+        >
+        <div v-if="formErrors.date" class="error-message" role="alert">{{ formErrors.date }}</div>
       </div>
 
       <div class="form-group">
         <label for="readingTime">Reading Time (minutes)</label>
-        <input id="readingTime" v-model.number="formData.readingTime" type="number" min="1" required>
+        <input 
+          id="readingTime" 
+          v-model.number="formData.readingTime" 
+          type="number" 
+          min="1" 
+          required
+          :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
+          aria-describedby="readingTimeHint"
+        >
+        <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
+        <div v-if="formErrors.readingTime" class="error-message" role="alert">{{ formErrors.readingTime }}</div>
       </div>
 
       <div class="form-group">
         <label for="featureImage">Feature Image URL</label>
-        <input id="featureImage" v-model="formData.featureImage" type="url" placeholder="Enter image URL">
+        <input 
+          id="featureImage" 
+          v-model="formData.featureImage" 
+          type="url" 
+          placeholder="Enter image URL"
+          :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
+        >
+        <div v-if="formErrors.featureImage" class="error-message" role="alert">{{ formErrors.featureImage }}</div>
       </div>
 
       <div class="form-group">
         <label for="content">Content (Markdown)</label>
-        <div class="markdown-editor">
+        <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
+          <span id="markdown-editor-label" class="sr-only">Markdown editor with preview</span>
           <textarea 
             id="content" 
             v-model="formData.content" 
             placeholder="Write your post content in markdown..."
             required
+            :aria-invalid="formErrors.content ? 'true' : 'false'"
+            aria-describedby="markdownHint"
+            rows="10"
           ></textarea>
-          <div class="preview-container">
-            <h3>Preview</h3>
-            <div v-html="previewContent" class="preview-content"></div>
-          </div>
+          <div id="markdownHint" class="hint">Use markdown syntax for formatting. Preview appears on the right.</div>
+          <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
+          
+          <section class="preview-container" aria-live="polite">
+          <h2 id="preview-heading">Preview</h2>
+          <article 
+            v-html="previewContent" 
+            class="preview-content"
+            tabindex="0"
+          ></article>
+        </section>
         </div>
       </div>
 
-      <button type="submit">Publish Post</button>
+      <button 
+        type="submit"
+        class="submit-btn"
+        :disabled="isSubmitting"
+        :aria-busy="isSubmitting"
+      >
+        {{ isSubmitting ? 'Publishing...' : 'Publish Post' }}
+      </button>
     </form>
+    
     <Notification 
       v-model="showNotification" 
       :message="notificationMessage" 
       :type="notificationType" 
       :logo="notificationLogo"
     />
-    </div>
+  </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { addPost, signOut, auth } from '@/config/firebase'
 import { marked } from 'marked'
@@ -72,6 +133,16 @@ const formData = ref({
   content: ''
 })
 
+// Form validation state
+const formErrors = ref({
+  title: '',
+  date: '',
+  readingTime: '',
+  featureImage: '',
+  content: ''
+})
+
+const isSubmitting = ref(false)
 const showNotification = ref(false)
 const notificationMessage = ref('')
 const notificationType = ref('info')
@@ -95,18 +166,23 @@ const previewContent = computed(() => {
 
 // Check token expiration on component mount
 onMounted(() => {
-  if ( !auth.currentUser) {
+  if (!auth.currentUser) {
     router.push('/login')
   }
+  
+  // Set initial focus to the title field
+  nextTick(() => {
+    document.getElementById('title')?.focus()
+  })
 })
 
 const logout = async () => {
   try {
-    const response = await signOut(auth)
-    console.log(response)
+    await signOut(auth)
     router.push('/login')
   } catch (e) {
-    console.log(e)
+    console.error('Error signing out:', e)
+    showNotify('Failed to log out. Please try again.', 'error')
   }
 }
 
@@ -117,46 +193,111 @@ function showNotify(message, type = 'info', logo = '') {
   showNotification.value = true
 }
 
-const handleSubmit = async () => {
+// Validate form fields
+const validateForm = () => {
+  let isValid = true
+  
+  // Reset all errors
+  Object.keys(formErrors.value).forEach(key => {
+    formErrors.value[key] = ''
+  })
+  
+  // Title validation
+  if (!formData.value.title.trim()) {
+    formErrors.value.title = 'Please enter a title'
+    isValid = false
+  }
+  
+  // Date validation
+  if (!formData.value.date) {
+    formErrors.value.date = 'Please select a date'
+    isValid = false
+  }
+  
+  // Reading time validation
+  if (!formData.value.readingTime || formData.value.readingTime < 1) {
+    formErrors.value.readingTime = 'Reading time must be at least 1 minute'
+    isValid = false
+  }
+  
+  // Feature image URL validation (if provided)
+  if (formData.value.featureImage && !isValidUrl(formData.value.featureImage)) {
+    formErrors.value.featureImage = 'Please enter a valid URL'
+    isValid = false
+  }
+  
+  // Content validation
+  if (!formData.value.content.trim()) {
+    formErrors.value.content = 'Please enter content for your post'
+    isValid = false
+  }
+  
+  return isValid
+}
+
+// Helper to validate URLs
+const isValidUrl = (url) => {
   try {
-    // Validate form data
-    if (!formData.value.title.trim()) {
-      showNotify('Please enter a title', 'error', '')
-      return
-    }
+    new URL(url)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 
-    if (!formData.value.content.trim()) {
-      showNotify('Please enter content', 'error', '')
-      return
+const handleSubmit = async () => {
+  // Validate form
+  if (!validateForm()) {
+    // Focus the first field with an error
+    const firstErrorField = Object.keys(formErrors.value).find(key => formErrors.value[key])
+    if (firstErrorField) {
+      nextTick(() => {
+        document.getElementById(firstErrorField)?.focus()
+      })
     }
-
+    return
+  }
+  
+  isSubmitting.value = true
+  
+  try {
     // Add post to Firestore
     await addPost({
       ...formData.value,
       date: new Date(formData.value.date),
       createdAt: new Date(),
     })
-    showNotify('Post published successfully!', 'success', '')
+    
+    showNotify('Post published successfully!', 'success')
+    
+    // Reset form after successful submission
+    formData.value = {
+      title: '',
+      date: new Date().toISOString().split('T')[0],
+      readingTime: 5,
+      featureImage: '',
+      content: ''
+    }
+    
     // Redirect to blog page
     router.push('/blog')
   } catch (error) {
     console.error('Error publishing post:', error)
-    showNotify('Failed to publish post. Pick up unique title, and Please, try again.', 'error', '')
+    showNotify('Failed to publish post. Please use a unique title and try again.', 'error')
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>
 
 <style scoped>
 .admin-form {
-  
   max-width: 800px;
   margin: 4rem auto;
   padding: 2rem;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  
-
 }
 
 h1 {
@@ -197,7 +338,7 @@ h1 {
 
 .logout-btn {
   background-color: #f56565;
-  color: white;
+  color: rgb(20, 19, 19);
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 6px;
@@ -208,6 +349,11 @@ h1 {
 
 .logout-btn:hover {
   background-color: #e53e3e;
+}
+
+.logout-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.5);
 }
 
 form {
@@ -237,11 +383,17 @@ textarea {
   transition: border-color 0.2s;
 }
 
-input:focus,
-textarea:focus {
+input:focus-visible,
+textarea:focus-visible {
   outline: none;
   border-color: #4299e1;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+}
+
+input[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: #e53e3e;
+  background-color: #fff5f5;
 }
 
 textarea {
@@ -249,9 +401,9 @@ textarea {
   resize: vertical;
 }
 
-button {
+.submit-btn {
   padding: 0.8rem;
-  background-color: #4299e1;
+  background-color: #7c5fbf;
   color: white;
   border: none;
   border-radius: 6px;
@@ -261,13 +413,19 @@ button {
   transition: all 0.2s;
 }
 
-button:hover {
-  background-color: #3182ce;
-  transform: translateY(-1px);
+.submit-btn:hover:not(:disabled) {
+  background-color: #6b4fa8;
 }
 
-button:active {
-  transform: translateY(0);
+.submit-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 95, 191, 0.4);
+}
+
+.submit-btn:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .markdown-editor {
@@ -279,6 +437,37 @@ button:active {
   margin-bottom: 1rem;
 }
 
+.preview-content {
+  height: 300px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+}
+
+.preview-content:focus {
+  outline: 2px solid #7c5fbf;
+  outline-offset: 2px;
+}
+
+.error-message {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.hint {
+  color: #2d3748;
+  font-size: 0.95rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+
+
+
+
 .preview-container {
   background: white;
   border-radius: 6px;
@@ -286,7 +475,7 @@ button:active {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.preview-container h3 {
+.preview-container h2 {
   margin: 0 0 1rem 0;
   color: #4a5568;
   font-size: 1rem;
