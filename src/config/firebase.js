@@ -35,45 +35,47 @@ export {
 
 // Firestore helpers
 export const getPosts = async () => {
-    const snapshot = await getDocs(collection(db, 'posts'));
-    return snapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        ...data,
-        // Convert Firestore Timestamp to formatted date string
-        date: data.date ? formatDate(data.date.toDate()) : 'No date'
-      };
-    });
-  };
+  const snapshot = await getDocs(collection(db, 'posts'));
+  return snapshot.docs.map(doc => {
+    const data = doc.data();
+    return {
+      id: doc.id,
+      ...data,
+      // Convert Firestore Timestamp to formatted date string
+      date: data.date ? formatDate(data.date.toDate()) : 'No date'
+    };
+  });
+};
 // Helper to find a post by title (case-insensitive)
 const findPostByTitle = async (title) => {
   const postsRef = collection(db, 'posts');
   const snapshot = await getDocs(postsRef);
   if (snapshot.empty) return null;
-  const lowerTitle = title.toLowerCase();
-  return snapshot.docs.find(doc => {
+  const lowerTitle = title.toLowerCase().trim();
+  const post = snapshot.docs.find(doc => {
     const data = doc.data();
-    return data.title && data.title.toLowerCase() === lowerTitle;
-  }) || null;
+    return data.title && data.title.toLowerCase().trim() === lowerTitle;
+  })
+  return post || null;
 };
-  export const getPost = async (title) => {
-    try {
-      const post = await findPostByTitle(title);
-      if (post) {
-        return {
-          id: post.id,
-          ...post.data(),
-          date: post.data().date ? formatDate(post.data().date.toDate()) : 'No date'
-        };
-      }
-      
-      return null;
-    } catch (error) {
-      console.error('Error in getPost:', error);
-      return null;
+export const getPost = async (title) => {
+  try {
+    const post = await findPostByTitle(title);
+    //safe guard against undefined as well
+    if (post != null) {
+      return {
+        id: post.id,
+        ...post.data(),
+        date: post.data().date ? formatDate(post.data().date.toDate()) : 'No date'
+      };
     }
-  };
+
+    return null;
+  } catch (error) {
+    console.error('Error in getPost:', error);
+    return null;
+  }
+};
 
 export const addPost = async (postData) => {
   if (!auth.currentUser) throw new Error('Not authenticated');
