@@ -1,46 +1,57 @@
 <template>
   <div class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <h1 class="text-4xl font-bold mb-4" v-html="post.title"></h1>
-      <div class="text-gray-600 mb-8">
-        <span class="mr-4">{{ formatDate(post.date) }}</span>
-        <span>{{ post.readingTime }} min read</span>
+      <div v-if="post">
+        <h1 class="text-4xl font-bold mb-4" v-html="post.title"></h1>
+        <div class="text-gray-600 mb-8">
+          <span class="mr-4">{{ formatDate(post.date) }}</span>
+          <span>{{ post.readingTime }} min read</span>
+        </div>
+
+        <!-- Table of Contents -->
+        <nav id="table-of-contents" class="mb-8" v-if="toc.length > 0">
+          <h2 class="text-lg font-semibold mb-2">Table of Contents</h2>
+          <ul class="space-y-1">
+            <li v-for="(item, index) in toc" :key="index" :class="{
+              'ml-4': item.level === 'h3',
+              'ml-8': item.level === 'h4'
+            }">
+              <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors" :class="{
+                'font-semibold': item.level === 'h2',
+                'text-[1rem]': item.level === 'h3',
+                'text-sm': item.level === 'h4'
+              }" @click="scrollToSection(item.id)">
+                <span v-if="item.level === 'h3'">→ </span>
+                <span v-if="item.level === 'h4'">⟶ </span>
+                {{ item.text }}
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="prose prose-lg max-w-none" v-html="renderedContent"></div>
       </div>
-
-      <!-- Table of Contents -->
-      <nav id="table-of-contents" class="mb-8" v-if="toc.length > 0">
-        <h2 class="text-lg font-semibold mb-2">Table of Contents</h2>
-        <ul class="space-y-1">
-          <li v-for="(item, index) in toc" :key="index" :class="{
-            'ml-4': item.level === 'h3',
-            'ml-8': item.level === 'h4'
-          }">
-            <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors"
-             :class="{
-              'font-semibold': item.level === 'h2',
-              'text-[1rem]': item.level === 'h3',
-              'text-sm': item.level === 'h4'
-            }" @click="scrollToSection(item.id)">
-              <span v-if="item.level === 'h3'">→ </span>
-              <span v-if="item.level === 'h4'">⟶ </span>
-              {{ item.text }}
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="prose prose-lg max-w-none" v-html="renderedContent"></div>
+      <div v-else class="text-center py-12">
+        <div class="animate-pulse">
+          <div class="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/4 mx-auto mb-8"></div>
+          <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
+          <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
+          <div class="h-4 bg-gray-200 rounded w-3/4 mb-8"></div>
+        </div>
+        <p class="text-gray-500 mt-4">Loading post...</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
-import { posts } from "../store/posts.js";
+import { getPost } from "../config/firebase";
 import DOMPurify from "dompurify";
 
 // Props
@@ -48,14 +59,22 @@ const props = defineProps({
   slug: {
     type: String,
     required: false,
-
   },
 });
 
-const post = computed(() => posts.find(post => post.slug === props.slug));
+const post = ref(null);
 
+onMounted(async () => {
+  const title = deslugify(props.slug);
+  post.value = await getPost(title);
+});
+
+function deslugify(slug) {
+  return slug.replace(/-/g, ' ');
+}
 // Computed properties
 const renderedContent = computed(() => {
+  if (!post.value || !post.value.content) return "";
   // Configure marked to use highlight.js for code blocks
   marked.setOptions({
     highlight: function (code, lang) {
@@ -116,6 +135,7 @@ function scrollToSection(id) {
     });
   }
 }
+ 
 </script>
 
 <style>
