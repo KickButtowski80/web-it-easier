@@ -9,9 +9,8 @@
           v-model="email"
           type="email"
           placeholder="Enter admin email"
-          autocomplete="username"
+          autocomplete="email"
           required
-          aria-required="true"
           :aria-invalid="!!emailError"
           @blur="validateEmail"
         />
@@ -27,14 +26,13 @@
           placeholder="Enter admin password"
           autocomplete="current-password"
           required
-          aria-required="true"
         />
       </div>
 
       <button 
         type="submit" 
         :disabled="loading"
-        aria-busy="loading"
+        :aria-busy="loading"
       >
         {{ loading ? 'Logging in...' : 'Login' }}
       </button>
@@ -164,7 +162,7 @@ input {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-input:focus {
+input:focus-visible {
   outline: none;
   border-color: #4299e1;
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
@@ -176,8 +174,8 @@ input[aria-invalid="true"] {
 
 button {
   padding: 12px;
-  background-color: #4299e1;
-  color: white;
+  background-color: #7c5fbf; /* soft indigo */
+  color: #fff;
   border: none;
   border-radius: 4px;
   font-size: 16px;
@@ -185,6 +183,35 @@ button {
   cursor: pointer;
   transition: background-color 0.2s, transform 0.1s;
   margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(63, 45, 86, 0.07);
+}
+
+button:hover {
+  background-color: #a48be7;
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px #bca6e9;
+}
+
+button:active {
+  background-color: #5d4391;
+  transform: translateY(1px);
+}
+
+button:hover {
+  background-color: #5c438c; /* lighter indigo for hover */
+}
+
+button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(63, 45, 86, 0.3);
+}
+
+button:active {
+  background-color: #2a1e38;
+  transform: translateY(1px);
 }
 
 button:hover {
