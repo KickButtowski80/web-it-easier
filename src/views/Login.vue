@@ -1,183 +1,58 @@
 <template>
-    <div class="login-container">
-        <h1>Admin Login</h1>
-        <form @submit.prevent="login" class="login-form">
-            <input v-model="password" type="password" 
-            placeholder="Enter admin password"
-            autocomplete="new-password">
-            <button type="submit" :disabled="loading">
-              {{ loading ? 'Checking...' : 'Login' }}
-            </button>
-        </form>
-        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-    </div>
+  <div class="login-container">
+    <h1>Admin Login</h1>
+    <form @submit.prevent="login" class="login-form">
+      <input
+        v-model="email"
+        type="email"
+        placeholder="Enter admin email"
+        autocomplete="username"
+        required
+      />
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Enter admin password"
+        autocomplete="current-password"
+        required
+      />
+      <button type="submit" :disabled="loading">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+    <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+  </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { checkLoginAttempts, recordLoginAttempt, generateSecureHash } from '@/config/firebase'
+import { auth, signInWithEmailAndPassword } from '@/config/firebase'
 
-// Get approximate IP address (for demo purposes)
-// In production, you'd get this from a server
-const getApproximateIpIdentifier = async () => {
-  // Get browser information
-  const nav = window.navigator;
-  const screen = window.screen;
-  
-  // Get modern browser features
-  const modernFeatures = [
-    // Hardware information
-    screen.width,
-    screen.height,
-    screen.colorDepth,
-    
-    // Language and timezone
-    nav.language || nav.userLanguage || nav.browserLanguage,
-    Intl.DateTimeFormat().resolvedOptions().timeZone,
-    
-    // Browser capabilities
-    nav.hardwareConcurrency,
-    nav.deviceMemory,
-    nav.maxTouchPoints,
-    
-    // User agent data (modern approach)
-    ...(nav.userAgentData?.platformVersion || ''),
-    ...(nav.userAgentData?.platform || ''),
-    
-    // Additional browser features
-    nav.connection?.effectiveType,
-    nav.connection?.rtt,
-    nav.connection?.downlink,
-    
-    // Timezone offset
-    new Date().getTimezoneOffset(),
-    
-    // Canvas fingerprint (basic version)
-    (() => {
-      // Create canvas and context offscreen
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return ''; // Handle cases where canvas context is not available
-
-      ctx.font = '12px Arial';
-      ctx.textBaseline = 'top';
-      ctx.fillText('Hello', 2, 2);
-      const dataUrl = canvas.toDataURL();
-      // console.log('Canvas Fingerprint Data URL:', dataUrl); // Keep for debugging if needed, otherwise remove
-      return dataUrl;
-    })()
-  ];
-  
-  // Create a string from all features
-  const identifier = modernFeatures.join('|');
-  
-  try {
-    // Use Web Crypto API for secure hashing
-    const encoder = new TextEncoder();
-    const data = encoder.encode(identifier);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return `client_${hashHex.slice(0, 16)}`; // Use first 16 chars of hash for reasonable length
-  } catch (error) {
-    console.error('Secure client ID generation failed:', error);
-    throw new Error('Your browser does not support secure client identification');
-  }
-};
-
+const email = ref('')
 const password = ref('')
 const router = useRouter()
 const loading = ref(false)
 const errorMessage = ref('')
 
 onMounted(() => {
-  console.log("Login component mounted!")
   document.title = "Login Page - Admin"
-  
-  // Clear any existing authentication data on login page load
-  // This helps prevent session fixation attacks
-  localStorage.removeItem('isAuthenticated')
-  localStorage.removeItem('authToken')
-  localStorage.removeItem('authTokenHash')
-  localStorage.removeItem('authExpires')
-  localStorage.removeItem('authNonce')
-  sessionStorage.removeItem('authToken')
 })
 
 const login = async () => {
+  loading.value = true
+  errorMessage.value = ''
   try {
-    loading.value = true;
-    errorMessage.value = '';
-    
-    // Get client identifier
-    const clientId = await getApproximateIpIdentifier();
-    
-    // Check if login is allowed (server-side rate limiting)
-    const attemptCheck = await checkLoginAttempts(clientId);
-    
-    if (!attemptCheck.allowed) {
-      errorMessage.value = attemptCheck.message;
-      loading.value = false;
-      return;
+    if (!email.value || !password.value) {
+      errorMessage.value = 'Email and password are required'
+      return
     }
-    
-    // Check password
-    if (password.value === import.meta.env.VITE_ADMIN_PASSWORD) {
-      console.log("Login successful");
-      
-      try {
-        // Record successful login
-        await recordLoginAttempt(clientId, true);
-        
-        // Generate a secure session token (timestamp + random string)
-        const timestamp = new Date().getTime();
-        const randomString = crypto.getRandomValues(new Uint8Array(16))
-          .reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
-        const sessionToken = `${timestamp}.${randomString}`;
-        
-        // Generate a hash of the token for validation
-        const tokenHash = await generateSecureHash(sessionToken);
-        
-        // Store authentication data (but NOT the password)
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('authToken', sessionToken);
-        localStorage.setItem('authTokenHash', tokenHash);
-        localStorage.setItem('authExpires', new Date(timestamp + 24*60*60*1000).toISOString());
-        
-        // Store a copy in sessionStorage for additional security
-        // sessionStorage is cleared when the browser/tab is closed
-        sessionStorage.setItem('authToken', sessionToken);
-        
-        // Store a random nonce for additional validation
-        const nonce = crypto.getRandomValues(new Uint8Array(16))
-          .reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
-        localStorage.setItem('authNonce', nonce);
-        
-        router.push('/admin/new-post');
-      } catch (error) {
-        console.error("Security operation failed:", error);
-        errorMessage.value = "Your browser doesn't support secure authentication. Please use a modern browser.";
-        return;
-      }
-    } else {
-      console.log("Login failed");
-      
-      // Record failed login
-      await recordLoginAttempt(clientId, false);
-      
-      // Show appropriate error message
-      if (attemptCheck.attemptsLeft <= 1) {
-        errorMessage.value = "Invalid password. This is your last attempt before lockout.";
-      } else {
-        errorMessage.value = `Invalid password. ${attemptCheck.attemptsLeft - 1} attempts remaining.`;
-      }
-    }
-  } catch (error) {
-    console.error("Login error:", error);
-    errorMessage.value = "An error occurred. Please try again.";
+    await signInWithEmailAndPassword(auth, email.value, password.value)
+    router.push('/admin/new-post')
+  } catch (err) {
+    errorMessage.value = err.message
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 </script>
