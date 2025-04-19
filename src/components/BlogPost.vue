@@ -1,7 +1,7 @@
 <template>
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <div v-if="post">
+      <article v-if="post" id="post-content">
         <h1 id="post-title" class="text-4xl font-bold mb-4" v-html="post.title"></h1>
         <div class="text-gray-600 mb-8">
           <span class="mr-4">{{ formatDate(post.date) }}</span>
@@ -13,7 +13,7 @@
         v-if="toc.length > 0"
         role="navigation" 
         aria-labelledby="toc-heading"
-        aria-label="Table of Contents">
+        >
           <h2 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h2>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
@@ -33,9 +33,8 @@
           </ul>
         </nav>
 
-        <article id="post-content" 
-        aria-labelledby="post-title" class="prose prose-lg max-w-none" v-html="renderedContent"></article>
-      </div>
+        <div class="prose prose-lg max-w-none" v-html="renderedContent"></div>
+      </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite">
         <div class="animate-pulse">
           <div class="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
