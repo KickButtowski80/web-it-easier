@@ -9,7 +9,7 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" class="mb-8" v-if="toc.length > 0">
+        <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0">
           <h2 class="text-lg font-semibold mb-2">Table of Contents</h2>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
@@ -264,40 +264,7 @@ nav ul {
   padding-left: 0;
 }
 
-/* nav li {
-  margin-bottom: 0.5rem;
-  transition: all 0.2s ease;
-}
 
-nav li.ml-4 {
-  margin-left: 1rem;
-  position: relative;
-}
-
-nav li.ml-8 {
-  margin-left: 2rem;
-  position: relative;
-}
-
-nav li.ml-4::before {
-  content: "";
-  position: absolute;
-  left: -1rem;
-  top: 0.7rem;
-  width: 0.5rem;
-  height: 1px;
-  background-color: #d1d5db;
-}
-
-nav li.ml-8::before {
-  content: "****";
-  position: absolute;
-  left: -1rem;
-  top: 0.7rem;
-  width: 0.5rem;
-  height: 1px;
-  background-color: #d1d5db;
-} */
 
 nav a {
   display: block;
@@ -334,5 +301,57 @@ h3 {
 .prose h3,
 .prose h4 {
   scroll-margin-top: 1.5rem;
+}
+
+
+.toc-bedazzled {
+  position: relative;
+  overflow: hidden;
+  background: 
+    /* SVG pattern for subtle sparkle effect */
+    url("data:image/svg+xml;utf8,<svg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='20' cy='20' r='1.5' fill='%23a5b4fc' opacity='0.6'/><circle cx='10' cy='30' r='1' fill='%23f472b6' opacity='0.4'/><circle cx='30' cy='10' r='1' fill='%23fbbf24' opacity='0.4'/></svg>"),
+    linear-gradient(135deg, rgba(255,255,255,0.85) 70%, rgba(199,210,254,0.7) 100%);
+  background-blend-mode: overlay;
+  border-radius: 1rem;
+  border: 2px solid #a5b4fc;
+  box-shadow: 0 8px 24px 0 rgba(59,130,246,0.09);
+  padding: 2rem 1.5rem;
+  transition: box-shadow 0.2s;
+  backdrop-filter: blur(2px);
+}
+
+.toc-bedazzled h2 {
+  color: #6366f1;
+  letter-spacing: 0.03em;
+}
+
+.toc-bedazzled ul {
+  background: transparent;
+}
+
+.toc-bedazzled a {
+  background: rgba(255,255,255,0.4);
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.toc-bedazzled a:hover {
+  background: #a5b4fc;
+  color: #fff;
+}
+
+.toc-bedazzled::after {
+  content: "";
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  width: 20rem;
+  height: 20rem;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    url("data:image/svg+xml;utf8,<svg width='320' height='320' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='0' y='0' width='32' height='32' fill='%236366f1' fill-opacity='0.6'/><rect x='32' y='32' width='32' height='32' fill='%23fbbf24' fill-opacity='0.5'/><circle cx='48' cy='16' r='10' fill='%23f472b6' fill-opacity='0.3'/><rect x='16' y='48' width='16' height='8' fill='%233b82f6' fill-opacity='0.4'/></svg>") no-repeat center/contain;
 }
 </style>
