@@ -1,7 +1,11 @@
 <template>
   <transition name="fade">
     <div v-if="show" :class="['notification', type]">
-      <img v-if="logo" :src="logo" alt="Logo" class="notification-logo" />
+      <font-awesome-icon 
+      v-if="icon" 
+      :icon="icon"
+      :class="['notification-icon', type]"
+      aria-hidden="true" />
       <div class="notification-content">
         <slot>{{ message }}</slot>
       </div>
@@ -20,9 +24,9 @@ const props = defineProps({
     type: String,
     default: 'info', // 'info', 'success', 'error', 'warning'
   },
-  logo: {
+  icon: {
     type: String,
-    default: '/open-door-icon.svg',
+    default: '',
   },
   duration: {
     type: Number,
@@ -65,9 +69,9 @@ watch(show, (val) => {
   z-index: 9999;
 }
 
-.notification-logo {
-  width: 32px;
-  height: 32px;
+.notification-icon {
+  width: 2rem;
+  height: 2rem;
   margin-right: 1em;
 }
 
