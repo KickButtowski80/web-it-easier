@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp, doc, deleteDoc } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, reauthenticateWithCredential, EmailAuthProvider, updatePassword as firebaseUpdatePassword } from 'firebase/auth';
 
 // Initialize Firebase immediately (no need for async init)
@@ -87,6 +87,16 @@ export const addPost = async (postData) => {
     createdAt: serverTimestamp()
   });
 };
+
+
+export const deletePost = async (title) => {
+  if (!auth.currentUser) throw new Error('Not authenticated');
+  const post = await findPostByTitle(title);
+  if (!post) throw new Error('Post not found');
+  const postRef = doc(db, 'posts', post.id);
+  await deleteDoc(postRef);
+};  
+
 
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString('en-US', {
