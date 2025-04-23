@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, signInWithEmailAndPassword } from '@/config/firebase'
 
@@ -95,45 +95,18 @@ const login = async () => {
     
     // Attempt login
     await signInWithEmailAndPassword(auth, email.value, password.value)
-    // Add a success message to confirm login
-    errorMessage.value = 'Login successful! Redirecting...';
-    console.log('Authentication successful, user:', auth.currentUser?.email);
-    await new Promise(resolve => setTimeout(resolve, 500));
-    try {
-      console.log('Attempting navigation to /admin/new-post');
-      await router.isReady().then(() => {
-        router.push('/admin/new-post');
-      });
-      console.log('Navigation successful');
-    } catch (navError) {
-      console.error('Navigation error:', navError);
-      console.log('Current auth state:', auth.currentUser ? 'Authenticated' : 'Not authenticated');
-      console.log('Current route:', router.currentRoute.value.path);
-      errorMessage.value = 'Login successful, but failed to navigate. Trying alternative method...';
-      
-      // Try an alternative navigation approach - use the full URL
-      const baseUrl = window.location.origin;
-      console.log('Base URL:', baseUrl);
-      const targetUrl = `${baseUrl}/admin/new-post`;
-      console.log('Attempting direct navigation to:', targetUrl);
-      
-      // Use a button to let the user try manual navigation
-      errorMessage.value = `Login successful! Click <a href="${targetUrl}" class="manual-link">here</a> to go to the admin page.`;
-      
-      // Also try automatic navigation after a delay
-      setTimeout(() => {
-        window.location.href = targetUrl;
-      }, 2000);
-    }
+    
+    // Wait a moment for UI update
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
+    // Navigate to admin page
+    await router.isReady()
+    await router.push('/admin/new-post')
+    
   } catch (err) {
-    // Format Firebase error messages to be more user-friendly
-    if (err.code === 'auth/invalid-credential') {
-      errorMessage.value = 'Invalid email or password. Please try again.'
-    } else if (err.code === 'auth/too-many-requests') {
-      errorMessage.value = 'Too many failed login attempts. Please try again later.'
-    } else {
-      errorMessage.value = err.message
-    }
+    errorMessage.value = err.code === 'auth/invalid-credential' 
+      ? 'Invalid email or password. Please try again.'
+      : 'Login failed. Please try again.'
     
     // Set focus to the error message for screen readers
     setTimeout(() => {
