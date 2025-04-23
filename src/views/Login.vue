@@ -119,11 +119,12 @@ const login = async () => {
     const targetRoute = '/admin/new-post'
     
     try {
-      await router.push(targetRoute)
+      // await router.push(targetRoute)
+      window.location.href = `${window.location.origin}${targetRoute}`
     } catch (navError) {
       console.error('Navigation failed:', navError)
       // If router navigation fails, try direct navigation
-      window.location.href = `${window.location.origin}${targetRoute}`
+      
     }
   } catch (err) {
     if (err.message.includes('domain') || err.message.includes('unauthorized')) {
