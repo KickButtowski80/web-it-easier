@@ -1,6 +1,6 @@
-# My Protfolio 
+# IT Group 
 
-Includes all you need to know about me and seeing my jobs I have done so far
+Includes all you need to know about IT Group and seeing our jobs We have done so far
 
-my slogan is
+Our slogan is
 the door to an easier future :)
