@@ -97,6 +97,7 @@ const login = async () => {
     await signInWithEmailAndPassword(auth, email.value, password.value)
     // Add a success message to confirm login
     errorMessage.value = 'Login successful! Redirecting...';
+    console.log('Authentication successful, user:', auth.currentUser?.email);
     await new Promise(resolve => setTimeout(resolve, 500));
     try {
       console.log('Attempting navigation to /admin/new-post');
@@ -105,6 +106,8 @@ const login = async () => {
     } catch (navError) {
       console.error('Navigation error:', navError);
       errorMessage.value = 'Login successful, but failed to navigate. Please go to /admin/new-post manually.';
+      // Try an alternative navigation approach
+      window.location.href = '/admin/new-post';
     }
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
