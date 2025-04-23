@@ -105,9 +105,6 @@ const login = async () => {
     } catch (navError) {
       console.error('Navigation error:', navError);
       errorMessage.value = 'Login successful, but failed to navigate. Please go to /admin/new-post manually.';
-      // Fallback navigation attempt
-      console.log('Attempting fallback navigation with window.location.href');
-      window.location.href = '/admin/new-post';
     }
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
