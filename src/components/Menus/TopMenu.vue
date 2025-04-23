@@ -9,19 +9,40 @@
          "
         aria-label="main"
       >
-        <a href="#">Home</a>
-        <a href="#my-works">My Work</a>
-        <a href="#hire-us"
-           class="border rounded-xl bg-purple-950 text-white
-           ">Hire Us</a>
+        <RouterLink to="/"
+        @click.native.prevent="scrollToSection('home')">Home</RouterLink>
+        <RouterLink to="/blog">Blog</RouterLink>
+        <RouterLink 
+          to="/#our-works" 
+          @click.native.prevent="scrollToSection('our-works')"
+        >Our Works</RouterLink>
+        <RouterLink 
+          to="/#hire-us" 
+          @click.native.prevent="scrollToSection('hire-us')"
+          class="border rounded-xl bg-purple-950 text-white"
+        >Hire Us</RouterLink>
       </nav>
     </div>
   </section>
 </template>
 <script>
 export default {
-    
-}
+  methods: {
+    scrollToSection(sectionId) {
+      // Check if we're on the home page
+      if (window.location.pathname === '/' || window.location.pathname === '') {
+        // We're on the home page, scroll to the section
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      } else {
+        // We're on another page, navigate to home with the hash
+        window.location.href = '/#' + sectionId;
+      }
+    }
+  }
+};
 </script>
 <style lang="">
     

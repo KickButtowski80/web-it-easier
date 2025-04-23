@@ -2,7 +2,7 @@
   <section
     id="hire-us"
     aria-label="Hire Us Section"
-    class="flex flex-col items-center justify-center relative"
+    class="flex flex-col items-center justify-center relative py-16"
   >
     <header class="text-center mb-20 relative z-20">
       <h1 class="font-bold py-6 text-3xl">Hire Us</h1>

@@ -9,8 +9,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "dompurify": "^3.2.5",
+    "firebase": "^11.6.0",
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.7",
+    "marked-gfm-heading-id": "^4.1.1",
     "puppeteer": "^24.4.0",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",

@@ -1,14 +1,13 @@
 <template>
-  <section>
-    <div id="my-works"></div>
-    <h1 class="text-center font-bold py-6 text-3xl mt-20">My Works</h1>
-    <section
-      class="min-h-screen grid grid-cols-1 gap-y-6 place-items-center1 md:gap-6 md:grid-cols-2 lg:grid-cols-3"
-    >
-      <div v-for="project in freelancerProjectHistory" :key="project.projectId">
-        <Work :projectInfo="project" />
+  <section id="our-works" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-12">Our Works</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-for="project in freelancerProjectHistory" :key="project.projectId" class="bg-white rounded-lg shadow-md overflow-hidden">
+          <Work :projectInfo="project" />
+        </div>
       </div>
-    </section>
+    </div>
   </section>
 </template>
 
