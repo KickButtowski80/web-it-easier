@@ -110,10 +110,19 @@ const login = async () => {
       console.log('Current route:', router.currentRoute.value.path);
       errorMessage.value = 'Login successful, but failed to navigate. Trying alternative method...';
       
-      // Try an alternative navigation approach
+      // Try an alternative navigation approach - use the full URL
+      const baseUrl = window.location.origin;
+      console.log('Base URL:', baseUrl);
+      const targetUrl = `${baseUrl}/admin/new-post`;
+      console.log('Attempting direct navigation to:', targetUrl);
+      
+      // Use a button to let the user try manual navigation
+      errorMessage.value = `Login successful! Click <a href="${targetUrl}" class="manual-link">here</a> to go to the admin page.`;
+      
+      // Also try automatic navigation after a delay
       setTimeout(() => {
-        window.location.href = '/admin/new-post';
-      }, 1000);
+        window.location.href = targetUrl;
+      }, 2000);
     }
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
