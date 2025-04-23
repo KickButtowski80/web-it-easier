@@ -94,15 +94,32 @@ const login = async () => {
     }
     
     // Attempt login
-    await signInWithEmailAndPassword(auth, email.value, password.value)
+    const result = await signInWithEmailAndPassword(auth, email.value, password.value)
     
-    // Wait a moment for UI update
-    await new Promise(resolve => setTimeout(resolve, 500))
-    
+    // Check if user is authenticated
+    if (!result.user) {
+      throw new Error('Authentication successful but no user returned')
+    }
+
+    // Wait for auth state to be fully updated
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    // Verify user is still authenticated
+    if (!auth.currentUser) {
+      throw new Error('User authentication state was lost')
+    }
+
     // Navigate to admin page
     await router.isReady()
-    await router.push('/admin/new-post')
+    const targetRoute = '/admin/new-post'
     
+    try {
+      await router.push(targetRoute)
+    } catch (navError) {
+      console.error('Navigation failed:', navError)
+      // If router navigation fails, try direct navigation
+      window.location.href = `${window.location.origin}${targetRoute}`
+    }
   } catch (err) {
     errorMessage.value = err.code === 'auth/invalid-credential' 
       ? 'Invalid email or password. Please try again.'
