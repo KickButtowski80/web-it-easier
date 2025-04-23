@@ -109,6 +109,11 @@ const login = async () => {
       throw new Error('User authentication state was lost')
     }
 
+    // Check if we're in production and if auth state is properly initialized
+    if (import.meta.env.PROD && !auth.currentUser?.uid) {
+      throw new Error('Authentication state not properly initialized. Please check your domain is authorized in Firebase Console.')
+    }
+
     // Navigate to admin page
     await router.isReady()
     const targetRoute = '/admin/new-post'
@@ -121,9 +126,13 @@ const login = async () => {
       window.location.href = `${window.location.origin}${targetRoute}`
     }
   } catch (err) {
-    errorMessage.value = err.code === 'auth/invalid-credential' 
-      ? 'Invalid email or password. Please try again.'
-      : 'Login failed. Please try again.'
+    if (err.message.includes('domain') || err.message.includes('unauthorized')) {
+      errorMessage.value = 'Authentication failed. Please contact the administrator to ensure the domain is authorized in Firebase Console.'
+    } else if (err.code === 'auth/invalid-credential') {
+      errorMessage.value = 'Invalid email or password. Please try again.'
+    } else {
+      errorMessage.value = 'Login failed. Please try again.'
+    }
     
     // Set focus to the error message for screen readers
     setTimeout(() => {
