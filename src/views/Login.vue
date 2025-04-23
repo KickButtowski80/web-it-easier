@@ -95,7 +95,10 @@ const login = async () => {
     
     // Attempt login
     await signInWithEmailAndPassword(auth, email.value, password.value)
-    router.push('/admin/new-post')
+    // Add a success message to confirm login
+    errorMessage.value = 'Login successful! Redirecting...';
+    await new Promise(resolve => setTimeout(resolve, 500));
+    await router.push('/admin/new-post')
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
     if (err.code === 'auth/invalid-credential') {
