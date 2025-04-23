@@ -101,8 +101,9 @@ const login = async () => {
     await new Promise(resolve => setTimeout(resolve, 500));
     try {
       console.log('Attempting navigation to /admin/new-post');
-      await nextTick();
-      await router.push('/admin/new-post')
+      await router.isReady().then(() => {
+        router.push('/admin/new-post');
+      });
       console.log('Navigation successful');
     } catch (navError) {
       console.error('Navigation error:', navError);
