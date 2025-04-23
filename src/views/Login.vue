@@ -99,10 +99,15 @@ const login = async () => {
     errorMessage.value = 'Login successful! Redirecting...';
     await new Promise(resolve => setTimeout(resolve, 500));
     try {
+      console.log('Attempting navigation to /admin/new-post');
       await router.push('/admin/new-post')
+      console.log('Navigation successful');
     } catch (navError) {
       console.error('Navigation error:', navError);
       errorMessage.value = 'Login successful, but failed to navigate. Please go to /admin/new-post manually.';
+      // Fallback navigation attempt
+      console.log('Attempting fallback navigation with window.location.href');
+      window.location.href = '/admin/new-post';
     }
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
