@@ -110,7 +110,7 @@
       v-model="showNotification" 
       :message="notificationMessage" 
       :type="notificationType" 
-      :logo="notificationLogo"
+      :icon="notificationIcon"
     />
   </section>
 </template>
@@ -146,7 +146,7 @@ const isSubmitting = ref(false)
 const showNotification = ref(false)
 const notificationMessage = ref('')
 const notificationType = ref('info')
-const notificationLogo = ref('')
+const notificationIcon = ref('')
 
 // Configure marked for syntax highlighting
 marked.setOptions({
@@ -186,10 +186,10 @@ const logout = async () => {
   }
 }
 
-function showNotify(message, type = 'info', logo = '') {
+function showNotify(message, type = 'info', icon = '') {
   notificationMessage.value = message
   notificationType.value = type
-  notificationLogo.value = logo
+  notificationIcon.value = icon
   showNotification.value = true
 }
 
@@ -246,6 +246,8 @@ const isValidUrl = (url) => {
 }
 
 const handleSubmit = async () => {
+  if (isSubmitting.value) return; // Prevent double submit
+  isSubmitting.value = true
   // Validate form
   if (!validateForm()) {
     // Focus the first field with an error
@@ -258,8 +260,6 @@ const handleSubmit = async () => {
     return
   }
   
-  isSubmitting.value = true
-  
   try {
     // Add post to Firestore
     await addPost({
@@ -268,8 +268,9 @@ const handleSubmit = async () => {
       createdAt: new Date(),
     })
     
-    showNotify('Post published successfully!', 'success')
-    
+    showNotify('Post published successfully!', 'success');
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await router.push('/blog');
     // Reset form after successful submission
     formData.value = {
       title: '',
@@ -279,14 +280,11 @@ const handleSubmit = async () => {
       content: ''
     }
     
-    // Redirect to blog page
-    router.push('/blog')
+
   } catch (error) {
     console.error('Error publishing post:', error)
     showNotify('Failed to publish post. Please use a unique title and try again.', 'error')
-  } finally {
-    isSubmitting.value = false
-  }
+  } 
 }
 </script>
 
