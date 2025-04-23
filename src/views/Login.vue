@@ -111,9 +111,9 @@ const login = async () => {
       errorMessage.value = 'Login successful, but failed to navigate. Trying alternative method...';
       
       // Try an alternative navigation approach
-      // setTimeout(() => {
-      //   window.location.href = '/admin/new-post';
-      // }, 1000);
+      setTimeout(() => {
+        window.location.href = '/admin/new-post';
+      }, 1000);
     }
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
