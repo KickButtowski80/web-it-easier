@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { auth, signInWithEmailAndPassword } from '@/config/firebase'
 
@@ -106,7 +106,14 @@ const login = async () => {
       console.log('Navigation successful');
     } catch (navError) {
       console.error('Navigation error:', navError);
-      errorMessage.value = 'Login successful, but failed to navigate. Please go to /admin/new-post manually.';
+      console.log('Current auth state:', auth.currentUser ? 'Authenticated' : 'Not authenticated');
+      console.log('Current route:', router.currentRoute.value.path);
+      errorMessage.value = 'Login successful, but failed to navigate. Trying alternative method...';
+      
+      // Try an alternative navigation approach
+      // setTimeout(() => {
+      //   window.location.href = '/admin/new-post';
+      // }, 1000);
     }
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
