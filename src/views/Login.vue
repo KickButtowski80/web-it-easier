@@ -98,7 +98,12 @@ const login = async () => {
     // Add a success message to confirm login
     errorMessage.value = 'Login successful! Redirecting...';
     await new Promise(resolve => setTimeout(resolve, 500));
-    await router.push('/admin/new-post')
+    try {
+      await router.push('/admin/new-post')
+    } catch (navError) {
+      console.error('Navigation error:', navError);
+      errorMessage.value = 'Login successful, but failed to navigate. Please go to /admin/new-post manually.';
+    }
   } catch (err) {
     // Format Firebase error messages to be more user-friendly
     if (err.code === 'auth/invalid-credential') {
