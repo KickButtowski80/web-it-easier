@@ -92,19 +92,16 @@ const login = async () => {
     }
     
     // Attempt login
-    console.log('[Login] Attempting Firebase sign in...');
     await signInWithEmailAndPassword(auth, email.value, password.value)
-    console.log('[Login] Firebase sign in successful.');
     
     // Navigate using router.push - the guard will handle auth check
     const targetRoute = '/admin/new-post';
-    console.log(`[Login] Attempting router.push to ${targetRoute}...`);
+    
     await router.isReady(); // Ensure router is ready
     await router.push(targetRoute);
-    console.log(`[Login] router.push to ${targetRoute} successful (or navigation is in progress).`);
+    
     
   } catch (err) {
-    console.error('[Login] Login error:', err);
     // Handle specific errors
     if (err.code === 'auth/invalid-credential') {
       errorMessage.value = 'Invalid email or password. Please try again.'

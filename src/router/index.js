@@ -15,7 +15,6 @@ const authReadyPromise = new Promise(resolve => { authReadyResolve = resolve; })
 
 // Listen for the initial auth state check
 const unsubscribeInitialAuthListener = onAuthStateChanged(auth, (user) => {
-  console.log('[Router] Initial Firebase Auth State Checked:', user ? user.email : 'No user');
   authReadyResolve(); // Signal that auth is ready
   unsubscribeInitialAuthListener(); // Unsubscribe after the first check
 });
