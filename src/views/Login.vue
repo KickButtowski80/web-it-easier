@@ -83,62 +83,39 @@ const login = async () => {
     // Validate inputs
     if (!email.value || !password.value) {
       errorMessage.value = 'Email and password are required'
-      loading.value = false
-      return
+      return // No need to set loading false here, finally block handles it
     }
     
     // Validate email format
     if (!validateEmail()) {
-      loading.value = false
-      return
+      return // No need to set loading false here, finally block handles it
     }
     
     // Attempt login
-    const result = await signInWithEmailAndPassword(auth, email.value, password.value)
+    await signInWithEmailAndPassword(auth, email.value, password.value)
     
-    // Check if user is authenticated
-    if (!result.user) {
-      throw new Error('Authentication successful but no user returned')
-    }
-
-    // Wait for auth state to be fully updated
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Verify user is still authenticated
-    if (!auth.currentUser) {
-      throw new Error('User authentication state was lost')
-    }
-
-    // Check if we're in production and if auth state is properly initialized
-    if (import.meta.env.PROD && !auth.currentUser?.uid) {
-      throw new Error('Authentication state not properly initialized. Please check your domain is authorized in Firebase Console.')
-    }
-
-    // Navigate to admin page
-    await router.isReady()
-    const targetRoute = '/admin/new-post'
+    // Navigate using router.push - the guard will handle auth check
+    const targetRoute = '/admin/new-post';
     
-    try {
-      await router.push(targetRoute)
-    } catch (navError) {
-      console.error('Navigation failed:', navError)
-      // If router navigation fails, try direct navigation
-      window.location.href = `${window.location.origin}${targetRoute}`
-    }
+    await router.isReady(); // Ensure router is ready
+    await router.push(targetRoute);
+    
+    
   } catch (err) {
-    if (err.message.includes('domain') || err.message.includes('unauthorized')) {
-      errorMessage.value = 'Authentication failed. Please contact the administrator to ensure the domain is authorized in Firebase Console.'
-    } else if (err.code === 'auth/invalid-credential') {
+    // Handle specific errors
+    if (err.code === 'auth/invalid-credential') {
       errorMessage.value = 'Invalid email or password. Please try again.'
+    } else if (err.message.includes('domain') || err.message.includes('unauthorized')) {
+       errorMessage.value = 'Authentication failed. Domain might not be authorized.' // Simplified message
     } else {
-      errorMessage.value = 'Login failed. Please try again.'
+      errorMessage.value = 'An error occurred during login. Please try again.'
     }
     
-    // Set focus to the error message for screen readers
+    // Focus handling can remain if needed
     setTimeout(() => {
       const errorEl = document.querySelector('.error-message')
       if (errorEl) errorEl.focus()
-    }, 100)
+    }, 100);
   } finally {
     loading.value = false
   }
