@@ -14,11 +14,11 @@ let authReadyResolve;
 const authReadyPromise = new Promise(resolve => { authReadyResolve = resolve; });
 
 // Listen for the initial auth state check
-const initialAuthListener = onAuthStateChanged(auth, (user) => {
-  console.log('[Router] Initial Firebase Auth State Checked:', user ? user.email : 'No user');
-  authReadyResolve(); // Signal that auth is ready
-  initialAuthListener(); // Unsubscribe after the first check
-});
+// const initialAuthListener = onAuthStateChanged(auth, (user) => {
+//   console.log('[Router] Initial Firebase Auth State Checked:', user ? user.email : 'No user');
+//   authReadyResolve(); // Signal that auth is ready
+//   initialAuthListener(); // Unsubscribe after the first check
+// });
 
 const routes = [
   {
@@ -69,7 +69,7 @@ router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.meta.requiresAuth;
   
   // Wait for the initial Firebase auth check to complete
-  await authReadyPromise;
+  // await authReadyPromise;
   
   // Get the current user directly from Firebase auth
   const user = auth.currentUser;
