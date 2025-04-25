@@ -16,13 +16,12 @@ export default {
 </script>
 
 <style scoped>
-
 .not-found {
   min-height: 80vh;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%);
+  align-items: center;
+
 }
 
 .not-found-content {
@@ -31,12 +30,13 @@ export default {
   border-radius: 16px;
   background: #fff;
   box-shadow: 0 8px 32px rgba(60, 60, 120, 0.08);
+  color: white;
 }
 
 .not-found-content h1 {
   font-size: 6rem;
   font-weight: 900;
-  color: #1e40af;
+  color: rgb(59,7,100);
   /* Improved contrast */
   margin-bottom: 0.5rem;
   outline: none;
@@ -59,16 +59,19 @@ export default {
 
 .home-link {
   display: inline-block;
-  padding: 0.7em 2em;
-  background: #3b82f6;
-  color: #fff;
-  border-radius: 8px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: rgb(59,7,100);
+  color: white;
+  border-radius: 5px;
   text-decoration: none;
-  font-weight: 600;
-  transition: background 0.2s;
+  font-weight: bold;
+  transition: background-color 0.2s;
 }
 
-.home-link:hover {
-  background: #2563eb;
+.home-link:hover,
+.home-link:focus {
+  background-color: rgb(45,5,80);
+  outline: 2px solid white;
 }
 </style>
