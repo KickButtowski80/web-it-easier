@@ -26,12 +26,12 @@ export default {
   background: linear-gradient(135deg, rgba(192,132,252,0.8) 0%, rgba(224,242,254,0.8) 50%, rgba(237,233,254,0.8) 100%);
 }
 .not-found::before {
-  content: "";
+  content: "9999";
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(
     45deg,
-    rgba(255,255,255,0.2) 0 2px,
+    rgba(215, 50, 198, 0.2) 0 2px,
     transparent 2px 20px
   );
   z-index: 1;
