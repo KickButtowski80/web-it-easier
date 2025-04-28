@@ -1,6 +1,6 @@
 <template>
   <div class="not-found" role="region" aria-labelledby="notfound-title">
-    <section class="not-found-content" id="main-content" tabindex="-1" aria-label="404 Not Found Page">
+    <section class="not-found-content" tabindex="-1" aria-label="404 Not Found Page">
       <h1 id="notfound-title">404</h1>
       <p>Oops! The page you're looking for doesn't exist.</p>
       <p>It might have been moved or deleted, or you might have mistyped the URL.</p>
