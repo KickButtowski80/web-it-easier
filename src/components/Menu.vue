@@ -1,4 +1,4 @@
-<template lang="">
+<template>
   <TopMenu />
   <HamburgerMenu :hideIt="true" />
   <BottomMenu :hideIt="false" />
@@ -15,4 +15,3 @@ export default {
   },
 };
 </script>
-<style lang=""></style>

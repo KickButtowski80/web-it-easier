@@ -27,20 +27,20 @@
 </template>
 <script>
 export default {
-    props: ['hideIt'],
-    data(){
-        return{
-            isHamburgerVisible:false,
-        }
-    },
-    methods: {
+  props: ['hideIt'],
+  data() {
+    return {
+      isHamburgerVisible: false,
+    }
+  },
+  methods: {
     toggleHamburgerMenu() {
       this.isHamburgerVisible = !this.isHamburgerVisible;
     },
   },
-    
+
 }
 </script>
 <style lang="">
-    
+
 </style>
