@@ -79,7 +79,7 @@ const router = createRouter({
           behavior: from.name === to.name ? 'smooth' : 'instant' // smooth if on same page, auto if navigating
         };
 
-        const maxDuration = 1000; // 1 second timeout
+        const maxDuration = 500; // 0.5 second timeout
 
         const checkElementRecursively = (timestamp) => {
           const element = document.querySelector(to.hash);
