@@ -76,7 +76,7 @@ const router = createRouter({
       return new Promise((resolve) => {
         const scrollOptions = {
           el: to.hash,
-          behavior: from.name === to.name ? 'smooth' : 'instant' // smooth if on same page, auto if navigating
+          behavior: from.name === to.name ? 'smooth' : 'instant' // smooth if on same page, instant if navigating
         };
 
         const maxDuration = 500; // 0.5 second timeout
