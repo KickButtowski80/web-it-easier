@@ -9,10 +9,10 @@
          "
         aria-label="main"
       >
-        <RouterLink :to="{ name: 'Home', hash: '#home' }">Home</RouterLink>
-        <RouterLink :to="{ name: 'Blog'  }">Blog</RouterLink>
-        <RouterLink :to="{ name: 'Home' , hash: '#our-works' }">Our Works</RouterLink>
-        <RouterLink :to="{ name: 'Home' , hash: '#hire-us' }" class="border rounded-xl bg-purple-950 text-white">Hire Us</RouterLink>
+        <RouterLink :to="{ name: 'Home'  }">Home</RouterLink>
+        <RouterLink :to="{ name: 'Blog' }">Blog</RouterLink>
+        <RouterLink :to="{ name: 'Home', hash: '#our-works' }">Our Works</RouterLink>
+        <RouterLink :to="{ name: 'Home', hash: '#hire-us' }" class="border rounded-xl bg-purple-950 text-white">Hire Us</RouterLink>
       </nav>
     </div>
   </section>
