@@ -1,20 +1,6 @@
 <template>
-  <section class="admin-form">
-    <div class="admin-header">
-      <div class="admin-actions">
-        <button 
-          @click="logout" 
-          class="logout-btn"
-          type="button"
-          aria-label="Log out from admin panel"
-        >
-          Log out
-        </button>
-      </div>
-    </div>
-    
-    <h1 id="form-heading">New Blog Post</h1>
-    
+  <section class="admin-form">    
+    <h1 id="form-heading">New Blog Post</h1>    
     <form @submit.prevent="handleSubmit" aria-labelledby="form-heading">
       <div class="form-group">
         <label for="title">Title</label>
@@ -306,19 +292,6 @@ h1 {
   font-weight: 600;
 }
 
-.admin-header {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-block: 2rem;
-}
-
-.admin-actions {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
 
 .change-password-btn {
   background-color: #4299e1;
@@ -334,25 +307,7 @@ h1 {
   background-color: #3182ce;
 }
 
-.logout-btn {
-  background-color: #f56565;
-  color: rgb(20, 19, 19);
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.2s;
-}
 
-.logout-btn:hover {
-  background-color: #e53e3e;
-}
-
-.logout-btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.5);
-}
 
 form {
   display: flex;
