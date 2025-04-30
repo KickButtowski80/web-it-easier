@@ -13,25 +13,39 @@
   </div>
 </template>
 
-<script>
-import { useNotifications } from '../composables/useNotifications';
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 
-export default {
-  name: 'Notification',
-  setup() {
-    const { notifications, removeNotification } = useNotifications();
+const notifications = ref([])
 
-    const getBgColor = (type) => {
-      switch (type) {
-        case 'error': return 'bg-red-500';
-        case 'success': return 'bg-green-500';
-        default: return 'bg-blue-500';
-      }
-    };
-
-    return { notifications, removeNotification, getBgColor };
+const getBgColor = (type) => {
+  switch (type) {
+    case 'error': return 'bg-red-500'
+    case 'success': return 'bg-green-500'
+    default: return 'bg-blue-500'
   }
-};
+}
+
+const removeNotification = (id) => {
+  notifications.value = notifications.value.filter(n => n.id !== id)
+}
+
+const handleNotificationEvent = (event) => {
+  notifications.value.push(event.detail)
+  
+  // Remove notification after 3 seconds
+  setTimeout(() => {
+    removeNotification(event.detail.id)
+  }, 3000)
+}
+
+onMounted(() => {
+  document.addEventListener('show-notification', handleNotificationEvent)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('show-notification', handleNotificationEvent)
+})
 </script>
 
 <style scoped>
