@@ -19,46 +19,56 @@
       </transition>
     </router-view>
   </main>
+  <Notification
+    v-model="showNotification"
+    :message="notificationMessage"
+    :type="notificationType"
+    :duration="3000"
+  />
 </template>
 <script setup>
 import Menu from "./components/Menu.vue";
+import Notification from "./components/UI/Notification.vue";
 import GoBackTop from "./components/GoBackTop.vue";
+import { ref } from "vue";
 import { onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+const showNotification = ref(false);
+const notificationMessage = ref("");
+const notificationType = ref("info");
 
-// Define the keyboard shortcut handler
 const handleKeyPress = async (e) => {
-  // Check for both lowercase and uppercase 'l'/'L'
-  if ((e.key === "l" || e.key === "L" || e.code === "KeyL") && e.altKey && e.shiftKey) {
+  if (
+    (e.key === "l" || e.key === "L" || e.code === "KeyL") &&
+    e.altKey &&
+    e.shiftKey
+  ) {
     e.preventDefault();
-    console.log("Attempting navigation to /login");
-    
+
     try {
-      // Use await with router.push for async navigation
       await router.push("/login");
-      console.log("Navigation successful!");
+      showNotification.value = true;
+      notificationMessage.value = "Navigating to login page";
+      notificationType.value = "success";
     } catch (error) {
-      console.error("Navigation failed:", error);
+      showNotification.value = true;
+      notificationMessage.value = `Navigation failed: ${error.message}`;
+      notificationType.value = "error";
     }
   }
 };
 
 onMounted(() => {
-  console.log("Component mounted, adding event listener");
-  
-  // Add event listener for keyboard shortcut
   document.addEventListener("keydown", handleKeyPress, { capture: true });
-  console.log("Event listener added to window");
 });
 
-// Ensure proper cleanup
 onUnmounted(() => {
   document.removeEventListener("keydown", handleKeyPress, { capture: true });
-  console.log("Event listener removed");
 });
 </script>
+ 
 
 
 <style>
