@@ -1,5 +1,5 @@
 <template>
-  <section class="admin-form">    
+  <section class="admin-form position-relative top-11">    
     <h1 id="form-heading">New Blog Post</h1>    
     <form @submit.prevent="handleSubmit" aria-labelledby="form-heading">
       <div class="form-group">
