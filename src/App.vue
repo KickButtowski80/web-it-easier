@@ -192,10 +192,7 @@ const checkMobile = () => {
   width: 60px;
   height: 60px;
   pointer-events: auto; /* Enable clicks on these areas */
-  /* opacity: 0.5;  */
-  background-color: transparent; /* Red background for testing */
-  /* border: 2px solid white;
-  color: white; */
+  background-color: transparent; 
   font-weight: bold;
   font-size: 20px;
   display: flex;
