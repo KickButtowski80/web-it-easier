@@ -1,5 +1,5 @@
 <template>
-  <section class="admin-form position-relative top-11">    
+  <section class="admin-form">    
     <h1 id="form-heading">New Blog Post</h1>    
     <form @submit.prevent="handleSubmit" aria-labelledby="form-heading">
       <div class="form-group">
@@ -276,6 +276,8 @@ const handleSubmit = async () => {
 
 <style scoped>
 .admin-form {
+  position: relative;
+  top: 11rem;
   max-width: 800px;
   margin: 4rem auto;
   padding: 2rem;

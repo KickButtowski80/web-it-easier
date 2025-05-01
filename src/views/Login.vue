@@ -124,6 +124,8 @@ const login = async () => {
 
 <style scoped>
 .login-container {
+  position: relative;
+  top: 11rem;
   max-width: 400px;
   margin: 100px auto;
   padding: 30px;
