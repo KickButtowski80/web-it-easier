@@ -28,10 +28,10 @@
 
   <!-- Tap areas for secret sequence (mobile only) -->
   <div class="secret-tap-areas" v-if="isMobile && !isLoginPage">
-    <button class="tap-area top-left" @click="handleTap(1)">1</button>
-    <button class="tap-area top-right" @click="handleTap(2)">2</button>
-    <button class="tap-area bottom-left" @click="handleTap(3)">3</button>
-    <button class="tap-area bottom-right" @click="handleTap(4)">4</button>
+    <button class="tap-area top-left" @click="handleTap(1)"></button>
+    <button class="tap-area top-right" @click="handleTap(2)"></button>
+    <button class="tap-area bottom-left" @click="handleTap(3)"></button>
+    <button class="tap-area bottom-right" @click="handleTap(4)"></button>
   </div>
 </template>
 <script setup>
@@ -192,10 +192,10 @@ const checkMobile = () => {
   width: 60px;
   height: 60px;
   pointer-events: auto; /* Enable clicks on these areas */
-  opacity: 0.5; /* More visible for testing */
+  /* opacity: 0.5;  */
   background-color: transparent; /* Red background for testing */
-  border: 2px solid white;
-  color: white;
+  /* border: 2px solid white;
+  color: white; */
   font-weight: bold;
   font-size: 20px;
   display: flex;
