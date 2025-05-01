@@ -1,17 +1,33 @@
 <template>
   <TopMenu />
+  <AdminLayout v-if="isAdmin" class="admin-layout-bar" />
   <HamburgerMenu :hideIt="true" />
   <BottomMenu :hideIt="false" />
 </template>
-<script>
+<script setup>
 import BottomMenu from "./Menus/BottomMenu.vue";
 import HamburgerMenu from "./Menus/HamburgerMenu.vue";
 import TopMenu from "./Menus/TopMenu.vue";
-export default {
-  components: {
-    BottomMenu,
-    HamburgerMenu,
-    TopMenu,
-  },
-};
+import AdminLayout from "./Admin/AdminLayout.vue";
+import { ref, onMounted, onUnmounted } from "vue";
+import { auth } from "@/config/firebase";
+import { onAuthStateChanged } from "firebase/auth";
+
+const isAdmin = ref(false);
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log('User email:', user.email);
+    isAdmin.value = user.email === 'pazpaz22@yahoo.com';
+  } else {
+    isAdmin.value = false;
+  }
+});   
+
+onMounted(() => {
+  document.title = "Menu Page - Admin";
+});
+onUnmounted(() => {
+  document.title = "Menu Page";
+});
 </script>
