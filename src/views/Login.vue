@@ -1,5 +1,5 @@
 <template>
-  <main class="login-container">
+  <section class="login-container">
     <h1 id="login-heading">Admin Login</h1>
     <form @submit.prevent="login" class="login-form" aria-labelledby="login-heading">
       <div class="form-group">
@@ -38,7 +38,7 @@
       </button>
     </form>
     <div v-if="errorMessage" class="error-message" role="alert" aria-live="assertive">{{ errorMessage }}</div>
-  </main>
+  </section>
 </template>
 
 <script setup>
