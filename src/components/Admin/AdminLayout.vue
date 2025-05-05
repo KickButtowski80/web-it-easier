@@ -9,9 +9,14 @@
       :type="notificationType"
       :duration="3000"
     />
-    <nav v-if="isAuthenticated" class="admin-nav" role="navigation" aria-label="Admin navigation">
-      <router-link 
-        to="/admin/new-post" 
+    <nav
+      v-if="isAuthenticated"
+      class="admin-nav"
+      role="navigation"
+      aria-label="Admin navigation"
+    >
+      <router-link
+        to="/admin/new-post"
         class="nav-link"
         :class="{ active: $route.path === '/admin/new-post' }"
         role="link"
@@ -19,8 +24,8 @@
       >
         New Post
       </router-link>
-      <router-link 
-        to="/admin/posts" 
+      <router-link
+        to="/admin/posts"
         class="nav-link"
         :class="{ active: $route.path === '/admin/posts' }"
         role="link"
@@ -28,8 +33,8 @@
       >
         Manage Posts
       </router-link>
-      <button 
-        @click="logout" 
+      <button
+        @click="logout"
         class="logout-btn"
         type="button"
         aria-label="Log out from admin panel"
@@ -41,11 +46,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { auth } from '@/config/firebase';
-import { signOut } from 'firebase/auth';
-import Notification from '../UI/Notification.vue';
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import { auth } from "@/config/firebase";
+import { signOut } from "firebase/auth";
+import Notification from "../UI/Notification.vue";
 const showNotification = ref(false);
 const notificationMessage = ref("");
 const notificationType = ref("info");
@@ -63,9 +68,9 @@ const logout = async () => {
     showNotification.value = true;
     notificationMessage.value = "You have been logged out";
     notificationType.value = "success";
-    router.push('/');
+    router.push("/");
   } catch (error) {
-    console.error('Logout failed:', error);
+    console.error("Logout failed:", error);
     showNotification.value = true;
     notificationMessage.value = "Logout failed";
     notificationType.value = "error";
@@ -108,7 +113,8 @@ const logout = async () => {
   transition: background-color 0.2s, color 0.2s;
 }
 
-.nav-link:hover, .nav-link:focus-visible {
+.nav-link:hover,
+.nav-link:focus-visible {
   background-color: #4a5568; /* Darker gray for hover/focus */
   color: #ffffff;
   outline: none;
@@ -117,8 +123,7 @@ const logout = async () => {
 .nav-link.active {
   background-color: #4c1d95; /* Purple for active state */
   color: #ffffff;
-  padding: 0.75rem ;
-  
+  padding: 0.75rem;
 }
 
 .logout-btn {
@@ -131,7 +136,8 @@ const logout = async () => {
   transition: background-color 0.2s;
 }
 
-.logout-btn:hover, .logout-btn:focus-visible {
+.logout-btn:hover,
+.logout-btn:focus-visible {
   background-color: #c53030; /* Darker red for hover/focus */
   outline: none;
 }
@@ -141,7 +147,7 @@ const logout = async () => {
     flex-direction: column;
     align-items: flex-start;
   }
-  .nav-link.active{
+  .nav-link.active {
     padding: 0.45rem;
   }
 }
