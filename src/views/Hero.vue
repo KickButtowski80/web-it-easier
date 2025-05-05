@@ -1,7 +1,8 @@
 <template>
   <section
     id="hero"
-    class="bg-purple-500 h-[90vh] md:mt-20 md:h-[40rem] text-white flex flex-col items-center justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
+    class="bg-purple-500 h-[90vh] md:mt-[4.5rem] md:h-[40rem] text-white flex flex-col items-center
+     justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
   >
     <div class="relative" style="perspective: 1000px">
       <div
