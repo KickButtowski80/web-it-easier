@@ -1,48 +1,58 @@
 <template>
-  <header class="admin-header" role="banner">
-    <div class="admin-logo">
-      <h1>Admin Dashboard</h1>
+  <div class="admin-container">
+    <header class="admin-header" role="banner">
+      <div class="admin-logo">
+        <h1>Admin Dashboard</h1>
+      </div>
+      <Notification
+        v-model="showNotification"
+        :message="notificationMessage"
+        :type="notificationType"
+        :duration="3000"
+      />
+      <nav
+        v-if="isAuthenticated"
+        class="admin-nav"
+        role="navigation"
+        aria-label="Admin navigation"
+      >
+        <router-link
+          to="/admin/new-post"
+          class="nav-link"
+          :class="{ active: $route.path === '/admin/new-post' || $route.path.includes('/admin/edit-post/') }"
+          role="link"
+          :aria-current="$route.path === '/admin/new-post' || $route.path.includes('/admin/edit-post/') ? 'page' : 'false'"
+        >
+          New Post
+        </router-link>
+        <router-link
+          to="/admin/manage-posts"
+          class="nav-link"
+          :class="{ active: $route.path === '/admin/manage-posts' }"
+          role="link"
+          :aria-current="$route.path === '/admin/manage-posts' ? 'page' : 'false'"
+        >
+          Manage Posts
+        </router-link>
+        <button
+          @click="logout"
+          class="logout-btn"
+          type="button"
+          aria-label="Log out from admin panel"
+        >
+          Log out
+        </button>
+      </nav>
+    </header>
+    
+    <div class="admin-content mt-[6rem]">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" :key="$route.fullPath" />
+        </transition>
+      </router-view>
     </div>
-    <Notification
-      v-model="showNotification"
-      :message="notificationMessage"
-      :type="notificationType"
-      :duration="3000"
-    />
-    <nav
-      v-if="isAuthenticated"
-      class="admin-nav"
-      role="navigation"
-      aria-label="Admin navigation"
-    >
-      <router-link
-        to="/admin/new-post"
-        class="nav-link"
-        :class="{ active: $route.path === '/admin/new-post' }"
-        role="link"
-        :aria-current="$route.path === '/admin/new-post' ? 'page' : 'false'"
-      >
-        New Post
-      </router-link>
-      <router-link
-        to="/admin/posts"
-        class="nav-link"
-        :class="{ active: $route.path === '/admin/posts' }"
-        role="link"
-        :aria-current="$route.path === '/admin/posts' ? 'page' : 'false'"
-      >
-        Manage Posts
-      </router-link>
-      <button
-        @click="logout"
-        class="logout-btn"
-        type="button"
-        aria-label="Log out from admin panel"
-      >
-        Log out
-      </button>
-    </nav>
-  </header>
+  </div>
 </template>
 
 <script setup>
@@ -79,6 +89,12 @@ const logout = async () => {
 </script>
 
 <style scoped>
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -91,7 +107,7 @@ const logout = async () => {
   top: 6rem;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 10;
 }
 
 .admin-logo h1 {
@@ -108,7 +124,7 @@ const logout = async () => {
 .nav-link {
   color: #cbd5e0; /* Light gray for contrast */
   text-decoration: none;
-  padding: 0.5rem 0rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 0.25rem;
   transition: background-color 0.2s, color 0.2s;
 }
@@ -123,7 +139,6 @@ const logout = async () => {
 .nav-link.active {
   background-color: #4c1d95; /* Purple for active state */
   color: #ffffff;
-  padding: 0.75rem;
 }
 
 .logout-btn {
@@ -142,13 +157,24 @@ const logout = async () => {
   outline: none;
 }
 
+
+
+/* Transition for router-view */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 @media (max-width: 768px) {
   .admin-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  .nav-link.active {
-    padding: 0.45rem;
-  }
+
 }
 </style>
