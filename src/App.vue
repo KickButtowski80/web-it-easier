@@ -27,11 +27,31 @@
   </main>
 
   <!-- Tap areas for secret sequence (mobile only) -->
-  <div class="secret-tap-areas" v-if="isMobile && !isLoginPage">
-    <button class="tap-area top-left" @click="handleTap(1)"></button>
-    <button class="tap-area top-right" @click="handleTap(2)"></button>
-    <button class="tap-area bottom-left" @click="handleTap(3)"></button>
-    <button class="tap-area bottom-right" @click="handleTap(4)"></button>
+  <div class="secret-tap-areas" v-if="isMobile && !isLoginPage" role="region" aria-label="Secret tap sequence area">
+    <button 
+      class="tap-area top-left" 
+      @click="handleTap(1)" 
+      aria-label="Top left tap area"
+      tabindex="0"
+    ></button>
+    <button 
+      class="tap-area top-right" 
+      @click="handleTap(2)" 
+      aria-label="Top right tap area"
+      tabindex="0"
+    ></button>
+    <button 
+      class="tap-area bottom-left" 
+      @click="handleTap(3)" 
+      aria-label="Bottom left tap area"
+      tabindex="0"
+    ></button>
+    <button 
+      class="tap-area bottom-right" 
+      @click="handleTap(4)" 
+      aria-label="Bottom right tap area"
+      tabindex="0"
+    ></button>
   </div>
 </template>
 <script setup>
@@ -52,19 +72,25 @@ const tapSequence = ref([]);
 const correctSequence = [1, 2, 3, 4]; 
 const sequenceTimeout = ref(null);
 
-// Handle key press for desktop
+// Handle key press for desktop - Alt+Shift+L for login access
 const handleKeyPress = async (e) => {
-  console.log(auth.currentUser);
+  // Check if user is already logged in
   const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
+  
+  // Check for keyboard shortcut: Alt+Shift+L
   const isLKey = e.key === "l" || e.key === "L" || e.code === "KeyL";
   const isAlt = e.altKey;
   const isShift = e.shiftKey;
+  
+  // Handle already logged in case
   if (isAdmin) {
     notificationMessage.value = "You are already logged in";
     notificationType.value = "warning";
     showNotification.value = true;
     return;
   }
+  
+  // Handle login shortcut
   if (!isAdmin && isLKey && isAlt && isShift) {
     e.preventDefault();
     navigateToLogin();
@@ -192,6 +218,14 @@ const checkMobile = () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.tap-area:focus-visible {
+  outline: 2px solid #4c1d95;
+  background-color: rgba(76, 29, 149, 0.1);
+  box-shadow: 0 0 0 4px rgba(76, 29, 149, 0.25);
 }
 
 .top-left {
