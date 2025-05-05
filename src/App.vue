@@ -28,10 +28,10 @@
 
   <!-- Tap areas for secret sequence (mobile only) -->
   <div class="secret-tap-areas" v-if="isMobile && !isLoginPage">
-    <button class="tap-area top-left" @click="handleTap(1)">1</button>
-    <button class="tap-area top-right" @click="handleTap(2)">2</button>
-    <button class="tap-area bottom-left" @click="handleTap(3)">3</button>
-    <button class="tap-area bottom-right" @click="handleTap(4)">4</button>
+    <button class="tap-area top-left" @click="handleTap(1)"></button>
+    <button class="tap-area top-right" @click="handleTap(2)"></button>
+    <button class="tap-area bottom-left" @click="handleTap(3)"></button>
+    <button class="tap-area bottom-right" @click="handleTap(4)"></button>
   </div>
 </template>
 <script setup>
@@ -49,11 +49,9 @@ const notificationType = ref("info");
 
 // For secret tap sequence
 const tapSequence = ref([]);
-const correctSequence = [1, 2, 3, 4]; // 1=top-left, 2=top-right, 3=bottom-left, 4=bottom-right
+const correctSequence = [1, 2, 3, 4]; 
 const sequenceTimeout = ref(null);
-// check for last four in the sequence
-// reset sequence if it is correct and navigate to login
-// reset sequence after 2 seconds of inactivity
+
 // Handle key press for desktop
 const handleKeyPress = async (e) => {
   console.log(auth.currentUser);
@@ -74,14 +72,11 @@ const handleKeyPress = async (e) => {
 };
 // Add this at the top of your script section
 const isLoginPage = computed(() => {
-  return router.currentRoute.value.path === '/login';
+  return router.currentRoute.value.path === "/login";
 });
-
-
 
 // Handle tap for mobile secret sequence
 const handleTap = (quadrant) => {
-  console.log(`Tap detected in quadrant ${quadrant}`);
 
   // Add the tapped quadrant to the sequence
   tapSequence.value.push(quadrant);
@@ -89,35 +84,29 @@ const handleTap = (quadrant) => {
   if (tapSequence.value.length > 4) {
     tapSequence.value = tapSequence.value.slice(-4);
   }
-  
-  console.log("Current sequence:", tapSequence.value);
-  
+
   // Check if the last 4 taps match the correct sequence
   if (tapSequence.value.length === 4) {
- 
+    sequenceTimeout.value = setTimeout(() => {
+      tapSequence.value = [];
+    }, 2000);
     const isMatch = tapSequence.value.every(
       (tap, index) => tap === correctSequence[index]
     );
-    
+
     if (isMatch) {
       showNotification.value = true;
       notificationMessage.value = "Navigating to login page";
       notificationType.value = "success";
-
       navigateToLogin();
       tapSequence.value = []; // Reset after success
     }
   }
-  
+
   // Reset sequence after inactivity (keep this part)
   if (sequenceTimeout.value) {
     clearTimeout(sequenceTimeout.value);
   }
-  
-  sequenceTimeout.value = setTimeout(() => {
-    console.log("Sequence timeout - resetting");
-    tapSequence.value = [];
-  }, 2000);
 };
 
 // Common navigation function
@@ -196,7 +185,7 @@ const checkMobile = () => {
   width: 60px;
   height: 60px;
   pointer-events: auto; /* Enable clicks on these areas */
-  background-color: transparent; 
+  background-color: transparent;
   font-weight: bold;
   font-size: 20px;
   display: flex;
