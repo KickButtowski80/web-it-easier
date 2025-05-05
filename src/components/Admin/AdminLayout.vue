@@ -92,7 +92,6 @@ const logout = async () => {
 .admin-container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
 .admin-header {
