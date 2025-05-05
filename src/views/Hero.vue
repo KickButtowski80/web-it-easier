@@ -1,8 +1,8 @@
 <template>
   <section
     id="hero"
-    class="bg-purple-500 h-[90vh] md:mt-[4.5rem] md:h-[40rem] text-white flex flex-col items-center
-     justify-center md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
+    class="bg-purple-500 h-[90vh] md:mt-[4.5rem] md:h-[40rem] text-white flex flex-col items-center justify-center
+     md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
   >
     <div class="relative" style="perspective: 1000px">
       <div
@@ -24,7 +24,11 @@
       <div
         class="background w-[8rem] h-[5.5rem] absolute bottom-[122px] md:bottom-[140px] left-[3rem] opacity-0 animate-bg-appears"
       >
-        <img class="" src="/nature-road-bg-pres.png" alt="Nature road background" />
+        <img
+          class=""
+          src="/nature-road-bg-pres.png"
+          alt="Nature road background"
+        />
       </div>
       <div
         class="font-normal text-[22rem] md:text-[22rem] text-stroke-purple absolute top-0 -left-5"
