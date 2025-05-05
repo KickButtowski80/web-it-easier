@@ -277,9 +277,8 @@ const handleSubmit = async () => {
 <style scoped>
 .admin-form {
   position: relative;
-  top: 11rem;
   max-width: 800px;
-  margin: 4rem auto;
+  margin: 0 auto;
   padding: 2rem;
   background: #fff;
   border-radius: 12px;
