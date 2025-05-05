@@ -28,10 +28,10 @@
 
   <!-- Tap areas for secret sequence (mobile only) -->
   <div class="secret-tap-areas" v-if="isMobile && !isLoginPage">
-    <button class="tap-area top-left" @click="handleTap(1)"></button>
-    <button class="tap-area top-right" @click="handleTap(2)"></button>
-    <button class="tap-area bottom-left" @click="handleTap(3)"></button>
-    <button class="tap-area bottom-right" @click="handleTap(4)"></button>
+    <button class="tap-area top-left" @click="handleTap(1)">1</button>
+    <button class="tap-area top-right" @click="handleTap(2)">2</button>
+    <button class="tap-area bottom-left" @click="handleTap(3)">3</button>
+    <button class="tap-area bottom-right" @click="handleTap(4)">4</button>
   </div>
 </template>
 <script setup>
@@ -51,12 +51,14 @@ const notificationType = ref("info");
 const tapSequence = ref([]);
 const correctSequence = [1, 2, 3, 4]; // 1=top-left, 2=top-right, 3=bottom-left, 4=bottom-right
 const sequenceTimeout = ref(null);
-
+// check for last four in the sequence
+// reset sequence if it is correct and navigate to login
+// reset sequence after 2 seconds of inactivity
 // Handle key press for desktop
 const handleKeyPress = async (e) => {
   console.log(auth.currentUser);
   const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
-  const isLoginKey = e.key === "l" || e.key === "L" || e.code === "KeyL";
+  const isLKey = e.key === "l" || e.key === "L" || e.code === "KeyL";
   const isAlt = e.altKey;
   const isShift = e.shiftKey;
   if (isAdmin) {
@@ -65,7 +67,7 @@ const handleKeyPress = async (e) => {
     showNotification.value = true;
     return;
   }
-  if (!isAdmin && isLoginKey && isAlt && isShift) {
+  if (!isAdmin && isLKey && isAlt && isShift) {
     e.preventDefault();
     navigateToLogin();
   }
@@ -79,41 +81,43 @@ const isLoginPage = computed(() => {
 
 // Handle tap for mobile secret sequence
 const handleTap = (quadrant) => {
-  console.log(quadrant);
   console.log(`Tap detected in quadrant ${quadrant}`);
-
-  // Clear timeout if it exists
-  if (sequenceTimeout.value) {
-    clearTimeout(sequenceTimeout.value);
-  }
 
   // Add the tapped quadrant to the sequence
   tapSequence.value.push(quadrant);
+  // Only keep the last 4 taps
+  if (tapSequence.value.length > 4) {
+    tapSequence.value = tapSequence.value.slice(-4);
+  }
+  
   console.log("Current sequence:", tapSequence.value);
-
-  // Check if sequence matches
-  if (tapSequence.value.length === correctSequence.length) {
+  
+  // Check if the last 4 taps match the correct sequence
+  if (tapSequence.value.length === 4) {
+ 
     const isMatch = tapSequence.value.every(
       (tap, index) => tap === correctSequence[index]
     );
-    console.log("Sequence complete, match:", isMatch);
-
+    
     if (isMatch) {
-      console.log("SUCCESS! Navigating to login page");
-      navigateToLogin();
-    } else {
-      console.log("Incorrect sequence");
-    }
+      showNotification.value = true;
+      notificationMessage.value = "Navigating to login page";
+      notificationType.value = "success";
 
-    // Reset sequence
-    tapSequence.value = [];
-  } else {
-    // Set timeout to reset sequence after 2 seconds of inactivity
-    sequenceTimeout.value = setTimeout(() => {
-      console.log("Sequence timeout - resetting");
-      tapSequence.value = [];
-    }, 2000);
+      navigateToLogin();
+      tapSequence.value = []; // Reset after success
+    }
   }
+  
+  // Reset sequence after inactivity (keep this part)
+  if (sequenceTimeout.value) {
+    clearTimeout(sequenceTimeout.value);
+  }
+  
+  sequenceTimeout.value = setTimeout(() => {
+    console.log("Sequence timeout - resetting");
+    tapSequence.value = [];
+  }, 2000);
 };
 
 // Common navigation function
