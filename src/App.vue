@@ -14,7 +14,7 @@
     :duration="3000"
   />
   <main
-    class="md:overflow-visible pb-[50px] md:pb-0"
+    class="md:overflow-visible mt-[4rem] pb-[50px] md:pb-0"
     id="main-content"
     tabindex="-1"
     role="main"
@@ -195,12 +195,12 @@ const checkMobile = () => {
 }
 
 .top-left {
-  top: 3rem;
+  top: 6rem;
   left: 0;
 }
 
 .top-right {
-  top: 3rem;
+  top: 6rem;
   right: 0;
 }
 
