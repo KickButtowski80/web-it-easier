@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { nextTick } from 'vue'
 import Home from '../views/Home.vue'
-import Blog from '../views/Blog.vue'
 import BlogPost from '../components/BlogPost.vue'
 import AdminLoadingSpinner from '../components/UI/AdminLoadingSpinner.vue'
 import { auth } from '../config/firebase'
@@ -32,11 +31,29 @@ const routes = [
     component: Login
   },
   {
-    path: '/admin/new-post',
-    name: 'NewPost',
-    component: () => import('../components/Admin/BlogPostForm.vue'),
-    meta: { requiresAuth: true, role: 'admin' } // Keep meta for clarity
+    path: '/admin',
+    component: () => import('../components/Admin/AdminLayout.vue'),
+    meta: { requiresAuth: true, role: 'admin' },
+    children: [
+      {
+        path: 'manage-posts',
+        name: 'ManagePosts',
+        component: () => import('../components/Admin/ManagePosts.vue')
+      },
+      {
+        path: 'new-post',
+        name: 'NewPost',
+        component: () => import('../components/Admin/BlogPostForm.vue')
+      },
+      {
+        path: 'edit-post/:id',
+        name: 'EditPost',
+        component: () => import('../components/Admin/BlogPostForm.vue'),
+        props: true
+      }
+    ]
   },
+ 
   {
     path: '/',
     name: 'Home',
@@ -45,7 +62,7 @@ const routes = [
   {
     path: '/blog',
     name: 'Blog',
-    component: Blog
+    component: () => import('../views/Blog.vue'),
   },
   {
     path: '/blog/:slug',
