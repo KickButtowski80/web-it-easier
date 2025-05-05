@@ -1,24 +1,33 @@
 <template>
-  <header class="admin-header">
+  <header class="admin-header" role="banner">
     <div class="admin-logo">
       <h1>Admin Dashboard</h1>
     </div>
-    
-    <nav v-if="isAuthenticated" class="admin-nav">
+    <Notification
+      v-model="showNotification"
+      :message="notificationMessage"
+      :type="notificationType"
+      :duration="3000"
+    />
+    <nav v-if="isAuthenticated" class="admin-nav" role="navigation" aria-label="Admin navigation">
       <router-link 
         to="/admin/new-post" 
         class="nav-link"
         :class="{ active: $route.path === '/admin/new-post' }"
+        role="link"
+        :aria-current="$route.path === '/admin/new-post' ? 'page' : 'false'"
       >
         New Post
       </router-link>
-      <!-- <router-link 
+      <router-link 
         to="/admin/posts" 
         class="nav-link"
         :class="{ active: $route.path === '/admin/posts' }"
+        role="link"
+        :aria-current="$route.path === '/admin/posts' ? 'page' : 'false'"
       >
         Manage Posts
-      </router-link> -->
+      </router-link>
       <button 
         @click="logout" 
         class="logout-btn"
@@ -36,7 +45,10 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { auth } from '@/config/firebase';
 import { signOut } from 'firebase/auth';
-
+import Notification from '../UI/Notification.vue';
+const showNotification = ref(false);
+const notificationMessage = ref("");
+const notificationType = ref("info");
 const router = useRouter();
 
 // Check if user is authenticated
@@ -48,9 +60,15 @@ const isAuthenticated = computed(() => {
 const logout = async () => {
   try {
     await signOut(auth);
+    showNotification.value = true;
+    notificationMessage.value = "You have been logged out";
+    notificationType.value = "success";
     router.push('/');
   } catch (error) {
     console.error('Logout failed:', error);
+    showNotification.value = true;
+    notificationMessage.value = "Logout failed";
+    notificationType.value = "error";
   }
 };
 </script>
@@ -60,8 +78,9 @@ const logout = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #fff;
+  padding: 1rem 0.75rem;
+  background-color: #2d3748; /* Dark background for contrast */
+  color: #ffffff; /* White text for contrast */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 6rem;
@@ -72,56 +91,58 @@ const logout = async () => {
 
 .admin-logo h1 {
   font-size: 1.5rem;
-  font-weight: 600;
-  color: #2c3e50;
   margin: 0;
 }
 
 .admin-nav {
   display: flex;
+  gap: 1rem;
   align-items: center;
-  gap: 1.5rem;
 }
 
 .nav-link {
-  color: #4a5568;
+  color: #cbd5e0; /* Light gray for contrast */
   text-decoration: none;
-  font-weight: 500;
-  padding: 0.5rem 0;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s ease;
+  padding: 0.5rem 0rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s, color 0.2s;
 }
 
-.nav-link:hover, .nav-link.active {
-  color: #3182ce;
-  border-bottom-color: #3182ce;
+.nav-link:hover, .nav-link:focus-visible {
+  background-color: #4a5568; /* Darker gray for hover/focus */
+  color: #ffffff;
+  outline: none;
+}
+
+.nav-link.active {
+  background-color: #4c1d95; /* Purple for active state */
+  color: #ffffff;
+  padding: 0.75rem ;
+  
 }
 
 .logout-btn {
-  background-color: #e53e3e;
-  color: white;
-  border: none;
+  background-color: #e53e3e; /* Red for logout */
+  color: #ffffff;
   padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  font-weight: 500;
+  border: none;
+  border-radius: 0.25rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s;
 }
 
-.logout-btn:hover {
-  background-color: #c53030;
+.logout-btn:hover, .logout-btn:focus-visible {
+  background-color: #c53030; /* Darker red for hover/focus */
+  outline: none;
 }
 
 @media (max-width: 768px) {
   .admin-header {
     flex-direction: column;
-    padding: 1rem;
+    align-items: flex-start;
   }
-  
-  .admin-nav {
-    margin-top: 1rem;
-    width: 100%;
-    justify-content: center;
+  .nav-link.active{
+    padding: 0.45rem;
   }
 }
 </style>
