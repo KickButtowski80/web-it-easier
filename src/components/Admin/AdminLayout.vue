@@ -45,13 +45,11 @@
       </nav>
     </header>
     
-    <div class="admin-content mt-[6rem]">
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" :key="$route.fullPath" />
-        </transition>
-      </router-view>
-    </div>
+    <!-- <div class="admin-content mt-[6rem]">
+      <transition name="fade" mode="out-in">
+        <router-view :key="$route.fullPath" />
+      </transition>
+    </div> -->
   </div>
 </template>
 

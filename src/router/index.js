@@ -33,25 +33,26 @@ const routes = [
   {
     path: '/admin',
     component: () => import('../components/Admin/AdminLayout.vue'),
+    meta: { requiresAuth: true, role: 'admin' }
+  },
+  {
+    path: '/admin/manage-posts',
+    name: 'ManagePosts',
+    component: () => import('../components/Admin/ManagePosts.vue'),
+    meta: { requiresAuth: true, role: 'admin' }
+  },
+  {
+    path: '/admin/new-post',
+    name: 'NewPost',
+    component: () => import('../components/Admin/BlogPostForm.vue'),
+    meta: { requiresAuth: true, role: 'admin' }
+  },
+  {
+    path: '/admin/edit-post/:id',
+    name: 'EditPost',
+    component: () => import('../components/Admin/BlogPostForm.vue'),
     meta: { requiresAuth: true, role: 'admin' },
-    children: [
-      {
-        path: 'manage-posts',
-        name: 'ManagePosts',
-        component: () => import('../components/Admin/ManagePosts.vue')
-      },
-      {
-        path: 'new-post',
-        name: 'NewPost',
-        component: () => import('../components/Admin/BlogPostForm.vue')
-      },
-      {
-        path: 'edit-post/:id',
-        name: 'EditPost',
-        component: () => import('../components/Admin/BlogPostForm.vue'),
-        props: true
-      }
-    ]
+    props: true
   },
  
   {
