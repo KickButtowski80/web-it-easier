@@ -277,6 +277,7 @@ const handleSubmit = async () => {
 <style scoped>
 .admin-form {
   position: relative;
+  top: 10rem;
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
@@ -417,10 +418,6 @@ textarea {
   margin-top: 0.25rem;
   font-weight: 500;
 }
-
-
-
-
 
 .preview-container {
   background: white;

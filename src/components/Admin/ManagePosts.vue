@@ -151,6 +151,8 @@ onMounted(fetchPosts);
 
 <style scoped>
 .manage-posts {
+  position: relative;
+  top: 6rem;
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
