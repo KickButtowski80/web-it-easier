@@ -44,12 +44,7 @@
         </button>
       </nav>
     </header>
-    
-    <!-- <div class="admin-content mt-[6rem]">
-      <transition name="fade" mode="out-in">
-        <router-view :key="$route.fullPath" />
-      </transition>
-    </div> -->
+
   </div>
 </template>
 
@@ -141,7 +136,7 @@ const logout = async () => {
 .logout-btn {
   background-color: #e53e3e; /* Red for logout */
   color: #ffffff;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
