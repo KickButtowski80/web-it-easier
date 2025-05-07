@@ -38,7 +38,7 @@
           @click="logout"
           class="logout-btn"
           type="button"
-          aria-label="Log out from admin panel"
+          aria-label="Log out from admin panel (Alt+L)"
         >
           Log out
         </button>
@@ -73,7 +73,7 @@ const logout = async () => {
     notificationType.value = "success";
     router.push("/");
   } catch (error) {
-    console.error("Logout failed:", error);
+    console.error("Logout failed:" + (error.message || "Unknown error"));
     showNotification.value = true;
     notificationMessage.value = "Logout failed";
     notificationType.value = "error";
