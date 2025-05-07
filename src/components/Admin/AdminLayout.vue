@@ -134,18 +134,19 @@ const logout = async () => {
 }
 
 .logout-btn {
-  background-color: #e53e3e; /* Red for logout */
+  background-color: #dc3545; /* Red for logout */
   color: #ffffff;
   padding: 0.5rem;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
+  
   transition: background-color 0.2s;
 }
 
 .logout-btn:hover,
 .logout-btn:focus-visible {
-  background-color: #c53030; /* Darker red for hover/focus */
+  background-color: #c82333; /* Darker red for hover/focus */
   outline: none;
 }
 
