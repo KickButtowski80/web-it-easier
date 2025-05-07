@@ -38,7 +38,7 @@
           @click="logout"
           class="logout-btn"
           type="button"
-          aria-label="Log out from admin panel (Alt+L)"
+          aria-label="Log out from admin panel"
         >
           Log out
         </button>
@@ -120,11 +120,18 @@ const logout = async () => {
   transition: background-color 0.2s, color 0.2s;
 }
 
-.nav-link:hover,
-.nav-link:focus-visible {
-  background-color: #4a5568; /* Darker gray for hover/focus */
+.nav-link:hover {
+  background-color: #4a5568; /* Darker gray for hover */
   color: #ffffff;
-  outline: none;
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  background-color: #4a5568;
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(74, 85, 104, 0.5);
+  text-decoration: underline;
 }
 
 .nav-link.active {
@@ -143,10 +150,15 @@ const logout = async () => {
   transition: background-color 0.2s;
 }
 
-.logout-btn:hover,
+.logout-btn:hover {
+  background-color: #c82333; /* Darker red for hover */
+}
+
 .logout-btn:focus-visible {
-  background-color: #c82333; /* Darker red for hover/focus */
-  outline: none;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  background-color: #c82333; /* Darker red for focus */
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.5);
 }
 
 
