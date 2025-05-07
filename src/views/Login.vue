@@ -27,8 +27,20 @@
           autocomplete="current-password"
           required
         />
+
       </div>
 
+      <div class="flex items-center gap-2">
+        <label for="rememberMe" class="flex items-center">
+          <span>Remember me</span>
+          <input
+            type="checkbox"
+            v-model="rememberMe"
+            id="rememberMe"
+            class="w-6 h-6 scale-150 flex-1 ml-2"
+          />
+        </label>    
+      </div> 
       <button 
         type="submit" 
         :disabled="loading"
@@ -48,6 +60,7 @@ import { auth, signInWithEmailAndPassword } from '@/config/firebase'
 
 const email = ref('')
 const password = ref('')
+const rememberMe = ref(false)
 const router = useRouter()
 const loading = ref(false)
 const errorMessage = ref('')
