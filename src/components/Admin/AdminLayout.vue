@@ -12,7 +12,7 @@
       />
       <nav
         v-if="isAuthenticated"
-        class="admin-nav"
+        class="admin-nav gap-0 md:gap-2"
         role="navigation"
         aria-label="Admin navigation"
       >
@@ -109,7 +109,6 @@ const logout = async () => {
 
 .admin-nav {
   display: flex;
-  gap: 1rem;
   align-items: center;
 }
 
