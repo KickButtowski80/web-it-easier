@@ -162,6 +162,13 @@ onMounted(fetchPosts);
   padding: 1rem;
 }
 
+@media (max-width: 768px) {
+  .manage-posts {
+    top: 7rem; /* Reduced top margin to match compact header */
+    padding: 1rem; /* Standard padding */
+  }
+}
+
 .main-title {
   font-size: clamp(1.5rem, 5vw, 2.25rem);
   font-weight: 700;

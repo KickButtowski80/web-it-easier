@@ -103,7 +103,7 @@ const logout = async () => {
 }
 
 .admin-logo h1 {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
   margin: 0;
 }
 
@@ -115,8 +115,9 @@ const logout = async () => {
 .nav-link {
   color: #cbd5e0; /* Light gray for contrast */
   text-decoration: none;
-  padding: 0.5rem 0.75rem;
+  padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
   border-radius: 0.25rem;
+  font-size: clamp(0.875rem, 2vw, 1rem);
   transition: background-color 0.2s, color 0.2s;
 }
 
@@ -144,9 +145,10 @@ const logout = async () => {
 .logout-btn {
   background-color: #dc3545; /* Red for logout */
   color: #ffffff;
-  padding: 0.5rem;
+  padding: clamp(0.4rem, 1vw, 0.5rem) clamp(0.5rem, 1.5vw, 0.75rem);
   border: none;
   border-radius: 0.25rem;
+  font-size: clamp(0.875rem, 2vw, 1rem);
   cursor: pointer;
   
   transition: background-color 0.2s;
@@ -180,9 +182,20 @@ const logout = async () => {
 
 @media (max-width: 768px) {
   .admin-header {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem;
+    flex-wrap: wrap;
   }
-
+  
+  .admin-logo h1 {
+    margin-right: 0.5rem;
+  }
+  
+  .admin-nav {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.75rem;
+  }
 }
 </style>

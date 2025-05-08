@@ -286,12 +286,23 @@ const handleSubmit = async () => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 768px) {
+  .admin-form {
+    top: 7rem; /* Reduced top margin to match compact header */
+    padding: 1rem; /* Standard padding */
+    margin: 0 0.75rem; /* Slightly reduced side margins */
+    border-radius: 8px;
+  }
+}
+
 h1 {
-  font-size: 1.8rem;
-  color: #2d3748;
-  margin-bottom: 1.5rem;
+  font-size: clamp(1.5rem, 5vw, 1.8rem);
+  color: #4c1d95; /* Match the purple brand color */
+  margin-bottom: clamp(1rem, 4vw, 1.5rem);
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #4c1d95;
 }
 
 
@@ -314,7 +325,7 @@ h1 {
 form {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: clamp(1rem, 3vw, 1.5rem);
 }
 
 .form-group {
@@ -324,17 +335,18 @@ form {
 }
 
 label {
-  font-weight: 500;
+  font-weight: 600;
   color: #4a5568;
+  font-size: clamp(0.9rem, 2vw, 1rem);
 }
 
 input,
 textarea {
   width: 100%;
-  padding: 0.8rem;
+  padding: clamp(0.6rem, 2vw, 0.8rem);
   border: 1px solid #e2e8f0;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 2vw, 1rem);
   transition: border-color 0.2s;
 }
 
@@ -357,24 +369,37 @@ textarea {
 }
 
 .submit-btn {
-  padding: 0.8rem;
-  background-color: #7c5fbf;
+  padding: clamp(0.8rem, 3vw, 1rem);
+  background-color: #4c1d95; /* Match the brand purple */
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .submit-btn {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
 }
 
 .submit-btn:hover:not(:disabled) {
   background-color: #6b4fa8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .submit-btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(124, 95, 191, 0.4);
+  outline: 3px solid #ffffff;
+  outline-offset: 0.5rem;
+  box-shadow: 0 0 0 5px rgba(76, 29, 149, 0.7);
+  position: relative;
+  z-index: 1;
 }
 
 .submit-btn:disabled {
@@ -390,6 +415,27 @@ textarea {
   border-radius: 8px;
   padding: 1rem;
   margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .markdown-editor {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "editor preview"
+      "hint hint"
+      "error error";
+  }
+}
+
+@media (max-width: 767px) {
+  .markdown-editor {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "editor"
+      "hint"
+      "error"
+      "preview";
+  }
 }
 
 .preview-content {
@@ -422,8 +468,15 @@ textarea {
 .preview-container {
   background: white;
   border-radius: 6px;
-  padding: 1rem;
+  padding: clamp(0.75rem, 2vw, 1rem);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .preview-container {
+    margin-top: 1.5rem;
+  }
 }
 
 .preview-container h2 {
