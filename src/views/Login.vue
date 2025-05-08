@@ -1,7 +1,6 @@
 <template>
   <section class="login-bg">
   <div class="login-container animate-fade-in">
-
     <h1 id="login-heading">Admin Login</h1>
     <form @submit.prevent="login" class="login-form" aria-labelledby="login-heading">
       <div class="form-group">
@@ -57,9 +56,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth, signInWithEmailAndPassword } from '@/config/firebase'
+import { auth, signInWithEmailAndPassword, browserLocalPersistence, browserSessionPersistence, setPersistence } from '@/config/firebase'
 
 const email = ref('')
 const password = ref('')
@@ -87,14 +86,25 @@ const validateEmail = () => {
 }
 
 onMounted(() => {
-  document.title = "Login Page - Admin"
+  document.title = "Login Page - Admin";
+  const storedEmail = localStorage.getItem('adminEmail');
+  if (storedEmail) {
+    email.value = storedEmail;
+    rememberMe.value = true;
+  }
 })
-
+watch(rememberMe, (newValue) => {
+  if (newValue) {
+    localStorage.setItem('adminEmail', email.value);
+  } else {
+    localStorage.removeItem('adminEmail');
+  }
+});
 const login = async () => {
   loading.value = true
   errorMessage.value = ''
   emailError.value = ''
-  
+  const persistence = rememberMe.value ? browserLocalPersistence : browserSessionPersistence;
   try {
     // Validate inputs
     if (!email.value || !password.value) {
@@ -106,12 +116,12 @@ const login = async () => {
     if (!validateEmail()) {
       return // No need to set loading false here, finally block handles it
     }
-    
+    await setPersistence(auth, persistence);
     // Attempt login
     await signInWithEmailAndPassword(auth, email.value, password.value)
     
     // Navigate using router.push - the guard will handle auth check
-    const targetRoute = '/admin/new-post';
+    const targetRoute = '/admin/manage-posts';
     
     await router.isReady(); // Ensure router is ready
     await router.push(targetRoute);
@@ -136,6 +146,8 @@ const login = async () => {
     loading.value = false
   }
 }
+
+
 </script>
 
 <style scoped>
@@ -156,7 +168,7 @@ const login = async () => {
 }
 
 @keyframes glowBox {
-  0% { box-shadow: 0 8px 32px 0 rgba(124,95,191,0.12), 0 2px 8px rgba(63, 45, 86, 0.12); }
+  0% { box-shadow: 0 8px 32px 0 rgba(117, 94, 169, 0.12), 0 2px 8px rgba(63, 45, 86, 0.12); }
   100% { box-shadow: 0 8px 32px 0 rgba(124,95,191,0.28), 0 2px 8px rgba(63, 45, 86, 0.18); }
 }
 
