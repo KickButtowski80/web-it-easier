@@ -1,5 +1,7 @@
 <template>
-  <section class="login-container">
+  <section class="login-bg">
+  <div class="login-container animate-fade-in">
+
     <h1 id="login-heading">Admin Login</h1>
     <form @submit.prevent="login" class="login-form" aria-labelledby="login-heading">
       <div class="form-group">
@@ -50,7 +52,8 @@
       </button>
     </form>
     <div v-if="errorMessage" class="error-message" role="alert" aria-live="assertive">{{ errorMessage }}</div>
-  </section>
+      </div>
+</section>
 </template>
 
 <script setup>
@@ -144,8 +147,32 @@ const login = async () => {
   padding: 30px;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(44, 19, 56, 0.18), 0 2px 8px rgba(63, 45, 86, 0.12);
+  backdrop-filter: blur(2px);
+  border: 1.5px solid rgba(124, 95, 191, 0.18);
+  animation: glowBox 2.5s ease-in-out infinite alternate;
+
   background-color: white;
+}
+
+@keyframes glowBox {
+  0% { box-shadow: 0 8px 32px 0 rgba(124,95,191,0.12), 0 2px 8px rgba(63, 45, 86, 0.12); }
+  100% { box-shadow: 0 8px 32px 0 rgba(124,95,191,0.28), 0 2px 8px rgba(63, 45, 86, 0.18); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease 0.1s both;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
 h1 {
@@ -193,6 +220,11 @@ input[aria-invalid="true"] {
 }
 
 button {
+  background: linear-gradient(90deg, #7c5fbf 0%, #a48be7 100%);
+  box-shadow: 0 4px 16px 0 rgba(124,95,191,0.10);
+  letter-spacing: 0.5px;
+  transition: background 0.3s, box-shadow 0.2s, transform 0.15s;
+
   padding: 12px;
   background-color: #7c5fbf; /* soft indigo */
   color: #fff;
