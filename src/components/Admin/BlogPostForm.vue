@@ -288,7 +288,7 @@ const handleSubmit = async () => {
 
 @media (max-width: 768px) {
   .admin-form {
-    top: 7rem; /* Reduced top margin to match compact header */
+    top: 9rem; /* Reduced top margin to match compact header */
     padding: 1rem; /* Standard padding */
     margin: 0 0.75rem; /* Slightly reduced side margins */
     border-radius: 8px;
