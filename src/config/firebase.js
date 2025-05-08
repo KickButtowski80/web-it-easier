@@ -30,7 +30,10 @@ export {
   onAuthStateChanged,
   reauthenticateWithCredential,
   EmailAuthProvider,
-  firebaseUpdatePassword
+  firebaseUpdatePassword,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  setPersistence,
 };
 
 // Firestore helpers
