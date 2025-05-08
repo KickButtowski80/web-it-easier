@@ -19,6 +19,8 @@ dist-ssr
 .DS_Store
 *.suo
 *.ntvs*
+# Windows security files
+*Zone.Identifier
 *.njsproj
 *.sln
 *.sw?
