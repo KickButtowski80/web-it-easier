@@ -26,5 +26,6 @@ dist-ssr
 *.sw?
 .vercel
 *.identifier
+*Zone.Identifier
 
 .env
