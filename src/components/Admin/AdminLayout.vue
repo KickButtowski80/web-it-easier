@@ -123,6 +123,8 @@ const logout = async () => {
 .nav-link:hover {
   background-color: #4a5568; /* Darker gray for hover */
   color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-link:focus-visible {
@@ -152,6 +154,8 @@ const logout = async () => {
 
 .logout-btn:hover {
   background-color: #c82333; /* Darker red for hover */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .logout-btn:focus-visible {
