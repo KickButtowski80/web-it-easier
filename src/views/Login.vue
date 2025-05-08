@@ -1,5 +1,5 @@
 <template>
-  <main class="login-container">
+  <section class="login-container">
     <h1 id="login-heading">Admin Login</h1>
     <form @submit.prevent="login" class="login-form" aria-labelledby="login-heading">
       <div class="form-group">
@@ -27,8 +27,8 @@
           autocomplete="current-password"
           required
         />
-      </div>
 
+      </div>
       <button 
         type="submit" 
         :disabled="loading"
@@ -38,7 +38,7 @@
       </button>
     </form>
     <div v-if="errorMessage" class="error-message" role="alert" aria-live="assertive">{{ errorMessage }}</div>
-  </main>
+  </section>
 </template>
 
 <script setup>
@@ -124,6 +124,8 @@ const login = async () => {
 
 <style scoped>
 .login-container {
+  position: relative;
+  top: 11rem;
   max-width: 400px;
   margin: 100px auto;
   padding: 30px;

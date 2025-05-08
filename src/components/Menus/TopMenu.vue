@@ -1,8 +1,8 @@
 <template>
   <section class="bg-purple-400 fixed top-0 
-  w-full z-50 h-navbar-height md:h-md-navbar-height">
-    <div class="p-2 flex md:justify-between md:items-center">
-      <span class="text-xl font-semibold md:text-5xl"> IT 🚪 </span>
+  w-full z-50 h-md-navbar-height">
+    <div class="p-2 flex h-md-navbar-height md:justify-between items-center">
+      <span class="font-semibold text-5xl"> IT 🚪 </span>
       <nav
         class="hidden md:[&>*]:pr-5 md:[&>*]:text-2xl md:[&>*]:p-5
          md:[&>*]:font-semibold md:flex md:justify-between md:items-center
