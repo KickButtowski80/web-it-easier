@@ -1,6 +1,6 @@
 <template>
   <div class="manage-posts">
-    <h2>Manage Blog Posts</h2>
+    <h2 class="main-title">Manage Blog Posts</h2>
     
     <div v-if="loading" class="loading-container">
       <AdminLoadingSpinner />
@@ -25,14 +25,16 @@
         </div>
         <div class="post-actions">
           <button 
-            @click="editPost(post.id)" 
+            @click="editPost(post.title)" 
+            @keydown.enter="editPost(post.title)"
             class="edit-button"
             aria-label="Edit post"
           >
             Edit
           </button>
           <button 
-            @click="confirmDelete(post.id)" 
+            @click="confirmDelete(post.title)" 
+            @keydown.enter="confirmDelete(post.title)"
             class="delete-button"
             aria-label="Delete post"
           >
@@ -51,12 +53,14 @@
           <button 
             @click="cancelDelete" 
             class="cancel-button"
+            aria-label="Cancel deletion"
           >
             Cancel
           </button>
           <button 
-            @click="deletePost" 
+            @click="removePost" 
             class="confirm-delete-button"
+            aria-label="Confirm delete post"
           >
             Delete
           </button>
@@ -132,11 +136,11 @@ const cancelDelete = () => {
 // Delete post
 const removePost = async () => {
   if (!postToDelete.value) return;
-  
+  console.log('Deleting post:', postToDelete.value);
   try {
     await deletePost(postToDelete.value);
     // Remove the deleted post from the local array
-    posts.value = posts.value.filter(post => post.id !== postToDelete.value);
+    posts.value = posts.value.filter(post => post.title !== postToDelete.value);
     showDeleteModal.value = false;
     postToDelete.value = null;
   } catch (err) {
@@ -156,6 +160,16 @@ onMounted(fetchPosts);
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
+}
+
+.main-title {
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 700;
+  color: #4c1d95; /* Purple to match your brand color */
+  margin-bottom: clamp(1rem, 3vw, 1.5rem);
+  padding-bottom: clamp(0.3rem, 1vw, 0.5rem);
+  border-bottom: 3px solid #4c1d95;
+  letter-spacing: -0.025em;
 }
 
 h2 {
@@ -212,10 +226,16 @@ h2 {
 .post-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
+  align-items: flex-start;
+  padding: 1.25rem;
   border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease;
+}
+
+.post-item:hover {
+  background-color: #f7fafc;
 }
 
 .post-details {
@@ -225,18 +245,24 @@ h2 {
 .post-details h3 {
   margin: 0 0 0.5rem 0;
   color: #2d3748;
+  font-size: clamp(1.125rem, 3vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 
 .post-date {
-  color: #718096;
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
+  color: #4a5568; /* Darker gray for better contrast */
+  font-size: clamp(0.875rem, 2vw, 1rem);
+  font-weight: 500; /* Slightly bolder for better readability */
+  margin-bottom: clamp(0.3rem, 2vw, 0.5rem);
+  display: inline-block;
 }
 
 .post-excerpt {
   color: #4a5568;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  font-size: clamp(0.9375rem, 2.5vw, 1.125rem);
+  line-height: 1.5;
+  margin-top: 0.5rem;
 }
 
 .post-actions {
@@ -257,9 +283,43 @@ h2 {
   color: white;
 }
 
+.edit-button:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 0.5rem;
+  box-shadow: 0 0 0 5px rgba(76, 29, 149, 0.7);
+  position: relative;
+  z-index: 1;
+}
+
 .delete-button {
-  background-color: #e53e3e;
+  background-color: #b91c1c; /* Darker red for better contrast with white text */
   color: white;
+  font-weight: 500; /* Slightly bolder text for better readability */
+}
+
+.delete-button:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 0.5rem;
+  box-shadow: 0 0 0 5px rgba(185, 28, 28, 0.7); /* Match the new darker red */
+  position: relative;
+  z-index: 1;
+}
+
+/* Button focus styles */
+.cancel-button:focus-visible {
+  outline: 3px solid #000000;
+  outline-offset: 0.5rem;
+  box-shadow: 0 0 0 5px rgba(74, 85, 104, 0.5);
+  position: relative;
+  z-index: 1;
+}
+
+.confirm-delete-button:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 0.5rem;
+  box-shadow: 0 0 0 5px rgba(185, 28, 28, 0.7); /* Match the new darker red */
+  position: relative;
+  z-index: 1;
 }
 
 /* Modal styles */
