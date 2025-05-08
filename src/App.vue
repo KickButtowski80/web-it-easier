@@ -74,28 +74,31 @@ const correctSequence = [1, 2, 3, 4];
 const sequenceTimeout = ref(null);
 
 // Handle key press for desktop - Alt+Shift+L for login access
+const isLoginShortcut = (e) => {
+  return (
+    (e.key === "l" || e.key === "L" || e.code === "KeyL") &&
+    e.altKey &&
+    e.shiftKey
+  );
+};
+
 const handleKeyPress = async (e) => {
   // Check if user is already logged in
   const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
   
-  // Check for keyboard shortcut: Alt+Shift+L
-  const isLKey = e.key === "l" || e.key === "L" || e.code === "KeyL";
-  const isAlt = e.altKey;
-  const isShift = e.shiftKey;
+  // Check for login shortcut
+  if (!isLoginShortcut(e)) return;
   
-  // Handle already logged in case
+  // Prevent default behavior
+  e.preventDefault();
+  
+  // Handle login shortcut based on admin status
   if (isAdmin) {
     notificationMessage.value = "You are already logged in";
     notificationType.value = "warning";
     showNotification.value = true;
     return;
-  }
-  
-  // Handle login shortcut
-  if (!isAdmin && isLKey && isAlt && isShift) {
-    e.preventDefault();
-    navigateToLogin();
-  }
+  } 
 };
 // Add this at the top of your script section
 const isLoginPage = computed(() => {
