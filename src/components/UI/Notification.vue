@@ -62,9 +62,11 @@ watch(show, (val) => {
   padding: 1em 1.5em;
   min-width: 260px;
   max-width: 400px;
-  margin: 1em auto;
   border-left: 6px solid #4299e1;
-  position: relative;
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 1rem;
   z-index: 9999;
 }

@@ -24,12 +24,6 @@
               </footer>
             </router-link>
           </article>
-          <button v-if="isAdmin" class="bg-red-600 text-white font-semibold px-4 py-2 rounded-md 
-                hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
-                focus:ring-red-500 transition-colors" @click="handleDeletePost(post.title)"
-            aria-label="Delete this post">
-            Remove
-          </button>
         </li>
       </ul>
           <Notification 
@@ -50,7 +44,7 @@
 </template>
 
 <script>
-import { getPosts, deletePost, auth } from '../config/firebase'
+import { getPosts, auth } from '../config/firebase'
 import { ref, onMounted } from 'vue'
 import Notification from '../components/UI/Notification.vue';
 // Helper function to create slugs from titles
@@ -80,19 +74,7 @@ export default {
     const notificationIcon = ref('')
 
 
-    // Function to handle post deletion
-    const handleDeletePost = async (title) => {
-      try {
-        await deletePost(title)
-        // Remove the deleted post from the local array
-        posts.value = posts.value.filter(post => post.title !== title)
-        // Show success notification
-        showNotify(`${title} deleted successfully`, 'success', 'check')
-      } catch (error) {
-        console.error('Error deleting post:', error)
-        showNotify('Failed to delete post. Please try again.', 'error', 'exclamation-triangle')
-      }
-    }
+
     function showNotify(message, type = 'info', icon = '') {
       notificationMessage.value = message
       notificationType.value = type
@@ -136,7 +118,6 @@ export default {
       formatDate,
       formatDateISO,
       slugify,
-      handleDeletePost,
       showNotify,
       showNotification,
       notificationMessage,

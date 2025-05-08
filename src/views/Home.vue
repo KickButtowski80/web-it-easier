@@ -1,11 +1,11 @@
 <template>
-  <main 
+  <section
   id="home"
   class="overflow-scroll md:overflow-visible pb-[50px] md:pb-0">
     <Hero />
     <Works />
     <Contact />
-  </main>
+  </section>
 </template>
 
 <script>
