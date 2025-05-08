@@ -27,8 +27,20 @@
           autocomplete="current-password"
           required
         />
-
       </div>
+
+      <div class="flex items-center gap-2">
+        <label for="rememberMe" class="flex items-center">
+          <span>Remember me</span>
+          <input
+            type="checkbox"
+            v-model="rememberMe"
+            id="rememberMe"
+            class="w-6 h-6 scale-150 flex-1 ml-2"
+          />
+        </label>    
+      </div> 
+      
       <button 
         type="submit" 
         :disabled="loading"
@@ -52,6 +64,7 @@ const router = useRouter()
 const loading = ref(false)
 const errorMessage = ref('')
 const emailError = ref('')
+const rememberMe = ref(false)
 
 // Validate email format
 const validateEmail = () => {
@@ -125,7 +138,7 @@ const login = async () => {
 <style scoped>
 .login-container {
   position: relative;
-  top: 11rem;
+  top: 4rem;
   max-width: 400px;
   margin: 100px auto;
   padding: 30px;
