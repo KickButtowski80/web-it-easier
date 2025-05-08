@@ -99,6 +99,7 @@ const handleKeyPress = async (e) => {
     showNotification.value = true;
     return;
   } 
+  navigateToLogin();
 };
 // Add this at the top of your script section
 const isLoginPage = computed(() => {
