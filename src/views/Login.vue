@@ -32,7 +32,7 @@
 
       <div class="flex items-center gap-2">
         <label for="rememberMe" class="flex items-center">
-          <span>Remember me</span>
+          <span>Remember Me</span>
           <input
             type="checkbox"
             v-model="rememberMe"
@@ -175,6 +175,15 @@ const login = async () => {
 .animate-fade-in {
   animation: fadeIn 1s ease 0.1s both;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -222,7 +231,8 @@ input {
 }
 
 input:focus-visible {
-  outline: none;
+  outline: 2px solid #4299e1;
+  outline-offset: 1px;
   border-color: #4299e1;
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
 }
@@ -232,63 +242,42 @@ input[aria-invalid="true"] {
 }
 
 button {
-  background: linear-gradient(90deg, #7c5fbf 0%, #a48be7 100%);
-  box-shadow: 0 4px 16px 0 rgba(124,95,191,0.10);
-  letter-spacing: 0.5px;
-  transition: background 0.3s, box-shadow 0.2s, transform 0.15s;
-
+  background: linear-gradient(90deg, #5d4391 0%, #7c5fbf 100%); /* Darker for better contrast */
   padding: 12px;
-  background-color: #7c5fbf; /* soft indigo */
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 4px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600; /* Increased for better contrast */
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.1s;
-  margin-top: 10px;
-  box-shadow: 0 2px 8px rgba(63, 45, 86, 0.07);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  margin-top: 15px;
+  box-shadow: 0 2px 8px rgba(63, 45, 86, 0.15);
+  position: relative;
 }
 
 button:hover {
-  background-color: #a48be7;
+  background: linear-gradient(90deg, #4c3577 0%, #6b50a4 100%); /* Even darker for hover */
+  box-shadow: 0 4px 12px rgba(63, 45, 86, 0.25);
 }
 
 button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px #bca6e9;
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(93, 67, 145, 0.5);
+  text-decoration: underline;
 }
 
 button:active {
-  background-color: #5d4391;
+  background: #4c3577;
   transform: translateY(1px);
 }
 
-button:hover {
-  background-color: #5c438c; /* lighter indigo for hover */
-}
-
-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(63, 45, 86, 0.3);
-}
-
-button:active {
-  background-color: #2a1e38;
-  transform: translateY(1px);
-}
-
-button:hover {
-  background-color: #3182ce;
-}
-
-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
-}
-
-button:active {
-  transform: translateY(1px);
+button:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
 }
 
 button:disabled {
