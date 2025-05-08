@@ -30,16 +30,21 @@
         />
       </div>
 
-      <div class="flex items-center gap-2">
-        <label for="rememberMe" class="flex items-center">
-          <span>Remember Me</span>
+      <div class="flex items-center mt-3 mb-2" role="group" aria-labelledby="remember-me-group">
+        <div id="remember-me-group" class="sr-only">Login preferences</div>
+        <div class="flex items-center">
           <input
             type="checkbox"
             v-model="rememberMe"
             id="rememberMe"
-            class="w-6 h-6 scale-150 flex-1 ml-2"
+            class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-2 focus:ring-purple-500 focus:ring-offset-1 focus:outline-none"
+            aria-describedby="remember-me-description"
           />
-        </label>    
+          <label for="rememberMe" class="whitespace-nowrap ml-2 text-sm font-medium text-gray-700 select-none">
+            Remember Me
+          </label>
+        </div>
+        <span id="remember-me-description" class="sr-only">Keep me logged in on this device</span>
       </div> 
       
       <button 
