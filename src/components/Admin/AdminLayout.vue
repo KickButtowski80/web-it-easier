@@ -12,7 +12,7 @@
       />
       <nav
         v-if="isAuthenticated"
-        class="admin-nav gap-0 md:gap-2"
+        class="admin-nav gap-[0.25rem] mr-1 md:gap-2"
         role="navigation"
         aria-label="Admin navigation"
       >
