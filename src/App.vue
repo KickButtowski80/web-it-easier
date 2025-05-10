@@ -98,7 +98,7 @@ const handleKeyPress = async (e) => {
   
   // Handle login shortcut based on admin status
   if (isAdmin) {
-    notificationMessage.value = "YYou are already logged in as an admin.";
+    notificationMessage.value = "You are already logged in as an admin.";
     notificationType.value = "warning";
     showNotification.value = true;
     return;
