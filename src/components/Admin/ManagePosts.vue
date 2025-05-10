@@ -1,5 +1,10 @@
 <template>
   <div class="manage-posts">
+    <Notification
+        v-model="showNotification"
+        :type="notificationType"
+        :message="notificationMessage"
+      />
     <h2 class="main-title">Manage Blog Posts</h2>
     
     <div v-if="loading" class="loading-container">
@@ -71,10 +76,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { getPosts, deletePost} from '@/config/firebase';
-
+import Notification from '../UI/Notification.vue';
 import AdminLoadingSpinner from '../UI/AdminLoadingSpinner.vue';
 
 const router = useRouter();
@@ -83,6 +88,39 @@ const loading = ref(true);
 const error = ref(null);
 const showDeleteModal = ref(false);
 const postToDelete = ref(null);
+
+const route = useRoute();
+
+
+const showNotification = ref(false);
+const notificationType = ref('');
+const notificationMessage = ref('');
+
+// Watcher with explicit immediate flag
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (newQuery.notify === 'already-logged-in') {
+      showNotification.value = true;
+      notificationType.value = newQuery.type || 'info';
+      notificationMessage.value = 'You are already logged in as an admin.';
+      
+      setTimeout(() => {
+  showNotification.value = false;
+  
+  // Remove only notification params without triggering full navigation
+  if (route.query.notify) {
+    const newQuery = { ...route.query };
+    delete newQuery.notify;
+    delete newQuery.type;
+    
+    router.replace({ query: newQuery }, { shallow: true });
+  }
+}, 2000);
+    }
+  },
+  { immediate: true } // Force immediate check of current value
+);
 
 // Fetch all blog posts
 const fetchPosts = async () => {

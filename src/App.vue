@@ -20,9 +20,13 @@
     tabindex="-1"
     role="main"
   >
+  
     <router-view v-slot="{ Component }" >
       <transition name="fade" mode="out-in">
-        <component :is="Component" :key="`${$route.fullPath}_${$route.name}`" />
+        <!-- if render key is not used,
+          the component will not be re-rendered when the route changes -->
+        <!-- :key="`${$route.fullPath}_${$route.name}`" -->
+        <component :is="Component"  />
       </transition>
     </router-view>
   </main>

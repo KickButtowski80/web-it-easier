@@ -54,7 +54,7 @@ const routes = [
     meta: { requiresAuth: true, role: 'admin' },
     props: true
   },
- 
+
   {
     path: '/',
     name: 'Home',
@@ -101,7 +101,7 @@ const router = createRouter({
 
         const checkElementRecursively = (timestamp) => {
           const element = document.querySelector(to.hash);
-          
+
           if (element) {
             // Found the element, scroll to it
             resolve(scrollOptions);
@@ -130,49 +130,64 @@ const router = createRouter({
     return { top: 0 };
   }
 })
+router.beforeEach((to, from, next) => {
+  const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
+  if (to.name === 'Login' && isAdmin) {
 
+    // If already logged in, redirect away from login page
+    next({
+      name: 'ManagePosts', query: {
+        notify: 'already-logged-in',
+        type: 'warning'
+      }
+    }); 
+  }
+  else {
+    next();
+  }
+});
 router.beforeEach(async (to, from, next) => {
   const requiresAuth = to.meta.requiresAuth;
   try {
-  // Wait for the initial Firebase auth check to complete
-  // await authReadyPromise;
+    // Wait for the initial Firebase auth check to complete
+    // await authReadyPromise;
 
-  await Promise.race([
-    authReadyPromise,
-    new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase initialization timeout')), 5000))
-  ]);
-  
-  // Get the current user directly from Firebase auth
-  const user = auth.currentUser;
-  
-  if (requiresAuth && !user) {
-    console.log('[Router Guard] Auth required, but no user. Redirecting to login.');
-    // Redirect to login, preserving the intended destination
-    next({ name: 'Login', query: { redirect: to.fullPath } }); 
-  } else {
-    console.log('[Router Guard] Access granted. Proceeding.');
-    next(); // Proceed with navigation
+    await Promise.race([
+      authReadyPromise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase initialization timeout')), 5000))
+    ]);
+
+    // Get the current user directly from Firebase auth
+    const user = auth.currentUser;
+
+    if (requiresAuth && !user) {
+      console.log('[Router Guard] Auth required, but no user. Redirecting to login.');
+      // Redirect to login, preserving the intended destination
+      next({ name: 'Login', query: { redirect: to.fullPath } });
+    } else {
+      console.log('[Router Guard] Access granted. Proceeding.');
+      next(); // Proceed with navigation
+    }
+
+    // If auth isn't ready yet, show a loading indicator
+    // if (!authReady) {
+    //   console.log('Auth not ready yet, showing loading screen');
+    //   next({ name: 'Loading' }); 
+    //   return;
+    // }
+
+    // Auth is ready, make the actual check
+    // if (requiresAuth && !currentAuthUser) {
+    //   console.log('Auth required but no user, redirecting to login');
+    //   next({ name: 'Login', query: { redirect: to.fullPath } });
+    // } else {
+    //   console.log('Proceeding with navigation');
+    //   next();
+    // }
+  } catch (error) {
+    console.error('Error in router guard:', error);
+    next({ name: 'Login' });
   }
-
-  // If auth isn't ready yet, show a loading indicator
-  // if (!authReady) {
-  //   console.log('Auth not ready yet, showing loading screen');
-  //   next({ name: 'Loading' }); 
-  //   return;
-  // }
-  
-  // Auth is ready, make the actual check
-  // if (requiresAuth && !currentAuthUser) {
-  //   console.log('Auth required but no user, redirecting to login');
-  //   next({ name: 'Login', query: { redirect: to.fullPath } });
-  // } else {
-  //   console.log('Proceeding with navigation');
-  //   next();
-  // }
-} catch (error) {
-  console.error('Error in router guard:', error);
-  next({ name: 'Login' });
-}
 });
 
 export default router
