@@ -130,10 +130,11 @@ const router = createRouter({
     return { top: 0 };
   }
 })
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  await authReadyPromise;
   const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
-  if (to.name === 'Login' && isAdmin) {
 
+  if (to.name === 'Login' && isAdmin) {
     // If already logged in, redirect away from login page
     next({
       name: 'ManagePosts', query: {
