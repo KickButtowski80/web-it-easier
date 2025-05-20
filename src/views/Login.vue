@@ -28,7 +28,6 @@
           autocomplete="current-password"
           required
         />
-        <span v-if="passwordError" class="field-error" role="alert">{{ passwordError }}</span>
       </div>
 
       <div class="flex items-center mt-3 mb-2" role="group" aria-labelledby="remember-me-group">
@@ -72,7 +71,6 @@ const router = useRouter()
 const loading = ref(false)
 const errorMessage = ref('')
 const emailError = ref('')
-const passwordError = ref('')
 const rememberMe = ref(false)
 
 // Validate email format
@@ -87,13 +85,7 @@ const validateEmail = () => {
     emailError.value = 'Please enter a valid email address'
     return false
   }
-
-  // Basic password validation
-  if (password.value.length < 8) {
-    passwordError.value = 'Password must be at least 8 characters'
-    return false
-  }
-
+  
   emailError.value = ''
   return true
 }
@@ -117,28 +109,21 @@ const login = async () => {
   loading.value = true
   errorMessage.value = ''
   emailError.value = ''
-  passwordError.value = ''
   const persistence = rememberMe.value ? browserLocalPersistence : browserSessionPersistence;
-  
   try {
     // Validate inputs
     if (!email.value || !password.value) {
       errorMessage.value = 'Email and password are required'
-      return
+      return // No need to set loading false here, finally block handles it
     }
     
     // Validate email format
     if (!validateEmail()) {
-      return
+      return // No need to set loading false here, finally block handles it
     }
-    
-    // Clear password field after successful validation
-    const tempPassword = password.value
-    password.value = ''
-    
     await setPersistence(auth, persistence);
     // Attempt login
-    await signInWithEmailAndPassword(auth, email.value, tempPassword)
+    await signInWithEmailAndPassword(auth, email.value, password.value)
     
     // Navigate using router.push - the guard will handle auth check
     const targetRoute = '/admin/manage-posts';
@@ -146,24 +131,24 @@ const login = async () => {
     await router.isReady(); // Ensure router is ready
     await router.push(targetRoute);
     
+    
   } catch (err) {
     // Handle specific errors
     if (err.code === 'auth/invalid-credential') {
       errorMessage.value = 'Invalid email or password. Please try again.'
     } else if (err.message.includes('domain') || err.message.includes('unauthorized')) {
-      errorMessage.value = 'Authentication failed. Domain might not be authorized.'
+       errorMessage.value = 'Authentication failed. Domain might not be authorized.' // Simplified message
     } else {
       errorMessage.value = 'An error occurred during login. Please try again.'
     }
     
-    // Focus handling
+    // Focus handling can remain if needed
     setTimeout(() => {
       const errorEl = document.querySelector('.error-message')
       if (errorEl) errorEl.focus()
     }, 100);
   } finally {
     loading.value = false
-    password.value = '' // Clear password field on any outcome
   }
 }
 
