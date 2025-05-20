@@ -1,26 +1,22 @@
 <template>
   <div class="manage-posts">
-    <Notification
-        v-model="showNotification"
-        :type="notificationType"
-        :message="notificationMessage"
-      />
+    <Notification v-model="showNotification" :type="notificationType" :message="notificationMessage" />
     <h2 class="main-title">Manage Blog Posts</h2>
-    
+
     <div v-if="loading" class="loading-container">
       <AdminLoadingSpinner />
     </div>
-    
+
     <div v-else-if="error" class="error-message">
       <p>{{ error }}</p>
       <button @click="fetchPosts" class="retry-button">Try Again</button>
     </div>
-    
+
     <div v-else-if="posts.length === 0" class="no-posts">
       <p>No blog posts found.</p>
       <router-link to="/admin/new-post" class="create-post-link">Create your first post</router-link>
     </div>
-    
+
     <ul v-else class="posts-list">
       <li v-for="post in posts" :key="post.id" class="post-item">
         <div class="post-details">
@@ -29,44 +25,28 @@
           <p class="post-excerpt">{{ truncateContent(post.content) }}</p>
         </div>
         <div class="post-actions">
-          <button 
-            @click="editPost(post.title)" 
-            @keydown.enter="editPost(post.title)"
-            class="edit-button"
-            aria-label="Edit post"
-          >
+          <button @click="editPost(post.title)" @keydown.enter="editPost(post.title)" class="edit-button"
+            aria-label="Edit post">
             Edit
           </button>
-          <button 
-            @click="confirmDelete(post.title)" 
-            @keydown.enter="confirmDelete(post.title)"
-            class="delete-button"
-            aria-label="Delete post"
-          >
+          <button @click="confirmDelete(post.title)" @keydown.enter="confirmDelete(post.title)" class="delete-button"
+            aria-label="Delete post">
             Delete
           </button>
         </div>
       </li>
     </ul>
-    
+
     <!-- Confirmation Modal -->
     <div v-if="showDeleteModal" class="delete-modal">
       <div class="modal-content" role="dialog" aria-labelledby="delete-modal-title">
         <h3 id="delete-modal-title">Confirm Deletion</h3>
         <p>Are you sure you want to delete this post? This action cannot be undone.</p>
         <div class="modal-actions">
-          <button 
-            @click="cancelDelete" 
-            class="cancel-button"
-            aria-label="Cancel deletion"
-          >
+          <button @click="cancelDelete" class="cancel-button" aria-label="Cancel deletion">
             Cancel
           </button>
-          <button 
-            @click="removePost" 
-            class="confirm-delete-button"
-            aria-label="Confirm delete post"
-          >
+          <button @click="removePost" class="confirm-delete-button" aria-label="Confirm delete post">
             Delete
           </button>
         </div>
@@ -78,7 +58,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { getPosts, deletePost} from '@/config/firebase';
+import { getPosts, deletePost } from '@/config/firebase';
 import Notification from '../UI/Notification.vue';
 import AdminLoadingSpinner from '../UI/AdminLoadingSpinner.vue';
 
@@ -104,19 +84,18 @@ watch(
       showNotification.value = true;
       notificationType.value = newQuery.type || 'info';
       notificationMessage.value = 'You are already logged in as an admin.';
-      
+
+
       setTimeout(() => {
-  showNotification.value = false;
-  
-  // Remove only notification params without triggering full navigation
-  if (route.query.notify) {
-    const newQuery = { ...route.query };
-    delete newQuery.notify;
-    delete newQuery.type;
-    
-    router.replace({ query: newQuery }, { shallow: true });
-  }
-}, 2000);
+        showNotification.value = false;
+
+        // Remove only notification params without triggering full navigation
+        if (route.query.notify) {
+          // This creates a new object (cleanQuery) with all properties from route.query except notify and type.
+          const { notify, type, ...cleanQuery } = route.query;
+          router.replace({ query: cleanQuery }, { shallow: true });
+        }
+      }, 1000);
     }
   },
   { immediate: true } // Force immediate check of current value
@@ -126,7 +105,7 @@ watch(
 const fetchPosts = async () => {
   loading.value = true;
   error.value = null;
-  
+
   try {
     const fetchedPosts = await getPosts();
     posts.value = fetchedPosts;
@@ -202,15 +181,18 @@ onMounted(fetchPosts);
 
 @media (max-width: 768px) {
   .manage-posts {
-    top: 7rem; /* Reduced top margin to match compact header */
-    padding: 1rem; /* Standard padding */
+    top: 7rem;
+    /* Reduced top margin to match compact header */
+    padding: 1rem;
+    /* Standard padding */
   }
 }
 
 .main-title {
   font-size: clamp(1.5rem, 5vw, 2.25rem);
   font-weight: 700;
-  color: #4c1d95; /* Purple to match your brand color */
+  color: #4c1d95;
+  /* Purple to match your brand color */
   margin-bottom: clamp(1rem, 3vw, 1.5rem);
   padding-bottom: clamp(0.3rem, 1vw, 0.5rem);
   border-bottom: 3px solid #4c1d95;
@@ -296,9 +278,11 @@ h2 {
 }
 
 .post-date {
-  color: #4a5568; /* Darker gray for better contrast */
+  color: #4a5568;
+  /* Darker gray for better contrast */
   font-size: clamp(0.875rem, 2vw, 1rem);
-  font-weight: 500; /* Slightly bolder for better readability */
+  font-weight: 500;
+  /* Slightly bolder for better readability */
   margin-bottom: clamp(0.3rem, 2vw, 0.5rem);
   display: inline-block;
 }
@@ -315,7 +299,8 @@ h2 {
   gap: 0.5rem;
 }
 
-.edit-button, .delete-button {
+.edit-button,
+.delete-button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.25rem;
@@ -337,15 +322,18 @@ h2 {
 }
 
 .delete-button {
-  background-color: #b91c1c; /* Darker red for better contrast with white text */
+  background-color: #b91c1c;
+  /* Darker red for better contrast with white text */
   color: white;
-  font-weight: 500; /* Slightly bolder text for better readability */
+  font-weight: 500;
+  /* Slightly bolder text for better readability */
 }
 
 .delete-button:focus-visible {
   outline: 3px solid #ffffff;
   outline-offset: 0.5rem;
-  box-shadow: 0 0 0 5px rgba(185, 28, 28, 0.7); /* Match the new darker red */
+  box-shadow: 0 0 0 5px rgba(185, 28, 28, 0.7);
+  /* Match the new darker red */
   position: relative;
   z-index: 1;
 }
@@ -362,7 +350,8 @@ h2 {
 .confirm-delete-button:focus-visible {
   outline: 3px solid #ffffff;
   outline-offset: 0.5rem;
-  box-shadow: 0 0 0 5px rgba(185, 28, 28, 0.7); /* Match the new darker red */
+  box-shadow: 0 0 0 5px rgba(185, 28, 28, 0.7);
+  /* Match the new darker red */
   position: relative;
   z-index: 1;
 }
@@ -419,13 +408,14 @@ h2 {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .post-actions {
     margin-top: 1rem;
     width: 100%;
   }
-  
-  .edit-button, .delete-button {
+
+  .edit-button,
+  .delete-button {
     flex: 1;
   }
 }
