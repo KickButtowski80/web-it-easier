@@ -177,8 +177,6 @@ onMounted(() => {
 
   // Start observing the document body
   resizeObserver.observe(document.body);
-
-  console.log("App mounted, mobile detection active with ResizeObserver");
 });
 
 onUnmounted(() => {
@@ -194,12 +192,6 @@ onUnmounted(() => {
 // Function to check if device is mobile
 const checkMobile = () => {
   isMobile.value = window.innerWidth <= 720;
-  console.log(
-    "Mobile detection:",
-    isMobile.value ? "MOBILE" : "DESKTOP",
-    "Width:",
-    window.innerWidth
-  );
 };
 </script>
 
