@@ -1,6 +1,6 @@
 <template>
   <section class="admin-form">    
-    <h1 id="form-heading">New Blog Post</h1>    
+    <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>    
     <form @submit.prevent="handleSubmit" aria-labelledby="form-heading">
       <div class="form-group">
         <label for="title">Title</label>
@@ -82,14 +82,25 @@
         </div>
       </div>
 
-      <button 
-        type="submit"
-        class="submit-btn"
-        :disabled="isSubmitting"
-        :aria-busy="isSubmitting"
-      >
-        {{ isSubmitting ? 'Publishing...' : 'Publish Post' }}
-      </button>
+      <div class="button-group">
+        <button 
+          type="submit"
+          class="submit-btn"
+          :disabled="isSubmitting"
+          :aria-busy="isSubmitting"
+        >
+          {{ buttonText }}
+        </button>
+        <button 
+          v-if="isEditMode"
+          type="button"
+          class="cancel-btn"
+          @click="cancelEdit"
+          :disabled="isSubmitting"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
     
     <Notification 
@@ -102,15 +113,23 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
-import { addPost, signOut, auth } from '@/config/firebase'
+import { ref, computed, onMounted, nextTick, defineProps } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { addPost, updatePost, getPostById, signOut, auth } from '@/config/firebase'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import Notification from '@/components/UI/Notification.vue'
 
+const props = defineProps({
+  id: { type: String, default: '' }
+})
+
 const router = useRouter()
+const route = useRoute()
+const postId = ref(null)
+const isEditMode = ref(false)
+
 const formData = ref({
   title: '',
   date: new Date().toISOString().split('T')[0],
@@ -150,17 +169,65 @@ const previewContent = computed(() => {
   return marked.parse(formData.value.content || '')
 })
 
-// Check token expiration on component mount
-onMounted(() => {
+// Computed property for button text based on form state
+const buttonText = computed(() => {
+  if (isSubmitting.value) {
+    return isEditMode.value ? 'Updating...' : 'Publishing...'
+  }
+  return isEditMode.value ? 'Update Post' : 'Publish Post'
+})
+
+// Load post data if in edit mode
+const loadPost = async () => {
+  // Get ID from either props or route params
+  const editId = props.id || route.params.id;
+  if (!editId) return;
+  
+  try {
+    isSubmitting.value = true;
+    const post = await getPostById(editId);
+    
+    if (post) {
+      postId.value = post.id;
+      isEditMode.value = true;
+      
+      // Format the date from Firestore timestamp to YYYY-MM-DD for the input field
+      formData.value = {
+        ...post,
+        date: post.date instanceof Date ? post.date.toISOString().split('T')[0] : 
+              post.date && post.date.toDate ? post.date.toDate().toISOString().split('T')[0] : 
+              new Date().toISOString().split('T')[0]
+      };
+    } else {
+      showNotify('Post not found', 'error');
+      router.push('/admin');
+    }
+  } catch (error) {
+    console.error('Error loading post:', error);
+    showNotify('Failed to load post', 'error');
+    router.push('/admin');
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
+// Check token expiration and load post if needed
+onMounted(async () => {
   if (!auth.currentUser) {
-    router.push('/login')
+    router.push('/login');
+    return;
+  }
+  
+  // If we have a post ID (either from props or route params), load the post data
+  if (props.id || route.params.id) {
+    await loadPost();
   }
   
   // Set initial focus to the title field
   nextTick(() => {
-    document.getElementById('title')?.focus()
-  })
-})
+    document.getElementById('title')?.focus();
+  });
+});
 
 const logout = async () => {
   try {
@@ -231,46 +298,64 @@ const isValidUrl = (url) => {
   }
 }
 
+const cancelEdit = () => {
+  // Navigate back to admin page or blog page
+  router.push('/admin/manage-posts');
+};
+
 const handleSubmit = async () => {
   if (isSubmitting.value) return; // Prevent double submit
-  isSubmitting.value = true
+  isSubmitting.value = true;
+  
   // Validate form
   if (!validateForm()) {
     // Focus the first field with an error
-    const firstErrorField = Object.keys(formErrors.value).find(key => formErrors.value[key])
+    const firstErrorField = Object.keys(formErrors.value).find(key => formErrors.value[key]);
     if (firstErrorField) {
       nextTick(() => {
-        document.getElementById(firstErrorField)?.focus()
-      })
+        document.getElementById(firstErrorField)?.focus();
+      });
     }
-    return
+    isSubmitting.value = false;
+    return;
   }
   
   try {
-    // Add post to Firestore
-    await addPost({
+    const postData = {
       ...formData.value,
-      date: new Date(formData.value.date),
-      createdAt: new Date(),
-    })
+      date: new Date(formData.value.date)
+    };
     
-    showNotify('Post published successfully!', 'success');
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await router.push('/blog');
-    // Reset form after successful submission
-    formData.value = {
-      title: '',
-      date: new Date().toISOString().split('T')[0],
-      readingTime: 5,
-      featureImage: '',
-      content: ''
+    if (isEditMode.value && postId.value) {
+      // Update existing post
+      await updatePost(postId.value, postData);
+      showNotify('Post updated successfully!', 'success');
+    } else {
+      // Add new post
+      postData.createdAt = new Date();
+      await addPost(postData);
+      showNotify('Post published successfully!', 'success');
     }
     
-
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await router.push('/blog');
+    
+    // Reset form after successful submission if it was a new post
+    if (!isEditMode.value) {
+      formData.value = {
+        title: '',
+        date: new Date().toISOString().split('T')[0],
+        readingTime: 5,
+        featureImage: '',
+        content: ''
+      };
+    }
   } catch (error) {
-    console.error('Error publishing post:', error)
-    showNotify('Failed to publish post. Please use a unique title and try again.', 'error')
-  } 
+    console.error(`Error ${isEditMode.value ? 'updating' : 'publishing'} post:`, error);
+    showNotify(`Failed to ${isEditMode.value ? 'update' : 'publish'} post. ${error.message || 'Please try again.'}`, 'error');
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 </script>
 
@@ -368,6 +453,12 @@ textarea {
   resize: vertical;
 }
 
+.button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
 .submit-btn {
   padding: clamp(0.8rem, 3vw, 1rem);
   background-color: #4c1d95; /* Match the brand purple */
@@ -406,6 +497,21 @@ textarea {
   background-color: #a0aec0;
   cursor: not-allowed;
   opacity: 0.7;
+}
+
+.cancel-btn {
+  padding: clamp(0.8rem, 3vw, 1rem);
+  background-color: #e2e8f0;
+  color: #4a5568;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #cbd5e0;
+  cursor: pointer;
 }
 
 .markdown-editor {
