@@ -25,7 +25,7 @@
           <p class="post-excerpt">{{ truncateContent(post.content) }}</p>
         </div>
         <div class="post-actions">
-          <button @click="editPost(post.title)" @keydown.enter="editPost(post.title)" class="edit-button"
+          <button @click="editPost(post.id)" @keydown.enter="editPost(post.id)" class="edit-button"
             aria-label="Edit post">
             Edit
           </button>
