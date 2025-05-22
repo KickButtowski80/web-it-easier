@@ -1,10 +1,10 @@
 <template>
 
-  <div v-if="isLoading" class="loading-overlay fixed inset-0 bg-white/90 
+  <div v-if="isLoading || error" class="loading-overlay fixed inset-0 bg-white/90 
     dark:bg-gray-900/90 flex flex-col items-center 
     justify-center z-50 transition-opacity duration-300
     perspective-[1000px]" 
-    role="status" aria-live="assertive" aria-atomic="true" aria-busy="true">
+    role="status" aria-live="assertive" aria-atomic="true" :aria-busy="isLoading">
     <div class="w-72 h-72 border border-purple-800 rounded-md  
    flex flex-col items-center justify-center 
     backdrop-blur-sm bg-white/50 dark:bg-gray-900/50">
@@ -33,22 +33,46 @@
         </div>
       </div>
 
-      <p id="loading-message" class="text-purple-900 dark:text-purple-200 font-medium text-lg">
-        <slot>{{ message }}</slot>
-      </p>
-      <p v-if="subMessage" id="loading-submessage" class="text-purple-800/70 dark:text-purple-300/80 text-sm mt-2">
-        {{ subMessage }}
-      </p>
-      <!-- Screen reader only text for better context -->
-      <span class="sr-only">
-        <slot name="sr-text">{{ message }} {{ subMessage }}</slot>
-      </span>
+      <!-- Loading State -->
+      <template v-if="isLoading">
+        <p id="loading-message" class="text-purple-900 dark:text-purple-200 font-medium text-lg">
+          <slot>{{ message }}</slot>
+        </p>
+        <p v-if="subMessage" id="loading-submessage" class="text-purple-800/70 dark:text-purple-300/80 text-sm mt-2">
+          {{ subMessage }}
+        </p>
+        <!-- Screen reader only text for better context -->
+        <span class="sr-only">
+          <slot name="sr-text">{{ message }} {{ subMessage }}</slot>
+        </span>
+      </template>
+      
+      <!-- Error State -->
+      <template v-else-if="error">
+        <p id="error-message" class="text-red-600 dark:text-red-400 font-medium text-lg">
+          {{ error }}
+        </p>
+        <button 
+          @click="$emit('retry')" 
+          class="mt-4 px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-md
+                 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          aria-label="Try again"
+        >
+          Try Again
+        </button>
+        <!-- Screen reader only text for error state -->
+        <span class="sr-only">
+          <slot name="sr-error">{{ error }}. Press the Try Again button to retry.</slot>
+        </span>
+      </template>
     </div>
   </div>
 </template>
 
 <script setup>
 
+
+const emit = defineEmits(['retry']);
 
 defineProps({
   isLoading: {
@@ -62,6 +86,10 @@ defineProps({
   subMessage: {
     type: String,
     default: 'Just a moment please'
+  },
+  error: {
+    type: String,
+    default: ''
   }
 });
 </script>
