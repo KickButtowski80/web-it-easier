@@ -3,16 +3,25 @@
     <Notification v-model="showNotification" :type="notificationType" :message="notificationMessage" />
     <h2 class="main-title">Manage Blog Posts</h2>
 
-    <div v-if="loading" class="loading-container">
-      <AdminLoadingSpinner />
-    </div>
+    <LoadingOverlay 
+      v-if="loading || error"
+      :isLoading="loading" 
+      :error="error"
+      :message="'Loading posts...'" 
+      :subMessage="'Please wait while we retrieve your posts'"
+      @retry="fetchPosts">
+      
+      <template #sr-text>
+        Post editor is currently loading data from the database. 
+        This may take a few seconds depending on your connection speed.
+      </template>
+      
+      <template #sr-error>
+        Error loading posts: {{ error }}. Press the Try Again button to retry.
+      </template>
+    </LoadingOverlay>
 
-    <div v-else-if="error" class="error-message">
-      <p>{{ error }}</p>
-      <button @click="fetchPosts" class="retry-button">Try Again</button>
-    </div>
-
-    <div v-else-if="posts.length === 0" class="no-posts">
+    <div v-if="posts.length === 0" class="no-posts">
       <p>No blog posts found.</p>
       <router-link to="/admin/new-post" class="create-post-link">Create your first post</router-link>
     </div>
@@ -60,7 +69,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { getPosts, deletePost } from '@/config/firebase';
 import Notification from '../UI/Notification.vue';
-import AdminLoadingSpinner from '../UI/AdminLoadingSpinner.vue';
+import LoadingOverlay from '../UI/LoadingOverlay.vue';
 
 const router = useRouter();
 const posts = ref([]);
@@ -110,7 +119,6 @@ const fetchPosts = async () => {
     const fetchedPosts = await getPosts();
     posts.value = fetchedPosts;
     posts.value.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date, newest first
-    console.log('Posts loaded:', posts.value);
   } catch (err) {
     console.error('Error fetching posts:', err);
     error.value = 'Failed to load blog posts. Please try again.';
