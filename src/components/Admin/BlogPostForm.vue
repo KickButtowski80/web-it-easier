@@ -1,7 +1,24 @@
 <template>
-  <section class="admin-form">    
+  <section class="admin-form relative">
+    <!-- Loading Overlay Component with custom screen reader text -->
+    <LoadingOverlay 
+      :isLoading="isLoading" 
+      :fullPage="false" 
+      :message="'Loading post data...'" 
+      :subMessage="'Please wait while we retrieve your content'">
+      <template #sr-text>
+        Post editor is currently loading data from the database. 
+        This may take a few seconds depending on your connection speed.
+      </template>
+    </LoadingOverlay>
+    
     <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>    
-    <form @submit.prevent="handleSubmit" aria-labelledby="form-heading">
+    <form 
+      @submit.prevent="handleSubmit" 
+      aria-labelledby="form-heading"
+      :class="{ 'opacity-50': isLoading }"
+      :aria-busy="isLoading"
+    >
       <div class="form-group">
         <label for="title">Title</label>
         <input 
@@ -113,9 +130,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, defineProps } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { addPost, updatePost, getPostById, signOut, auth } from '@/config/firebase'
+import LoadingOverlay from '@/components/UI/LoadingOverlay.vue'
 import { marked } from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
@@ -125,8 +143,8 @@ const props = defineProps({
   id: { type: String, default: '' }
 })
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();  // For navigation :performing navigation actions
+const route = useRoute();    // For reading current route info
 const postId = ref(null)
 const isEditMode = ref(false)
 
@@ -148,6 +166,7 @@ const formErrors = ref({
 })
 
 const isSubmitting = ref(false)
+const isLoading = ref(false)
 const showNotification = ref(false)
 const notificationMessage = ref('')
 const notificationType = ref('info')
@@ -184,7 +203,7 @@ const loadPost = async () => {
   if (!editId) return;
   
   try {
-    isSubmitting.value = true;
+    isLoading.value = true;
     const post = await getPostById(editId);
     
     if (post) {
@@ -207,7 +226,7 @@ const loadPost = async () => {
     showNotify('Failed to load post', 'error');
     router.push('/admin');
   } finally {
-    isSubmitting.value = false;
+    isLoading.value = false;
   }
 };
 
