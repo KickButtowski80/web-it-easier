@@ -1,6 +1,6 @@
 <template>
 
-  <div v-if="isLoading || error" class="loading-overlay fixed inset-0 bg-white/90 
+  <div v-if="isLoading" class="loading-overlay fixed inset-0 bg-white/90 
     dark:bg-gray-900/90 flex flex-col items-center 
     justify-center z-50 transition-opacity duration-300
     perspective-[1000px]" 
@@ -46,25 +46,6 @@
           <slot name="sr-text">{{ message }} {{ subMessage }}</slot>
         </span>
       </template>
-      
-      <!-- Error State -->
-      <template v-else-if="error">
-        <p id="error-message" class="text-red-600 dark:text-red-400 font-medium text-lg">
-          {{ error }}
-        </p>
-        <button 
-          @click="$emit('retry')" 
-          class="mt-4 px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-md
-                 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-          aria-label="Try again"
-        >
-          Try Again
-        </button>
-        <!-- Screen reader only text for error state -->
-        <span class="sr-only">
-          <slot name="sr-error">{{ error }}. Press the Try Again button to retry.</slot>
-        </span>
-      </template>
     </div>
   </div>
 </template>
@@ -72,7 +53,6 @@
 <script setup>
 
 
-const emit = defineEmits(['retry']);
 
 defineProps({
   isLoading: {
@@ -87,10 +67,6 @@ defineProps({
     type: String,
     default: 'Just a moment please'
   },
-  error: {
-    type: String,
-    default: ''
-  }
 });
 </script>
 

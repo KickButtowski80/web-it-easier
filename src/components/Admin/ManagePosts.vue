@@ -4,20 +4,14 @@
     <h2 class="main-title">Manage Blog Posts</h2>
 
     <LoadingOverlay 
-      v-if="loading || error"
+      v-if="loading"
       :isLoading="loading" 
-      :error="error"
       :message="'Loading posts...'" 
-      :subMessage="'Please wait while we retrieve your posts'"
-      @retry="fetchPosts">
+      :subMessage="'Please wait while we retrieve your posts'">
       
       <template #sr-text>
         Post editor is currently loading data from the database. 
         This may take a few seconds depending on your connection speed.
-      </template>
-      
-      <template #sr-error>
-        Error loading posts: {{ error }}. Press the Try Again button to retry.
       </template>
     </LoadingOverlay>
 
@@ -74,7 +68,6 @@ import LoadingOverlay from '../UI/LoadingOverlay.vue';
 const router = useRouter();
 const posts = ref([]);
 const loading = ref(true);
-const error = ref(null);
 const showDeleteModal = ref(false);
 const postToDelete = ref(null);
 
@@ -121,7 +114,9 @@ const fetchPosts = async () => {
     posts.value.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date, newest first
   } catch (err) {
     console.error('Error fetching posts:', err);
-    error.value = 'Failed to load blog posts. Please try again.';
+    showNotification.value = true;
+    notificationType.value = 'error';
+    notificationMessage.value = 'Failed to load blog posts. Please try again.';
   } finally {
     loading.value = false;
   }
@@ -170,7 +165,9 @@ const removePost = async () => {
     postToDelete.value = null;
   } catch (err) {
     console.error('Error deleting post:', err);
-    error.value = 'Failed to delete post. Please try again.';
+    showNotification.value = true;
+    notificationType.value = 'error';
+    notificationMessage.value = 'Failed to delete post. Please try again.';
   }
 };
 

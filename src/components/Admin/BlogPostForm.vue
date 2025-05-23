@@ -145,8 +145,8 @@ const props = defineProps({
 
 const router = useRouter();  // For navigation :performing navigation actions
 const route = useRoute();    // For reading current route info
-const postId = ref(null)
-const isEditMode = ref(false)
+const postId = ref(null);
+const isEditMode = ref(false);
 
 const formData = ref({
   title: '',
