@@ -106,7 +106,7 @@ watch(
 // Fetch all blog posts
 const fetchPosts = async () => {
   loading.value = true;
-  error.value = null;
+
 
   try {
     const fetchedPosts = await getPosts();
