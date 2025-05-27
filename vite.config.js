@@ -4,16 +4,61 @@ import vue from "@vitejs/plugin-vue";
 import path from "path";
 import Sonda from 'sonda/vite'; 
 
-export default defineConfig({  
-  build: {
-    // Enable source maps for development and bundle analysis
-    // - 'true': Generates source maps in development mode (faster builds)
-    // - 'hidden': Generates source maps but doesn't include them in the bundle (smaller production builds)
-    // - 'inline': Embeds source maps as data URLs (useful for development)
-    // Note: Enabling source maps increases build time and output size,
-    // but is necessary for accurate bundle analysis with tools like Sonda
-    sourcemap: true, // Set to false in production for better performance
-  },
+export default defineConfig(() => { 
+
+  return {
+    build: {
+      outDir: "dist",
+      sourcemap: false,
+      minify: "terser",
+      terserOptions: {
+        compress: {
+          ecma: 2020,
+          warnings: false,
+          comparisons: false,
+          inline: 2,
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.debug'],
+          passes: 3,
+        },
+        mangle: {
+          safari10: true,
+          properties: {
+            regex: /^_/,
+          },
+        },
+        format: {
+          comments: false,
+          ecma: 2020,
+        },
+        toplevel: true,
+        keep_classnames: false,
+        keep_fnames: false,
+      },
+      cssCodeSplit: true,
+      cssMinify: true,
+      assetsInlineLimit: 0,
+      rollupOptions: {
+        input: {
+          main: resolve(__dirname, "index.html"),
+          notFound: resolve(__dirname, "404.html")
+        },
+        output: {
+          manualChunks: {
+            firebase: ["firebase/app", "firebase/firestore"],
+            fontawesome: ["@fortawesome/fontawesome-free"],
+          },
+          assetFileNames: (assetInfo) => {
+            const imgType = /\.(png|jpe?g|gif|svg|webp|avif)$/;
+            if (assetInfo.name && imgType.test(assetInfo.name)) {
+              return "assets/img/[name]-[hash][extname]";
+            }
+            return "assets/[name]-[hash][extname]";
+          },
+        },
+      },
+    },
   plugins: [
     vue(),
     viteCompression({
@@ -30,12 +75,13 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
+        "@": path.resolve(__dirname, "src")
+      }
   },
   server: {
     watch: {
-      usePolling: true,
-    },
-  },
+        usePolling: true
+      }
+    }
+  };
 });
