@@ -51,16 +51,56 @@ export {
  * Get all blog posts from Firestore
  * @returns {Promise<Array>} Formatted array of blog posts with IDs and formatted dates
  */
+
+// Utility function for retrying operations
+const withRetry = async (operation, maxRetries = 3) => {
+  let attempts = 0;
+  
+  while (attempts < maxRetries) {
+    try {
+      return await operation();
+    } catch (error) {
+      attempts++;
+      console.log(`Firebase operation failed. Attempt ${attempts}/${maxRetries}`);
+      
+      if (attempts >= maxRetries) {
+        console.error('All retry attempts failed');
+        throw error;
+      }
+      
+      // Exponential backoff
+      await new Promise(resolve => setTimeout(resolve, 300 * Math.pow(2, attempts)));
+    }
+  }
+};
+
+
+
+
+
 export const getPosts = async () => {
-  const snapshot = await getDocs(collection(db, 'posts'));
-  return snapshot.docs.map(doc => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      ...data,
-      // Convert Firestore Timestamp to formatted date string
-      date: data.date ? formatDate(data.date.toDate()) : 'No date'
-    };
+  return withRetry(async () => {
+    /* TEST RETRY MECHANISM: Uncomment to simulate network failures
+     * This code creates artificial errors 70% of the time to test the retry mechanism.
+     * Useful for:
+     * 1. Verifying withRetry works correctly
+     * 2. Testing how your UI handles loading states during retries
+     * 3. Confirming error notifications appear only after all retries fail
+     */
+    // if (Math.random() < 0.7) {
+    //   throw new Error("Simulated network error");
+    // }
+
+    const snapshot = await getDocs(collection(db, 'posts'));
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+        // Convert Firestore Timestamp to formatted date string
+        date: data.date ? formatDate(data.date.toDate()) : 'No date'
+      };
+    });
   });
 };
 /**
@@ -74,15 +114,17 @@ export const getPosts = async () => {
  * @returns {Object|null} Raw Firestore document reference or null if not found
  */
 const findPostByTitle = async (title) => {
-  const postsRef = collection(db, 'posts');
-  const snapshot = await getDocs(postsRef);
-  if (snapshot.empty) return null;
-  const lowerTitle = title.toLowerCase().trim();
-  const post = snapshot.docs.find(doc => {
-    const data = doc.data();
-    return data.title && data.title.toLowerCase().trim() === lowerTitle;
-  })
-  return post || null;
+  return withRetry(async () => {
+    const postsRef = collection(db, 'posts');
+    const snapshot = await getDocs(postsRef);
+    if (snapshot.empty) return null;
+    const lowerTitle = title.toLowerCase().trim();
+    const post = snapshot.docs.find(doc => {
+      const data = doc.data();
+      return data.title && data.title.toLowerCase().trim() === lowerTitle;
+    })
+    return post || null;
+  });
 };
 /**
  * Public API function to get a post by its title
@@ -108,7 +150,6 @@ export const getPost = async (title) => {
         date: post.data().date ? formatDate(post.data().date.toDate()) : 'No date'
       };
     }
-
     return null;
   } catch (error) {
     console.error('Error in getPost:', error);
