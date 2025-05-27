@@ -18,7 +18,9 @@
 import BottomMenu from "./Menus/BottomMenu.vue";
 import HamburgerMenu from "./Menus/HamburgerMenu.vue";
 import TopMenu from "./Menus/TopMenu.vue";
-import AdminLayout from "./Admin/AdminLayout.vue";
+// Using defineAsyncComponent for AdminLayout to maintain code-splitting
+import { defineAsyncComponent } from 'vue';
+????const AdminLayout = defineAsyncComponent(() => import("./Admin/AdminLayout.vue"));
 import { ref, onMounted, onUnmounted } from "vue";
 import { auth } from "@/config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
