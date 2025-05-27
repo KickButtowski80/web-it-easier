@@ -52,7 +52,22 @@ export {
  * @returns {Promise<Array>} Formatted array of blog posts with IDs and formatted dates
  */
 
-// Utility function for retrying operations
+/**
+ * Utility function for retrying failed operations with exponential backoff
+ * 
+ * How the retry mechanism works:
+ * 1. Attempts to execute the provided operation
+ * 2. If it fails, increments the attempt counter and logs the failure
+ * 3. If max retries reached, throws the final error
+ * 4. Otherwise, waits using exponential backoff before trying again
+ * 
+ * See inline comments for detailed explanation of the Promise/await mechanism.
+ * 
+ * @param {Function} operation - Async function to retry if it fails
+ * @param {number} maxRetries - Maximum number of retry attempts (default: 3)
+ * @returns {Promise<any>} - Result of the operation if successful
+ * @throws {Error} - Throws the last error if all retries fail
+ */
 const withRetry = async (operation, maxRetries = 3) => {
   let attempts = 0;
   
@@ -68,7 +83,29 @@ const withRetry = async (operation, maxRetries = 3) => {
         throw error;
       }
       
-      // Exponential backoff
+      // Exponential backoff - wait longer between each retry
+      // This pauses only this function while allowing other code to run:
+      // 1. Creates a Promise that resolves after the calculated delay
+      // 2. await sees an unresolved Promise and pauses this function
+      // 3. JavaScript continues running other code during this pause
+      // 4. When setTimeout completes, it calls resolve() which fulfills the Promise
+      // 5. Delay increases exponentially: 600ms, 1200ms, 2400ms, etc.
+      //
+      // EDUCATIONAL NOTE: Promise Resolution Timing
+      // --------------------------------------
+      // If we had used: await new Promise(resolve => resolve());
+      // instead of setTimeout, the Promise would resolve immediately, but there would
+      // still be a tiny, imperceptible delay because of how JavaScript handles Promises:
+      //
+      // 1. Promises use JavaScript's "microtask queue" for resolution
+      // 2. Microtasks run after the current synchronous code but before the next event loop tick
+      // 3. This creates a technical delay in the microseconds range
+      // 4. For retry mechanisms, we need meaningful delays (hundreds of milliseconds)
+      //    which is why we use setTimeout to create real, perceivable delays
+      //
+      // This distinction is important for understanding JavaScript's event loop,
+      // but for practical retry implementations, always use setTimeout with
+      // appropriate delay values.
       await new Promise(resolve => setTimeout(resolve, 300 * Math.pow(2, attempts)));
     }
   }
