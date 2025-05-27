@@ -3,16 +3,19 @@
     <Notification v-model="showNotification" :type="notificationType" :message="notificationMessage" />
     <h2 class="main-title">Manage Blog Posts</h2>
 
-    <div v-if="loading" class="loading-container">
-      <AdminLoadingSpinner />
-    </div>
+    <LoadingOverlay 
+      v-if="loading"
+      :isLoading="loading" 
+      :message="'Loading posts...'" 
+      :subMessage="'Please wait while we retrieve your posts'">
+      
+      <template #sr-text>
+        Post editor is currently loading data from the database. 
+        This may take a few seconds depending on your connection speed.
+      </template>
+    </LoadingOverlay>
 
-    <div v-else-if="error" class="error-message">
-      <p>{{ error }}</p>
-      <button @click="fetchPosts" class="retry-button">Try Again</button>
-    </div>
-
-    <div v-else-if="posts.length === 0" class="no-posts">
+    <div v-if="posts.length === 0" class="no-posts">
       <p>No blog posts found.</p>
       <router-link to="/admin/new-post" class="create-post-link">Create your first post</router-link>
     </div>
@@ -25,7 +28,7 @@
           <p class="post-excerpt">{{ truncateContent(post.content) }}</p>
         </div>
         <div class="post-actions">
-          <button @click="editPost(post.title)" @keydown.enter="editPost(post.title)" class="edit-button"
+          <button @click="editPost(post.id)" @keydown.enter="editPost(post.id)" class="edit-button"
             aria-label="Edit post">
             Edit
           </button>
@@ -60,12 +63,11 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { getPosts, deletePost } from '@/config/firebase';
 import Notification from '../UI/Notification.vue';
-import AdminLoadingSpinner from '../UI/AdminLoadingSpinner.vue';
+import LoadingOverlay from '../UI/LoadingOverlay.vue';
 
 const router = useRouter();
 const posts = ref([]);
 const loading = ref(true);
-const error = ref(null);
 const showDeleteModal = ref(false);
 const postToDelete = ref(null);
 
@@ -104,16 +106,17 @@ watch(
 // Fetch all blog posts
 const fetchPosts = async () => {
   loading.value = true;
-  error.value = null;
+
 
   try {
     const fetchedPosts = await getPosts();
     posts.value = fetchedPosts;
     posts.value.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date, newest first
-    console.log('Posts loaded:', posts.value);
   } catch (err) {
     console.error('Error fetching posts:', err);
-    error.value = 'Failed to load blog posts. Please try again.';
+    showNotification.value = true;
+    notificationType.value = 'error';
+    notificationMessage.value = 'Failed to load blog posts. Please try again.';
   } finally {
     loading.value = false;
   }
@@ -162,7 +165,9 @@ const removePost = async () => {
     postToDelete.value = null;
   } catch (err) {
     console.error('Error deleting post:', err);
-    error.value = 'Failed to delete post. Please try again.';
+    showNotification.value = true;
+    notificationType.value = 'error';
+    notificationMessage.value = 'Failed to delete post. Please try again.';
   }
 };
 

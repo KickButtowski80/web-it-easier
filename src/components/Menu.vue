@@ -34,7 +34,6 @@ const navigateToLogin = () => {
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log('User email:', user.email);
     isAdmin.value = user.email === 'pazpaz22@yahoo.com';
   } else {
     isAdmin.value = false;

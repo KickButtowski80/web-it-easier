@@ -17,22 +17,22 @@
         aria-label="Admin navigation"
       >
         <router-link
-          to="/admin/new-post"
+          :to="newPostLinkTo"
           class="nav-link"
-          :class="{ active: $route.path === '/admin/new-post' || $route.path.includes('/admin/edit-post/') }"
+          :class="{ active: isNewPostActive }"
           role="link"
-          :aria-current="$route.path === '/admin/new-post' || $route.path.includes('/admin/edit-post/') ? 'page' : 'false'"
+          :aria-current="isNewPostActive ? 'page' : 'false'"
         >
-          New Post
+          {{ newPostLinkText }}
         </router-link>
         <router-link
-          to="/admin/manage-posts"
+          :to="managePostsLinkTo"
           class="nav-link"
-          :class="{ active: $route.path === '/admin/manage-posts' }"
+          :class="{ active: isManagePostsRoute }"
           role="link"
-          :aria-current="$route.path === '/admin/manage-posts' ? 'page' : 'false'"
+          :aria-current="isManagePostsRoute ? 'page' : 'false'"
         >
-          Manage Posts
+          <span v-if="showBackArrow" class="mr-1">←</span> {{ managePostsLinkText }}
         </router-link>
         <button
           @click="logout"
@@ -50,14 +50,37 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { auth } from "@/config/firebase";
 import { signOut } from "firebase/auth";
 import Notification from "../UI/Notification.vue";
 const showNotification = ref(false);
 const notificationMessage = ref("");
 const notificationType = ref("info");
-const router = useRouter();
+const router = useRouter();  // For navigation :performing navigation actions
+const route = useRoute();    // For reading current route info
+
+// Computed properties for dynamic navigation
+const isEditRoute = computed(() => route.path.includes("/admin/edit-post/"));
+const isNewPostRoute = computed(() => route.path === "/admin/new-post");
+const isManagePostsRoute = computed(() => route.path === "/admin/manage-posts");
+
+const newPostLinkText = computed(() =>
+  isEditRoute.value ? "Edit Post" : "New Post"
+);
+
+const newPostLinkTo = computed(() =>
+  isEditRoute.value ? route.path : "/admin/new-post"
+);
+
+// Always show "Manage Posts" but with a back arrow when in edit mode
+const managePostsLinkText = "Manage Posts";
+const managePostsLinkTo = "/admin/manage-posts";
+const showBackArrow = computed(() => isEditRoute.value);
+
+const isNewPostActive = computed(() =>
+  isNewPostRoute.value || isEditRoute.value
+);
 
 // Check if user is authenticated
 const isAuthenticated = computed(() => {
