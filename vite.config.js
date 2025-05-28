@@ -41,8 +41,6 @@ export default defineConfig(({ mode, command }) => {
           comments: false,
           ecma: 2020
         },
-        // Enable multithreading for faster builds
-        parallel: true
       },
       cssCodeSplit: true,
       cssMinify: {
