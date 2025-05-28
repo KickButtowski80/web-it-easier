@@ -10,31 +10,15 @@ export default defineConfig(() => {
     build: {
       outDir: "dist",
       sourcemap: false,
-      minify: "terser",
-      terserOptions: {
-        compress: {
-          ecma: 2020,
-          warnings: false,
-          comparisons: false,
-          inline: 2,
-          drop_console: true,
-          drop_debugger: true,
-          pure_funcs: ['console.log', 'console.info', 'console.debug'],
-          passes: 3,
-        },
-        mangle: {
-          safari10: true,
-          properties: {
-            regex: /^_/,
-          },
-        },
-        format: {
-          comments: false,
-          ecma: 2020,
-        },
-        toplevel: true,
-        keep_classnames: false,
-        keep_fnames: false,
+      minify: 'esbuild',
+      esbuildOptions: {
+        target: 'es2020',
+        drop: ['console', 'debugger'],
+        keepNames: true,
+        minifyIdentifiers: true,
+        minifySyntax: true,
+        minifyWhitespace: true,
+        treeShaking: true,
       },
       cssCodeSplit: true,
       cssMinify: false,
