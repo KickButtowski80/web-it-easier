@@ -1,3 +1,4 @@
+import terser from '@rollup/plugin-terser';
 import viteCompression from "vite-plugin-compression";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
@@ -12,16 +13,18 @@ export default defineConfig(({ mode, command }) => {
     build: {
       outDir: "dist",
       sourcemap: enableSourceMap,  // Enable source maps for analysis and development
-      minify: 'esbuild',
+      minify: 'terser',
       chunkSizeWarningLimit: 1000,  // Moved here from rollupOptions.output
-      esbuildOptions: {
-        target: 'es2020',
-        drop: ['console', 'debugger'],
-        keepNames: true,
-        minifyIdentifiers: true,
-        minifySyntax: true,
-        minifyWhitespace: true,
-        treeShaking: true,
+      terserOptions: {
+        compress: {
+          drop_console: true,    // Remove console.* in production
+          drop_debugger: true,  // Remove debugger
+          pure_funcs: ['console.log', 'console.info'] // Remove specific console methods
+        },
+        format: {
+          comments: false,       // Remove all comments
+          ecma: 2020            // Target modern JS
+        }
       },
       cssCodeSplit: true,
       cssMinify: {
