@@ -11,6 +11,7 @@
     v-model="showNotification"
     :message="notificationMessage"
     :type="notificationType"
+    :icon="notificationIcon"
     :duration="3000"
   />
   <main
@@ -71,7 +72,7 @@ const router = useRouter();
 const showNotification = ref(false);
 const notificationMessage = ref("");
 const notificationType = ref("info");
-
+const notificationIcon = ref("info-circle");
 // For secret tap sequence
 const tapSequence = ref([]);
 const correctSequence = [1, 2, 3, 4]; 
@@ -100,6 +101,7 @@ const handleKeyPress = async (e) => {
   if (isAdmin) {
     notificationMessage.value = "You are already logged in as an admin.";
     notificationType.value = "warning";
+    notificationIcon.value = "info-circle";
     showNotification.value = true;
     return;
   } 
@@ -151,10 +153,12 @@ const navigateToLogin = async () => {
     showNotification.value = true;
     notificationMessage.value = "Navigating to login page";
     notificationType.value = "success";
+    notificationIcon.value = "check";
   } catch (error) {
     showNotification.value = true;
     notificationMessage.value = `Navigation failed: ${error.message}`;
     notificationType.value = "error";
+    notificationIcon.value = "exclamation-circle";
   }
 };
 
