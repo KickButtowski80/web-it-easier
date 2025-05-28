@@ -17,14 +17,32 @@ export default defineConfig(({ mode, command }) => {
       chunkSizeWarningLimit: 1000,  // Moved here from rollupOptions.output
       terserOptions: {
         compress: {
-          drop_console: true,    // Remove console.* in production
-          drop_debugger: true,  // Remove debugger
-          pure_funcs: ['console.log', 'console.info'] // Remove specific console methods
+          // Code Removal
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.warn', 'console.error'],
+          
+          // Advanced Compression
+          passes: 2,                  // Multiple compression passes
+          ecma: 2020,                 // Modern JS features
+          collapse_vars: true,        // Merge variables when possible
+          toplevel: true,             // Optimize top-level functions/variables
+          
+          // Safe Optimizations
+          booleans: true,             // Optimize boolean expressions
+          conditionals: true,         // Optimize conditionals
+          dead_code: true,            // Remove unreachable code
+          evaluate: true,             // Evaluate constant expressions
+          if_return: true,            // Optimize if-return and if-continue
+          join_vars: true,            // Join consecutive variable declarations
+          loops: true,                // Optimize loops
         },
         format: {
-          comments: false,       // Remove all comments
-          ecma: 2020            // Target modern JS
-        }
+          comments: false,
+          ecma: 2020
+        },
+        // Enable multithreading for faster builds
+        parallel: true
       },
       cssCodeSplit: true,
       cssMinify: {
