@@ -101,7 +101,6 @@ const handleKeyPress = async (e) => {
   if (isAdmin) {
     notificationMessage.value = "You are already logged in as an admin.";
     notificationType.value = "warning";
-    notificationIcon.value = "info-circle";
     showNotification.value = true;
     return;
   } 
@@ -153,12 +152,12 @@ const navigateToLogin = async () => {
     showNotification.value = true;
     notificationMessage.value = "Navigating to login page";
     notificationType.value = "success";
-    notificationIcon.value = "check";
+    
   } catch (error) {
     showNotification.value = true;
     notificationMessage.value = `Navigation failed: ${error.message}`;
     notificationType.value = "error";
-    notificationIcon.value = "exclamation-circle";
+    
   }
 };
 
