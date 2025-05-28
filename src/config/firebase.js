@@ -1,5 +1,4 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getFirestore, collection, addDoc, getDocs, serverTimestamp, doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail, 
   onAuthStateChanged, reauthenticateWithCredential, EmailAuthProvider, updatePassword as firebaseUpdatePassword,
@@ -15,8 +14,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getFirestore(app);
 
 // Initialize Firebase Auth
