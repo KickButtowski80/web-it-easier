@@ -37,7 +37,7 @@ export default defineConfig(() => {
         keep_fnames: false,
       },
       cssCodeSplit: true,
-      cssMinify: true,
+      cssMinify: false,
       assetsInlineLimit: 0,
       rollupOptions: {
         input: {
