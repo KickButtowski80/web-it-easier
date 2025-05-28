@@ -1,11 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { nextTick } from 'vue'
-import Home from '../views/Home.vue'
-import BlogPost from '../components/BlogPost.vue'
+import { nextTick, defineAsyncComponent } from 'vue'
 import AdminLoadingSpinner from '../components/UI/AdminLoadingSpinner.vue'
 import { auth } from '../config/firebase'
-import Login from '../views/Login.vue'
 import { onAuthStateChanged } from 'firebase/auth'
+
+// Create a loading component for async routes
+const LoadingComponent = {
+  template: '<div class="flex justify-center items-center min-h-screen"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div></div>'
+};
+
+// Helper function for lazy loading with loading state
+const lazyLoad = (path) => defineAsyncComponent({
+  loader: () => import(`../${path}.vue`),
+  loadingComponent: LoadingComponent,
+  delay: 200, // Show loading component after 200ms
+  timeout: 5000 // Time before giving up (5s)
+});
 
 // Promise that resolves when Firebase auth state is initially checked
 let authReadyResolve, authReady, currentAuthUser;
@@ -28,29 +38,29 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: () => lazyLoad('views/Login')
   },
   {
     path: '/admin',
-    component: () => import('../components/Admin/AdminLayout.vue'),
+    component: () => lazyLoad('components/Admin/AdminLayout'),
     meta: { requiresAuth: true, role: 'admin' }
   },
   {
     path: '/admin/manage-posts',
     name: 'ManagePosts',
-    component: () => import('../components/Admin/ManagePosts.vue'),
+    component: () => lazyLoad('components/Admin/ManagePosts'),
     meta: { requiresAuth: true, role: 'admin' }
   },
   {
     path: '/admin/new-post',
     name: 'NewPost',
-    component: () => import('../components/Admin/BlogPostForm.vue'),
+    component: () => lazyLoad('components/Admin/BlogPostForm.vue'),
     meta: { requiresAuth: true, role: 'admin' }
   },
   {
     path: '/admin/edit-post/:id',
     name: 'EditPost',
-    component: () => import('../components/Admin/BlogPostForm.vue'),
+    component: () => lazyLoad('components/Admin/BlogPostForm.vue'),
     meta: { requiresAuth: true, role: 'admin' },
     props: true
   },
@@ -79,7 +89,7 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('../views/NotFound.vue')
+    component: () => lazyLoad('views/NotFound')
   }
 ]
 
