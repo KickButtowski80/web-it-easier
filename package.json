@@ -7,9 +7,10 @@
     "node": "18.x"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite --mode development",
+    "build": "vite build --mode production",
+    "preview": "vite preview --mode production",
+    "analyze": "vite build --mode analysis"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",

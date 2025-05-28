@@ -29,3 +29,6 @@ dist-ssr
 *Zone.Identifier
 
 .env
+
+# Build reports
+sonda-report.html
