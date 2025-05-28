@@ -1,10 +1,10 @@
 import viteCompression from "vite-plugin-compression";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import path from "path";
-import Sonda from 'sonda/vite'; 
+import { resolve } from "path";
+import Sonda from 'sonda/vite';
 
-export default defineConfig(() => { 
+export default defineConfig(() => {
 
   return {
     build: {
@@ -59,27 +59,27 @@ export default defineConfig(() => {
         },
       },
     },
-  plugins: [
-    vue(),
-    viteCompression({
-      algorithm: "brotliCompress", // Choose desired compression algorithm (optional)
-      threshold: 1024,
-      ext: ".gz", // Output compressed files with .gz extension
-      filter: /\.(js|css|html|svg)$/i, // Compress all text-based assets
-    }),
-    Sonda({
-      open: true,
-      gzipSize: true,
-      brotliSize: true,
-    }),
-  ],
-  resolve: {
-    alias: {
-        "@": path.resolve(__dirname, "src")
+    plugins: [
+      vue(),
+      viteCompression({
+        algorithm: "brotliCompress", // Choose desired compression algorithm (optional)
+        threshold: 1024,
+        ext: ".gz", // Output compressed files with .gz extension
+        filter: /\.(js|css|html|svg)$/i, // Compress all text-based assets
+      }),
+      Sonda({
+        open: true,
+        gzipSize: true,
+        brotliSize: true,
+      }),
+    ],
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "src")
       }
-  },
-  server: {
-    watch: {
+    },
+    server: {
+      watch: {
         usePolling: true
       }
     }
