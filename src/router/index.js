@@ -3,6 +3,7 @@ import { nextTick, defineAsyncComponent } from 'vue'
 import AdminLoadingSpinner from '../components/UI/AdminLoadingSpinner.vue'
 import { auth } from '../config/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
+import Home from '../views/Home.vue'
 
 // Create a loading component for async routes
 const LoadingComponent = {
@@ -78,7 +79,7 @@ const routes = [
   {
     path: '/blog/:slug',
     name: 'BlogPost',
-    component: BlogPost,
+    component: () => import('../views/BlogPost.vue'),
     props: true
   },
   {
