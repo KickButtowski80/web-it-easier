@@ -3,7 +3,6 @@ import "./style.css";
 import App from "./App.vue";
 import router from "./router";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { registerIcons } from './icons';
 
 // Create Vue app
 const app = createApp(App);
@@ -14,31 +13,12 @@ app.use(router);
 // Register FontAwesome component
 app.component('font-awesome-icon', FontAwesomeIcon);
 
-// Initialize icons based on environment
-const initializeIcons = async () => {
-  try {
-    // In production, only load success icon initially
-    // Others will be loaded on demand
-    if (import.meta.env.PROD) {
-      await registerIcons(['success']);
-      console.debug('Initial icon loaded');
-    } else {
-      // In development, load all icons for easier testing
-      await registerIcons(['success', 'warning', 'error', 'info']);
-      console.debug('All icons loaded');
-    }
-  } catch (error) {
-    console.error('Failed to load icons:', error);
-  }
-}
-
 // Initialize app with performance metrics
 const startTime = performance.now();
 
 // Wait for both router and icons before mounting
 Promise.all([
   router.isReady(),
-  initializeIcons()
 ]).then(() => {
   app.mount("#app");
   

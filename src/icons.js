@@ -23,8 +23,3 @@ export const notificationIcons = {
   error: faExclamationCircle
 }
 
-// Simple synchronous registration function
-export const registerIcons = (types = ['info']) => {
-  // No need to do anything since we've already added all icons to the library
-  return true
-}
