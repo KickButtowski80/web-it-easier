@@ -99,6 +99,13 @@ export default defineConfig(({ mode }) => {
             effort: 6  // Higher number = better compression (0-6)
           },
         },
+        resize: {
+          width: 1920,           // Max width (adjust based on your layout's max content width)
+          height: 1080,          // Max height
+          fit: 'inside',         // Maintain aspect ratio, fit within dimensions
+          withoutEnlargement: true, // Don't enlarge smaller images
+          fastShrinkOnLoad: true  // Faster processing for downscaling
+        },
         includePublic: true,  // Optimize images in public folder
         logStats: true,  // Show optimization stats
       }),
