@@ -92,11 +92,12 @@ export default defineConfig(({ mode }) => {
       }),
       ViteImageOptimizer({
         sharp: {
-          quality: 80,  // Default image quality (1-100)
-          avif: { quality: 60 },  // AVIF compression
-          webp: { quality: 75 },  // WebP compression
-          png: { quality: 85, compressionLevel: 9 },  // PNG optimization
-          jpeg: { quality: 80, mozjpeg: true },  // JPEG optimization
+          // Convert all formats to WebP
+          toFormat: 'webp',
+          webp: {
+            quality: 75,
+            effort: 6  // Higher number = better compression (0-6)
+          },
         },
         includePublic: true,  // Optimize images in public folder
         logStats: true,  // Show optimization stats
