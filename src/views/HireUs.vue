@@ -22,7 +22,7 @@
             <img
               src="/programmers/Samuel-C-Tyler.svg"
               alt="picture of Samuel C Tyler the lead developer"
-              class="float-right w-1/2"
+              class="float-right w-1/2 overflow-hidden"
             />
             <h3 class="text-lg font-semibold">Lead Developer</h3>
             <a href="#sam-info" class="text-blue-700 underline">more info...</a>
@@ -32,7 +32,7 @@
             <img
               src="/programmers/izak-t.svg"
               alt="picture of Izak Tarashandegan the founder and Developer"
-              class="float-right w-1/2"
+              class="float-right w-1/2 overflow-hidden"
             />
             <h3 class="text-lg font-semibold">Founder / Developer</h3>
             <a href="#izak-info" class="text-blue-700 underline"
