@@ -4,6 +4,7 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 import Sonda from 'sonda/vite';
+import ViteImageOptimizer from 'vite-plugin-image-optimizer';
 
 export default defineConfig(({ mode, command }) => {
   // Enable source maps for analysis mode or development
