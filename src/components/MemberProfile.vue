@@ -3,6 +3,7 @@
     <img
       :src="image"
       :alt="imgAlt"
+      loading="lazy"
       class="rounded-full float-left overflow-hidden"
       style="shape-outside: circle()"
     />
