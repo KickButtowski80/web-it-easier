@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp, doc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, doc, getDoc } from "firebase/firestore/lite"; // Lite SDK for reads
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail, 
   onAuthStateChanged, reauthenticateWithCredential, EmailAuthProvider, updatePassword as firebaseUpdatePassword,
   browserLocalPersistence, browserSessionPersistence, setPersistence } from 'firebase/auth';
@@ -207,6 +207,9 @@ export const getPost = async (title) => {
  * @throws {Error} If user is not authenticated or a post with same title exists
  */
 export const addPost = async (postData) => {
+    // Dynamically import write operations from full Firestore SDK
+    const { addDoc, serverTimestamp } = await import('firebase/firestore');
+
   if (!auth.currentUser) throw new Error('Not authenticated');
   const existing = await findPostByTitle(postData.title);
   if (existing) throw new Error('A post with this title already exists!');
@@ -234,6 +237,7 @@ export const addPost = async (postData) => {
  * @throws {Error} If user is not authenticated or post not found
  */
 export const deletePost = async (title) => {
+  const { doc, deleteDoc } = await import('firebase/firestore');
   if (!auth.currentUser) throw new Error('Not authenticated');
   const post = await findPostByTitle(title);
   if (!post) throw new Error('Post not found');
@@ -286,6 +290,7 @@ export const getPostById = async (postId) => {
  * @throws {Error} If user is not authenticated, no ID provided, or title conflict
  */
 export const updatePost = async (postId, postData) => {
+  const { updateDoc, serverTimestamp } = await import('firebase/firestore');
   if (!auth.currentUser) throw new Error('Not authenticated');
   if (!postId) throw new Error('Post ID is required');
   
