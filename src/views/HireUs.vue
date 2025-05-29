@@ -112,7 +112,7 @@
             <img
               src="/programmers/Samuel-C-Tyler.svg"
               alt="Samuel C Tyler the leader coder"
-              class="float-right"
+              class="float-right overflow-hidden"
             />
             <p>
               Web Application Developer with 10+ years experience in modern,
@@ -136,7 +136,7 @@
             <img
               src="/programmers/izak-t.svg"
               alt="izak tarashandegan the founder and coder"
-              class="float-right"
+              class="float-right overflow-hidden"
             />
             <p>
               At IT, we specialize in helping businesses build a strong internet

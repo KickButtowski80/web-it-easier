@@ -1,4 +1,5 @@
 import { withDirectives } from "vue";
+const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -122,5 +123,14 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Fix for media element overflow issues
+    plugin(function({ addBase }) {
+      addBase({
+        'img, video, canvas': {
+          overflow: 'hidden',
+        },
+      });
+    }),
+  ],
 };
