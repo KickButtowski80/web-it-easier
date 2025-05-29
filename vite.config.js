@@ -59,9 +59,8 @@ export default defineConfig(({ mode, command }) => {
         output: {
           manualChunks: {
             'firebase-core': ['firebase/app'],
-            'firebase-auth': [/firebase\/auth/],
-            'firebase-firestore-lite': [/firebase\/firestore\/(lite)/],
-            'firebase-firestore-full': [/firebase\/firestore(?!\/lite)/],
+            'firebase-auth': ['firebase/auth'],
+            'firebase-firestore': ['firebase/firestore'],
             vue: ['vue', 'vue-router'],
             icons: [
               '@fortawesome/fontawesome-svg-core',
