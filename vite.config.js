@@ -21,13 +21,13 @@ export default defineConfig(({ mode, command }) => {
           drop_console: true,
           drop_debugger: true,
           pure_funcs: ['console.log', 'console.info', 'console.warn', 'console.error'],
-          
+
           // Advanced Compression
           passes: 2,                  // Multiple compression passes
           ecma: 2020,                 // Modern JS features
           collapse_vars: true,        // Merge variables when possible
           toplevel: true,             // Optimize top-level functions/variables
-          
+
           // Safe Optimizations
           booleans: true,             // Optimize boolean expressions
           conditionals: true,         // Optimize conditionals
@@ -51,7 +51,7 @@ export default defineConfig(({ mode, command }) => {
           minifyGradients: false                 // Keep gradient declarations readable
         }]
       },
-      assetsInlineLimit: 0,
+      assetsInlineLimit: 4096,// 4kb - files smaller than this will be inlined
       rollupOptions: {
         input: {
           main: resolve(__dirname, "index.html"),
@@ -60,8 +60,8 @@ export default defineConfig(({ mode, command }) => {
           manualChunks: {
             'firebase-core': ['firebase/app'],
             'firebase-auth': ['firebase/auth'],
-          'firebase-firestore-lite': ['firebase/firestore/lite'], // For all lite SDK usage (core setup and reads)
-'firebase-firestore-full': ['firebase/firestore'],    // For write operations and advanced features
+            'firebase-firestore-lite': ['firebase/firestore/lite'], // For all lite SDK usage (core setup and reads)
+            'firebase-firestore-full': ['firebase/firestore'],    // For write operations and advanced features
             vue: ['vue', 'vue-router'],
             icons: [
               '@fortawesome/fontawesome-svg-core',
@@ -88,6 +88,17 @@ export default defineConfig(({ mode, command }) => {
         threshold: 1024,
         ext: ".gz", // Output compressed files with .gz extension
         filter: /\.(js|css|html|svg)$/i, // Compress all text-based assets
+      }),
+      ViteImageOptimizer({
+        sharp: {
+          quality: 80,  // Default image quality (1-100)
+          avif: { quality: 60 },  // AVIF compression
+          webp: { quality: 75 },  // WebP compression
+          png: { quality: 85, compressionLevel: 9 },  // PNG optimization
+          jpeg: { quality: 80, mozjpeg: true },  // JPEG optimization
+        },
+        includePublic: true,  // Optimize images in public folder
+        logStats: true,  // Show optimization stats
       }),
       Sonda({
         open: true,
