@@ -2,7 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, doc, getDoc } from "firebase/firestore/lite"; // Lite SDK for reads
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail, 
   onAuthStateChanged, reauthenticateWithCredential, EmailAuthProvider, updatePassword as firebaseUpdatePassword,
-  browserLocalPersistence, browserSessionPersistence, setPersistence } from 'firebase/auth';
+  browserLocalPersistence, browserSessionPersistence, setPersistence
+} from 'firebase/auth';
 
 // Initialize Firebase immediately (no need for async init)
 const firebaseConfig = {
@@ -69,43 +70,59 @@ export {
  */
 const withRetry = async (operation, maxRetries = 3) => {
   let attempts = 0;
-  
+
   while (attempts < maxRetries) {
     try {
       return await operation();
     } catch (error) {
       attempts++;
       console.log(`Firebase operation failed. Attempt ${attempts}/${maxRetries}`);
-      
+
       if (attempts >= maxRetries) {
         console.error('All retry attempts failed');
         throw error;
       }
-      
-      // Exponential backoff - wait longer between each retry
+      // Calculate base delay with exponential backoff
+      // Base formula: 300ms * 2^attempts
+      // This gives us: 600ms, 1200ms, 2400ms, etc.
+      const baseDelay = 300 * Math.pow(2, attempts);
+
+      // Add jitter to prevent thundering herd problem
+      // - Multiplies base delay by a random factor between 0.7 and 1.3
+      // - This spreads out retry attempts when many clients retry simultaneously
+      // - Example: For a 1000ms base delay, actual delay will be between 700-1300ms
+      const jitter = baseDelay * (0.7 + Math.random() * 0.6);
+
+      // Wait using the calculated delay with jitter
       // This pauses only this function while allowing other code to run:
       // 1. Creates a Promise that resolves after the calculated delay
       // 2. await sees an unresolved Promise and pauses this function
       // 3. JavaScript continues running other code during this pause
       // 4. When setTimeout completes, it calls resolve() which fulfills the Promise
-      // 5. Delay increases exponentially: 600ms, 1200ms, 2400ms, etc.
-      //
-      // EDUCATIONAL NOTE: Promise Resolution Timing
-      // --------------------------------------
-      // If we had used: await new Promise(resolve => resolve());
-      // instead of setTimeout, the Promise would resolve immediately, but there would
-      // still be a tiny, imperceptible delay because of how JavaScript handles Promises:
-      //
-      // 1. Promises use JavaScript's "microtask queue" for resolution
-      // 2. Microtasks run after the current synchronous code but before the next event loop tick
-      // 3. This creates a technical delay in the microseconds range
-      // 4. For retry mechanisms, we need meaningful delays (hundreds of milliseconds)
-      //    which is why we use setTimeout to create real, perceivable delays
-      //
-      // This distinction is important for understanding JavaScript's event loop,
-      // but for practical retry implementations, always use setTimeout with
-      // appropriate delay values.
-      await new Promise(resolve => setTimeout(resolve, 300 * Math.pow(2, attempts)));
+      // 5. The function resumes execution after the delay
+
+      /*
+       * EDUCATIONAL NOTE: Timing in JavaScript
+       * -------------------------------------
+       * Why use setTimeout instead of immediate Promise resolution?
+       * 
+       * Immediate resolution (what NOT to do):
+       *   await new Promise(resolve => resolve());
+       *   - Uses microtask queue
+       *   - Delay is microscopic (microseconds)
+       *   - Not suitable for retry mechanisms
+       *
+       * With setTimeout (what we use):
+       *   await new Promise(resolve => setTimeout(resolve, delay));
+       *   - Uses the task queue (macrotask)
+       *   - Creates meaningful delays (hundreds of ms)
+       *   - Allows CPU to handle other tasks during the wait
+       *   - Essential for proper retry behavior
+       *
+       * This distinction is crucial for understanding JavaScript's event loop
+       * and implementing effective retry mechanisms.
+       */
+      await new Promise(resolve => setTimeout(resolve, jitter));
     }
   }
 };
@@ -260,7 +277,7 @@ export const getPostById = async (postId) => {
   try {
     const postRef = doc(db, 'posts', postId);
     const postSnap = await getDoc(postRef);
-    
+
     if (postSnap.exists()) {
       return {
         id: postSnap.id,
@@ -293,13 +310,13 @@ export const updatePost = async (postId, postData) => {
   const { updateDoc, serverTimestamp } = await import('firebase/firestore');
   if (!auth.currentUser) throw new Error('Not authenticated');
   if (!postId) throw new Error('Post ID is required');
-  
+
   // Check if another post with the same title exists (but not the current post)
   const existing = await findPostByTitle(postData.title);
   if (existing && existing.id !== postId) {
     throw new Error('Another post with this title already exists!');
   }
-  
+
   const postRef = doc(db, 'posts', postId);
   return await updateDoc(postRef, {
     ...postData,
