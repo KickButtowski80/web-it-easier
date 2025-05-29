@@ -60,9 +60,8 @@ export default defineConfig(({ mode, command }) => {
           manualChunks: {
             'firebase-core': ['firebase/app'],
             'firebase-auth': ['firebase/auth'],
-            'firebase-firestore-core': ['firebase/firestore/lite'],
-            'firebase-firestore-read': ['firebase/firestore/lite'],
-            'firebase-firestore-write': ['firebase/firestore'],
+          'firebase-firestore-lite': ['firebase/firestore/lite'], // For all lite SDK usage (core setup and reads)
+'firebase-firestore-full': ['firebase/firestore'],    // For write operations and advanced features
             vue: ['vue', 'vue-router'],
             icons: [
               '@fortawesome/fontawesome-svg-core',
