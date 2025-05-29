@@ -61,7 +61,8 @@ export default defineConfig(({ mode, command }) => {
             'firebase-core': ['firebase/app'],
             'firebase-auth': ['firebase/auth'],
             'firebase-firestore-core': ['firebase/firestore/lite'],
-            'firebase-firestore-full': ['firebase/firestore'],
+            'firebase-firestore-read': ['firebase/firestore/lite'],
+            'firebase-firestore-write': ['firebase/firestore'],
             vue: ['vue', 'vue-router'],
             icons: [
               '@fortawesome/fontawesome-svg-core',
