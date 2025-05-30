@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineAsyncComponent } from "vue";
 import freelancerProjectHistoryData from "../assets/json/freelancerProjectHistoryData.json";
 const Work = defineAsyncComponent(() => 
   import('../components/Work.vue')
