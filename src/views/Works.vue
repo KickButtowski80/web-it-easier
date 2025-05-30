@@ -3,8 +3,16 @@
     <div class="container mx-auto px-4">
       <h2 class="text-4xl font-bold text-center mb-12">Our Works</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div v-for="project in freelancerProjectHistory" :key="project.projectId" class="bg-white rounded-lg shadow-md overflow-hidden">
-          <Work :projectInfo="project" />
+        <div v-for="project in freelancerProjectHistory" :key="project.projectId"
+          class="bg-white rounded-lg shadow-md overflow-hidden">
+          <Suspense>
+            <template #default>
+              <Work :projectInfo="project" />
+            </template>
+            <template #fallback>
+              <div>Loading project...</div>
+            </template>
+          </Suspense>
         </div>
       </div>
     </div>
@@ -14,11 +22,12 @@
 <script>
 import { ref, onMounted, defineAsyncComponent } from "vue";
 import freelancerProjectHistoryData from "../assets/json/freelancerProjectHistoryData.json";
-const Work = defineAsyncComponent(() => 
-  import('../components/Work.vue')
-);
+
 
 export default {
+  components: {
+    Work: defineAsyncComponent(() => import('../components/Work.vue'))
+  },
   setup() {
     const freelancerProjectHistory = ref([]);
 
@@ -29,7 +38,6 @@ export default {
 
     return {
       freelancerProjectHistory,
-      Work
     };
   },
 };
