@@ -67,6 +67,7 @@ import { useRouter } from 'vue-router'
 
 const email = ref('')
 const password = ref('')
+const router = useRouter()
 const loading = ref(false)
 const errorMessage = ref('')
 const emailError = ref('')
@@ -133,11 +134,28 @@ const login = async () => {
     const persistence = rememberMe.value ? browserLocalPersistence : browserSessionPersistence;
     
     await setPersistence(auth, persistence);
-    // Rest of your login logic
-    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
-    // ...
-  } catch (error) {
-    // Handle errors
+    await signInWithEmailAndPassword(auth, email.value, password.value);
+    
+    // Navigate using router.push - the guard will handle auth check
+    const targetRoute = '/admin/manage-posts';
+    await router.isReady(); // Ensure router is ready
+    await router.push(targetRoute);
+    
+  } catch (err) {
+    // Handle specific errors
+    if (err.code === 'auth/invalid-credential') {
+      errorMessage.value = 'Invalid email or password. Please try again.';
+    } else if (err.message.includes('domain') || err.message.includes('unauthorized')) {
+      errorMessage.value = 'Authentication failed. Domain might not be authorized.';
+    } else {
+      errorMessage.value = 'An error occurred during login. Please try again.';
+    }
+    
+    // Focus handling for accessibility
+    setTimeout(() => {
+      const errorEl = document.querySelector('.error-message');
+      if (errorEl) errorEl.focus();
+    }, 100);
   } finally {
     loading.value = false;
   }
