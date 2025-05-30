@@ -29,6 +29,7 @@ export default {
 
     return {
       freelancerProjectHistory,
+      work
     };
   },
 };
