@@ -14,12 +14,11 @@
 <script>
 import { ref, onMounted } from "vue";
 import freelancerProjectHistoryData from "../assets/json/freelancerProjectHistoryData.json";
-import Work from "../components/Work.vue";
+const Work = defineAsyncComponent(() => 
+  import('../components/Work.vue')
+);
 
 export default {
-  components: {
-    Work,
-  },
   setup() {
     const freelancerProjectHistory = ref([]);
 
