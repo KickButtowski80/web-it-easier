@@ -24,6 +24,8 @@
               alt="picture of Samuel C Tyler the lead developer"
               class="float-right w-1/2 overflow-hidden"
               loading="lazy"
+              width="300"
+              height="300"
             />
             <h3 class="text-lg font-semibold">Lead Developer</h3>
             <a href="#sam-info" class="text-blue-700 underline">more info...</a>

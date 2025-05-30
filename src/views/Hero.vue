@@ -19,7 +19,7 @@
       <div
         class="sun w-[2.5rem] absolute bottom-[173px] left-[8.5rem] opacity-0 animate-sun-appears"
       >
-        <img src="/sun.svg" alt="Sun icon" loading="lazy" class="overflow-hidden" />
+        <img src="/sun.svg" alt="Sun icon" loading="lazy" class="overflow-hidden" width="64" height="64" />
       </div>
       <div
         class="background w-[8rem] h-[5.5rem] absolute bottom-[122px] md:bottom-[140px] left-[3rem] opacity-0 animate-bg-appears"
@@ -29,6 +29,8 @@
           src="/nature-road-bg-pres.png"
           alt="Nature road background"
           loading="lazy"
+          width="800"
+          height="550"
         />
       </div>
       <div
@@ -100,9 +102,7 @@ export default {
 </script>
 
 <style scoped lang="css">
-#hero {
-  /* background-image: linear-gradient(55deg, #7612e9, #c471ed, #f64f59); */
-}
+ 
 .diagonal {
   position: relative;
   isolation: isolate;

@@ -8,6 +8,8 @@
         :src="image"
         :title="imageAlt"
         :alt="imageAlt"
+        width="600"
+        height="400"
       />
       <Transition name="slide-fade">
         <div
