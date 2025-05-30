@@ -118,6 +118,8 @@
               alt="Samuel C Tyler the leader coder"
               class="float-right overflow-hidden"
               loading="lazy"
+              width="300"
+              height="300"
             />
             <p>
               Web Application Developer with 10+ years experience in modern,
