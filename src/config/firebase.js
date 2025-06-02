@@ -256,7 +256,7 @@ export const addPost = async (postData) => {
  * @throws {Error} If user is not authenticated or post not found
  */
 export const deletePost = async (title) => {
-  const { doc, deleteDoc } = await import('firebase/firestore');
+  const { doc, deleteDoc } = await import('firebase/firestore/lite');
   if (!auth.currentUser) throw new Error('Not authenticated');
   const post = await findPostByTitle(title);
   if (!post) throw new Error('Post not found');
