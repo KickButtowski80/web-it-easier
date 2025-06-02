@@ -86,17 +86,9 @@ export default {
       }
     })
 
-    // Format date for display
-    const formatDate = (date) => {
-      return new Date(date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    };
 
     // Format date for machine-readable datetime attribute
-    const formatDateISO = (date) => {
+  const formatDateISO = (date) => {
       return new Date(date).toISOString().split('T')[0];
     };
 
@@ -106,7 +98,7 @@ export default {
       isAdmin,
       formatDate,
       formatDateISO,
-      slugify,
+      titleToSlug,
       showNotify,
       showNotification,
       notificationMessage,
