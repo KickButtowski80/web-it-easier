@@ -9,6 +9,7 @@
     font-family: "Alata", sans-serif;
     @apply scroll-p-navbar-height  md:scroll-p-md-navbar-height;
   }
+  
     
 }
 @layer components {
@@ -33,3 +34,4 @@
     @apply px-6 py-4 bg-gray-200  mx-2 rounded-md shadow-sm;
   }
 }
+

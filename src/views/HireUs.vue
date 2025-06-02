@@ -22,7 +22,10 @@
             <img
               src="/programmers/Samuel-C-Tyler.svg"
               alt="picture of Samuel C Tyler the lead developer"
-              class="float-right w-1/2"
+              class="float-right w-1/2 overflow-hidden"
+              loading="lazy"
+              width="300"
+              height="300"
             />
             <h3 class="text-lg font-semibold">Lead Developer</h3>
             <a href="#sam-info" class="text-blue-700 underline">more info...</a>
@@ -32,7 +35,8 @@
             <img
               src="/programmers/izak-t.svg"
               alt="picture of Izak Tarashandegan the founder and Developer"
-              class="float-right w-1/2"
+              class="float-right w-1/2 overflow-hidden"
+              loading="lazy"
             />
             <h3 class="text-lg font-semibold">Founder / Developer</h3>
             <a href="#izak-info" class="text-blue-700 underline"
@@ -112,7 +116,10 @@
             <img
               src="/programmers/Samuel-C-Tyler.svg"
               alt="Samuel C Tyler the leader coder"
-              class="float-right"
+              class="float-right overflow-hidden"
+              loading="lazy"
+              width="300"
+              height="300"
             />
             <p>
               Web Application Developer with 10+ years experience in modern,
@@ -136,7 +143,8 @@
             <img
               src="/programmers/izak-t.svg"
               alt="izak tarashandegan the founder and coder"
-              class="float-right"
+              class="float-right overflow-hidden"
+              loading="lazy"
             />
             <p>
               At IT, we specialize in helping businesses build a strong internet

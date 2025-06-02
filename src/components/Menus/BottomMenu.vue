@@ -7,7 +7,7 @@
        flex justify-evenly items-center
        h-full py-2"
     >
-      <RouterLink :to="{ name: 'Home'  }">Home🏠</RouterLink>
+      <RouterLink :to="{ name: 'Home'  }">Home 🏠</RouterLink>
       <RouterLink :to="{ name: 'Blog' }">Blog 📝</RouterLink>
       <RouterLink :to="{ name: 'Home', hash: '#our-works' }">Our Works 🖥️</RouterLink>
       <RouterLink :to="{ name: 'Home', hash: '#hire-us' }" class="border p-2 rounded-xl bg-purple-950 text-white">Hire Us 🔈</RouterLink>

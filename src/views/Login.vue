@@ -63,7 +63,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { auth, signInWithEmailAndPassword, browserLocalPersistence, browserSessionPersistence, setPersistence } from '@/config/firebase'
+
 
 const email = ref('')
 const password = ref('')
@@ -106,51 +106,60 @@ watch(rememberMe, (newValue) => {
   }
 });
 const login = async () => {
-  loading.value = true
-  errorMessage.value = ''
-  emailError.value = ''
-  const persistence = rememberMe.value ? browserLocalPersistence : browserSessionPersistence;
+  loading.value = true;
+  errorMessage.value = '';
+  emailError.value = '';
+  
   try {
-    // Validate inputs
+    // Validate inputs first (before loading auth module)
     if (!email.value || !password.value) {
-      errorMessage.value = 'Email and password are required'
-      return // No need to set loading false here, finally block handles it
+      errorMessage.value = 'Email and password are required';
+      return;
     }
     
-    // Validate email format
     if (!validateEmail()) {
-      return // No need to set loading false here, finally block handles it
+      return;
     }
+    
+    // Dynamically import Firebase auth
+    const { getAuth } = await import('firebase/auth');
+    const { 
+      signInWithEmailAndPassword, 
+      setPersistence, 
+      browserLocalPersistence, 
+      browserSessionPersistence 
+    } = await import('firebase/auth');
+    
+    const auth = getAuth();
+    const persistence = rememberMe.value ? browserLocalPersistence : browserSessionPersistence;
+    
     await setPersistence(auth, persistence);
-    // Attempt login
-    await signInWithEmailAndPassword(auth, email.value, password.value)
+    await signInWithEmailAndPassword(auth, email.value, password.value);
     
     // Navigate using router.push - the guard will handle auth check
     const targetRoute = '/admin/manage-posts';
-    
     await router.isReady(); // Ensure router is ready
     await router.push(targetRoute);
-    
     
   } catch (err) {
     // Handle specific errors
     if (err.code === 'auth/invalid-credential') {
-      errorMessage.value = 'Invalid email or password. Please try again.'
+      errorMessage.value = 'Invalid email or password. Please try again.';
     } else if (err.message.includes('domain') || err.message.includes('unauthorized')) {
-       errorMessage.value = 'Authentication failed. Domain might not be authorized.' // Simplified message
+      errorMessage.value = 'Authentication failed. Domain might not be authorized.';
     } else {
-      errorMessage.value = 'An error occurred during login. Please try again.'
+      errorMessage.value = 'An error occurred during login. Please try again.';
     }
     
-    // Focus handling can remain if needed
+    // Focus handling for accessibility
     setTimeout(() => {
-      const errorEl = document.querySelector('.error-message')
-      if (errorEl) errorEl.focus()
+      const errorEl = document.querySelector('.error-message');
+      if (errorEl) errorEl.focus();
     }, 100);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 
 </script>

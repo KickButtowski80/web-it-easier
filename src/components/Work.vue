@@ -4,10 +4,12 @@
       class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col"
     >
       <img
-        class="min-w-full h-full object-contain border rounded-lg border-purple-800 my-5"
+        class="min-w-full h-full object-contain border rounded-lg border-purple-800 my-5 overflow-hidden"
         :src="image"
         :title="imageAlt"
         :alt="imageAlt"
+        width="600"
+        height="400"
       />
       <Transition name="slide-fade">
         <div
