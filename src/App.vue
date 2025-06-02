@@ -11,6 +11,7 @@
     v-model="showNotification"
     :message="notificationMessage"
     :type="notificationType"
+    :icon="notificationIcon"
     :duration="3000"
   />
   <main
@@ -71,7 +72,7 @@ const router = useRouter();
 const showNotification = ref(false);
 const notificationMessage = ref("");
 const notificationType = ref("info");
-
+const notificationIcon = ref("info-circle");
 // For secret tap sequence
 const tapSequence = ref([]);
 const correctSequence = [1, 2, 3, 4]; 
@@ -151,10 +152,12 @@ const navigateToLogin = async () => {
     showNotification.value = true;
     notificationMessage.value = "Navigating to login page";
     notificationType.value = "success";
+    
   } catch (error) {
     showNotification.value = true;
     notificationMessage.value = `Navigation failed: ${error.message}`;
     notificationType.value = "error";
+    
   }
 };
 

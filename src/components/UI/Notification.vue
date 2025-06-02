@@ -3,7 +3,7 @@
     <div v-if="show" :class="['notification', type]">
       <font-awesome-icon 
       v-if="icon" 
-      :icon="icon"
+      :icon="typeToIcon[type]"
       :class="['notification-icon', type]"
       aria-hidden="true" />
       <div class="notification-content">
@@ -16,7 +16,14 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
+import { notificationIcons } from '@/icons'
 
+const typeToIcon = {
+  info: ['fas', 'info-circle'],
+  success: ['fas', 'check'],
+  warning: ['fas', 'exclamation'],
+  error: ['fas', 'exclamation-circle']
+};
 const show = defineModel({ type: Boolean, default: false }) // replaces modelValue
 const props = defineProps({
   message: String,

@@ -7,9 +7,10 @@
     "node": "18.x"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite --mode development",
+    "build": "vite build --mode production",
+    "preview": "vite preview --mode production",
+    "analyze": "vite build --mode analysis"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -25,13 +26,18 @@
     "vue-router": "4"
   },
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
     "@vitejs/plugin-vue": "^5.2.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.1",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.5.14",
+    "sharp": "^0.34.2",
+    "sonda": "^0.7.1",
+    "svgo": "^3.3.2",
     "tailwindcss": "^3.4.17",
     "vite": "^5.4.14",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-image-optimizer": "^1.1.8"
   }
 }
