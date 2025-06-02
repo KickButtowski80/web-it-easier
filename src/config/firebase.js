@@ -227,7 +227,7 @@ export const getPost = async (title) => {
  */
 export const addPost = async (postData) => {
     // Dynamically import write operations from full Firestore SDK
-    const { addDoc, serverTimestamp } = await import('firebase/firestore');
+    const { addDoc, serverTimestamp } = await import('firebase/firestore/lite');
 
   if (!auth.currentUser) throw new Error('Not authenticated');
   const existing = await findPostByTitle(postData.title);
