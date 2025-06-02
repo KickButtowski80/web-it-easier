@@ -5,6 +5,8 @@ import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPas
   browserLocalPersistence, browserSessionPersistence, setPersistence
 } from 'firebase/auth';
 
+import { formatDate } from '../utils/helpers';
+
 // Initialize Firebase immediately (no need for async init)
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -325,17 +327,3 @@ export const updatePost = async (postId, postData) => {
   });
 };
 
-
-/**
- * Helper function to format dates consistently throughout the application
- * 
- * @param {Date} date - JavaScript Date object to format
- * @returns {string} Formatted date string (e.g., "May 20, 2025")
- */
-const formatDate = (date) => {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
