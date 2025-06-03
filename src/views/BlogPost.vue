@@ -50,13 +50,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import { getPost } from "../config/firebase";
+import { titleToSlug } from "../utils/helpers";
 import DOMPurify from "dompurify";
+import { useRoute } from "vue-router";
 
 // Props
 const props = defineProps({
@@ -68,9 +70,46 @@ const props = defineProps({
 
 const post = ref(null);
 
+const route = useRoute();
+
+// Set up canonical URL management
+const canonicalUrl = ref('');
+
+const updateCanonicalTag = () => {
+  if (post.value && post.value.title) {
+    // Create the canonical URL using the proper slug format
+    const slug = titleToSlug(post.value.title);
+    canonicalUrl.value = `https://izak-portfolio.vercel.app/blog/${slug}`;
+    
+    // Remove any existing canonical tags
+    const existingCanonical = document.querySelector('link[rel="canonical"]');
+    if (existingCanonical) {
+      existingCanonical.remove();
+    }
+    
+    // Add the canonical tag to the document head
+    const link = document.createElement('link');
+    link.rel = 'canonical';
+    link.href = canonicalUrl.value;
+    document.head.appendChild(link);
+    
+    // Update page title with post title for better SEO
+    document.title = `${post.value.title} | Izak's Portfolio`;
+  }
+};
+
 onMounted(async () => {
   const title = deslugify(props.slug);
   post.value = await getPost(title);
+  updateCanonicalTag();
+});
+
+// Clean up canonical tag when component is unmounted
+onUnmounted(() => {
+  const existingCanonical = document.querySelector('link[rel="canonical"]');
+  if (existingCanonical) {
+    existingCanonical.remove();
+  }
 });
 
 function deslugify(slug) {

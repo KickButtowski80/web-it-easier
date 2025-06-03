@@ -226,17 +226,36 @@ export const getPost = async (title) => {
  * @throws {Error} If user is not authenticated or a post with same title exists
  */
 export const addPost = async (postData) => {
-    // Dynamically import write operations from full Firestore SDK
-    const { addDoc, serverTimestamp } = await import('firebase/firestore/lite');
+  // Dynamically import write operations from Firestore lite SDK
+  const { addDoc, serverTimestamp } = await import('firebase/firestore/lite');
+  const { titleToSlug } = await import('../utils/helpers');
+  const { notifyGoogle } = await import('../utils/googleIndexing');
 
   if (!auth.currentUser) throw new Error('Not authenticated');
   const existing = await findPostByTitle(postData.title);
   if (existing) throw new Error('A post with this title already exists!');
-  return await addDoc(collection(db, 'posts'), {
+  
+  // Create the post document
+  const newPost = {
     ...postData,
     date: postData.date instanceof Date ? postData.date : new Date(postData.date),
-    createdAt: serverTimestamp()
-  });
+    createdAt: serverTimestamp(),
+    slug: titleToSlug(postData.title)
+  };
+  
+  const docRef = await addDoc(collection(db, 'posts'), newPost);
+  
+  // Notify Google about the new post
+  try {
+    const postUrl = `https://izak-portfolio.vercel.app/blog/${titleToSlug(postData.title)}`;
+    await notifyGoogle(postUrl, 'URL_UPDATED');
+    console.log(`Notified Google about new post: ${postUrl}`);
+  } catch (error) {
+    console.error('Failed to notify Google about new post:', error);
+    // Don't throw here - post was still created successfully
+  }
+  
+  return { id: docRef.id, ...newPost };
 };
 
 
@@ -257,11 +276,29 @@ export const addPost = async (postData) => {
  */
 export const deletePost = async (title) => {
   const { doc, deleteDoc } = await import('firebase/firestore/lite');
+  const { titleToSlug } = await import('../utils/helpers');
+  const { notifyGoogle } = await import('../utils/googleIndexing');
+  
   if (!auth.currentUser) throw new Error('Not authenticated');
   const post = await findPostByTitle(title);
   if (!post) throw new Error('Post not found');
+  
+  // Get the slug before deleting the post
+  const slug = titleToSlug(title);
+  
+  // Delete the post
   const postRef = doc(db, 'posts', post.id);
   await deleteDoc(postRef);
+  
+  // Notify Google about the deleted post
+  try {
+    const postUrl = `https://izak-portfolio.vercel.app/blog/${slug}`;
+    await notifyGoogle(postUrl, 'URL_DELETED');
+    console.log(`Notified Google about deleted post: ${postUrl}`);
+  } catch (error) {
+    console.error('Failed to notify Google about deleted post:', error);
+    // Don't throw here - post was still deleted successfully
+  }
 };
 
 /**
@@ -309,7 +346,10 @@ export const getPostById = async (postId) => {
  * @throws {Error} If user is not authenticated, no ID provided, or title conflict
  */
 export const updatePost = async (postId, postData) => {
-  const { updateDoc, serverTimestamp } = await import('firebase/firestore');
+  const { updateDoc, serverTimestamp } = await import('firebase/firestore/lite');
+  const { titleToSlug } = await import('../utils/helpers');
+  const { notifyGoogle } = await import('../utils/googleIndexing');
+  
   if (!auth.currentUser) throw new Error('Not authenticated');
   if (!postId) throw new Error('Post ID is required');
 
@@ -319,11 +359,27 @@ export const updatePost = async (postId, postData) => {
     throw new Error('Another post with this title already exists!');
   }
 
+  // Update the post with new data and timestamp
   const postRef = doc(db, 'posts', postId);
-  return await updateDoc(postRef, {
+  const updatedData = {
     ...postData,
     date: postData.date instanceof Date ? postData.date : new Date(postData.date),
-    updatedAt: serverTimestamp()
-  });
+    updatedAt: serverTimestamp(),
+    slug: titleToSlug(postData.title)
+  };
+  
+  await updateDoc(postRef, updatedData);
+  
+  // Notify Google about the updated post
+  try {
+    const postUrl = `https://izak-portfolio.vercel.app/blog/${titleToSlug(postData.title)}`;
+    await notifyGoogle(postUrl, 'URL_UPDATED');
+    console.log(`Notified Google about updated post: ${postUrl}`);
+  } catch (error) {
+    console.error('Failed to notify Google about updated post:', error);
+    // Don't throw here - post was still updated successfully
+  }
+  
+  return { id: postId, ...updatedData };
 };
 
