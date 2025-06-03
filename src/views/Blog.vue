@@ -48,6 +48,7 @@ import { formatDate, titleToSlug } from '../utils/helpers';
 import { getPosts, auth} from '../config/firebase'
 import { ref, onMounted } from 'vue'
 import Notification from '../components/UI/Notification.vue';
+import { showNotify } from '../utils/helpers'
 
 export default {
   components: {
@@ -64,12 +65,7 @@ export default {
 
 
 
-    function showNotify(message, type = 'info', icon = '') {
-      notificationMessage.value = message
-      notificationType.value = type
-      notificationIcon.value = icon
-      showNotification.value = true
-    }
+ 
 
     onMounted(async () => {
       try {
