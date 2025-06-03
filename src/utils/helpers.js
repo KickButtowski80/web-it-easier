@@ -33,5 +33,11 @@ const formatDate = (date) => {
       .replace(/-+$/, ''); // Remove trailing hyphens
   };
   
+function showNotify(message, type = 'info', icon = '') {
+  notificationMessage.value = message
+  notificationType.value = type
+  notificationIcon.value = icon
+  showNotification.value = true
+}
   // Export utility functions for use in other modules
-  export { formatDate, titleToSlug };
+  export { formatDate, titleToSlug, showNotify };

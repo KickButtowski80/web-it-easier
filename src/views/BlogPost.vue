@@ -43,11 +43,19 @@
         <p class="text-gray-500 mt-4">Loading post...</p>
       </div>
     </div>
+    <Notification 
+      v-model="showNotification" 
+      :message="notificationMessage" 
+      :type="notificationType" 
+      :icon="notificationIcon"
+    />
   </section>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import Notification from '@/components/UI/Notification.vue'
+import { showNotify } from "../utils/helpers"
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import hljs from "highlight.js";
@@ -64,7 +72,7 @@ const props = defineProps({
     required: false,
   },
 });
-
+const isMounted = ref(true);
 const post = ref(null);
 const defaultCanonical = ref(null);
 const route = useRoute();
@@ -99,18 +107,28 @@ const updateCanonicalTag = () => {
 };
 
 onMounted(async () => {
+  isMounted.value = true;
   const title = deslugify(props.slug);
-  post.value = await getPost(title);
-  updateCanonicalTag();
+  try {
+    const postData = await getPost(title);
+    if (isMounted.value && postData) {
+      post.value = postData;
+      updateCanonicalTag();
+    }
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    showNotify('Failed to load post. Please try again.', 'error');
+  }
 });
 
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
+  isMounted.value = false;
   const existingCanonical = document.querySelector('link[rel="canonical"]');
   if (existingCanonical) {
     existingCanonical.remove();
   }
-  document.head.appendChild(defaultCanonical.value.cloneNode(true));
+  document.head.insertAdjacentHTML('beforeend', defaultCanonical.value);
   document.title = "Izak's Portfolio";
 });
 

@@ -138,6 +138,7 @@ import { marked } from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import Notification from '@/components/UI/Notification.vue'
+import { showNotify } from '@/utils/helpers'
 
 const props = defineProps({
   id: { type: String, default: '' }
@@ -258,12 +259,6 @@ const logout = async () => {
   }
 }
 
-function showNotify(message, type = 'info', icon = '') {
-  notificationMessage.value = message
-  notificationType.value = type
-  notificationIcon.value = icon
-  showNotification.value = true
-}
 
 // Validate form fields
 const validateForm = () => {
