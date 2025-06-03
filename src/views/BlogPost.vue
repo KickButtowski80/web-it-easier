@@ -9,11 +9,8 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" class="mb-8 toc-bedazzled" 
-        v-if="toc.length > 0"
-        role="navigation" 
-        aria-labelledby="toc-heading"
-        >
+        <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
+          aria-labelledby="toc-heading">
           <h2 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h2>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
@@ -69,7 +66,7 @@ const props = defineProps({
 });
 
 const post = ref(null);
-
+const defaultCanonical = ref(null);
 const route = useRoute();
 
 // Set up canonical URL management
@@ -80,19 +77,22 @@ const updateCanonicalTag = () => {
     // Create the canonical URL using the proper slug format
     const slug = titleToSlug(post.value.title);
     canonicalUrl.value = `https://izak-portfolio.vercel.app/blog/${slug}`;
-    
-    // Remove any existing canonical tags
-    const existingCanonical = document.querySelector('link[rel="canonical"]');
-    if (existingCanonical) {
-      existingCanonical.remove();
+
+    // Store the default canonical if not already stored
+    if (!defaultCanonical.value) {
+      const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
+      if (defaultCanonicalEl) {
+        defaultCanonical.value = defaultCanonicalEl.outerHTML;
+        defaultCanonicalEl.remove();
+      }
     }
-    
+
     // Add the canonical tag to the document head
     const link = document.createElement('link');
     link.rel = 'canonical';
     link.href = canonicalUrl.value;
     document.head.appendChild(link);
-    
+
     // Update page title with post title for better SEO
     document.title = `${post.value.title} | Izak's Portfolio`;
   }
@@ -110,6 +110,8 @@ onUnmounted(() => {
   if (existingCanonical) {
     existingCanonical.remove();
   }
+  document.head.appendChild(defaultCanonical.value.cloneNode(true));
+  document.title = "Izak's Portfolio";
 });
 
 function deslugify(slug) {
@@ -178,7 +180,7 @@ function scrollToSection(id) {
     });
   }
 }
- 
+
 </script>
 
 <style>
@@ -350,14 +352,14 @@ h3 {
 .toc-bedazzled {
   position: relative;
   overflow: hidden;
-  background: 
+  background:
     /* SVG pattern for subtle sparkle effect */
     url("data:image/svg+xml;utf8,<svg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='20' cy='20' r='1.5' fill='%23a5b4fc' opacity='0.6'/><circle cx='10' cy='30' r='1' fill='%23f472b6' opacity='0.4'/><circle cx='30' cy='10' r='1' fill='%23fbbf24' opacity='0.4'/></svg>"),
-    linear-gradient(135deg, rgba(255,255,255,0.85) 70%, rgba(199,210,254,0.7) 100%);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 70%, rgba(199, 210, 254, 0.7) 100%);
   background-blend-mode: overlay;
   border-radius: 1rem;
   border: 2px solid #a5b4fc;
-  box-shadow: 0 8px 24px 0 rgba(59,130,246,0.09);
+  box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.09);
   padding: 2rem 1.5rem;
   transition: box-shadow 0.2s;
   backdrop-filter: blur(2px);
@@ -373,7 +375,7 @@ h3 {
 }
 
 .toc-bedazzled a {
-  background: rgba(255,255,255,0.4);
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 0.5rem;
   padding: 0.2rem 0.6rem;
   transition: background 0.2s, color 0.2s;
