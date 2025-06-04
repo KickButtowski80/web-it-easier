@@ -247,7 +247,9 @@ export const addPost = async (postData) => {
   
   // Notify Google about the new post
   try {
-    const postUrl = `https://izak-portfolio.vercel.app/blog/${titleToSlug(postData.title)}`;
+    // Get the current hostname dynamically
+    const baseUrl = window.location.origin;
+    const postUrl = `${baseUrl}/blog/${titleToSlug(postData.title)}`;
     await notifyGoogle(postUrl, 'URL_UPDATED');
     console.log(`Notified Google about new post: ${postUrl}`);
   } catch (error) {
@@ -292,7 +294,7 @@ export const deletePost = async (title) => {
   
   // Notify Google about the deleted post
   try {
-    const postUrl = `https://izak-portfolio.vercel.app/blog/${slug}`;
+    const postUrl = `${window.location.origin}/blog/${slug}`;
     await notifyGoogle(postUrl, 'URL_DELETED');
     console.log(`Notified Google about deleted post: ${postUrl}`);
   } catch (error) {
@@ -372,7 +374,7 @@ export const updatePost = async (postId, postData) => {
   
   // Notify Google about the updated post
   try {
-    const postUrl = `https://izak-portfolio.vercel.app/blog/${titleToSlug(postData.title)}`;
+    const postUrl = `${window.location.origin}/blog/${titleToSlug(postData.title)}`;
     await notifyGoogle(postUrl, 'URL_UPDATED');
     console.log(`Notified Google about updated post: ${postUrl}`);
   } catch (error) {
