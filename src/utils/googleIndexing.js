@@ -1,50 +1,36 @@
 // src/utils/googleIndexing.js
-import { google } from 'googleapis';
 
-// Only initialize in production environment
+// Check if we're in production environment
 const isProduction = import.meta.env.PROD === true;
-const hasCredentials = 
-  import.meta.env.VITE_GOOGLE_CLIENT_EMAIL && 
-  import.meta.env.VITE_GOOGLE_PRIVATE_KEY;
-
-// Only create the client if in production with credentials
-let jwtClient = null;
-if (isProduction && hasCredentials) {
-  jwtClient = new google.auth.JWT(
-    import.meta.env.VITE_GOOGLE_CLIENT_EMAIL,
-    null,
-    import.meta.env.VITE_GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-    ['https://www.googleapis.com/auth/indexing'],
-    null
-  );
-}
 
 export const notifyGoogle = async (url, type = 'URL_UPDATED') => {
-  // Skip if not in production or missing credentials
-  if (!isProduction || !jwtClient) {
+  // Skip if not in production
+  if (!isProduction) {
     console.log(`[DEV] Would notify Google about: ${url} (${type})`);
-    return null;
+    return { notified: false, dev: true };
   }
   
   try {
-    await jwtClient.authorize();
-    
-    const indexing = google.indexing({
-      version: 'v3',
-      auth: jwtClient
+    // Call our Vercel serverless function instead of the Google API directly
+    const response = await fetch('/api/notify-google-indexing', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url, type }),
     });
+
+    const data = await response.json();
     
-    const result = await indexing.urlNotifications.publish({
-      requestBody: {
-        url: url,
-        type: type // URL_UPDATED or URL_DELETED
-      }
-    });
+    if (!response.ok) {
+      console.error('Google Indexing API error:', data.error);
+      return { notified: false, error: data.error };
+    }
     
     console.log(`Successfully notified Google about: ${url}`);
-    return result.data;
+    return { notified: true, data: data.data };
   } catch (error) {
-    console.error('Google Indexing API error:', error);
-    return null;
+    console.error('Network error when notifying Google:', error);
+    return { notified: false, error: 'Network error' };
   }
 };
