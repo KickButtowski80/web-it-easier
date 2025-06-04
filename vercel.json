@@ -23,11 +23,14 @@
       ]
     }
   ],
-  "functions": {
-    "api/**/*.js": { "runtime": "nodejs22.x" }
-  },
   "rewrites": [
-    {"source": "/api/**", "destination": "/api/index.js"},
-    { "source": "/(.*)", "destination": "/" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
