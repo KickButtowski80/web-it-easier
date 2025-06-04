@@ -26,11 +26,8 @@
           </article>
         </li>
       </ul>
-          <Notification 
-          v-model="showNotification"
-           :message="notificationMessage"
-           :type="notificationType"
-           :icon="notificationIcon" />
+      <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+        :icon="notificationIcon" />
     </section>
 
     <div v-if="loading" class="text-center py-12" aria-live="polite">
@@ -45,10 +42,17 @@
 
 <script>
 import { formatDate, titleToSlug } from '../utils/helpers';
-import { getPosts, auth} from '../config/firebase'
+import { getPosts, auth } from '../config/firebase'
 import { ref, onMounted } from 'vue'
 import Notification from '../components/UI/Notification.vue';
-import { showNotify } from '../utils/helpers'
+import { useNotification } from '../utils/helpers'
+const {
+  showNotification,
+  notificationMessage,
+  notificationType,
+  notificationIcon,
+  showNotify
+} = useNotification();
 
 export default {
   components: {
@@ -58,14 +62,6 @@ export default {
     const posts = ref([])
     const loading = ref(true)
     const isAdmin = ref(false)
-    const showNotification = ref(false)
-    const notificationMessage = ref('')
-    const notificationType = ref('info')
-    const notificationIcon = ref('')
-
-
-
- 
 
     onMounted(async () => {
       try {
@@ -84,7 +80,7 @@ export default {
 
 
     // Format date for machine-readable datetime attribute
-  const formatDateISO = (date) => {
+    const formatDateISO = (date) => {
       return new Date(date).toISOString().split('T')[0];
     };
 
@@ -95,12 +91,10 @@ export default {
       formatDate,
       formatDateISO,
       titleToSlug,
-      showNotify,
-      showNotification,
       notificationMessage,
       notificationType,
       notificationIcon,
-
+      showNotification
     };
   }
 };

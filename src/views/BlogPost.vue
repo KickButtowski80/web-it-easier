@@ -43,19 +43,16 @@
         <p class="text-gray-500 mt-4">Loading post...</p>
       </div>
     </div>
-    <Notification 
-      v-model="showNotification" 
-      :message="notificationMessage" 
-      :type="notificationType" 
-      :icon="notificationIcon"
-    />
+    <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+      :icon="notificationIcon" />
   </section>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import Notification from '@/components/UI/Notification.vue'
-import { showNotify } from "../utils/helpers"
+import { useNotification } from "../utils/helpers"
+
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import hljs from "highlight.js";
@@ -72,6 +69,14 @@ const props = defineProps({
     required: false,
   },
 });
+
+const {
+  showNotification,
+  notificationMessage,
+  notificationType,
+  notificationIcon,
+  showNotify
+} = useNotification();
 const isMounted = ref(true);
 const post = ref(null);
 const defaultCanonical = ref(null);
@@ -80,40 +85,68 @@ const route = useRoute();
 // Set up canonical URL management
 const canonicalUrl = ref('');
 
-const updateCanonicalTag = () => {
-  if (post.value && post.value.title) {
-    // Create the canonical URL using the proper slug format
-    const slug = titleToSlug(post.value.title);
-    canonicalUrl.value = `https://izak-portfolio.vercel.app/blog/${slug}`;
+const updateCanonicalTag = async () => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (post.value && post.value.title) {
+        // Create the canonical URL using the proper slug format
+        const slug = titleToSlug(post.value.title);
+        canonicalUrl.value = `https://izak-portfolio.vercel.app/blog/${slug}`;
 
-    // Store the default canonical if not already stored
-    if (!defaultCanonical.value) {
-      const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
-      if (defaultCanonicalEl) {
-        defaultCanonical.value = defaultCanonicalEl.outerHTML;
-        defaultCanonicalEl.remove();
+        // Store the default canonical if not already stored
+        if (!defaultCanonical.value) {
+          const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
+          if (defaultCanonicalEl) {
+            defaultCanonical.value = defaultCanonicalEl.outerHTML;
+            defaultCanonicalEl.remove();
+          }
+        }
+
+        // Add the canonical tag to the document head
+        const link = document.createElement('link');
+        link.rel = 'canonical';
+        link.href = canonicalUrl.value;
+        // Find the canonical URL comment
+        const canonicalComment = Array.from(document.head.childNodes).find(
+          node => node.nodeType === Node.COMMENT_NODE &&
+            node.textContent.trim() === 'Canonical URL'
+        );
+
+        if (canonicalComment) {
+          // Insert after the comment
+          document.head.insertBefore(link, canonicalComment.nextSibling);
+        } else {
+          // Fallback to appending if comment not found
+          document.head.appendChild(link);
+        }
+        // Update page title with post title for better SEO
+        document.title = `${post.value.title} | Izak's Portfolio`;
       }
+
+      // Always resolve the promise when done
+      resolve();
+    } catch (error) {
+      console.error('Error updating canonical tag:', error);
+      reject(error);
     }
-
-    // Add the canonical tag to the document head
-    const link = document.createElement('link');
-    link.rel = 'canonical';
-    link.href = canonicalUrl.value;
-    document.head.appendChild(link);
-
-    // Update page title with post title for better SEO
-    document.title = `${post.value.title} | Izak's Portfolio`;
-  }
+  });
 };
-
 onMounted(async () => {
+
+
+  const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
+  if (defaultCanonicalEl) {
+    defaultCanonical.value = defaultCanonicalEl.outerHTML;
+    defaultCanonicalEl.remove();
+  }
+
   isMounted.value = true;
   const title = deslugify(props.slug);
   try {
     const postData = await getPost(title);
     if (isMounted.value && postData) {
       post.value = postData;
-      updateCanonicalTag();
+      await updateCanonicalTag();
     }
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -124,11 +157,34 @@ onMounted(async () => {
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
   isMounted.value = false;
+
+  // Remove any existing canonical tag
   const existingCanonical = document.querySelector('link[rel="canonical"]');
   if (existingCanonical) {
     existingCanonical.remove();
   }
-  document.head.insertAdjacentHTML('beforeend', defaultCanonical.value);
+
+  // Restore the default canonical tag after the comment if it exists
+  if (defaultCanonical.value) {
+    const canonicalComment = Array.from(document.head.childNodes).find(
+      node => node.nodeType === Node.COMMENT_NODE &&
+        node.textContent.trim() === 'Canonical URL'
+    );
+
+    if (canonicalComment) {
+      // Create a temporary div to parse the HTML string
+      const temp = document.createElement('div');
+      temp.innerHTML = defaultCanonical.value;
+      const defaultCanonicalEl = temp.firstChild;
+
+      // Insert after the comment
+      document.head.insertBefore(defaultCanonicalEl, canonicalComment.nextSibling);
+    } else {
+      // Fallback to appending if comment not found
+      document.head.insertAdjacentHTML('beforeend', defaultCanonical.value);
+    }
+  }
+
   document.title = "Izak's Portfolio";
 });
 

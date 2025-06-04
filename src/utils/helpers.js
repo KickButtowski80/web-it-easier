@@ -1,4 +1,4 @@
-
+import { ref } from 'vue';
 /**
  * Helper function to format dates consistently throughout the application
  * 
@@ -33,11 +33,27 @@ const formatDate = (date) => {
       .replace(/-+$/, ''); // Remove trailing hyphens
   };
   
-function showNotify(message, type = 'info', icon = '') {
-  notificationMessage.value = message
-  notificationType.value = type
-  notificationIcon.value = icon
-  showNotification.value = true
+// Add a notification composable
+ function useNotification() {
+  const showNotification = ref(false);
+  const notificationMessage = ref('');
+  const notificationType = ref('info');
+  const notificationIcon = ref('');
+  
+  function showNotify(message, type = 'info', icon = '') {
+    notificationMessage.value = message;
+    notificationType.value = type;
+    notificationIcon.value = icon;
+    showNotification.value = true;
+  }
+  
+  return {
+    showNotification,
+    notificationMessage,
+    notificationType,
+    notificationIcon,
+    showNotify
+  };
 }
   // Export utility functions for use in other modules
-  export { formatDate, titleToSlug, showNotify };
+  export { formatDate, titleToSlug, useNotification };
