@@ -11,8 +11,10 @@ export const notifyGoogle = async (url, type = 'URL_UPDATED') => {
   }
   
   try {
+    const baseUrl = window.location.origin;
+    const apiUrl = `${baseUrl}/api/notify-google-indexing`;
     // Call our Vercel serverless function instead of the Google API directly
-    const response = await fetch('/api/notify-google-indexing', {
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
