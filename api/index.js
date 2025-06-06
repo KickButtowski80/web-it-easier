@@ -4,14 +4,28 @@
 import notifyGoogleIndexing from './notify-google-indexing.js';
 
 export default async function handler(req, res) {
+  // Set CORS headers for all responses
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // Log request information for debugging
+  console.log('API Request:', {
+    method: req.method,
+    url: req.url,
+    hasBody: !!req.body,
+    timestamp: new Date().toISOString()
+  });
+
   // Extract the path from the URL
   const path = req.url.split('/api/')[1]?.split('?')[0] || '';
   
-  // Route to the appropriate handler based on the path
-  if (path === 'notify-google-indexing' || path === '') {
-    return notifyGoogleIndexing(req, res);
-  }
-  
-  // If no matching route is found, return 404
-  return res.status(404).json({ error: 'Not Found' });
+  // Route all requests to the Google Indexing handler
+  // This includes both /api and /api/notify-google-indexing endpoints
+  return notifyGoogleIndexing(req, res);
 }
