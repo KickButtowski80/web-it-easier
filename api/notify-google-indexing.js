@@ -17,18 +17,18 @@ export default async function handler(req, res) {
   console.log('DEBUG: Environment variables present:');
   console.log('- GOOGLE_CLIENT_EMAIL exists:', !!process.env.GOOGLE_CLIENT_EMAIL);
   console.log('- GOOGLE_PRIVATE_KEY exists:', !!process.env.GOOGLE_PRIVATE_KEY);
-  
+
   if (process.env.GOOGLE_CLIENT_EMAIL) {
     console.log('- GOOGLE_CLIENT_EMAIL value:', process.env.GOOGLE_CLIENT_EMAIL);
   }
-  
+
   if (process.env.GOOGLE_PRIVATE_KEY) {
     console.log('- GOOGLE_PRIVATE_KEY length:', process.env.GOOGLE_PRIVATE_KEY.length);
     console.log('- GOOGLE_PRIVATE_KEY starts with:', process.env.GOOGLE_PRIVATE_KEY.substring(0, 20));
   } else {
     console.log('- GOOGLE_PRIVATE_KEY is undefined or empty');
   }
-  
+
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     if (process.env.GOOGLE_PRIVATE_KEY) {
       // This is critical for JWT signing.
       privateKey = process.env.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n');
-      
+
       // Debug the processed key format (first and last few characters)
       console.log('Processed private key format check:');
       console.log('- First 20 chars:', privateKey.substring(0, 20));
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
       console.error('Missing GOOGLE_CLIENT_EMAIL or GOOGLE_PRIVATE_KEY, or private key is empty after processing. Check environment variables.');
       return res.status(500).json({ error: 'Authentication credentials not configured, incomplete, or private key is missing.' });
     }
-  
+
     const jwtClient = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
       null,
@@ -95,7 +95,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Error in notifyGoogleIndexing:', error);
 
-    // Handle specific errors
+    // Handle specific errors list
     if (error.code === 400 || (error.message && error.message.includes('Invalid URL'))) {
       return res.status(400).json({ error: 'Invalid URL provided.' });
     }
@@ -105,8 +105,8 @@ export default async function handler(req, res) {
         errors: error.errors || [],
         response: error.response?.data || 'No response data'
       });
-      return res.status(403).json({ 
-        error: 'Authentication failed or insufficient permissions.', 
+      return res.status(403).json({
+        error: 'Authentication failed or insufficient permissions.',
         details: error.message,
         hint: 'Verify that your service account has proper permissions and the domain is verified in Search Console.'
       });
