@@ -1,10 +1,10 @@
 import { google } from 'googleapis';
-import * as dotenv from 'dotenv';
+
 import path from 'path';
 
 // Load environment variables from .env.local
 const envPath = path.resolve(process.cwd(), '.env.local');
-dotenv.config({ path: envPath });
+
 console.log('Loaded environment from:', envPath);
 
 // Configuration for Google Indexing API
@@ -51,9 +51,8 @@ export default async function handler(req, res) {
     // Handle private key
     let privateKey = '';
     if (process.env.GOOGLE_PRIVATE_KEY) {
-      // Ensure escaped newlines from the .env file (\\n) are converted to actual newlines (\n).
       // This is critical for JWT signing.
-      privateKey = process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n');
+      privateKey = process.env.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n');
       
       // Debug the processed key format (first and last few characters)
       console.log('Processed private key format check:');
