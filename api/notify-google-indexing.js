@@ -1,121 +1,100 @@
 import { google } from 'googleapis';
 
-import path from 'path';
-
-// Load environment variables from .env.local
-const envPath = path.resolve(process.cwd(), '.env.local');
-
-console.log('Loaded environment from:', envPath);
-
-// Configuration for Google Indexing API
-// Note: Without Firestore rate limiting, we rely on Google's own API limits
-// The Google Indexing API has a limit of 200 calls per day
-
 export default async function handler(req, res) {
-  // DEBUG: Log environment variables and request information
-  console.log('DEBUG: API handler called');
-  console.log('DEBUG: Environment variables present:');
-  console.log('- GOOGLE_CLIENT_EMAIL exists:', !!process.env.GOOGLE_CLIENT_EMAIL);
-  console.log('- GOOGLE_PRIVATE_KEY exists:', !!process.env.GOOGLE_PRIVATE_KEY);
-  
-  if (process.env.GOOGLE_CLIENT_EMAIL) {
-    console.log('- GOOGLE_CLIENT_EMAIL value:', process.env.GOOGLE_CLIENT_EMAIL);
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
-  
-  if (process.env.GOOGLE_PRIVATE_KEY) {
-    console.log('- GOOGLE_PRIVATE_KEY length:', process.env.GOOGLE_PRIVATE_KEY.length);
-    console.log('- GOOGLE_PRIVATE_KEY starts with:', process.env.GOOGLE_PRIVATE_KEY.substring(0, 20));
-  } else {
-    console.log('- GOOGLE_PRIVATE_KEY is undefined or empty');
-  }
-  
+
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  // Get URL and type from request body
-  const { url, type = 'URL_UPDATED' } = req.body;
-
-  if (!url) {
-    return res.status(400).json({ error: 'URL is required.' });
+    return res.status(405).json({ 
+      error: 'Method Not Allowed',
+      message: 'Only POST requests are supported'
+    });
   }
 
   try {
-    // Note: We've removed the Firestore-based rate limiting.
-    // The Google Indexing API itself has a limit of 200 calls per day,
-    // and will return an error if that limit is exceeded.
+    const { url, type = 'URL_UPDATED' } = req.body;
 
-    // --- Google Indexing API Call Logic ---
-    // Create JWT client for Google API authentication
-    // Handle private key
-    let privateKey = '';
-    if (process.env.GOOGLE_PRIVATE_KEY) {
-      // This is critical for JWT signing.
-      privateKey = process.env.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n');
-      
-      // Debug the processed key format (first and last few characters)
-      console.log('Processed private key format check:');
-      console.log('- First 20 chars:', privateKey.substring(0, 20));
-      console.log('- Last 20 chars:', privateKey.substring(privateKey.length - 20));
-      console.log('- Contains actual newlines:', privateKey.includes('\n'));
-    } else {
-      console.error('GOOGLE_PRIVATE_KEY is not set in environment variables.');
+    if (!url) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'URL is required'
+      });
     }
 
-    // Ensure both client email and the private key are present and valid
-    if (!process.env.GOOGLE_CLIENT_EMAIL || !privateKey) {
-      console.error('Missing GOOGLE_CLIENT_EMAIL or GOOGLE_PRIVATE_KEY, or private key is empty after processing. Check environment variables.');
-      return res.status(500).json({ error: 'Authentication credentials not configured, incomplete, or private key is missing.' });
-    }
-  
-    const jwtClient = new google.auth.JWT(
-      process.env.GOOGLE_CLIENT_EMAIL,
-      null,
-      privateKey,
-      ['https://www.googleapis.com/auth/indexing'],
-      null
-    );
-
-    await jwtClient.authorize();
-
-    const indexRequest = {
-      url: url,
-      type: type, // Default to URL_UPDATED if not specified
-    };
-
-    const response = await google.indexing('v3').urlNotifications.publish({
-      auth: jwtClient,
-      resource: indexRequest,
+    // Debug: Log environment variables (without exposing full key)
+    console.log('Environment check:', {
+      hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
+      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+      privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length || 0,
+      privateKeyStart: process.env.GOOGLE_PRIVATE_KEY?.substring(0, 20) || 'none',
+      privateKeyEnd: process.env.GOOGLE_PRIVATE_KEY?.substring(-20) || 'none'
     });
 
-    console.log(`Indexing API response for ${url}:`, response.data);
-    return res.status(200).json({ success: true, data: response.data });
+    if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+      throw new Error('Missing required Google service account credentials');
+    }
+
+    // Process private key - handle multiple formats
+    let privateKey = process.env.GOOGLE_PRIVATE_KEY;
+    
+    // Replace escaped newlines if they exist
+    if (privateKey.includes('\\n')) {
+      privateKey = privateKey.replace(/\\n/g, '\n');
+    }
+    
+    // Ensure proper PEM format
+    if (!privateKey.includes('\n') && privateKey.includes('-----BEGIN PRIVATE KEY-----')) {
+      privateKey = privateKey
+        .replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n')
+        .replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----\n');
+    }
+
+    // Create JWT client
+    const auth = new google.auth.JWT({
+      email: process.env.GOOGLE_CLIENT_EMAIL,
+      key: privateKey,
+      scopes: ['https://www.googleapis.com/auth/indexing']
+    });
+
+    // Get access token
+    const tokens = await auth.authorize();
+    if (!tokens.access_token) {
+      throw new Error('Failed to obtain access token');
+    }
+
+    // Make the API request
+    const indexing = google.indexing({ version: 'v3', auth });
+    const response = await indexing.urlNotifications.publish({
+      requestBody: {
+        url,
+        type: type.toUpperCase()
+      }
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: response.data
+    });
 
   } catch (error) {
-    console.error('Error in notifyGoogleIndexing:', error);
+    console.error('Error in notify-google-indexing:', {
+      message: error.message,
+      stack: error.stack,
+      response: error.response?.data
+    });
 
-    // Handle specific errors
-    if (error.code === 400 || (error.message && error.message.includes('Invalid URL'))) {
-      return res.status(400).json({ error: 'Invalid URL provided.' });
-    }
-    if (error.code === 403) {
-      console.error('Google API 403 error details:', {
-        message: error.message,
-        errors: error.errors || [],
-        response: error.response?.data || 'No response data'
-      });
-      return res.status(403).json({ 
-        error: 'Authentication failed or insufficient permissions.', 
-        details: error.message,
-        hint: 'Verify that your service account has proper permissions and the domain is verified in Search Console.'
-      });
-    }
-    // Handle Google API quota exceeded errors
-    if (error.code === 429 || (error.message && error.message.includes('quota'))) {
-      return res.status(429).json({ error: 'Google Indexing API quota exceeded. Try again tomorrow.' });
-    }
-
-    return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      message: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 }
