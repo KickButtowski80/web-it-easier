@@ -48,17 +48,45 @@ export default async function handler(req, res) {
 
     // --- Google Indexing API Call Logic ---
     // Create JWT client for Google API authentication
-    // Handle private key
+    // Handle private key with multiple format possibilities
     let privateKey = '';
     if (process.env.GOOGLE_PRIVATE_KEY) {
-      // This is critical for JWT signing.
-      privateKey = process.env.GOOGLE_PRIVATE_KEY.split(String.raw`\n`).join('\n');
-
-      // Debug the processed key format (first and last few characters)
+      const rawKey = process.env.GOOGLE_PRIVATE_KEY;
+      
+      // Debug the raw key format
+      console.log('Raw private key format check:');
+      console.log('- Length:', rawKey.length);
+      console.log('- First 20 chars:', rawKey.substring(0, 20));
+      console.log('- Last 20 chars:', rawKey.substring(rawKey.length - 20));
+      console.log('- Contains literal \\n:', rawKey.includes('\\n'));
+      console.log('- Contains actual newlines:', rawKey.includes('\n'));
+      console.log('- First char code:', rawKey.charCodeAt(0));
+      console.log('- Last char code:', rawKey.charCodeAt(rawKey.length - 1));
+      
+      // Try multiple approaches to format the key correctly
+      if (rawKey.includes('\\n')) {
+        // Case 1: Key has literal backslash-n that needs to be converted to actual newlines
+        privateKey = rawKey.replace(/\\n/g, '\n');
+        console.log('Applied Case 1: Replaced \\n with actual newlines');
+      } else if (!rawKey.includes('\n')) {
+        // Case 2: Key has no newlines at all
+        privateKey = rawKey
+          .replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n')
+          .replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----');
+        console.log('Applied Case 2: Added newlines to header/footer');
+      } else {
+        // Case 3: Key already has proper newlines
+        privateKey = rawKey;
+        console.log('Applied Case 3: Using key as-is (already has newlines)');
+      }
+      
+      // Final verification
       console.log('Processed private key format check:');
-      console.log('- First 20 chars:', privateKey.substring(0, 20));
-      console.log('- Last 20 chars:', privateKey.substring(privateKey.length - 20));
+      console.log('- Length:', privateKey.length);
+      console.log('- First 30 chars:', privateKey.substring(0, 30));
+      console.log('- Last 30 chars:', privateKey.substring(privateKey.length - 30));
       console.log('- Contains actual newlines:', privateKey.includes('\n'));
+      console.log('- Number of newlines:', (privateKey.match(/\n/g) || []).length);
     } else {
       console.error('GOOGLE_PRIVATE_KEY is not set in environment variables.');
     }
