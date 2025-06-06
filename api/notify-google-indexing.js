@@ -1,102 +1,75 @@
 import { google } from 'googleapis';
 
-import path from 'path';
-
-// Load environment variables from .env.local
-const envPath = path.resolve(process.cwd(), '.env.local');
-
-console.log('Loaded environment from:', envPath);
-
 // Configuration for Google Indexing API
-// Note: Without Firestore rate limiting, we rely on Google's own API limits
 // The Google Indexing API has a limit of 200 calls per day
 
 export default async function handler(req, res) {
-  // DEBUG: Log environment variables and request information
-  console.log('DEBUG: API handler called');
-  console.log('DEBUG: Environment variables present:');
-  console.log('- GOOGLE_CLIENT_EMAIL exists:', !!process.env.GOOGLE_CLIENT_EMAIL);
-  console.log('- GOOGLE_PRIVATE_KEY exists:', !!process.env.GOOGLE_PRIVATE_KEY);
+  // Set CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (process.env.GOOGLE_CLIENT_EMAIL) {
-    console.log('- GOOGLE_CLIENT_EMAIL value:', process.env.GOOGLE_CLIENT_EMAIL);
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
-
-  if (process.env.GOOGLE_PRIVATE_KEY) {
-    console.log('- GOOGLE_PRIVATE_KEY length:', process.env.GOOGLE_PRIVATE_KEY.length);
-    console.log('- GOOGLE_PRIVATE_KEY starts with:', process.env.GOOGLE_PRIVATE_KEY.substring(0, 20));
-  } else {
-    console.log('- GOOGLE_PRIVATE_KEY is undefined or empty');
+  
+  console.log('Google Indexing API handler called');
+  
+  // Check environment variables
+  if (!process.env.GOOGLE_CLIENT_EMAIL) {
+    console.error('GOOGLE_CLIENT_EMAIL is missing');
+    return res.status(500).json({ error: 'Server configuration error: Missing client email' });
+  }
+  
+  if (!process.env.GOOGLE_PRIVATE_KEY) {
+    console.error('GOOGLE_PRIVATE_KEY is missing');
+    return res.status(500).json({ error: 'Server configuration error: Missing private key' });
   }
 
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Get URL and type from request body
+  // Validate request body
+  if (!req.body || !req.body.url) {
+    return res.status(400).json({ error: 'Missing required fields', details: 'URL is required' });
+  }
+
+  // Extract URL and notification type from request
   const { url, type = 'URL_UPDATED' } = req.body;
 
-  if (!url) {
-    return res.status(400).json({ error: 'URL is required.' });
+  // Validate URL format
+  if (!url.startsWith('http')) {
+    return res.status(400).json({ error: 'Invalid URL format', details: 'URL must start with http:// or https://' });
   }
 
   try {
-    // Note: We've removed the Firestore-based rate limiting.
-    // The Google Indexing API itself has a limit of 200 calls per day,
-    // and will return an error if that limit is exceeded.
-
-    // --- Google Indexing API Call Logic ---
-    // Create JWT client for Google API authentication
-    // Handle private key with multiple format possibilities
-    let privateKey = '';
-    if (process.env.GOOGLE_PRIVATE_KEY) {
-      const rawKey = process.env.GOOGLE_PRIVATE_KEY;
-      
-      // Debug the raw key format
-      console.log('Raw private key format check:');
-      console.log('- Length:', rawKey.length);
-      console.log('- First 20 chars:', rawKey.substring(0, 20));
-      console.log('- Last 20 chars:', rawKey.substring(rawKey.length - 20));
-      console.log('- Contains literal \\n:', rawKey.includes('\\n'));
-      console.log('- Contains actual newlines:', rawKey.includes('\n'));
-      console.log('- First char code:', rawKey.charCodeAt(0));
-      console.log('- Last char code:', rawKey.charCodeAt(rawKey.length - 1));
-      
-      // Try multiple approaches to format the key correctly
-      if (rawKey.includes('\\n')) {
-        // Case 1: Key has literal backslash-n that needs to be converted to actual newlines
-        privateKey = rawKey.replace(/\\n/g, '\n');
-        console.log('Applied Case 1: Replaced \\n with actual newlines');
-      } else if (!rawKey.includes('\n')) {
-        // Case 2: Key has no newlines at all
-        privateKey = rawKey
-          .replace('-----BEGIN PRIVATE KEY-----', '-----BEGIN PRIVATE KEY-----\n')
-          .replace('-----END PRIVATE KEY-----', '\n-----END PRIVATE KEY-----');
-        console.log('Applied Case 2: Added newlines to header/footer');
-      } else {
-        // Case 3: Key already has proper newlines
-        privateKey = rawKey;
-        console.log('Applied Case 3: Using key as-is (already has newlines)');
-      }
-      
-      // Final verification
-      console.log('Processed private key format check:');
-      console.log('- Length:', privateKey.length);
-      console.log('- First 30 chars:', privateKey.substring(0, 30));
-      console.log('- Last 30 chars:', privateKey.substring(privateKey.length - 30));
-      console.log('- Contains actual newlines:', privateKey.includes('\n'));
-      console.log('- Number of newlines:', (privateKey.match(/\n/g) || []).length);
-    } else {
-      console.error('GOOGLE_PRIVATE_KEY is not set in environment variables.');
+    // Get the private key and ensure it's properly formatted
+    // This is the most critical part - we need to ensure the key is in the correct format
+    let privateKey = process.env.GOOGLE_PRIVATE_KEY;
+    
+    // Log key information (safely)
+    console.log('Private key info:', {
+      length: privateKey?.length || 0,
+      hasNewlines: privateKey?.includes('\n') || false,
+      hasLiteralBackslashN: privateKey?.includes('\\n') || false
+    });
+    
+    // If the key contains literal '\n', replace them with actual newlines
+    if (privateKey?.includes('\\n')) {
+      privateKey = privateKey.replace(/\\n/g, '\n');
+      console.log('Converted literal \\n to actual newlines');
     }
-
-    // Ensure both client email and the private key are present and valid
-    if (!process.env.GOOGLE_CLIENT_EMAIL || !privateKey) {
-      console.error('Missing GOOGLE_CLIENT_EMAIL or GOOGLE_PRIVATE_KEY, or private key is empty after processing. Check environment variables.');
-      return res.status(500).json({ error: 'Authentication credentials not configured, incomplete, or private key is missing.' });
-    }
-
+    
+    // Create JWT client with minimal logging of sensitive data
+    console.log('Creating JWT client with:', {
+      email: process.env.GOOGLE_CLIENT_EMAIL,
+      keyPresent: !!privateKey,
+      keyLength: privateKey?.length || 0
+    });
+    
     const jwtClient = new google.auth.JWT(
       process.env.GOOGLE_CLIENT_EMAIL,
       null,
@@ -105,45 +78,74 @@ export default async function handler(req, res) {
       null
     );
 
+    // Authorize the client
+    console.log('Authorizing JWT client...');
     await jwtClient.authorize();
+    console.log('JWT client authorized successfully');
 
-    const indexRequest = {
-      url: url,
-      type: type, // Default to URL_UPDATED if not specified
-    };
-
-    const response = await google.indexing('v3').urlNotifications.publish({
-      auth: jwtClient,
-      resource: indexRequest,
+    // Create indexing client
+    const indexing = google.indexing({
+      version: 'v3',
+      auth: jwtClient
     });
 
-    console.log(`Indexing API response for ${url}:`, response.data);
-    return res.status(200).json({ success: true, data: response.data });
+    // Call the Google Indexing API
+    console.log(`Sending ${type} notification for URL: ${url}`);
+    const result = await indexing.urlNotifications.publish({
+      requestBody: {
+        url: url,
+        type: type // URL_UPDATED or URL_DELETED
+      }
+    });
+
+    // Log the result (without exposing full response)
+    console.log('Google Indexing API success:', {
+      statusCode: result.status,
+      statusText: result.statusText,
+      dataReceived: !!result.data
+    });
+
+    // Return success response
+    return res.status(200).json({
+      success: true,
+      message: `URL ${type === 'URL_DELETED' ? 'deletion' : 'update'} notification sent to Google`,
+      url: url,
+      notificationType: type,
+      googleResponse: result.data
+    });
 
   } catch (error) {
-    console.error('Error in notifyGoogleIndexing:', error);
-
-    // Handle specific errors list
-    if (error.code === 400 || (error.message && error.message.includes('Invalid URL'))) {
-      return res.status(400).json({ error: 'Invalid URL provided.' });
-    }
+    // Enhanced error logging
+    console.error('Google Indexing API Error:', {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      stack: error.stack?.split('\n')[0] || 'No stack trace'
+    });
+    
+    // Handle specific error codes
     if (error.code === 403) {
-      console.error('Google API 403 error details:', {
-        message: error.message,
-        errors: error.errors || [],
-        response: error.response?.data || 'No response data'
-      });
       return res.status(403).json({
-        error: 'Authentication failed or insufficient permissions.',
-        details: error.message,
-        hint: 'Verify that your service account has proper permissions and the domain is verified in Search Console.'
+        error: 'Authentication failed',
+        details: 'Check service account permissions and key format'
+      });
+    } else if (error.code === 400) {
+      return res.status(400).json({
+        error: 'Bad request',
+        details: error.message || 'Invalid request to Google Indexing API'
+      });
+    } else if (error.code === 429) {
+      return res.status(429).json({
+        error: 'Rate limit exceeded',
+        details: 'Google Indexing API quota exceeded (limit is 200 calls per day)'
       });
     }
-    // Handle Google API quota exceeded errors
-    if (error.code === 429 || (error.message && error.message.includes('quota'))) {
-      return res.status(429).json({ error: 'Google Indexing API quota exceeded. Try again tomorrow.' });
-    }
-
-    return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    
+    // Generic error response with more details
+    return res.status(500).json({
+      error: 'Internal Server Error',
+      details: error.message || 'Unknown error occurred',
+      errorType: error.name || 'UnknownError'
+    });
   }
 }
