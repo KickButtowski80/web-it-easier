@@ -138,7 +138,14 @@ import { marked } from 'marked'
 import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import Notification from '@/components/UI/Notification.vue'
-
+import { useNotification } from '@/utils/helpers'
+const { 
+  showNotification, 
+  notificationMessage, 
+  notificationType, 
+  notificationIcon, 
+  showNotify 
+} = useNotification();
 const props = defineProps({
   id: { type: String, default: '' }
 })
@@ -167,10 +174,6 @@ const formErrors = ref({
 
 const isSubmitting = ref(false)
 const isLoading = ref(false)
-const showNotification = ref(false)
-const notificationMessage = ref('')
-const notificationType = ref('info')
-const notificationIcon = ref('')
 
 // Configure marked for syntax highlighting
 marked.setOptions({
@@ -248,22 +251,8 @@ onMounted(async () => {
   });
 });
 
-const logout = async () => {
-  try {
-    await signOut(auth)
-    router.push('/login')
-  } catch (e) {
-    console.error('Error signing out:', e)
-    showNotify('Failed to log out. Please try again.', 'error')
-  }
-}
 
-function showNotify(message, type = 'info', icon = '') {
-  notificationMessage.value = message
-  notificationType.value = type
-  notificationIcon.value = icon
-  showNotification.value = true
-}
+
 
 // Validate form fields
 const validateForm = () => {

@@ -9,11 +9,8 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" class="mb-8 toc-bedazzled" 
-        v-if="toc.length > 0"
-        role="navigation" 
-        aria-labelledby="toc-heading"
-        >
+        <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
+          aria-labelledby="toc-heading">
           <h2 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h2>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
@@ -46,17 +43,24 @@
         <p class="text-gray-500 mt-4">Loading post...</p>
       </div>
     </div>
+    <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+      :icon="notificationIcon" />
   </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import Notification from '@/components/UI/Notification.vue'
+import { useNotification } from "../utils/helpers"
+
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import { getPost } from "../config/firebase";
+import { titleToSlug } from "../utils/helpers";
 import DOMPurify from "dompurify";
+import { useRoute } from "vue-router";
 
 // Props
 const props = defineProps({
@@ -66,11 +70,122 @@ const props = defineProps({
   },
 });
 
+const {
+  showNotification,
+  notificationMessage,
+  notificationType,
+  notificationIcon,
+  showNotify
+} = useNotification();
+const isMounted = ref(true);
 const post = ref(null);
+const defaultCanonical = ref(null);
+const route = useRoute();
 
+// Set up canonical URL management
+const canonicalUrl = ref('');
+
+const updateCanonicalTag = async () => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (post.value && post.value.title) {
+        // Create the canonical URL using the proper slug format
+        const slug = titleToSlug(post.value.title);
+        canonicalUrl.value = `https://izak-portfolio.vercel.app/blog/${slug}`;
+
+        // Store the default canonical if not already stored
+        if (!defaultCanonical.value) {
+          const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
+          if (defaultCanonicalEl) {
+            defaultCanonical.value = defaultCanonicalEl.outerHTML;
+            defaultCanonicalEl.remove();
+          }
+        }
+
+        // Add the canonical tag to the document head
+        const link = document.createElement('link');
+        link.rel = 'canonical';
+        link.href = canonicalUrl.value;
+        // Find the canonical URL comment
+        const canonicalComment = Array.from(document.head.childNodes).find(
+          node => node.nodeType === Node.COMMENT_NODE &&
+            node.textContent.trim() === 'Canonical URL'
+        );
+
+        if (canonicalComment) {
+          // Insert after the comment
+          document.head.insertBefore(link, canonicalComment.nextSibling);
+        } else {
+          // Fallback to appending if comment not found
+          document.head.appendChild(link);
+        }
+        // Update page title with post title for better SEO
+        document.title = `${post.value.title} | Izak's Portfolio`;
+      }
+
+      // Always resolve the promise when done
+      resolve();
+    } catch (error) {
+      console.error('Error updating canonical tag:', error);
+      reject(error);
+    }
+  });
+};
 onMounted(async () => {
+
+
+  const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
+  if (defaultCanonicalEl) {
+    defaultCanonical.value = defaultCanonicalEl.outerHTML;
+    defaultCanonicalEl.remove();
+  }
+
+  isMounted.value = true;
   const title = deslugify(props.slug);
-  post.value = await getPost(title);
+  try {
+    const postData = await getPost(title);
+    if (isMounted.value && postData) {
+      post.value = postData;
+      await updateCanonicalTag();
+    }
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    showNotify('Failed to load post. Please try again.', 'error');
+  }
+});
+
+// Clean up canonical tag when component is unmounted
+onUnmounted(() => {
+  isMounted.value = false;
+
+  // Remove any existing canonical tag
+  const existingCanonical = document.querySelector('link[rel="canonical"]');
+  if (existingCanonical) {
+    existingCanonical.remove();
+  }
+
+  // Restore the default canonical tag after the comment if it exists
+  if (defaultCanonical.value) {
+    const canonicalComment = Array.from(document.head.childNodes).find(
+      node => node.nodeType === Node.COMMENT_NODE &&
+        node.textContent.trim() === 'Canonical URL'
+    );
+
+    if (canonicalComment) {
+      // Create a temporary div to parse the HTML string
+      const temp = document.createElement('div');
+      temp.innerHTML = defaultCanonical.value;
+      const defaultCanonicalEl = temp.firstChild;
+
+      // Insert after the comment
+      document.head.insertBefore(defaultCanonicalEl, canonicalComment.nextSibling);
+    } else {
+      // Fallback to appending if comment not found
+      document.head.insertAdjacentHTML('beforeend', defaultCanonical.value);
+    }
+  }
+
+  document.title = "Izak's Portfolio";
 });
 
 function deslugify(slug) {
@@ -139,7 +254,7 @@ function scrollToSection(id) {
     });
   }
 }
- 
+
 </script>
 
 <style>
@@ -311,14 +426,14 @@ h3 {
 .toc-bedazzled {
   position: relative;
   overflow: hidden;
-  background: 
+  background:
     /* SVG pattern for subtle sparkle effect */
     url("data:image/svg+xml;utf8,<svg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='20' cy='20' r='1.5' fill='%23a5b4fc' opacity='0.6'/><circle cx='10' cy='30' r='1' fill='%23f472b6' opacity='0.4'/><circle cx='30' cy='10' r='1' fill='%23fbbf24' opacity='0.4'/></svg>"),
-    linear-gradient(135deg, rgba(255,255,255,0.85) 70%, rgba(199,210,254,0.7) 100%);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 70%, rgba(199, 210, 254, 0.7) 100%);
   background-blend-mode: overlay;
   border-radius: 1rem;
   border: 2px solid #a5b4fc;
-  box-shadow: 0 8px 24px 0 rgba(59,130,246,0.09);
+  box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.09);
   padding: 2rem 1.5rem;
   transition: box-shadow 0.2s;
   backdrop-filter: blur(2px);
@@ -334,7 +449,7 @@ h3 {
 }
 
 .toc-bedazzled a {
-  background: rgba(255,255,255,0.4);
+  background: rgba(255, 255, 255, 0.4);
   border-radius: 0.5rem;
   padding: 0.2rem 0.6rem;
   transition: background 0.2s, color 0.2s;

@@ -5,14 +5,14 @@
 
     <section aria-label="Blog posts">
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 list-none p-0">
-        <li v-for="post in posts" :key="slugify(post.title)" class="post-item">
+        <li v-for="post in posts" :key="titleToSlug(post.title)" class="post-item">
           <article class="h-full relative">
-            <router-link :to="'/blog/' + slugify(post.title)" class="block h-full bg-white rounded-lg shadow-2xl overflow-hidden 
+            <router-link :to="'/blog/' + titleToSlug(post.title)" class="block h-full bg-white rounded-lg shadow-2xl overflow-hidden 
               post-preview hover:shadow-lg transition-shadow p-8 
               focus-visible:outline-none focus-visible:ring-2 
               focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
-              :aria-labelledby="`post-title-${slugify(post.title)}`">
-              <h2 :id="`post-title-${slugify(post.title)}`" class="text-2xl font-bold mb-4">
+              :aria-labelledby="`post-title-${titleToSlug(post.title)}`">
+              <h2 :id="`post-title-${titleToSlug(post.title)}`" class="text-2xl font-bold mb-4">
                 {{ post.title }}
               </h2>
 
@@ -26,11 +26,8 @@
           </article>
         </li>
       </ul>
-          <Notification 
-          v-model="showNotification"
-           :message="notificationMessage"
-           :type="notificationType"
-           :icon="notificationIcon" />
+      <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+        :icon="notificationIcon" />
     </section>
 
     <div v-if="loading" class="text-center py-12" aria-live="polite">
@@ -44,21 +41,18 @@
 </template>
 
 <script>
+import { formatDate, titleToSlug } from '../utils/helpers';
 import { getPosts, auth } from '../config/firebase'
 import { ref, onMounted } from 'vue'
 import Notification from '../components/UI/Notification.vue';
-// Helper function to create slugs from titles
-const slugify = (text) => {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/[\W_]+/g, '-') // Replace non-word characters with hyphens
-    .replace(/\-+/g, '-') // Replace multiple hyphens with a single hyphen
-    .replace(/^-+/, '') // Remove leading hyphens
-    .replace(/-+$/, ''); // Remove trailing hyphens
-};
+import { useNotification } from '../utils/helpers'
+const {
+  showNotification,
+  notificationMessage,
+  notificationType,
+  notificationIcon,
+  showNotify
+} = useNotification();
 
 export default {
   components: {
@@ -68,19 +62,6 @@ export default {
     const posts = ref([])
     const loading = ref(true)
     const isAdmin = ref(false)
-    const showNotification = ref(false)
-    const notificationMessage = ref('')
-    const notificationType = ref('info')
-    const notificationIcon = ref('')
-
-
-
-    function showNotify(message, type = 'info', icon = '') {
-      notificationMessage.value = message
-      notificationType.value = type
-      notificationIcon.value = icon
-      showNotification.value = true
-    }
 
     onMounted(async () => {
       try {
@@ -97,14 +78,6 @@ export default {
       }
     })
 
-    // Format date for display
-    const formatDate = (date) => {
-      return new Date(date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    };
 
     // Format date for machine-readable datetime attribute
     const formatDateISO = (date) => {
@@ -117,13 +90,11 @@ export default {
       isAdmin,
       formatDate,
       formatDateISO,
-      slugify,
-      showNotify,
-      showNotification,
+      titleToSlug,
       notificationMessage,
       notificationType,
       notificationIcon,
-
+      showNotification
     };
   }
 };
