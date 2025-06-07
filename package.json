@@ -10,7 +10,10 @@
     "dev": "vite --mode development",
     "build": "vite build --mode production",
     "preview": "vite preview --mode production",
-    "analyze": "vite build --mode analysis"
+    "analyze": "vite build --mode analysis",
+    "test:api:esm": "node test-api.mjs",
+    "test:api:cjs": "node test-api.js",
+    "test:api": "pnpm test:api:esm || pnpm test:api:cjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -30,6 +33,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "@types/node": "^22.15.30",
     "@vitejs/plugin-vue": "^5.2.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.1",

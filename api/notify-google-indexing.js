@@ -1,8 +1,10 @@
+// @ts-check
 import { google } from 'googleapis';
 
 // Configuration for Google Indexing API
 // The Google Indexing API has a limit of 200 calls per day
 
+// This is needed for ES modules
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -116,36 +118,58 @@ export default async function handler(req, res) {
 
   } catch (error) {
     // Enhanced error logging
-    console.error('Google Indexing API Error:', {
+    const errorDetails = {
       name: error.name,
       message: error.message,
       code: error.code,
-      stack: error.stack?.split('\n')[0] || 'No stack trace'
-    });
+      stack: error.stack?.split('\n')[0] || 'No stack trace',
+      // Add more debug info
+      env: {
+        hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
+        hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+        privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length || 0,
+        nodeEnv: process.env.NODE_ENV
+      },
+      timestamp: new Date().toISOString()
+    };
     
-    // Handle specific error codes
+    console.error('Google Indexing API Error:', JSON.stringify(errorDetails, null, 2));
+    
+    // Return detailed error in development, generic in production
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
     if (error.code === 403) {
       return res.status(403).json({
         error: 'Authentication failed',
-        details: 'Check service account permissions and key format'
+        details: isDevelopment ? error.message : 'Check service account permissions',
+        ...(isDevelopment && { debug: errorDetails })
       });
-    } else if (error.code === 400) {
+    } 
+    
+    if (error.code === 400) {
       return res.status(400).json({
         error: 'Bad request',
-        details: error.message || 'Invalid request to Google Indexing API'
-      });
-    } else if (error.code === 429) {
-      return res.status(429).json({
-        error: 'Rate limit exceeded',
-        details: 'Google Indexing API quota exceeded (limit is 200 calls per day)'
+        details: isDevelopment ? error.message : 'Invalid request',
+        ...(isDevelopment && { debug: errorDetails })
       });
     }
     
-    // Generic error response with more details
+    if (error.code === 429) {
+      return res.status(429).json({
+        error: 'Rate limit exceeded',
+        details: 'Google Indexing API quota exceeded',
+        ...(isDevelopment && { debug: errorDetails })
+      });
+    }
+    
+    // For all other errors
     return res.status(500).json({
       error: 'Internal Server Error',
-      details: error.message || 'Unknown error occurred',
-      errorType: error.name || 'UnknownError'
+      details: isDevelopment ? error.message : 'An error occurred',
+      ...(isDevelopment && { 
+        debug: errorDetails,
+        stack: error.stack 
+      })
     });
   }
 }
