@@ -13,7 +13,9 @@
     "analyze": "vite build --mode analysis",
     "test:api:esm": "node test-api.mjs",
     "test:api:cjs": "node test-api.js",
-    "test:api": "pnpm test:api:esm || pnpm test:api:cjs"
+    "test:api": "pnpm test:api:esm || pnpm test:api:cjs",
+    "test:env": "node test-env.js",
+    "test:env:dotenv": "node -r dotenv/config test-env.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
