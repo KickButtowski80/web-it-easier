@@ -28,11 +28,8 @@ dist-ssr
 *.identifier
 *Zone.Identifier
 
-.env
-
+.env*
 # Build reports
 sonda-report.html
 public/images/backup/
 
-
-it-group-461723-37077b043425.json
