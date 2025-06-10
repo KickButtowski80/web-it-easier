@@ -1,19 +1,11 @@
 <template>
-  <div class="doorgroup" @click="scrollToTop" aria-label="Go to top of page">
+  <div class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
     <div class="doorway" ref="doorWay">
       <div id="openDoor" class="door" ref="door">
-        <div
-          ref="openDoor"
-          aria-label="Open Door"
-          class="flex justify-center text-center mt-2 w-full h-full text-xl"
-        >
+        <div ref="openDoor" aria-label="Open Door" class="flex justify-center text-center mt-2 w-full h-full text-xl">
           <span class="text-2xl" role="img" aria-label="Up Arrow">⬆️</span>
-          <span
-            class="flex justify-end items-center mt-3 text-sm"
-            aria-label="door knob"
-          >
-            🟣</span
-          >
+          <span class="flex justify-end items-center mt-3 text-sm" aria-label="door knob">
+            🟣</span>
         </div>
       </div>
     </div>
@@ -24,13 +16,14 @@ import { ref, onMounted } from "vue";
 
 export default {
   setup() {
+    const doorGroup = ref(null);
     const door = ref(null);
     const doorWay = ref(null);
     const openDoor = ref(null);
     const animationFrameId = ref(null);
 
     const handleScroll = () => {
-  
+
       if (window.scrollY > 30) {
         door.value.classList.remove("hidden");
         door.value.classList.add("show");
@@ -48,13 +41,12 @@ export default {
         doorWay.value.classList.add("hidden");
       }
     };
- 
+
     const scrollToTop = () => {
-    
       door.value.style.transform = "rotateY(55deg)";
-      history.replaceState({}, '', location.pathname);    
+      history.replaceState({}, '', location.pathname);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    
+
     };
     const handleTouchStart = () => {
       door.value.style.transform = "rotateY(55deg)";
@@ -77,11 +69,26 @@ export default {
       door.value.classList.add("hidden");
       doorWay.value.classList.add("hidden");
       window.addEventListener("scroll", handleScroll);
-      door.value.addEventListener("touchstart", handleTouchStart, { passive: true, capture: true });
-      door.value.addEventListener("touchend", handleTouchEnd, { passive: true, capture: true });
+
+      // Parent element listener (capture phase)
+      doorGroup.value.addEventListener("touchstart", handleTouchStart, {
+        passive: true,
+        capture: true
+      });
+      doorGroup.value.addEventListener("touchend", handleTouchEnd, {
+        passive: true,
+        capture: true
+      });
+
+      // Individual element listeners (bubble phase)
+      door.value.addEventListener("touchstart", handleTouchStart, { passive: true });
+      door.value.addEventListener("touchend", handleTouchEnd, { passive: true });
+      doorWay.value.addEventListener("touchstart", handleTouchStart, { passive: true });
+      doorWay.value.addEventListener("touchend", handleTouchEnd, { passive: true });
     });
 
     return {
+      doorGroup,
       openDoor,
       door,
       doorWay,
@@ -95,6 +102,7 @@ export default {
 .hidden {
   display: none;
 }
+
 .show {
   display: block;
 }
@@ -104,8 +112,8 @@ export default {
   display: inline-flex;
   position: fixed;
   z-index: 5;
-  bottom: 40px;
-  right: 5px;
+  bottom: 3.5rem;
+  right: 1rem;
 }
 
 .doorway {
@@ -113,7 +121,8 @@ export default {
   height: 110px;
   width: 66px;
   position: relative;
-  perspective: 200px; /* Apply perspective to the parent */
+  perspective: 200px;
+  /* Apply perspective to the parent */
 }
 
 .door {

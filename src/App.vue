@@ -38,25 +38,25 @@
       class="tap-area top-left" 
       @click="handleTap(1)" 
       aria-label="Top left tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
     <button 
       class="tap-area top-right" 
       @click="handleTap(2)" 
       aria-label="Top right tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
     <button 
       class="tap-area bottom-left" 
       @click="handleTap(3)" 
       aria-label="Bottom left tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
     <button 
       class="tap-area bottom-right" 
       @click="handleTap(4)" 
       aria-label="Bottom right tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
   </div>
 </template>
