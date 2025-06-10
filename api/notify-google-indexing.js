@@ -7,12 +7,43 @@ import { google } from 'googleapis';
 // This is needed for ES modules
 export default async function handler(req, res) {
   // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  /**
+   * CORS Configuration
+   * - Restricts access to approved origins only
+   * - Uses Vary: Origin to prevent cache poisoning
+   * - Implements proper preflight handling
+   */
+  const allowedOrigins = [
+    'https://izak-portfolio.vercel.app',  // Production
+    'http://localhost:3000'               // Development
+  ];
 
-  // Handle preflight requests
+  // Validate request origin
+  const origin = req.headers.origin;
+  const isAllowed = allowedOrigins.includes(origin);
+
+  if (isAllowed) {
+    /**
+     * Set dynamic CORS headers for valid origins
+     * - Access-Control-Allow-Origin: Only the requesting origin
+     * - Vary: Origin - Ensures separate cache entries per origin
+     */
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  } else {
+    return res.status(403).json({ error: 'Origin not allowed' });
+  }
+
+  /**
+   * Preflight Requests:
+   * OPTIONS calls browsers make before actual requests to check CORS permissions
+   * - Caches OPTIONS responses for 24 hours (86400 seconds)
+   * - Specifies allowed methods and headers
+   */
   if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Max-Age', '86400');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     return res.status(200).end();
   }
 

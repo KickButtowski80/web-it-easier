@@ -71,13 +71,17 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Not Allowed' });
   }
 
-
+ /**
+   * Preflight Requests:
+   * OPTIONS calls browsers make before actual requests to check CORS permissions
+   * - Caches OPTIONS responses for 24 hours (86400 seconds)
+   * - Specifies allowed methods and headers
+   */
   if (req.method === 'OPTIONS') {
     // Set CORS headers
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Max-Age', '86400'); // Cache for 24 hours
-    // Handle preflight requests
     return res.status(200).end();
   }
 
