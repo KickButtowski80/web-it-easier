@@ -465,7 +465,11 @@ textarea {
   display: flex;
   gap: 1rem;
   justify-content: center;
+  margin-bottom: clamp(6rem, 15vh, 8rem); /* Increased bottom margin with clamp */
+  padding: 1rem;
 }
+
+
 
 .submit-btn {
   padding: clamp(0.8rem, 3vw, 1rem);
@@ -476,8 +480,13 @@ textarea {
   font-size: clamp(1rem, 2.5vw, 1.125rem);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: 
+    background-color 0.15s ease-in-out,
+    transform 0.1s ease-out,
+    box-shadow 0.15s ease-in-out;
   margin-top: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
 }
 
 @media (max-width: 768px) {
@@ -488,9 +497,14 @@ textarea {
 }
 
 .submit-btn:hover:not(:disabled) {
-  background-color: #6b4fa8;
+  background-color: #5b21b6;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .submit-btn:focus-visible {
