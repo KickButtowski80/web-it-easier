@@ -2,7 +2,7 @@
   <div class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
     <div class="doorway" ref="doorWay">
       <div id="openDoor" class="door" ref="door">
-        <div ref="openDoor" aria-label="Open Door" class="flex justify-center text-center mt-2 w-full h-full text-xl">
+        <div ref="openDoor" aria-label="Open Door" class="mx-auto text-center mt-2 w-full h-full text-xl">
           <span class="text-2xl" role="img" aria-label="Up Arrow">⬆️</span>
           <span class="flex justify-end items-center mt-3 text-sm" aria-label="door knob">
             🟣</span>
@@ -48,11 +48,12 @@ export default {
       window.scrollTo({ top: 0, behavior: "smooth" });
 
     };
-    const handleTouchStart = () => {
+    const handleTouchStart = (event) => {
+      event.preventDefault();
       door.value.style.transform = "rotateY(55deg)";
     };
 
-    const handleTouchEnd = () => {
+    const handleTouchEnd = (event) => {
       // Cancel any previous animation frame (if needed)
       if (animationFrameId.value) {
         cancelAnimationFrame(animationFrameId.value);
@@ -63,6 +64,8 @@ export default {
         door.value.style.transform = "rotateY(0deg)";
         scrollToTop();
       });
+
+      event.preventDefault();
     };
     onMounted(() => {
       openDoor.value.classList.add("hidden");
@@ -71,20 +74,16 @@ export default {
       window.addEventListener("scroll", handleScroll);
 
       // Parent element listener (capture phase)
+      // Only add touch listeners to the doorGroup (outermost element)
+      // This will capture touches anywhere within the door
       doorGroup.value.addEventListener("touchstart", handleTouchStart, {
-        passive: true,
-        capture: true
+        passive: false
       });
       doorGroup.value.addEventListener("touchend", handleTouchEnd, {
-        passive: true,
-        capture: true
+        passive: false
       });
 
-      // Individual element listeners (bubble phase)
-      door.value.addEventListener("touchstart", handleTouchStart, { passive: true });
-      door.value.addEventListener("touchend", handleTouchEnd, { passive: true });
-      doorWay.value.addEventListener("touchstart", handleTouchStart, { passive: true });
-      doorWay.value.addEventListener("touchend", handleTouchEnd, { passive: true });
+
     });
 
     return {
@@ -111,9 +110,11 @@ export default {
   cursor: pointer;
   display: inline-flex;
   position: fixed;
-  z-index: 5;
+  z-index: 2; 
+  isolation: isolate; /* Create new stacking context */
   bottom: 3.5rem;
   right: 1rem;
+  touch-action: manipulation;
 }
 
 .doorway {
@@ -129,8 +130,10 @@ export default {
   position: absolute;
   top: 0px;
   left: 0px;
-  height: 100px;
-  width: 56px;
+  width: 100%;
+  height: 100%;
+  /* height: 100px;
+  width: 56px; */
   background: rgb(146, 47, 153);
   font-size: 24px;
   border-left: none;
@@ -140,7 +143,12 @@ export default {
   user-select: none;
 }
 
-.door:focus {
+.door * {
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.door:focus-visible {
   transform: rotateY(55deg);
 }
 </style>
