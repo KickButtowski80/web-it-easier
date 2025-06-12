@@ -108,8 +108,7 @@
         >
           {{ buttonText }}
         </button>
-        <button 
-          v-if="isEditMode"
+        <button      
           type="button"
           class="cancel-btn"
           @click="cancelEdit"
@@ -517,7 +516,7 @@ textarea {
   border: none;
   border-radius: 6px;
   font-weight: 600;
-  transition: all 0.2s;
+  transition: background-color 0.2s ease;
 }
 
 .cancel-btn:hover {
