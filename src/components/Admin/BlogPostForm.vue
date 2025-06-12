@@ -369,24 +369,14 @@ const handleSubmit = async () => {
 
 <style scoped>
 .admin-form {
-  position: relative;
-  top: 10rem;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 12rem auto 0rem;
   padding: 2rem;
-  background: #fff;
+  background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 768px) {
-  .admin-form {
-    top: 9rem; /* Reduced top margin to match compact header */
-    padding: 1rem; /* Standard padding */
-    margin: 0 0.75rem; /* Slightly reduced side margins */
-    border-radius: 8px;
-  }
-}
 
 h1 {
   font-size: clamp(1.5rem, 5vw, 1.8rem);
@@ -465,7 +455,6 @@ textarea {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-bottom: clamp(6rem, 15vh, 8rem); /* Increased bottom margin with clamp */
   padding: 1rem;
 }
 
@@ -641,16 +630,6 @@ textarea {
   background: none;
 }
 
-@media (max-width: 640px) {
-  .admin-form {
-    margin: 1rem;
-    padding: 1rem;
-  }
-
-  h1 {
-    font-size: 1.5rem;
-  }
-}
 
 @media (max-width: 768px) {
   .markdown-editor {
