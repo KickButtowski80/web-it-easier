@@ -15,7 +15,7 @@
     :duration="3000"
   />
   <main
-    class="md:overflow-visible mt-[4rem]  pb-[50px]
+    class="md:overflow-visible mt-[4rem] mb-[13rem] pb-[50px]
      md:pb-0"
     id="main-content"
     tabindex="-1"

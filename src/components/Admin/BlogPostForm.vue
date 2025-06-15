@@ -1,74 +1,43 @@
 <template>
   <section class="admin-form relative">
     <!-- Loading Overlay Component with custom screen reader text -->
-    <LoadingOverlay 
-      :isLoading="isLoading" 
-      :fullPage="false" 
-      :message="'Loading post data...'" 
+    <LoadingOverlay :isLoading="isLoading" :fullPage="false" :message="'Loading post data...'"
       :subMessage="'Please wait while we retrieve your content'">
       <template #sr-text>
-        Post editor is currently loading data from the database. 
+        Post editor is currently loading data from the database.
         This may take a few seconds depending on your connection speed.
       </template>
     </LoadingOverlay>
-    
-    <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>    
-    <form 
-      @submit.prevent="handleSubmit" 
-      aria-labelledby="form-heading"
-      :class="{ 'opacity-50': isLoading }"
-      :aria-busy="isLoading"
-    >
+
+    <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>
+    <form @submit.prevent="handleSubmit" aria-labelledby="form-heading" :class="{ 'opacity-50': isLoading }"
+      :aria-busy="isLoading">
       <div class="form-group">
         <label for="title">Title</label>
-        <input 
-          id="title" 
-          v-model="formData.title" 
-          type="text" 
-          placeholder="Enter post title" 
-          required
-          :aria-invalid="formErrors.title ? 'true' : 'false'"
-          autocomplete="off"
-        >
+        <input id="title" v-model="formData.title" type="text" placeholder="Enter post title" required
+          :aria-invalid="formErrors.title ? 'true' : 'false'" autocomplete="off">
         <div v-if="formErrors.title" class="error-message" role="alert">{{ formErrors.title }}</div>
       </div>
 
       <div class="form-group">
         <label for="date">Date</label>
-        <input 
-          id="date" 
-          v-model="formData.date" 
-          type="date" 
-          required
-          :aria-invalid="formErrors.date ? 'true' : 'false'"
-        >
+        <input id="date" v-model="formData.date" type="date" required
+          :aria-invalid="formErrors.date ? 'true' : 'false'">
         <div v-if="formErrors.date" class="error-message" role="alert">{{ formErrors.date }}</div>
       </div>
 
       <div class="form-group">
         <label for="readingTime">Reading Time (minutes)</label>
-        <input 
-          id="readingTime" 
-          v-model.number="formData.readingTime" 
-          type="number" 
-          min="1" 
-          required
-          :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
-          aria-describedby="readingTimeHint"
-        >
+        <input id="readingTime" v-model.number="formData.readingTime" type="number" min="1" required
+          :aria-invalid="formErrors.readingTime ? 'true' : 'false'" aria-describedby="readingTimeHint">
         <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
         <div v-if="formErrors.readingTime" class="error-message" role="alert">{{ formErrors.readingTime }}</div>
       </div>
 
       <div class="form-group">
         <label for="featureImage">Feature Image URL</label>
-        <input 
-          id="featureImage" 
-          v-model="formData.featureImage" 
-          type="url" 
-          placeholder="Enter image URL"
-          :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
-        >
+        <input id="featureImage" v-model="formData.featureImage" type="url" placeholder="Enter image URL"
+          :aria-invalid="formErrors.featureImage ? 'true' : 'false'">
         <div v-if="formErrors.featureImage" class="error-message" role="alert">{{ formErrors.featureImage }}</div>
       </div>
 
@@ -76,55 +45,31 @@
         <label for="content">Content (Markdown)</label>
         <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
           <span id="markdown-editor-label" class="sr-only">Markdown editor with preview</span>
-          <textarea 
-            id="content" 
-            v-model="formData.content" 
-            placeholder="Write your post content in markdown..."
-            required
-            :aria-invalid="formErrors.content ? 'true' : 'false'"
-            aria-describedby="markdownHint"
-            rows="10"
-          ></textarea>
+          <textarea id="content" v-model="formData.content" placeholder="Write your post content in markdown..."
+            required :aria-invalid="formErrors.content ? 'true' : 'false'" aria-describedby="markdownHint"
+            rows="10"></textarea>
           <div id="markdownHint" class="hint">Use markdown syntax for formatting. Preview appears on the right.</div>
           <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
-          
+
           <section class="preview-container" aria-live="polite">
-          <h2 id="preview-heading">Preview</h2>
-          <article 
-            v-html="previewContent" 
-            class="preview-content"
-            tabindex="0"
-          ></article>
-        </section>
+            <h2 id="preview-heading">Preview</h2>
+            <article v-html="previewContent" class="preview-content" tabindex="0"></article>
+          </section>
         </div>
       </div>
 
       <div class="button-group">
-        <button 
-          type="submit"
-          class="submit-btn"
-          :disabled="isSubmitting"
-          :aria-busy="isSubmitting"
-        >
+        <button type="submit" class="submit-btn" :disabled="isSubmitting" :aria-busy="isSubmitting">
           {{ buttonText }}
         </button>
-        <button      
-          type="button"
-          class="cancel-btn"
-          @click="cancelEdit"
-          :disabled="isSubmitting"
-        >
-          Cancel
+        <button type="button" class="cancel-btn" @click="cancelEdit" :disabled="isSubmitting">
+          Cancel Post
         </button>
       </div>
     </form>
-    
-    <Notification 
-      v-model="showNotification" 
-      :message="notificationMessage" 
-      :type="notificationType" 
-      :icon="notificationIcon"
-    />
+
+    <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+      :icon="notificationIcon" />
   </section>
 </template>
 
@@ -138,12 +83,12 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css'
 import Notification from '@/components/UI/Notification.vue'
 import { useNotification } from '@/utils/helpers'
-const { 
-  showNotification, 
-  notificationMessage, 
-  notificationType, 
-  notificationIcon, 
-  showNotify 
+const {
+  showNotification,
+  notificationMessage,
+  notificationType,
+  notificationIcon,
+  showNotify
 } = useNotification();
 const props = defineProps({
   id: { type: String, default: '' }
@@ -178,7 +123,7 @@ const isLoading = ref(false)
 marked.setOptions({
   gfm: true,
   breaks: true,
-  highlight: function(code, lang) {
+  highlight: function (code, lang) {
     if (lang && hljs.getLanguage(lang)) {
       return hljs.highlight(lang, code).value
     }
@@ -203,21 +148,21 @@ const loadPost = async () => {
   // Get ID from either props or route params
   const editId = props.id || route.params.id;
   if (!editId) return;
-  
+
   try {
     isLoading.value = true;
     const post = await getPostById(editId);
-    
+
     if (post) {
       postId.value = post.id;
       isEditMode.value = true;
-      
+
       // Format the date from Firestore timestamp to YYYY-MM-DD for the input field
       formData.value = {
         ...post,
-        date: post.date instanceof Date ? post.date.toISOString().split('T')[0] : 
-              post.date && post.date.toDate ? post.date.toDate().toISOString().split('T')[0] : 
-              new Date().toISOString().split('T')[0]
+        date: post.date instanceof Date ? post.date.toISOString().split('T')[0] :
+          post.date && post.date.toDate ? post.date.toDate().toISOString().split('T')[0] :
+            new Date().toISOString().split('T')[0]
       };
     } else {
       showNotify('Post not found', 'error');
@@ -238,12 +183,12 @@ onMounted(async () => {
     router.push('/login');
     return;
   }
-  
+
   // If we have a post ID (either from props or route params), load the post data
   if (props.id || route.params.id) {
     await loadPost();
   }
-  
+
   // Set initial focus to the title field
   nextTick(() => {
     document.getElementById('title')?.focus();
@@ -256,42 +201,42 @@ onMounted(async () => {
 // Validate form fields
 const validateForm = () => {
   let isValid = true
-  
+
   // Reset all errors
   Object.keys(formErrors.value).forEach(key => {
     formErrors.value[key] = ''
   })
-  
+
   // Title validation
   if (!formData.value.title.trim()) {
     formErrors.value.title = 'Please enter a title'
     isValid = false
   }
-  
+
   // Date validation
   if (!formData.value.date) {
     formErrors.value.date = 'Please select a date'
     isValid = false
   }
-  
+
   // Reading time validation
   if (!formData.value.readingTime || formData.value.readingTime < 1) {
     formErrors.value.readingTime = 'Reading time must be at least 1 minute'
     isValid = false
   }
-  
+
   // Feature image URL validation (if provided)
   if (formData.value.featureImage && !isValidUrl(formData.value.featureImage)) {
     formErrors.value.featureImage = 'Please enter a valid URL'
     isValid = false
   }
-  
+
   // Content validation
   if (!formData.value.content.trim()) {
     formErrors.value.content = 'Please enter content for your post'
     isValid = false
   }
-  
+
   return isValid
 }
 
@@ -313,7 +258,7 @@ const cancelEdit = () => {
 const handleSubmit = async () => {
   if (isSubmitting.value) return; // Prevent double submit
   isSubmitting.value = true;
-  
+
   // Validate form
   if (!validateForm()) {
     // Focus the first field with an error
@@ -326,13 +271,13 @@ const handleSubmit = async () => {
     isSubmitting.value = false;
     return;
   }
-  
+
   try {
     const postData = {
       ...formData.value,
       date: new Date(formData.value.date)
     };
-    
+
     if (isEditMode.value && postId.value) {
       // Update existing post
       await updatePost(postId.value, postData);
@@ -343,10 +288,10 @@ const handleSubmit = async () => {
       await addPost(postData);
       showNotify('Post published successfully!', 'success');
     }
-    
+
     await new Promise(resolve => setTimeout(resolve, 1000));
     await router.push('/blog');
-    
+
     // Reset form after successful submission if it was a new post
     if (!isEditMode.value) {
       formData.value = {
@@ -369,7 +314,7 @@ const handleSubmit = async () => {
 <style scoped>
 .admin-form {
   max-width: 800px;
-  margin: 12rem auto 0rem;
+  margin: 12rem auto -7rem;
   padding: 2rem;
   background: #ffffff;
   border-radius: 12px;
@@ -379,7 +324,8 @@ const handleSubmit = async () => {
 
 h1 {
   font-size: clamp(1.5rem, 5vw, 1.8rem);
-  color: #4c1d95; /* Match the purple brand color */
+  color: #4c1d95;
+  /* Match the purple brand color */
   margin-bottom: clamp(1rem, 4vw, 1.5rem);
   text-align: center;
   font-weight: 700;
@@ -452,29 +398,46 @@ textarea {
 
 .button-group {
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
   justify-content: center;
-  padding: 1rem;
+  gap: 1rem;
+  /* padding: 0 1rem;
+  margin-bottom: 4.5rem; Balanced spacing to prevent GoBackTop overlap */
+
+}
+
+@media (min-width: 375px) {
+  .button-group {
+    flex-direction: row;
+    place-items: center;
+    padding: 1.5rem 0;
+  }
 }
 
 
 
 .submit-btn {
-  padding: clamp(0.8rem, 3vw, 1rem);
-  background-color: #4c1d95; /* Match the brand purple */
+  padding: 0.8rem 1.5rem;
+
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4c1d95;
+  /* Match the brand purple */
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: 
+  transition:
     background-color 0.15s ease-in-out,
     transform 0.1s ease-out,
     box-shadow 0.15s ease-in-out;
   margin-top: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  min-width: 120px;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
@@ -510,13 +473,25 @@ textarea {
 }
 
 .cancel-btn {
-  padding: clamp(0.8rem, 3vw, 1rem);
+  padding: 0.8rem 1.5rem;
+
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-color: #e2e8f0;
   color: #4a5568;
   border: none;
   border-radius: 6px;
+  font-size: 1rem;
   font-weight: 600;
-  transition: background-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease-out;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  cursor: pointer;
 }
 
 .cancel-btn:hover {
