@@ -132,8 +132,6 @@ export default {
   left: 0px;
   width: 100%;
   height: 100%;
-  /* height: 100px;
-  width: 56px; */
   background: rgb(146, 47, 153);
   font-size: 24px;
   border-left: none;
