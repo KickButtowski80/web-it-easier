@@ -45,16 +45,103 @@
         <label for="content">Content (Markdown)</label>
         <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
           <span id="markdown-editor-label" class="sr-only">Markdown editor with preview</span>
-          <textarea id="content" v-model="formData.content" placeholder="Write your post content in markdown..."
-            required :aria-invalid="formErrors.content ? 'true' : 'false'" aria-describedby="markdownHint"
-            rows="10"></textarea>
-          <div id="markdownHint" class="hint">Use markdown syntax for formatting. Preview appears on the right.</div>
-          <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
+          
+          <!-- Tab Navigation -->
+          <div class="markdown-tabs">
+            <button 
+              type="button"
+              @click="activeTab = 'edit'" 
+              :class="['tab-button', { active: activeTab === 'edit' }]"
+              aria-controls="editor-panel"
+              :aria-selected="activeTab === 'edit'"
+            >
+              <span class="icon">✏️</span> Edit
+            </button>
+            <button 
+              type="button"
+              @click="activeTab = 'preview'" 
+              :class="['tab-button', { active: activeTab === 'preview' }]"
+              aria-controls="preview-panel"
+              :aria-selected="activeTab === 'preview'"
+            >
+              <span class="icon">👁️</span> Preview
+            </button>
+          </div>
+          
+          <!-- Editor Panel -->
+          <div 
+            id="editor-panel"
+            v-show="activeTab === 'edit'"
+            role="tabpanel"
+            aria-labelledby="edit-tab"
+          >
+            <!-- Markdown Toolbar -->
+            <div class="markdown-toolbar">
+              <button type="button" class="toolbar-btn" title="Heading 1" @click="insertMarkdown('# ', '')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"></path><path d="M4 18h16"></path><path d="M4 6h16"></path></svg>
+                <span>H1</span>
+              </button>
+              <button type="button" class="toolbar-btn" title="Heading 2" @click="insertMarkdown('## ', '')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"></path><path d="M4 18h16"></path><path d="M4 6h16"></path></svg>
+                <span>H2</span>
+              </button>
+              <div class="toolbar-divider"></div>
+              <button type="button" class="toolbar-btn" title="Bold" @click="insertMarkdown('**', '**')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path><path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path></svg>
+              </button>
+              <button type="button" class="toolbar-btn" title="Italic" @click="insertMarkdown('*', '*')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="4" x2="10" y2="4"></line><line x1="14" y1="20" x2="5" y2="20"></line><line x1="15" y1="4" x2="9" y2="20"></line></svg>
+              </button>
+              <button type="button" class="toolbar-btn" title="Code" @click="insertMarkdown('`', '`')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+              </button>
+              <div class="toolbar-divider"></div>
+              <button type="button" class="toolbar-btn" title="Bulleted List" @click="insertMarkdown('- ', '')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+              </button>
+              <button type="button" class="toolbar-btn" title="Numbered List" @click="insertMarkdown('1. ', '')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="10" y1="6" x2="21" y2="6"></line><line x1="10" y1="12" x2="21" y2="12"></line><line x1="10" y1="18" x2="21" y2="18"></line><path d="M4 6h1v4"></path><path d="M4 10h2"></path><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path></svg>
+              </button>
+              <div class="toolbar-divider"></div>
+              <button type="button" class="toolbar-btn" title="Link" @click="insertMarkdown('[', '](url)')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              </button>
+              <button type="button" class="toolbar-btn" title="Image" @click="insertMarkdown('![', '](image-url)')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              </button>
+              <button type="button" class="toolbar-btn" title="Blockquote" @click="insertMarkdown('> ', '')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              </button>
+              <button type="button" class="toolbar-btn" title="Code Block" @click="insertMarkdown('```\n', '\n```')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                <span>{ }</span>
+              </button>
+            </div>
+            
+            <textarea 
+              id="content" 
+              v-model="formData.content" 
+              placeholder="Write your post content in markdown..." 
+              required 
+              :aria-invalid="formErrors.content ? 'true' : 'false'"
+              rows="15"
+            ></textarea>
+            <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
+          </div>
 
-          <section class="preview-container" aria-live="polite">
-            <h2 id="preview-heading">Preview</h2>
+          <!-- Preview Panel -->
+          <div 
+            id="preview-panel"
+            v-show="activeTab === 'preview'"
+            role="tabpanel"
+            aria-labelledby="preview-tab"
+            aria-live="polite"
+          >
+            <div class="preview-header">
+              <h2 id="preview-heading">Preview</h2>
+            </div>
             <article v-html="previewContent" class="preview-content" tabindex="0"></article>
-          </section>
+          </div>
         </div>
       </div>
 
@@ -98,6 +185,7 @@ const router = useRouter();  // For navigation :performing navigation actions
 const route = useRoute();    // For reading current route info
 const postId = ref(null);
 const isEditMode = ref(false);
+const activeTab = ref('edit'); // For tab switching between edit and preview
 
 const formData = ref({
   title: '',
@@ -255,6 +343,52 @@ const cancelEdit = () => {
   router.push('/admin/manage-posts');
 };
 
+// Function to handle markdown toolbar button clicks
+const insertMarkdown = (prefix, suffix) => {
+  // Get the textarea element
+  const textarea = document.getElementById('content');
+  if (!textarea) return;
+  
+  // Get current selection positions
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const selectedText = formData.value.content.substring(start, end);
+  const beforeText = formData.value.content.substring(0, start);
+  const afterText = formData.value.content.substring(end);
+  
+  // Check if we're at the start of a line for block elements
+  const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
+  const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
+  
+  // Insert markdown with or without newline
+  const insertion = needsNewLine ? '\n' + prefix + selectedText + suffix : prefix + selectedText + suffix;
+  formData.value.content = beforeText + insertion + afterText;
+  
+  // Restore focus and update selection on next tick
+  nextTick(() => {
+    textarea.focus();
+    const newCursorPos = start + prefix.length + (needsNewLine ? 1 : 0);
+    
+    // If there was selected text, maintain the selection
+    if (selectedText.length > 0) {
+      textarea.setSelectionRange(newCursorPos, newCursorPos + selectedText.length);
+    } else {
+      // For link and image, position cursor between brackets
+      if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      } 
+      // For code block, position cursor inside the block
+      else if (prefix === '```\n' && suffix === '\n```') {
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }
+      // For other elements, position cursor after the inserted prefix
+      else {
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }
+    }
+  });
+};
+
 const handleSubmit = async () => {
   if (isSubmitting.value) return; // Prevent double submit
   isSubmitting.value = true;
@@ -315,12 +449,12 @@ const handleSubmit = async () => {
 .admin-form {
   max-width: 800px;
   margin: 12rem auto -7rem;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 12px;
+  background-color: white;
+  border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  position: relative;
 }
-
 
 h1 {
   font-size: clamp(1.5rem, 5vw, 1.8rem);
@@ -500,7 +634,8 @@ textarea {
 }
 
 .markdown-editor {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   background: #f8fafc;
   border-radius: 8px;
@@ -508,24 +643,137 @@ textarea {
   margin-bottom: 1rem;
 }
 
+/* Tab Navigation */
+.markdown-tabs {
+  display: flex;
+  border-bottom: 2px solid #e2e8f0;
+  margin-bottom: 1rem;
+}
+
+.tab-button {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  font-weight: 600;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab-button:hover {
+  color: #4c1d95;
+  background-color: rgba(76, 29, 149, 0.05);
+}
+
+.tab-button.active {
+  color: #4c1d95;
+  border-bottom-color: #4c1d95;
+}
+
+.tab-button .icon {
+  font-size: 1.1rem;
+}
+
+/* Markdown Toolbar */
+.markdown-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: -1px;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  color: #4a5568;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.toolbar-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e0;
+  color: #4c1d95;
+}
+
+.toolbar-btn:active {
+  background: #edf2f7;
+  transform: translateY(1px);
+}
+
+.toolbar-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: #e2e8f0;
+  margin: 0 0.25rem;
+}
+
+/* Editor and Preview Panels */
+#editor-panel, #preview-panel {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: white;
+}
+
+#preview-panel {
+  padding: 1rem;
+}
+
+.preview-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+#content {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 0 0 6px 6px;
+  padding: 1rem;
+  min-height: 300px;
+  font-family: 'Fira Code', monospace;
+  line-height: 1.6;
+  resize: vertical;
+}
+
 @media (min-width: 768px) {
   .markdown-editor {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "editor preview"
-      "hint hint"
-      "error error";
+    display: flex;
+    flex-direction: column;
   }
 }
 
 @media (max-width: 767px) {
   .markdown-editor {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "editor"
-      "hint"
-      "error"
-      "preview";
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .markdown-toolbar {
+    overflow-x: auto;
+    padding-bottom: 0.75rem;
   }
 }
 
