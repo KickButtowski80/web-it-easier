@@ -75,8 +75,7 @@ const {
 const isMounted = ref(true);
 const post = ref(null);
 const defaultCanonical = ref(null);
-const route = useRoute();
-
+ 
 // Set up canonical URL management
 const canonicalUrl = ref('');
 

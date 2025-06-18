@@ -62,104 +62,11 @@
           <!-- Editor Panel -->
           <div id="editor-panel" v-show="activeTab === 'edit'" role="tabpanel" aria-labelledby="edit-tab">
             <!-- Markdown Toolbar -->
-            <div class="markdown-toolbar">
-              <button type="button" class="toolbar-btn" title="Heading 1" @click="insertMarkdown('# ', '')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 12h16"></path>
-                  <path d="M4 18h16"></path>
-                  <path d="M4 6h16"></path>
-                </svg>
-                <span>H1</span>
-              </button>
-              <button type="button" class="toolbar-btn" title="Heading 2" @click="insertMarkdown('## ', '')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 12h16"></path>
-                  <path d="M4 18h16"></path>
-                  <path d="M4 6h16"></path>
-                </svg>
-                <span>H2</span>
-              </button>
-              <div class="toolbar-divider"></div>
-              <button type="button" class="toolbar-btn" title="Bold" @click="insertMarkdown('**', '**')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
-                  <path d="M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z"></path>
-                </svg>
-              </button>
-              <button type="button" class="toolbar-btn" title="Italic" @click="insertMarkdown('*', '*')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="19" y1="4" x2="10" y2="4"></line>
-                  <line x1="14" y1="20" x2="5" y2="20"></line>
-                  <line x1="15" y1="4" x2="9" y2="20"></line>
-                </svg>
-              </button>
-              <button type="button" class="toolbar-btn" title="Code" @click="insertMarkdown('`', '`')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="16 18 22 12 16 6"></polyline>
-                  <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-              </button>
-              <div class="toolbar-divider"></div>
-              <button type="button" class="toolbar-btn" title="Bulleted List" @click="insertMarkdown('- ', '')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="8" y1="6" x2="21" y2="6"></line>
-                  <line x1="8" y1="12" x2="21" y2="12"></line>
-                  <line x1="8" y1="18" x2="21" y2="18"></line>
-                  <line x1="3" y1="6" x2="3.01" y2="6"></line>
-                  <line x1="3" y1="12" x2="3.01" y2="12"></line>
-                  <line x1="3" y1="18" x2="3.01" y2="18"></line>
-                </svg>
-              </button>
-              <button type="button" class="toolbar-btn" title="Numbered List" @click="insertMarkdown('1. ', '')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="10" y1="6" x2="21" y2="6"></line>
-                  <line x1="10" y1="12" x2="21" y2="12"></line>
-                  <line x1="10" y1="18" x2="21" y2="18"></line>
-                  <path d="M4 6h1v4"></path>
-                  <path d="M4 10h2"></path>
-                  <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"></path>
-                </svg>
-              </button>
-              <div class="toolbar-divider"></div>
-              <button type="button" class="toolbar-btn" title="Link" @click="insertMarkdown('[', '](url)')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                </svg>
-              </button>
-              <button type="button" class="toolbar-btn" title="Image" @click="insertMarkdown('![', '](image-url)')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-              </button>
-              <button type="button" class="toolbar-btn" title="Blockquote" @click="insertMarkdown('> ', '')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-              </button>
-              <button type="button" class="toolbar-btn" title="Code Block" @click="insertMarkdown('```\n', '\n```')">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="16 18 22 12 16 6"></polyline>
-                  <polyline points="8 6 2 12 8 18"></polyline>
-                </svg>
-                <span>{ }</span>
-              </button>
-            </div>
 
-            <textarea id="content" v-model="formData.content" placeholder="Write your post content in markdown..."
+            <MarkdownToolbar @format="handleFormat" />
+         
+
+            <textarea ref="contentTextarea" id="content" v-model="formData.content" placeholder="Write your post content in markdown..."
               required :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15"></textarea>
             <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
           </div>
@@ -200,6 +107,7 @@ import LoadingOverlay from '@/components/UI/LoadingOverlay.vue'
 import { renderMarkdown } from '@/utils/markdown';
 import Notification from '@/components/UI/Notification.vue'
 import { useNotification } from '@/utils/helpers'
+import MarkdownToolbar from '../UI/MarkdownToolbar.vue';
 
 const {
   showNotification,
@@ -224,19 +132,20 @@ const formData = ref({
   readingTime: 5,
   featureImage: '',
   content: ''
-})
+});
 
-// Form validation state
+const contentTextarea = ref(null);
+
 const formErrors = ref({
   title: '',
   date: '',
   readingTime: '',
   featureImage: '',
   content: ''
-})
+});
 
-const isSubmitting = ref(false)
-const isLoading = ref(false)
+const isSubmitting = ref(false);
+const isLoading = ref(false);
 
 const previewContent = computed(() => {
   return renderMarkdown(formData.value.content || '');
@@ -244,163 +153,50 @@ const previewContent = computed(() => {
 
 const buttonText = computed(() => {
   if (isSubmitting.value) {
-    return isEditMode.value ? 'Updating...' : 'Publishing...'
+    return isEditMode.value ? 'Updating...' : 'Publishing...';
   }
-  return isEditMode.value ? 'Update Post' : 'Publish Post'
-})
-
-// Load post data if in edit mode
-const loadPost = async () => {
-  // Get ID from either props or route params
-  const editId = props.id || route.params.id;
-  if (!editId) return;
-
-  try {
-    isLoading.value = true;
-    const post = await getPostById(editId);
-
-    if (post) {
-      postId.value = post.id;
-      isEditMode.value = true;
-
-      // Format the date from Firestore timestamp to YYYY-MM-DD for the input field
-      formData.value = {
-        ...post,
-        date: post.date instanceof Date ? post.date.toISOString().split('T')[0] :
-          post.date && post.date.toDate ? post.date.toDate().toISOString().split('T')[0] :
-            new Date().toISOString().split('T')[0]
-      };
-    } else {
-      showNotify('Post not found', 'error');
-      router.push('/admin');
-    }
-  } catch (error) {
-    console.error('Error loading post:', error);
-    showNotify('Failed to load post', 'error');
-    router.push('/admin');
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-// Check token expiration and load post if needed
-onMounted(async () => {
-  if (!auth.currentUser) {
-    router.push('/login');
-    return;
-  }
-
-  // If we have a post ID (either from props or route params), load the post data
-  if (props.id || route.params.id) {
-    await loadPost();
-  }
-
-  // Set initial focus to the title field
-  nextTick(() => {
-    document.getElementById('title')?.focus();
-  });
+  return isEditMode.value ? 'Update Post' : 'Publish Post';
 });
 
-// Validate form fields
-const validateForm = () => {
-  let isValid = true
-
-  // Reset all errors
-  Object.keys(formErrors.value).forEach(key => {
-    formErrors.value[key] = ''
-  })
-
-  // Title validation
-  if (!formData.value.title.trim()) {
-    formErrors.value.title = 'Please enter a title'
-    isValid = false
-  }
-
-  // Date validation
-  if (!formData.value.date) {
-    formErrors.value.date = 'Please select a date'
-    isValid = false
-  }
-
-  // Reading time validation
-  if (!formData.value.readingTime || formData.value.readingTime < 1) {
-    formErrors.value.readingTime = 'Reading time must be at least 1 minute'
-    isValid = false
-  }
-
-  // Feature image URL validation (if provided)
-  if (formData.value.featureImage && !isValidUrl(formData.value.featureImage)) {
-    formErrors.value.featureImage = 'Please enter a valid URL'
-    isValid = false
-  }
-
-  // Content validation
-  if (!formData.value.content.trim()) {
-    formErrors.value.content = 'Please enter content for your post'
-    isValid = false
-  }
-
-  return isValid
-}
-
-// Helper to validate URLs
-const isValidUrl = (url) => {
-  try {
-    new URL(url)
-    return true
-  } catch (e) {
-    return false
-  }
-}
-
-const cancelEdit = () => {
-  // Navigate back to admin page or blog page
-  router.push('/admin/manage-posts');
-};
-
-// Function to handle markdown toolbar button clicks
-const insertMarkdown = (prefix, suffix) => {
-  // Get the textarea element
-  const textarea = document.getElementById('content');
+const handleFormat = ({ prefix, suffix }) => {
+  const textarea = contentTextarea.value;
   if (!textarea) return;
-
-  // Get current selection positions
+  
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
   const selectedText = formData.value.content.substring(start, end);
   const beforeText = formData.value.content.substring(0, start);
   const afterText = formData.value.content.substring(end);
-
-  // Check if we're at the start of a line for block elements
+  
   const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
   const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
-
-  // Insert markdown with or without newline
-  const insertion = needsNewLine ? '\n' + prefix + selectedText + suffix : prefix + selectedText + suffix;
+  
+  let newCursorPos = start;
+  let insertion = prefix + selectedText + suffix;
+  
+  if (needsNewLine) {
+    insertion = '\n' + insertion;
+    newCursorPos += 1; // Account for the newline
+  }
+  
+  // Special handling for different markdown elements
+  if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
+    // Position cursor inside the link/image URL
+    newCursorPos += prefix.length;
+  } else if (prefix === '```\n' && suffix === '\n```') {
+    // Position cursor inside the code block
+    newCursorPos += prefix.length;
+  } else {
+    // Default: position after the inserted prefix
+    newCursorPos += prefix.length + selectedText.length;
+  }
+  
   formData.value.content = beforeText + insertion + afterText;
-
-  // Restore focus and update selection on next tick
+  
+  // Set cursor position after the inserted text
   nextTick(() => {
     textarea.focus();
-    const newCursorPos = start + prefix.length + (needsNewLine ? 1 : 0);
-
-    // If there was selected text, maintain the selection
-    if (selectedText.length > 0) {
-      textarea.setSelectionRange(newCursorPos, newCursorPos + selectedText.length);
-    } else {
-      // For link and image, position cursor between brackets
-      if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
-        textarea.setSelectionRange(newCursorPos, newCursorPos);
-      }
-      // For code block, position cursor inside the block
-      else if (prefix === '```\n' && suffix === '\n```') {
-        textarea.setSelectionRange(newCursorPos, newCursorPos);
-      }
-      // For other elements, position cursor after the inserted prefix
-      else {
-        textarea.setSelectionRange(newCursorPos, newCursorPos);
-      }
-    }
+    textarea.setSelectionRange(newCursorPos, newCursorPos);
   });
 };
 

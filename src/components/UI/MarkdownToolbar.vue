@@ -104,8 +104,8 @@ const emit = defineEmits(['format']);
 
 // Function to handle markdown toolbar button clicks
 const insertMarkdown = (prefix, suffix) => {
-  // Emit the format event with prefix and suffix
-  emit('format', prefix, suffix);
+  // Emit the format event with an object containing prefix and suffix
+  emit('format', { prefix, suffix });
 };
 </script>
 
