@@ -236,10 +236,18 @@ const navigateToManagePosts = () => {
   router.push('/admin/manage-posts');
 };
 const cancelEdit = () => {
-  const { title, content, featureImage } = formData.value;
-  const hasChanges = title || content || featureImage;
+  const { title, content, featureImage, date, readingTime } = formData.value;
+  const defaultDate = new Date().toISOString().split('T')[0];
+  
+  // Check if any field has been modified from its default/empty state
+  const hasChanges = title || 
+                   content || 
+                   featureImage || 
+                   date !== defaultDate || 
+                   readingTime !== 5;
+                   
   if (!hasChanges) {
-    navigateToManagePosts
+    navigateToManagePosts();
   } else {
     confirmDialog.value?.show();
   }
