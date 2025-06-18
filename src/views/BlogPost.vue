@@ -51,15 +51,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import Notification from '@/components/UI/Notification.vue'
-import { useNotification } from "../utils/helpers"
-
-import { marked } from "marked";
-import { gfmHeadingId } from "marked-gfm-heading-id";
-import hljs from "highlight.js";
+import { useNotification, titleToSlug } from "../utils/helpers";
+import { renderMarkdown } from "../utils/markdown";
 import "highlight.js/styles/github.css";
 import { getPost } from "../config/firebase";
-import { titleToSlug } from "../utils/helpers";
-import DOMPurify from "dompurify";
 import { useRoute } from "vue-router";
 
 // Props
@@ -191,23 +186,10 @@ onUnmounted(() => {
 function deslugify(slug) {
   return slug.replace(/-/g, ' ');
 }
-// Computed properties
+
 const renderedContent = computed(() => {
   if (!post.value || !post.value.content) return "";
-  // Configure marked to use highlight.js for code blocks
-  marked.setOptions({
-    highlight: function (code, lang) {
-      if (lang && hljs.getLanguage(lang)) {
-        return hljs.highlight(code, { language: lang }).value;
-      }
-      return hljs.highlightAuto(code).value;
-    },
-    breaks: true,
-    gfm: true,
-    langPrefix: "language-none",
-  });
-  marked.use(gfmHeadingId());
-  return DOMPurify.sanitize(marked(post.value.content));
+  return renderMarkdown(post.value.content);
 });
 
 const toc = computed(() => {
