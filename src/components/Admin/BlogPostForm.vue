@@ -64,10 +64,11 @@
             <!-- Markdown Toolbar -->
 
             <MarkdownToolbar @format="handleFormat" />
-         
 
-            <textarea ref="contentTextarea" id="content" v-model="formData.content" placeholder="Write your post content in markdown..."
-              required :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15"></textarea>
+
+            <textarea ref="contentTextarea" id="content" v-model="formData.content"
+              placeholder="Write your post content in markdown..." required
+              :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15"></textarea>
             <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
           </div>
 
@@ -79,10 +80,10 @@
               <article v-html="previewContent" class="preview-content prose lg:prose-lg max-w-none" tabindex="0">
 
               </article>
-            </div> 
-          </div> 
-        </div> 
-      </div> 
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="button-group">
         <button type="submit" class="submit-btn" :disabled="isSubmitting" :aria-busy="isSubmitting">
@@ -96,6 +97,9 @@
 
     <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
       :icon="notificationIcon" />
+
+    <ConfirmationDialog ref="confirmDialog" message="Discard all changes and return to posts?" confirm-text="Discard"
+      cancel-text="Keep Editing" @confirm="navigateToManagePosts" />
   </section>
 </template>
 
@@ -108,6 +112,7 @@ import { renderMarkdown } from '@/utils/markdown';
 import Notification from '@/components/UI/Notification.vue'
 import { useNotification } from '@/utils/helpers'
 import MarkdownToolbar from '../UI/MarkdownToolbar.vue';
+import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
 
 const {
   showNotification,
@@ -125,13 +130,41 @@ const route = useRoute();    // For reading current route info
 const postId = ref(null);
 const isEditMode = ref(false);
 const activeTab = ref('edit'); // For tab switching between edit and preview
-
+const confirmDialog = ref(null);
 const formData = ref({
   title: '',
   date: new Date().toISOString().split('T')[0],
   readingTime: 5,
   featureImage: '',
   content: ''
+});
+
+// Load post data if in edit mode
+onMounted(async () => {
+  const currentPostId = props.id || route.params.id;
+  if (currentPostId) {
+    isEditMode.value = true;
+    postId.value = currentPostId;
+    isLoading.value = true;
+    
+    try {
+      const post = await getPostById(currentPostId);
+      if (post) {
+        formData.value = {
+          title: post.title || '',
+          date: post.date ? new Date(post.date.seconds * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          readingTime: post.readingTime || 5,
+          featureImage: post.featureImage || '',
+          content: post.content || ''
+        };
+      }
+    } catch (error) {
+      console.error('Error loading post:', error);
+      showNotify('Failed to load post. Please try again.', 'error');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 });
 
 const contentTextarea = ref(null);
@@ -161,24 +194,24 @@ const buttonText = computed(() => {
 const handleFormat = ({ prefix, suffix }) => {
   const textarea = contentTextarea.value;
   if (!textarea) return;
-  
+
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
   const selectedText = formData.value.content.substring(start, end);
   const beforeText = formData.value.content.substring(0, start);
   const afterText = formData.value.content.substring(end);
-  
+
   const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
   const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
-  
+
   let newCursorPos = start;
   let insertion = prefix + selectedText + suffix;
-  
+
   if (needsNewLine) {
     insertion = '\n' + insertion;
     newCursorPos += 1; // Account for the newline
   }
-  
+
   // Special handling for different markdown elements
   if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
     // Position cursor inside the link/image URL
@@ -190,14 +223,26 @@ const handleFormat = ({ prefix, suffix }) => {
     // Default: position after the inserted prefix
     newCursorPos += prefix.length + selectedText.length;
   }
-  
+
   formData.value.content = beforeText + insertion + afterText;
-  
+
   // Set cursor position after the inserted text
   nextTick(() => {
     textarea.focus();
     textarea.setSelectionRange(newCursorPos, newCursorPos);
   });
+};
+const navigateToManagePosts = () => {
+  router.push('/admin/manage-posts');
+};
+const cancelEdit = () => {
+  const { title, content, featureImage } = formData.value;
+  const hasChanges = title || content || featureImage;
+  if (!hasChanges) {
+    navigateToManagePosts
+  } else {
+    confirmDialog.value?.show();
+  }
 };
 
 const handleSubmit = async () => {
@@ -264,20 +309,24 @@ const handleSubmit = async () => {
 */
 
 :deep(.prose ul) {
-  list-style-type: disc; /* Default bullet points for unordered lists */
+  list-style-type: disc;
+  /* Default bullet points for unordered lists */
   padding-left: 1.5rem;
 }
 
 :deep(.prose ol) {
-  list-style-type: decimal; /* Numbers for ordered lists */
+  list-style-type: decimal;
+  /* Numbers for ordered lists */
   padding-left: 1.5rem;
 }
 
 :deep(.prose blockquote) {
-  border-left: 4px solid #e5e7eb; /* Light gray border on the left */
+  border-left: 4px solid #e5e7eb;
+  /* Light gray border on the left */
   padding-left: 1rem;
   margin: 1.5rem 0;
-  color: #4b5563; /* Slightly darker text */
+  color: #4b5563;
+  /* Slightly darker text */
   font-style: italic;
 }
 
