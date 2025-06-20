@@ -146,7 +146,7 @@ onMounted(async () => {
     isEditMode.value = true;
     postId.value = currentPostId;
     isLoading.value = true;
-    
+
     try {
       const post = await getPostById(currentPostId);
       if (post) {
@@ -168,6 +168,8 @@ onMounted(async () => {
 });
 
 const contentTextarea = ref(null);
+const orderListCounter = ref(0);
+
 
 const formErrors = ref({
   title: '',
@@ -202,10 +204,27 @@ const handleFormat = ({ prefix, suffix }) => {
   const afterText = formData.value.content.substring(end);
 
   const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
-  const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
+  // const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
+
+  const needsNewLinePattern = /^(#{1,2}\s+|\d+\.\s+|[->]\s+)/;
+  const needsNewLine = needsNewLinePattern.test(prefix) && !isLineStart;
 
   let newCursorPos = start;
-  let insertion = prefix + selectedText + suffix;
+  // let insertion = prefix + selectedText + suffix;
+
+
+
+  let insertion;
+ 
+  if (prefix.match(/^\d+\. $/)) {  // If this is an ordered list prefix
+    // For existing ordered lists, keep incrementing
+    orderListCounter.value += 1;
+    insertion = `${orderListCounter.value}. ${selectedText}${suffix}`;
+  } else {
+    // Reset for non-ordered-list items (like bullet points, headers, etc.)
+    orderListCounter.value = 0;
+    insertion = prefix + selectedText + suffix;
+  }
 
   if (needsNewLine) {
     insertion = '\n' + insertion;
@@ -238,14 +257,14 @@ const navigateToManagePosts = () => {
 const cancelEdit = () => {
   const { title, content, featureImage, date, readingTime } = formData.value;
   const defaultDate = new Date().toISOString().split('T')[0];
-  
+
   // Check if any field has been modified from its default/empty state
-  const hasChanges = title || 
-                   content || 
-                   featureImage || 
-                   date !== defaultDate || 
-                   readingTime !== 5;
-                   
+  const hasChanges = title ||
+    content ||
+    featureImage ||
+    date !== defaultDate ||
+    readingTime !== 5;
+
   if (!hasChanges) {
     navigateToManagePosts();
   } else {
