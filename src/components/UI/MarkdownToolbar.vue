@@ -54,7 +54,8 @@
                 <line x1="3" y1="18" x2="3.01" y2="18"></line>
             </svg>
         </button>
-        <button type="button" class="toolbar-btn" title="Numbered List" @click="insertMarkdown('1. ', '')">
+        <button type="button" class="toolbar-btn" title="Numbered List"
+            @click="insertMarkdown(`1. `, '')">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="10" y1="6" x2="21" y2="6"></line>
@@ -99,76 +100,87 @@
 </template>
 
 <script setup>
+import { ref, computed, onMounted, nextTick } from 'vue';
+
+// const orderListCounter = ref(0);
+
 // Define emits for parent component communication
 const emit = defineEmits(['format']);
 
 // Function to handle markdown toolbar button clicks
 const insertMarkdown = (prefix, suffix) => {
-  // Emit the format event with an object containing prefix and suffix
-  emit('format', { prefix, suffix });
+//    if (!prefix.match(/^\d+\. $/)) {
+//         // Reset for non-ordered-list items (like bullet points, headers, etc.)
+//         orderListCounter.value = 0;
+//     } else {
+//         // For existing ordered lists, keep incrementing
+//         orderListCounter.value += 1;
+//     }
+    // Emit the format event with an object containing prefix and suffix
+    emit('format', { prefix, suffix });
 };
 </script>
 
 <style scoped>
 /* Markdown Toolbar */
 .markdown-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px 6px 0 0;
-  margin-bottom: -1px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding: 0.5rem;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px 6px 0 0;
+    margin-bottom: -1px;
 }
 
 .toolbar-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  padding: 0.4rem 0.6rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 4px;
-  color: #4a5568;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.4rem 0.6rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    color: #4a5568;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
 }
 
 .toolbar-btn:hover {
-  background: #f8fafc;
-  border-color: #cbd5e0;
-  color: #4c1d95;
+    background: #f8fafc;
+    border-color: #cbd5e0;
+    color: #4c1d95;
 }
 
 .toolbar-btn:active {
-  background: #edf2f7;
-  transform: translateY(1px);
+    background: #edf2f7;
+    transform: translateY(1px);
 }
 
 .toolbar-btn svg {
-  width: 16px;
-  height: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 .toolbar-divider {
-  width: 1px;
-  height: 24px;
-  background: #e2e8f0;
-  margin: 0 0.25rem;
+    width: 1px;
+    height: 24px;
+    background: #e2e8f0;
+    margin: 0 0.25rem;
 }
 
 @media (max-width: 767px) {
-  .markdown-editor {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .markdown-toolbar {
-    overflow-x: auto;
-    padding-bottom: 0.75rem;
-  }
+    .markdown-editor {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .markdown-toolbar {
+        overflow-x: auto;
+        padding-bottom: 0.75rem;
+    }
 }
 </style>
