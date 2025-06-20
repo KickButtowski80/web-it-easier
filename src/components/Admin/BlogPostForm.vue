@@ -193,6 +193,25 @@ const buttonText = computed(() => {
   return isEditMode.value ? 'Update Post' : 'Publish Post';
 });
 
+const getOrderListCounter = (prefix) => {
+  /**
+   * Fine-grained counter management for ordered lists
+   * 
+   * Implements the single-responsibility principle by:
+   * 1. Managing only the ordered list counter state
+   * 2. Returning just the counter value (or null)
+   * 3. Handling counter reset conditions
+   * 
+   * This separation allows the formatting logic to remain in handleFormat
+   * while keeping counter management isolated and testable.
+   */
+  if (!prefix.match(/^\d+\. $/)) {
+    orderListCounter.value = 0;
+    return null;
+  }
+  return ++orderListCounter.value;
+}
+
 const handleFormat = ({ prefix, suffix }) => {
   const textarea = contentTextarea.value;
   if (!textarea) return;
@@ -210,21 +229,16 @@ const handleFormat = ({ prefix, suffix }) => {
   const needsNewLine = needsNewLinePattern.test(prefix) && !isLineStart;
 
   let newCursorPos = start;
-  // let insertion = prefix + selectedText + suffix;
-
-
-
   let insertion;
- 
-  if (prefix.match(/^\d+\. $/)) {  // If this is an ordered list prefix
-    // For existing ordered lists, keep incrementing
-    orderListCounter.value += 1;
-    insertion = `${orderListCounter.value}. ${selectedText}${suffix}`;
+
+  const orderedListNumber = getOrderListCounter(prefix);
+  if (orderedListNumber) {
+    insertion = orderedListNumber + '. ' + selectedText + suffix;
   } else {
-    // Reset for non-ordered-list items (like bullet points, headers, etc.)
-    orderListCounter.value = 0;
     insertion = prefix + selectedText + suffix;
   }
+
+
 
   if (needsNewLine) {
     insertion = '\n' + insertion;
