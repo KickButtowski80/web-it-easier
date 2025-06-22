@@ -30,7 +30,7 @@
           </ul>
         </nav>
 
-        <div class="prose prose-lg max-w-none" v-html="renderedContent"></div>
+        <div class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4" v-html="renderedContent"></div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite">
         <div class="animate-pulse">
@@ -239,6 +239,12 @@ function scrollToSection(id) {
 </script>
 
 <style>
+
+
+
+
+
+
 /* Base code block styling */
 pre {
   background-color: #f6f8fa;

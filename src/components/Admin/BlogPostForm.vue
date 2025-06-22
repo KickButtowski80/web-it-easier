@@ -74,7 +74,10 @@
           </div>
 
           <!-- Preview Panel -->
-          <div id="preview-panel" v-show="activeTab === 'preview'" role="tabpanel" aria-labelledby="preview-tab"
+          <div id="preview-panel" 
+          class="whitespace-pre-wrap tab-size-4"
+          v-show="activeTab === 'preview'" role="tabpanel"
+           aria-labelledby="preview-tab"
             aria-live="polite">
             <div class="preview-header">
               <h2 id="preview-heading" class="text-xl font-semibold mb-2 sr-only">Preview</h2>
@@ -497,6 +500,9 @@ textarea {
   border-radius: 6px;
   font-size: clamp(0.9rem, 2vw, 1rem);
   transition: border-color 0.2s;
+/* preserve whitespace */
+  white-space: pre;
+  tab-size: 4;
 }
 
 input:focus-visible,
