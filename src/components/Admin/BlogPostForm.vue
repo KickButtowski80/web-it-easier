@@ -323,7 +323,30 @@ const cancelEdit = () => {
 
 
 
+const validateForm = () => {
+  let isValid = true;
+  formErrors.value = {}; // Reset errors
 
+  // Title validation
+  if (!formData.value.title?.trim()) {
+    formErrors.value.title = 'Title is required';
+    isValid = false;
+  }
+
+  // Date validation
+  if (!formData.value.date) {
+    formErrors.value.date = 'Date is required';
+    isValid = false;
+  }
+
+  // Content validation
+  if (!formData.value.content?.trim()) {
+    formErrors.value.content = 'Content is required';
+    isValid = false;
+  }
+
+  return isValid;
+};
 
 const handleSubmit = async () => {
   if (isSubmitting.value) return; // Prevent double submit
