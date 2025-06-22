@@ -66,7 +66,8 @@
             <MarkdownToolbar @format="handleFormat" />
 
 
-            <textarea ref="contentTextarea" id="content" v-model="formData.content"
+            <textarea ref="contentTextarea" id="content" v-model="formData.content" @keydown.tab.prevent="handleTab"
+              @keydown.esc="handleEsc" @keydown.shift.tab.prevent="handleShiftTab"
               placeholder="Write your post content in markdown..." required
               :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15"></textarea>
             <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
@@ -168,7 +169,7 @@ onMounted(async () => {
 });
 
 const contentTextarea = ref(null);
-const orderListCounter = ref(0);
+const orderListCounters = ref({});
 
 
 const formErrors = ref({
@@ -193,7 +194,28 @@ const buttonText = computed(() => {
   return isEditMode.value ? 'Update Post' : 'Publish Post';
 });
 
-const getOrderListCounter = (prefix) => {
+
+const handleTab = (e) => {
+
+  const textarea = e.target;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+
+  // Insert tab at cursor position
+  const newText = formData.value.content.substring(0, start) +
+    '    ' +
+    formData.value.content.substring(end);
+  formData.value.content = newText;
+
+  nextTick(() => {
+    // Set cursor position after the inserted spaces
+    const newCursorPosition = start + 4;
+    textarea.selectionStart = newCursorPosition;
+    textarea.selectionEnd = newCursorPosition;
+  });
+
+}
+const getOrderListCounter = (prefix, beforeText) => {
   /**
    * Fine-grained counter management for ordered lists
    * 
@@ -205,11 +227,23 @@ const getOrderListCounter = (prefix) => {
    * This separation allows the formatting logic to remain in handleFormat
    * while keeping counter management isolated and testable.
    */
-  if (!prefix.match(/^\d+\. $/)) {
-    orderListCounter.value = 0;
+
+  // First check if this is an ordered list at all
+  if (!prefix.match(/^\s*\d+\.\s+$/)) {
     return null;
   }
-  return ++orderListCounter.value;
+
+  // Get indentation level of current prefix
+  const currentIndent = (prefix.match(/^(\s*)/) || [''])[0].length;
+  const indentKey = `indent_${currentIndent}`;
+
+  // Initialize counter for this indent level if needed
+  if (!orderListCounters.value[indentKey]) {
+    orderListCounters.value[indentKey] = 0;
+  }
+
+  // Increment and return
+  return ++orderListCounters.value[indentKey];
 }
 
 const handleFormat = ({ prefix, suffix }) => {
@@ -225,13 +259,14 @@ const handleFormat = ({ prefix, suffix }) => {
   const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
   // const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
 
-  const needsNewLinePattern = /^(#{1,2}\s+|\d+\.\s+|[->]\s+)/;
+  const needsNewLinePattern = /^(\s*#{1,2}\s+|\s*\d+\.\s+|\s*[->]\s+)/;
   const needsNewLine = needsNewLinePattern.test(prefix) && !isLineStart;
 
   let newCursorPos = start;
   let insertion;
 
-  const orderedListNumber = getOrderListCounter(prefix);
+  const orderedListNumber = getOrderListCounter(prefix, beforeText);
+  console.log('beforeText', beforeText || 'empty', 'afterText', afterText || 'empty');
   if (orderedListNumber) {
     insertion = orderedListNumber + '. ' + selectedText + suffix;
   } else {
@@ -285,6 +320,10 @@ const cancelEdit = () => {
     confirmDialog.value?.show();
   }
 };
+
+
+
+
 
 const handleSubmit = async () => {
   if (isSubmitting.value) return; // Prevent double submit
