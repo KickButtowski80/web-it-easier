@@ -74,11 +74,8 @@
           </div>
 
           <!-- Preview Panel -->
-          <div id="preview-panel" 
-          class="whitespace-pre-wrap tab-size-4"
-          v-show="activeTab === 'preview'" role="tabpanel"
-           aria-labelledby="preview-tab"
-            aria-live="polite">
+          <div id="preview-panel" class="whitespace-pre-wrap tab-size-4" v-show="activeTab === 'preview'"
+            role="tabpanel" aria-labelledby="preview-tab" aria-live="polite">
             <div class="preview-header">
               <h2 id="preview-heading" class="text-xl font-semibold mb-2 sr-only">Preview</h2>
               <article v-html="previewContent" class="preview-content prose lg:prose-lg max-w-none" tabindex="0">
@@ -199,25 +196,66 @@ const buttonText = computed(() => {
 
 
 const handleTab = (e) => {
-
+  e.preventDefault();
   const textarea = e.target;
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
+  const value = formData.value.content;
 
-  // Insert tab at cursor position
-  const newText = formData.value.content.substring(0, start) +
-    '    ' +
-    formData.value.content.substring(end);
+  // Get the current line up to cursor
+  const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+  const lineUpToCursor = value.substring(lineStart, start);
+
+  // Calculate spaces to next tab stop (4 spaces per tab)
+  // how far the cursor is from the previous tab stop lineUpToCursor.length % 4
+  // how many spaces to add to reach the next tab stop 4 - (lineUpToCursor.length % 4)
+  const spacesToAdd = 4 - (lineUpToCursor.length % 4);
+  const spaces = ' '.repeat(spacesToAdd);
+
+  // Insert spaces
+  const newText = value.substring(0, start) +
+    spaces +
+    value.substring(end);
+
   formData.value.content = newText;
 
   nextTick(() => {
-    // Set cursor position after the inserted spaces
-    const newCursorPosition = start + 4;
-    textarea.selectionStart = newCursorPosition;
-    textarea.selectionEnd = newCursorPosition;
+    // Set cursor position after inserted spaces
+    // Using chained assignment (a = b = c) to set both selectionStart and selectionEnd to the same position
+    // a=c and b=c
+    // This creates a cursor (no text selection) at the new position
+    textarea.selectionStart = textarea.selectionEnd = start + spacesToAdd;
   });
+};
+const handleShiftTab = (e) => {
+  e.preventDefault();
+  const textarea = e.target;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const value = formData.value.content;
 
-}
+  // Get the current line
+  const lineStart = value.lastIndexOf('\n', start - 1) + 1;
+  const lineEnd = value.indexOf('\n', start);
+  const line = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
+
+  // Remove up to 4 leading spaces
+  const newLine = line.replace(/^ {1,4}/, '');
+  const spacesRemoved = line.length - newLine.length;
+
+  if (spacesRemoved > 0) {
+    const newText = value.substring(0, lineStart) +
+      newLine +
+      value.substring(lineEnd === -1 ? value.length : lineEnd);
+
+    formData.value.content = newText;
+
+    nextTick(() => {
+      const newPos = Math.max(start - spacesRemoved, lineStart);
+      textarea.selectionStart = textarea.selectionEnd = newPos;
+    });
+  }
+};
 const getOrderListCounter = (prefix, beforeText) => {
   /**
    * Fine-grained counter management for ordered lists
@@ -500,7 +538,7 @@ textarea {
   border-radius: 6px;
   font-size: clamp(0.9rem, 2vw, 1rem);
   transition: border-color 0.2s;
-/* preserve whitespace */
+  /* preserve whitespace */
   white-space: pre;
   tab-size: 4;
 }
