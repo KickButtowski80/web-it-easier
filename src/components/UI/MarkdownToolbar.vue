@@ -55,7 +55,7 @@
             </svg>
         </button>
         <button type="button" class="toolbar-btn" title="Numbered List"
-            @click="insertMarkdown(`1. `, '')">
+            @click="insertOrderedList">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="10" y1="6" x2="21" y2="6"></line>
@@ -102,22 +102,35 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
 
-// const orderListCounter = ref(0);
+// Use sessionStorage to persist orderListCounter across renders
+const orderListCounter = ref(parseInt(sessionStorage.getItem('orderListCounter')) || 0);
+
+// Update sessionStorage whenever the counter changes
+const updateCounter = (newValue) => {
+  orderListCounter.value = newValue;
+  sessionStorage.setItem('orderListCounter', newValue.toString());
+};
 
 // Define emits for parent component communication
 const emit = defineEmits(['format']);
 
 // Function to handle markdown toolbar button clicks
 const insertMarkdown = (prefix, suffix) => {
-//    if (!prefix.match(/^\d+\. $/)) {
-//         // Reset for non-ordered-list items (like bullet points, headers, etc.)
-//         orderListCounter.value = 0;
-//     } else {
-//         // For existing ordered lists, keep incrementing
-//         orderListCounter.value += 1;
-//     }
+    if (!prefix.match(/^\d+\. $/)) {
+         // Reset for non-ordered-list items (like bullet points, headers, etc.)
+         updateCounter(0);
+     } else {
+         // For existing ordered lists, keep incrementing
+         updateCounter(orderListCounter.value + 1);
+     }
     // Emit the format event with an object containing prefix and suffix
     emit('format', { prefix, suffix });
+};
+
+const insertOrderedList = () => {
+    const prefix = `${orderListCounter.value + 1}. `;
+    updateCounter(orderListCounter.value + 1);
+    emit('format', { prefix, suffix: '' });
 };
 </script>
 
