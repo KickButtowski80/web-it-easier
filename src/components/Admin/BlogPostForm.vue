@@ -240,7 +240,7 @@ const getOrderListCounter = (prefix, beforeText) => {
     // Get the current line's indentation
     const currentLineStart = beforeText.lastIndexOf('\n') + 1;
     const currentLine = beforeText.substring(currentLineStart);
-    const indentMatch = currentLine.match(/^([\t ]*)/);
+    const indentMatch = currentLine.match(/^[\t ]*/);
     const indentStr = indentMatch ? indentMatch[0] : '';
 
     // Calculate indentation in tab stops (1 tab = 4 spaces)
@@ -251,9 +251,30 @@ const getOrderListCounter = (prefix, beforeText) => {
     const tabStop = Math.floor(currentIndent / 4) * 4;
     const indentLevel = tabStop / 4; // 0 = top level, 1 = 1 tab, etc.
 
-    // Find the parent list item for hierarchical tracking
     const parentId = findParentListItem(beforeText, indentLevel);
-    
+
+    // Cleanup logic: Remove counters for stale lists.
+    for (const key in orderListCounters.value) {
+        const keyLevelMatch = key.match(/level_(\d+)/);
+        const keyParentMatch = key.match(/parent_(.+)$/);
+
+        if (keyLevelMatch && keyParentMatch) {
+            const keyLevel = parseInt(keyLevelMatch[1], 10);
+            const keyParentId = keyParentMatch[1];
+
+            // 1. Delete counters for any lists nested deeper than the current level.
+            if (keyLevel > indentLevel) {
+                delete orderListCounters.value[key];
+            }
+
+            // 2. Delete counters for lists at the same level but with a different parent.
+            // This handles starting a new sub-list after finishing a previous one.
+            if (keyLevel === indentLevel && keyParentId !== parentId) {
+                delete orderListCounters.value[key];
+            }
+        }
+    }
+
     // Create composite key using both level and parent
     const compositeKey = `level_${indentLevel}_parent_${parentId}`;
     
@@ -277,40 +298,44 @@ const getOrderListCounter = (prefix, beforeText) => {
  * @returns {string} - A unique identifier for the parent list item
  */
 const findParentListItem = (text, currentLevel) => {
-    if (currentLevel === 0) return 'root'; // Top level has no parent
-    
+    if (currentLevel === 0) return 'root';
+
     const lines = text.split('\n');
-    let lastParentLine = '';
-    let lastParentNumber = 0;
-    
-    // Start from the end and work backwards
+    let listBlockStartIndex = lines.length -1;
+
+    // 1. Find the start of the current contiguous list block
+    // A block starts after a blank line or a line with less indentation.
     for (let i = lines.length - 1; i >= 0; i--) {
         const line = lines[i];
-        if (!line.trim()) continue; // Skip empty lines
-        
-        const lineIndent = line.match(/^([\t ]*)/) ? line.match(/^([\t ]*)/)[0] : '';
-        const lineIndentLevel = Math.floor(
-            lineIndent.split('').reduce((total, char) => 
-                total + (char === '\t' ? 4 : 1), 0) / 4
-        );
-        
-        // If we find a line at the parent level (current - 1)
-        if (lineIndentLevel === currentLevel - 1) {
-            // Check if it's an ordered list item
-            const match = line.trim().match(/^(\d+)\.\s/);
-            if (match) {
-                lastParentNumber = match[1];
-                lastParentLine = line;
-                break;
-            }
+        const lineIndent = (line.match(/^[\t ]*/) || [''])[0];
+        const lineIndentLevel = Math.floor(lineIndent.split('').reduce((total, char) => total + (char === '\t' ? 4 : 1), 0) / 4);
+
+        if (lineIndentLevel < currentLevel || !line.trim()) {
+            listBlockStartIndex = i + 1;
+            break;
+        }
+        if (i === 0) { // If we reached the top of the file
+             listBlockStartIndex = 0;
         }
     }
-    
-    // Return parent identifier (number + position in document)
-    // If no parent found, use a unique identifier based on position
-    return lastParentLine ? 
-        `${lastParentNumber}_${text.indexOf(lastParentLine)}` : 
-        `noparent_${currentLevel}_${text.length}`;
+
+    // 2. Look for the parent on the line immediately preceding the block
+    const parentLineIndex = listBlockStartIndex - 1;
+    if (parentLineIndex >= 0) {
+        const parentLine = lines[parentLineIndex];
+        const parentIndent = (parentLine.match(/^[\t ]*/) || [''])[0];
+        const parentIndentLevel = Math.floor(parentIndent.split('').reduce((total, char) => total + (char === '\t' ? 4 : 1), 0) / 4);
+        const parentMatch = parentLine.trim().match(/^(\d+)\.\s*/);
+
+        if (parentIndentLevel === currentLevel - 1 && parentMatch) {
+            // Found a valid parent, create a stable ID
+            return `${parentMatch[1]}_${parentLineIndex}`;
+        }
+    }
+
+    // 3. If no parent is found, it's an "orphan" list.
+    // Its ID is based on its own starting position to keep it stable.
+    return `noparent_${currentLevel}_${listBlockStartIndex}`;
 };
 
 const handleFormat = ({ prefix, suffix }) => {
