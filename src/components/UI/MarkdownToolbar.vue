@@ -55,7 +55,7 @@
             </svg>
         </button>
         <button type="button" class="toolbar-btn" title="Numbered List"
-            @click="insertOrderedList">
+            @click="insertMarkdown('1. ', '')">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="10" y1="6" x2="21" y2="6"></line>
@@ -96,42 +96,46 @@
             </svg>
             <span>{ }</span>
         </button>
+        <div class="toolbar-divider"></div>
+        <button type="button" class="toolbar-btn" title="Strikethrough" @click="insertMarkdown('~~', '~~')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 9V6a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v3"></path>
+                <path d="M3 12h18"></path>
+                <path d="M17 18v-3a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v3"></path>
+            </svg>
+        </button>
+        <button type="button" class="toolbar-btn" title="Horizontal Rule" @click="insertMarkdown('\n---\n', '')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+
+        <button type="button" class="toolbar-btn" title="Table" @click="insertMarkdown('| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |\n', '')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="3" y1="15" x2="21" y2="15"></line>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+                <line x1="15" y1="3" x2="15" y2="21"></line>
+            </svg>
+        </button>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue';
 
-// Use sessionStorage to persist orderListCounter across renders
-const orderListCounter = ref(parseInt(sessionStorage.getItem('orderListCounter')) || 0);
-
-// Update sessionStorage whenever the counter changes
-const updateCounter = (newValue) => {
-  orderListCounter.value = newValue;
-  sessionStorage.setItem('orderListCounter', newValue.toString());
-};
 
 // Define emits for parent component communication
 const emit = defineEmits(['format']);
 
 // Function to handle markdown toolbar button clicks
-const insertMarkdown = (prefix, suffix) => {
-    if (!prefix.match(/^\d+\. $/)) {
-         // Reset for non-ordered-list items (like bullet points, headers, etc.)
-         updateCounter(0);
-     } else {
-         // For existing ordered lists, keep incrementing
-         updateCounter(orderListCounter.value + 1);
-     }
-    // Emit the format event with an object containing prefix and suffix
+const insertMarkdown = (prefix, suffix) => {  
     emit('format', { prefix, suffix });
 };
 
-const insertOrderedList = () => {
-    const prefix = `${orderListCounter.value + 1}. `;
-    updateCounter(orderListCounter.value + 1);
-    emit('format', { prefix, suffix: '' });
-};
 </script>
 
 <style scoped>
