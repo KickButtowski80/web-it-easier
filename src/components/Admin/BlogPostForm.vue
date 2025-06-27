@@ -70,7 +70,9 @@
 
                         <textarea ref="contentTextarea" id="content" v-model="formData.content"
                             @keydown.tab.exact.prevent="handleTabWrapper"
-                            @keydown.shift.tab.exact.prevent="handleShiftTabWrapper" @keydown.esc="handleEsc"
+                            @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
+                            @keydown.enter.exact.prevent="handleEnter"
+                            @keydown.esc="handleEsc"
                             placeholder="Write your post content in markdown..." required
                             :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
                 </textarea>
@@ -337,6 +339,55 @@ const findParentListItem = (text, currentLevel) => {
     // 3. If no parent is found, it's an "orphan" list.
     // Its ID is based on its own starting position to keep it stable.
     return `noparent_${currentLevel}_${listBlockStartIndex}`;
+};
+
+const handleEnter = (event) => {
+    const textarea = event.target;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const value = formData.value.content;
+    
+    // Check if we're in a list item
+    const currentLine = value.substring(value.lastIndexOf('\n', start - 1) + 1, start);
+    const isInListItem = currentLine.match(/^\s*(\d+\.|[-*+])\s/);
+    
+    if (isInListItem) {
+        // Find the next line
+        //start searching for \n from start point to find next line
+        const nextLineStart = value.indexOf('\n', start) + 1;
+        
+        // Check if there is a next line and it's a list item
+        if (nextLineStart > 0) {
+            const nextLineEnd = value.indexOf('\n', nextLineStart);
+            const nextLine = nextLineEnd === -1 ? 
+                value.substring(nextLineStart) : 
+                value.substring(nextLineStart, nextLineEnd);
+            
+            const nextListItemMatch = nextLine.match(/^\s*(\d+\.|[-*+])\s/);
+            if (nextListItemMatch) {
+                // Just move the cursor to after the list marker
+                event.preventDefault();
+                const newPosition = nextLineStart + nextListItemMatch[0].length;
+                
+                nextTick(() => {
+                    textarea.focus();
+                    textarea.setSelectionRange(newPosition, newPosition);
+                });
+                return;
+            }
+        }
+    }
+    
+    // Default enter behavior
+    event.preventDefault();
+    const beforeText = value.substring(0, start);
+    const afterText = value.substring(end);
+    formData.value.content = beforeText + '\n' + afterText;
+    const newCursorPos = start + 1;
+    nextTick(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+    });
 };
 
 const handleFormat = ({ prefix, suffix }) => {
