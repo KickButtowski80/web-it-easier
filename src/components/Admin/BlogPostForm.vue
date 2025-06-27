@@ -342,6 +342,7 @@ const findParentListItem = (text, currentLevel) => {
 };
 
 const handleEnter = (event) => {
+
     const textarea = event.target;
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -356,6 +357,42 @@ const handleEnter = (event) => {
         //start searching for \n from start point to find next line
         const nextLineStart = value.indexOf('\n', start) + 1;
         
+       if (nextLineStart === 0) {
+           // No next line, create a new list item
+           event.preventDefault();
+           const beforeText = value.substring(0, start);
+           const afterText = value.substring(end);
+           
+           // Extract current list marker info
+           const listMatch = currentLine.match(/^(\s*)(\d+\.|[-*+])(\s+)/);
+           if (!listMatch) return;
+           
+           const [_, indent, marker, space] = listMatch;
+           let newMarker;
+           
+           if (marker.match(/\d+\./)) {
+               // For ordered lists, increment the number
+               const currentNumber = parseInt(marker, 10);
+               newMarker = `${currentNumber + 1}.`;
+           } else {
+               // For unordered lists, keep the same marker
+               newMarker = marker;
+           }
+           
+           // Create new list item with same indentation
+           const newListItem = `\n${indent}${newMarker}${space}`;
+           formData.value.content = beforeText + newListItem + afterText;
+           
+           // Position cursor after the new list marker
+           const newCursorPos = start + newListItem.length;
+           nextTick(() => {
+               textarea.focus();
+               textarea.setSelectionRange(newCursorPos, newCursorPos);
+           });
+           return;
+       }
+
+
         // Check if there is a next line and it's a list item
         if (nextLineStart > 0) {
             const nextLineEnd = value.indexOf('\n', nextLineStart);
@@ -364,6 +401,7 @@ const handleEnter = (event) => {
                 value.substring(nextLineStart, nextLineEnd);
             
             const nextListItemMatch = nextLine.match(/^\s*(\d+\.|[-*+])\s/);
+            
             if (nextListItemMatch) {
                 // Just move the cursor to after the list marker
                 event.preventDefault();
@@ -403,26 +441,7 @@ const handleFormat = ({ prefix, suffix }) => {
     const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
     // const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
 
-    // const needsNewLinePattern = new RegExp([
-    //     '^',                        // Start of line
-    //     '(?:',                      // Non-capturing group start
-    //     '\\d+\\.\\s+',              // 1. (number followed by dot and space)
-    //     '|',                        // OR
-    //     '    \\d+\\.\\s+',          //     1. (4 spaces, number, dot, space)
-    //     '|',                        // OR
-    //     '\\d+\\.\\s+\\S+',          // 1. followed by word
-    //     '|',                        // OR
-    //     '    \\d+\\.\\s+\\S+',      //     1. followed by word (with 4 spaces)
-    //     '|',                        // OR
-    //     '-\\s+',                    // - (unordered list item)
-    //     '|',                        // OR
-    //     '    -\\s+',                //     - (indented unordered list item)
-    //     '|',                        // OR
-    //     '-\\s+\\S+',               // - followed by word
-    //     '|',                        // OR
-    //     '    -\\s+\\S+',            //     - followed by word (with 4 spaces)
-    // ')'                         // Non-capturing group end
-    // ].join(''));
+
 
     const needsNewLinePattern = new RegExp([
         '^', // Start of line
