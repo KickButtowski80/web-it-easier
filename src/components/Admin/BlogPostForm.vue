@@ -175,7 +175,6 @@ onMounted(async () => {
 
 const contentTextarea = ref(null);
 const orderListCounters = ref({});
-const parentListStack = ref([]);
 
 
 const formErrors = ref({
@@ -224,24 +223,25 @@ const handleShiftTabWrapper = (event) => {
 
 
 /**
- * Get the next ordered list counter and indentation string
- * @param {string} prefix - The prefix to check if it's an ordered list
- * @param {string} beforeText - The text before the cursor
- * @returns {Object|null} - The next counter and indentation string, or null if not an ordered list
+ * Gets the indentation of the current line
+ * @param {string} text - The text to analyze
+ * @returns {string} - The indentation string (spaces/tabs)
  */
-const getOrderListCounter = (prefix, beforeText) => {
-    // Check if we're inserting an ordered list (prefix will be like "1. ")
-    // But don't use prefix to determine context - that comes from beforeText
-    const isOrderedList = prefix.match(/^\s*\d+\.\s+$/);
-    if (!isOrderedList) {
-        return null;
-    }
-
-    // Get the current line's indentation
-    const currentLineStart = beforeText.lastIndexOf('\n') + 1;
-    const currentLine = beforeText.substring(currentLineStart);
+const currentLinesIndention = (text) => {
+    const currentLineStart = text.lastIndexOf('\n') + 1;
+    const currentLine = text.substring(currentLineStart);
     const indentMatch = currentLine.match(/^[\t ]*/);
-    const indentStr = indentMatch ? indentMatch[0] : '';
+    return indentMatch ? indentMatch[0] : '';
+};
+
+/**
+ * Get the next ordered list counter and indentation string
+ * @param {string} beforeText - The text before the cursor
+ * @returns {Object} - The next counter and indentation information
+ */
+const getOrderListCounter = (beforeText) => {
+    // Get the current line's indentation
+    const indentStr = currentLinesIndention(beforeText);
 
     // Calculate indentation in tab stops (1 tab = 4 spaces)
     const currentIndent = indentStr.split('').reduce((total, char) =>
@@ -277,7 +277,7 @@ const getOrderListCounter = (prefix, beforeText) => {
 
     // Create composite key using both level and parent
     const compositeKey = `level_${indentLevel}_parent_${parentId}`;
-    
+
     // Initialize or get counter for this specific sub-list
     if (!orderListCounters.value[compositeKey]) {
         orderListCounters.value[compositeKey] = 1; // Start at 1
@@ -291,6 +291,7 @@ const getOrderListCounter = (prefix, beforeText) => {
     };
 };
 
+
 /**
  * Helper function to find the parent list item for hierarchical tracking
  * @param {string} text - The text before the cursor
@@ -301,7 +302,7 @@ const findParentListItem = (text, currentLevel) => {
     if (currentLevel === 0) return 'root';
 
     const lines = text.split('\n');
-    let listBlockStartIndex = lines.length -1;
+    let listBlockStartIndex = lines.length - 1;
 
     // 1. Find the start of the current contiguous list block
     // A block starts after a blank line or a line with less indentation.
@@ -315,7 +316,7 @@ const findParentListItem = (text, currentLevel) => {
             break;
         }
         if (i === 0) { // If we reached the top of the file
-             listBlockStartIndex = 0;
+            listBlockStartIndex = 0;
         }
     }
 
@@ -351,29 +352,52 @@ const handleFormat = ({ prefix, suffix }) => {
     const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
     // const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
 
+    // const needsNewLinePattern = new RegExp([
+    //     '^',                        // Start of line
+    //     '(?:',                      // Non-capturing group start
+    //     '\\d+\\.\\s+',              // 1. (number followed by dot and space)
+    //     '|',                        // OR
+    //     '    \\d+\\.\\s+',          //     1. (4 spaces, number, dot, space)
+    //     '|',                        // OR
+    //     '\\d+\\.\\s+\\S+',          // 1. followed by word
+    //     '|',                        // OR
+    //     '    \\d+\\.\\s+\\S+',      //     1. followed by word (with 4 spaces)
+    //     '|',                        // OR
+    //     '-\\s+',                    // - (unordered list item)
+    //     '|',                        // OR
+    //     '    -\\s+',                //     - (indented unordered list item)
+    //     '|',                        // OR
+    //     '-\\s+\\S+',               // - followed by word
+    //     '|',                        // OR
+    //     '    -\\s+\\S+',            //     - followed by word (with 4 spaces)
+    // ')'                         // Non-capturing group end
+    // ].join(''));
+
     const needsNewLinePattern = new RegExp([
-        '^',                        // Start of line
-        '(?:',                      // Non-capturing group start
-        '\\d+\\.\\s+',              // 1. (number followed by dot and space)
-        '|',                        // OR
-        '    \\d+\\.\\s+',          //     1. (4 spaces, number, dot, space)
-        '|',                        // OR
-        '\\d+\\.\\s+\\S+',          // 1. followed by word
-        '|',                        // OR
-        '    \\d+\\.\\s+\\S+' ,      //     1. followed by word (with 4 spaces)
-    ')'                         // Non-capturing group end
+        '^', // Start of line
+        '(?:',
+        '\\s{0,4}(?:\\d+\\.\\s+\\S*)', // Ordered list (e.g., "1. item" or "    1. item")
+        '|',
+        '\\s{0,4}-\\s+\\S*',           // Unordered list (e.g., "- item" or "    - item")
+        ')'
     ].join(''));
+
+
     const needsNewLine = needsNewLinePattern.test(prefix) && !isLineStart;
 
     let newCursorPos = start;
     let insertion;
-
-    let { number, indent } = getOrderListCounter(prefix, beforeText) || { number: null, indent: '' };
+    let { number, indent } = { number: null, indent: '' };
+    if (prefix.match(/^\s*\d+\.\s+$/)) {
+        ({ number, indent } = getOrderListCounter(beforeText));
+    } else if (prefix.match(/^\s*[-*+]\s+$/)) {
+        indent = currentLinesIndention(beforeText);
+    }
     if (number) {
         insertion = indent + number + '. ' + selectedText + suffix;
     }
     else {
-        insertion = prefix + selectedText + suffix;
+        insertion = indent + prefix + selectedText + suffix;
     }
 
 
@@ -393,6 +417,9 @@ const handleFormat = ({ prefix, suffix }) => {
     } else if (number) {
         // For ordered lists, account for indent, number and dot
         newCursorPos += indent.length + number.toString().length + 2 + selectedText.length; // +2 for '. '
+    } else if (prefix.match(/^\s*[-*+]\s+$/)) {
+        // For unordered lists, account for indentation and list marker
+        newCursorPos += indent.length + prefix.trim().length + 1 + selectedText.length; // +1 for the space after marker
     } else {
         // Default: position after the inserted prefix
         newCursorPos += prefix.length + selectedText.length;
