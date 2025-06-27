@@ -29,6 +29,10 @@ dist-ssr
 *Zone.Identifier
 
 .env*
+.env.test
+.env.local
+.env.example
+
 # Build reports
 sonda-report.html
 public/images/backup/
