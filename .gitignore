@@ -29,6 +29,12 @@ dist-ssr
 *Zone.Identifier
 
 .env
+.env.local
+.env.example
+.env.production
+.env.development
+.env.test
+
 
 # Build reports
 sonda-report.html
