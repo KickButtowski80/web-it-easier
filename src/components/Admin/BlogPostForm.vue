@@ -311,6 +311,9 @@ const cancelEdit = () => {
   router.push('/admin/manage-posts');
 };
 
+// Import the Google Indexing utility
+import { notifyGoogle } from '@/utils/googleIndexing';
+
 const handleSubmit = async () => {
   if (isSubmitting.value) return; // Prevent double submit
   isSubmitting.value = true;
@@ -334,15 +337,37 @@ const handleSubmit = async () => {
       date: new Date(formData.value.date)
     };
     
+    let postUrl = '';
+    
     if (isEditMode.value && postId.value) {
       // Update existing post
       await updatePost(postId.value, postData);
+      postUrl = `${window.location.origin}/blog/${postId.value}`;
       showNotify('Post updated successfully!', 'success');
+      
+      // Notify Google about the update
+      try {
+        await notifyGoogle(postUrl, 'URL_UPDATED');
+        console.log('Google notified about post update');
+      } catch (googleError) {
+        console.warn('Failed to notify Google about update:', googleError);
+        // Don't fail the entire operation if Google notification fails
+      }
     } else {
       // Add new post
       postData.createdAt = new Date();
-      await addPost(postData);
+      const newPostRef = await addPost(postData);
+      postUrl = `${window.location.origin}/blog/${newPostRef.id}`;
       showNotify('Post published successfully!', 'success');
+      
+      // Notify Google about the new post
+      try {
+        await notifyGoogle(postUrl, 'URL_UPDATED');
+        console.log('Google notified about new post');
+      } catch (googleError) {
+        console.warn('Failed to notify Google about new post:', googleError);
+        // Don't fail the entire operation if Google notification fails
+      }
     }
     
     await new Promise(resolve => setTimeout(resolve, 1000));

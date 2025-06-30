@@ -12,7 +12,7 @@ export const notifyGoogle = async (url, type = 'URL_UPDATED') => {
   
   try {
     const baseUrl = window.location.origin;
-    const apiUrl = `${baseUrl}/api`;
+    const apiUrl = `${baseUrl}/api/notify-google-indexing`;
     
     console.log(`[Google Indexing] Calling API: ${apiUrl}`, {
       url,
