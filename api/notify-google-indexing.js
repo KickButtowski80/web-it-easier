@@ -48,10 +48,21 @@ export default async function handler(req, res) {
     throw new Error('GOOGLE_CLIENT_EMAIL environment variable is required');
   }
 
-  // Use the private key from environment or fallback
-  let privateKey = process.env.GOOGLE_PRIVATE_KEY;
+  // Use the private key from environment, prioritizing the Base64 version for production.
+  let privateKey;
+  if (process.env.GOOGLE_PRIVATE_KEY_BASE64) {
+    console.log('Found GOOGLE_PRIVATE_KEY_BASE64, decoding...');
+    // Decode the Base64 key to get the original multi-line string.
+    privateKey = Buffer.from(process.env.GOOGLE_PRIVATE_KEY_BASE64, 'base64').toString('utf-8');
+  } else if (process.env.GOOGLE_PRIVATE_KEY) {
+    // Fallback to the raw key for local development.
+    console.log('Found GOOGLE_PRIVATE_KEY, using as is.');
+    privateKey = process.env.GOOGLE_PRIVATE_KEY;
+  }
+
+  // If neither key is found, the function cannot proceed.
   if (!privateKey) {
-    throw new Error('GOOGLE_PRIVATE_KEY environment variable is required');
+    throw new Error('Required environment variable GOOGLE_PRIVATE_KEY_BASE64 or GOOGLE_PRIVATE_KEY is missing.');
   }
 
   // Log what we're using
