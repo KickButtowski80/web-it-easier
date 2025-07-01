@@ -49,39 +49,46 @@ async function parseBody(req) {
 export default async function handler(req, res) {
 
 
+  // --- CORS Security Check ---
+  // To protect the API, we only allow requests from specific, trusted domains.
   const allowedOrigins = [
-    'https://izak-portfolio.vercel.app',  // Production
-    'http://localhost:3000'               // Local development
+    'https://izak-portfolio.vercel.app',  // The live, public website
+    'http://localhost:3000'               // The local development environment
   ];
 
+  // Get the domain the visitor is coming from.
   const origin = req.headers.origin;
   const isAllowed = allowedOrigins.includes(origin);
 
+  // If the visitor's domain is on our trusted list, we add special headers.
   if (isAllowed) {
+    // 1. Access-Control-Allow-Origin:
+    // This tells the browser, "It's okay for this website to see the response."
+    // We set it dynamically to the visitor's own origin.
     res.setHeader('Access-Control-Allow-Origin', origin);
     /**
      * Ensures secure caching by creating separate response caches for each origin.
      * Without this, a cached response for one origin could be incorrectly served to another.
      */
-    res.setHeader('Vary', 'Origin');  
+    res.setHeader('Vary', 'Origin');
     // Prevents cache poisoning when different origins request the same resource
     // forces each origin to have its own cash 
     // Required when using dynamic Access-Control-Allow-Origin values
   } else {
+    // If the visitor is not from a trusted domain, block the request immediately.
     return res.status(403).json({ error: 'Not Allowed' });
   }
 
- /**
-   * Preflight Requests:
-   * OPTIONS calls browsers make before actual requests to check CORS permissions
-   * - Caches OPTIONS responses for 24 hours (86400 seconds)
-   * - Specifies allowed methods and headers
-   */
+  // --- OPTIONS Preflight Request Handling ---
+  // Browsers send a "preflight" OPTIONS request before a real POST request
+  // to ask for permission and check the server's rules (CORS).
   if (req.method === 'OPTIONS') {
-    // Set CORS headers
+    // We tell the browser which methods and headers are allowed.
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Max-Age', '86400'); // Cache for 24 hours
+    // We also tell the browser it can remember these rules for 24 hours.
+    res.setHeader('Access-Control-Max-Age', '86400');
+    // Send a success response to let the browser proceed with the real request.
     return res.status(200).end();
   }
 

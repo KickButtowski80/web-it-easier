@@ -30,6 +30,7 @@ dist-ssr
 
 .env
 .env.local
+.env.local.backup
 .env.example
 .env.production
 .env.development
@@ -41,4 +42,6 @@ sonda-report.html
 public/images/backup/
 
 
-it-group-461723-37077b043425.json
+
+it-group-461723-8ec3f278a934.json
+formatted-key.txt
