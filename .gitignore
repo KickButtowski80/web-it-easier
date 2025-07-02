@@ -28,13 +28,20 @@ dist-ssr
 *.identifier
 *Zone.Identifier
 
-.env*
-.env.test
+.env
 .env.local
+.env.local.backup
 .env.example
+.env.production
+.env.development
+.env.test
+
 
 # Build reports
 sonda-report.html
 public/images/backup/
 
-.env.test
+
+
+it-group-461723-8ec3f278a934.json
+formatted-key.txt
