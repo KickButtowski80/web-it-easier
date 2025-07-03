@@ -71,8 +71,7 @@
                         <textarea ref="contentTextarea" id="content" v-model="formData.content"
                             @keydown.tab.exact.prevent="handleTabWrapper"
                             @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
-                            @keydown.enter.exact.prevent="handleEnter"
-                            @keydown.esc="handleEsc"
+                            @keydown.enter.exact.prevent="handleEnter" @keydown.esc="handleEsc"
                             placeholder="Write your post content in markdown..." required
                             :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
                 </textarea>
@@ -347,66 +346,66 @@ const handleEnter = (event) => {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const value = formData.value.content;
-    
+
     // Check if we're in a list item
     const currentLine = value.substring(value.lastIndexOf('\n', start - 1) + 1, start);
     const isInListItem = currentLine.match(/^\s*(\d+\.|[-*+])\s/);
-    
+
     if (isInListItem) {
         // Find the next line
         //start searching for \n from start point to find next line
         const nextLineStart = value.indexOf('\n', start) + 1;
-        
-       if (nextLineStart === 0) {
-           // No next line, create a new list item
-           event.preventDefault();
-           const beforeText = value.substring(0, start);
-           const afterText = value.substring(end);
-           
-           // Extract current list marker info
-           const listMatch = currentLine.match(/^(\s*)(\d+\.|[-*+])(\s+)/);
-           if (!listMatch) return;
-           
-           const [_, indent, marker, space] = listMatch;
-           let newMarker;
-           
-           if (marker.match(/\d+\./)) {
-               // For ordered lists, increment the number
-               const currentNumber = parseInt(marker, 10);
-               newMarker = `${currentNumber + 1}.`;
-           } else {
-               // For unordered lists, keep the same marker
-               newMarker = marker;
-           }
-           
-           // Create new list item with same indentation
-           const newListItem = `\n${indent}${newMarker}${space}`;
-           formData.value.content = beforeText + newListItem + afterText;
-           
-           // Position cursor after the new list marker
-           const newCursorPos = start + newListItem.length;
-           nextTick(() => {
-               textarea.focus();
-               textarea.setSelectionRange(newCursorPos, newCursorPos);
-           });
-           return;
-       }
+
+        if (nextLineStart === 0) {
+            // No next line, create a new list item
+            event.preventDefault();
+            const beforeText = value.substring(0, start);
+            const afterText = value.substring(end);
+
+            // Extract current list marker info
+            const listMatch = currentLine.match(/^(\s*)(\d+\.|[-*+])(\s+)/);
+            if (!listMatch) return;
+
+            const [_, indent, marker, space] = listMatch;
+            let newMarker;
+
+            if (marker.match(/\d+\./)) {
+                // For ordered lists, increment the number
+                const currentNumber = parseInt(marker, 10);
+                newMarker = `${currentNumber + 1}.`;
+            } else {
+                // For unordered lists, keep the same marker
+                newMarker = marker;
+            }
+
+            // Create new list item with same indentation
+            const newListItem = `\n${indent}${newMarker}${space}`;
+            formData.value.content = beforeText + newListItem + afterText;
+
+            // Position cursor after the new list marker
+            const newCursorPos = start + newListItem.length;
+            nextTick(() => {
+                textarea.focus();
+                textarea.setSelectionRange(newCursorPos, newCursorPos);
+            });
+            return;
+        }
 
 
         // Check if there is a next line and it's a list item
         if (nextLineStart > 0) {
             const nextLineEnd = value.indexOf('\n', nextLineStart);
-            const nextLine = nextLineEnd === -1 ? 
-                value.substring(nextLineStart) : 
+            const nextLine = nextLineEnd === -1 ?
+                value.substring(nextLineStart) :
                 value.substring(nextLineStart, nextLineEnd);
-            
+
             const nextListItemMatch = nextLine.match(/^\s*(\d+\.|[-*+])\s/);
-            
+
             if (nextListItemMatch) {
                 // Just move the cursor to after the list marker
                 event.preventDefault();
                 const newPosition = nextLineStart + nextListItemMatch[0].length;
-                
+
                 nextTick(() => {
                     textarea.focus();
                     textarea.setSelectionRange(newPosition, newPosition);
@@ -415,7 +414,7 @@ const handleEnter = (event) => {
             }
         }
     }
-    
+
     // Default enter behavior
     event.preventDefault();
     const beforeText = value.substring(0, start);
@@ -439,20 +438,11 @@ const handleFormat = ({ prefix, suffix }) => {
     const afterText = formData.value.content.substring(end);
 
     const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
-    // const needsNewLine = (prefix === '# ' || prefix === '## ' || prefix === '- ' || prefix === '1. ' || prefix === '> ') && !isLineStart;
-
-
-
-    const needsNewLinePattern = new RegExp([
-        '^', // Start of line
-        '(?:',
-        '\\s{0,4}(?:\\d+\\.\\s+\\S*)', // Ordered list (e.g., "1. item" or "    1. item")
-        '|',
-        '\\s{0,4}-\\s+\\S*',           // Unordered list (e.g., "- item" or "    - item")
-        ')'
-    ].join(''));
-
-
+    // Match list markers at start of line:
+    // - \s* : any number of spaces at start
+    // - (?:\d+\.\s*|[-*+]\s*) : either a number followed by dot, or a bullet (-/*/+)
+    // - $ : ensure nothing else follows (empty line after marker)
+    const needsNewLinePattern = /^\s*(?:\d+\.\s*|[-*+]\s*)$/;
     const needsNewLine = needsNewLinePattern.test(prefix) && !isLineStart;
 
     let newCursorPos = start;
@@ -471,10 +461,13 @@ const handleFormat = ({ prefix, suffix }) => {
     }
 
 
-
-    if (needsNewLine) {
+    const lastLineEnd = beforeText.lastIndexOf('\n');
+    const lastLine = beforeText.substring(lastLineEnd + 1);
+    
+    // Only add newline if the last line has actual content (not just spaces)
+    if (needsNewLine && lastLine.trim() !== '') {
         insertion = '\n' + insertion;
-        newCursorPos += 1; // Account for the newline
+        // newCursorPos += 1; // Account for the newline
     }
 
     // Special handling for different markdown elements
@@ -485,6 +478,9 @@ const handleFormat = ({ prefix, suffix }) => {
         // Position cursor inside the code block
         newCursorPos += prefix.length;
     } else if (number) {
+        console.log('indent', indent.length);
+        console.log('number', number);
+
         // For ordered lists, account for indent, number and dot
         newCursorPos += indent.length + number.toString().length + 2 + selectedText.length; // +2 for '. '
     } else if (prefix.match(/^\s*[-*+]\s+$/)) {
