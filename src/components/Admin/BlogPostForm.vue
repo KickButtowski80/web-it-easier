@@ -231,6 +231,13 @@ const handleShiftTabWrapper = (event) => {
 const currentLinesIndention = (text) => {
     const currentLineStart = text.lastIndexOf('\n') + 1;
     const currentLine = text.substring(currentLineStart);
+    
+    // Handle empty or whitespace-only lines
+    if (!currentLine.trim()) {
+        return '';
+    }
+    
+    // Match leading whitespace (tabs or spaces)
     const indentMatch = currentLine.match(/^[\t ]*/);
     return indentMatch ? indentMatch[0] : '';
 };
@@ -307,16 +314,23 @@ const findParentListItem = (text, currentLevel) => {
 
     // 1. Find the start of the current contiguous list block
     // A block starts after a blank line or a line with less indentation.
-    for (let i = lines.length - 1; i >= 0; i--) {
+    // Start from the second-to-last line to avoid including the current line in the search
+    const startIndex = Math.max(0, lines.length - 2);
+
+    for (let i = startIndex; i >= 0; i--) {
         const line = lines[i];
         const lineIndent = (line.match(/^[\t ]*/) || [''])[0];
-        const lineIndentLevel = Math.floor(lineIndent.split('').reduce((total, char) => total + (char === '\t' ? 4 : 1), 0) / 4);
+        const lineIndentLevel = Math.floor(lineIndent.split('').reduce((total, char) =>
+            total + (char === '\t' ? 4 : 1), 0) / 4);
 
+        // If we find a line with less indentation or a blank line, we've found our block start
         if (lineIndentLevel < currentLevel || !line.trim()) {
             listBlockStartIndex = i + 1;
             break;
         }
-        if (i === 0) { // If we reached the top of the file
+
+        // If we reach the top of the file, the entire block starts at index 0
+        if (i === 0) {
             listBlockStartIndex = 0;
         }
     }
@@ -442,8 +456,14 @@ const handleFormat = ({ prefix, suffix }) => {
     // - \s* : any number of spaces at start
     // - (?:\d+\.\s*|[-*+]\s*) : either a number followed by dot, or a bullet (-/*/+)
     // - $ : ensure nothing else follows (empty line after marker)
-    const needsNewLinePattern = /^\s*(?:\d+\.\s*|[-*+]\s*)$/;
-    const needsNewLine = needsNewLinePattern.test(prefix) && !isLineStart;
+    // Check if we need a newline for list items
+    // Check if prefix is a list marker (ordered or unordered)
+    // - Optional whitespace, followed by either:
+    //   - A number and a dot (1.)
+    //   - A bullet point (-, *, +)
+    // - Optional trailing whitespace
+    const isListMarker = /^\s*(?:\d+\.|[-*+])(?:\s|$)/.test(prefix);
+    const needsNewLine = isListMarker && !isLineStart;
 
     let newCursorPos = start;
     let insertion;
@@ -451,23 +471,72 @@ const handleFormat = ({ prefix, suffix }) => {
     if (prefix.match(/^\s*\d+\.\s+$/)) {
         ({ number, indent } = getOrderListCounter(beforeText));
     } else if (prefix.match(/^\s*[-*+]\s+$/)) {
-        indent = currentLinesIndention(beforeText);
+  
+        // For unordered lists, maintain current indentation
+        const lastLineEnd = beforeText.lastIndexOf('\n');
+        const currentLine = beforeText.substring(lastLineEnd + 1);
+        indent = currentLinesIndention(currentLine);
     }
-    if (number) {
-        insertion = indent + number + '. ' + selectedText + suffix;
-    }
-    else {
-        insertion = indent + prefix + selectedText + suffix;
-    }
-
-
-    const lastLineEnd = beforeText.lastIndexOf('\n');
-    const lastLine = beforeText.substring(lastLineEnd + 1);
+    /**
+     * Determines if we're starting a new sublist by checking if the current line is empty.
+     * This is true in two cases:
+     * 1. There are no newlines in beforeText (lastIndexOf returns -1)
+     * 2. The text after the last newline is empty or only whitespace
+     * 
+     * This helps prevent double-indentation when creating the first item in a sublist.
+     * @type {boolean}
+     */
+    // Check if we're starting a new sublist by looking at the previous line
+    const prevLineEnd = beforeText.lastIndexOf('\n', beforeText.lastIndexOf('\n') - 1);
+    const prevLine = beforeText.substring(prevLineEnd + 1, beforeText.lastIndexOf('\n')).trim();
     
-    // Only add newline if the last line has actual content (not just spaces)
-    if (needsNewLine && lastLine.trim() !== '') {
-        insertion = '\n' + insertion;
-        // newCursorPos += 1; // Account for the newline
+    // It's a new sublist if:
+    // 1. Previous line has content (not empty)
+    // 2. Current line is empty
+    // 3. Previous line is a list item
+    const isNewSublist = prevLine.match(/^\s*[-*+]\s+\S+/) && 
+        beforeText.substring(beforeText.lastIndexOf('\n') + 1).trim() === '';
+
+    if (number) {
+        // Only add indentation if it's not a new sublist (indent is already in the prefix)
+        insertion = (isNewSublist ? '' : indent) + number + '. ' + selectedText + suffix;
+    } else if (prefix.match(/^\s*[-*+]\s+$/)) {
+        console.log('isNewSubList, indent', isNewSublist, indent.length);
+        // For unordered lists, only add indentation if it's not a new sublist
+        insertion = indent + prefix + selectedText + suffix;
+    } else {
+        insertion = prefix + selectedText + suffix;
+    }
+
+    // Handle list items formatting
+    if (isListMarker) {
+        const lastLineEnd = beforeText.lastIndexOf('\n');
+        const lastLine = beforeText.substring(lastLineEnd + 1);
+        const isPreviousLineEmpty = lastLine.trim() === '';
+
+        // For unordered lists
+        if (prefix.match(/^\s*[-*+]\s*$/)) {
+            // Get current line's indentation
+            const lastLineEnd = beforeText.lastIndexOf('\n');
+            const currentLine = beforeText.substring(lastLineEnd + 1);
+            const currentIndent = currentLinesIndention(currentLine);
+
+            // Clean up any extra spaces and maintain current indentation
+            insertion = insertion.replace(/^(\s*[-*+])\s*/, (match, bullet) => {
+                // Use exactly 4 spaces for sublists, no indentation for top level
+                return (isNewSublist ? '    ' : currentIndent || '') + '-' + ' ';
+            });
+
+            // Add newline if needed, maintaining current indentation
+            if (needsNewLine && !isPreviousLineEmpty) {
+                insertion = '\n' + insertion;
+            }
+        } else if (number) {
+            // For ordered lists, just handle newlines if needed
+            if (needsNewLine && !isPreviousLineEmpty) {
+                insertion = '\n' + insertion;
+            }
+        }
     }
 
     // Special handling for different markdown elements
@@ -478,11 +547,10 @@ const handleFormat = ({ prefix, suffix }) => {
         // Position cursor inside the code block
         newCursorPos += prefix.length;
     } else if (number) {
-        console.log('indent', indent.length);
-        console.log('number', number);
-
-        // For ordered lists, account for indent, number and dot
-        newCursorPos += indent.length + number.toString().length + 2 + selectedText.length; // +2 for '. '
+        // Calculate cursor position based on whether it's a new sublist or not
+        const indentLength = isNewSublist ? 0 : indent.length;
+        const numberLength = number.toString().length;
+        newCursorPos += indentLength + numberLength + 2 + selectedText.length; // +2 for '. '
     } else if (prefix.match(/^\s*[-*+]\s+$/)) {
         // For unordered lists, account for indentation and list marker
         newCursorPos += indent.length + prefix.trim().length + 1 + selectedText.length; // +1 for the space after marker
