@@ -120,7 +120,7 @@ import Notification from '@/components/UI/Notification.vue'
 import { useNotification } from '@/utils/helpers'
 import MarkdownToolbar from '../UI/MarkdownToolbar.vue';
 import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
-import { handleTab, handleShiftTab } from '@/utils/textareaHelpers';
+import { handleTab, handleShiftTab, getListRelationship } from '@/utils/textareaHelpers';
 const {
     showNotification,
     notificationMessage,
@@ -231,16 +231,13 @@ const handleShiftTabWrapper = (event) => {
 const currentLinesIndention = (text) => {
     const currentLineStart = text.lastIndexOf('\n') + 1;
     const currentLine = text.substring(currentLineStart);
-    
-    // Handle empty or whitespace-only lines
-    if (!currentLine.trim()) {
-        return '';
-    }
-    
-    // Match leading whitespace (tabs or spaces)
-    const indentMatch = currentLine.match(/^[\t ]*/);
-    return indentMatch ? indentMatch[0] : '';
+    return currentLine.match(/^ */)[0];
 };
+
+
+
+
+
 
 /**
  * Get the next ordered list counter and indentation string
@@ -248,50 +245,84 @@ const currentLinesIndention = (text) => {
  * @returns {Object} - The next counter and indentation information
  */
 const getOrderListCounter = (beforeText) => {
+
+
     // Get the current line's indentation
     const indentStr = currentLinesIndention(beforeText);
 
-    // Calculate indentation in tab stops (1 tab = 4 spaces)
-    const currentIndent = indentStr.split('').reduce((total, char) =>
-        total + (char === '\t' ? 4 : 1), 0);
+    // Calculate indentation level based on spaces (4 spaces = 1 level)
+    const indentLevel = Math.floor(indentStr.length / 4); // 0 = top level, 1 = 1 tab, etc.
 
-    // Round down to nearest tab stop
-    const tabStop = Math.floor(currentIndent / 4) * 4;
-    const indentLevel = tabStop / 4; // 0 = top level, 1 = 1 tab, etc.
+
+    console.log(`Current indent level: ${indentLevel}`);
 
     const parentId = findParentListItem(beforeText, indentLevel);
+    console.log(`Parent ID: ${parentId}`);
 
-    // Cleanup logic: Remove counters for stale lists.
-    for (const key in orderListCounters.value) {
-        const keyLevelMatch = key.match(/level_(\d+)/);
-        const keyParentMatch = key.match(/parent_(.+)$/);
+    // Create composite key using both level and parent
+    const compositeKey = `level_${indentLevel}_${parentId}`;
+    console.log(`Composite key: ${compositeKey}`);
 
-        if (keyLevelMatch && keyParentMatch) {
-            const keyLevel = parseInt(keyLevelMatch[1], 10);
-            const keyParentId = keyParentMatch[1];
+    // Find the previous counter at this level to continue numbering
+    let counterValue = 1;
+    let foundExistingCounter = false;
 
-            // 1. Delete counters for any lists nested deeper than the current level.
-            if (keyLevel > indentLevel) {
-                delete orderListCounters.value[key];
-            }
+    // First, check if we already have a counter for this exact composite key
+    if (orderListCounters.value[compositeKey] !== undefined) {
+        counterValue = orderListCounters.value[compositeKey] + 1;
+        foundExistingCounter = true;
+        console.log(`Found existing counter for ${compositeKey}: ${counterValue - 1}`);
+    } else {
+        // If no exact match, look for any counter at this level with the same parent
+        for (const [key, value] of Object.entries(orderListCounters.value)) {
+            const keyLevelMatch = key.match(/level_(\d+)_(.*)/);
+            if (keyLevelMatch) {
+                const keyLevel = parseInt(keyLevelMatch[1], 10);
+                const keyParent = keyLevelMatch[2];
 
-            // 2. Delete counters for lists at the same level but with a different parent.
-            // This handles starting a new sub-list after finishing a previous one.
-            if (keyLevel === indentLevel && keyParentId !== parentId) {
-                delete orderListCounters.value[key];
+                // If we find a counter at the same level with the same parent, continue from it
+                if (keyLevel === indentLevel && keyParent === parentId) {
+                    counterValue = value + 1;
+                    foundExistingCounter = true;
+                    console.log(`Found matching parent counter at ${key}: ${value}`);
+                    break;
+                }
             }
         }
     }
 
-    // Create composite key using both level and parent
-    const compositeKey = `level_${indentLevel}_parent_${parentId}`;
+    // Clean up counters that are no longer needed
+    const keysToDelete = [];
+    for (const key in orderListCounters.value) {
+        const keyLevelMatch = key.match(/level_(\d+)_/);
+        if (keyLevelMatch) {
+            const keyLevel = parseInt(keyLevelMatch[1], 10);
 
-    // Initialize or get counter for this specific sub-list
-    if (!orderListCounters.value[compositeKey]) {
-        orderListCounters.value[compositeKey] = 1; // Start at 1
-    } else {
-        orderListCounters.value[compositeKey]++; // Increment the counter
+            // Delete counters for any lists nested deeper than the current level
+            // But only if we're not in the middle of a sublist
+            if (keyLevel > indentLevel && !key.startsWith(`level_${indentLevel + 1}_${parentId}`)) {
+                keysToDelete.push(key);
+                console.log(`Marking for deletion (deeper level): ${key}`);
+            }
+
+            // Delete counters for lists at the same level with different parents
+            if (keyLevel === indentLevel && key !== compositeKey) {
+                keysToDelete.push(key);
+                console.log(`Marking for deletion (same level, different parent): ${key}`);
+            }
+        }
     }
+
+    // Actually delete the marked keys
+    keysToDelete.forEach(key => {
+        delete orderListCounters.value[key];
+        console.log(`Deleted counter: ${key}`);
+    });
+
+    // Update the counter
+    orderListCounters.value[compositeKey] = counterValue;
+    console.log(`Set counter for ${compositeKey}: ${counterValue}`);
+    console.log('All counters:', JSON.stringify(orderListCounters.value, null, 2));
 
     return {
         number: orderListCounters.value[compositeKey],
@@ -299,60 +330,59 @@ const getOrderListCounter = (beforeText) => {
     };
 };
 
-
 /**
  * Helper function to find the parent list item for hierarchical tracking
- * @param {string} text - The text before the cursor
- * @param {number} currentLevel - The current indentation level
+ * @param {string} textBeforeCursor - The text before the cursor
+ * @param {number} currentIndentLevel - The current indentation level
  * @returns {string} - A unique identifier for the parent list item
  */
-const findParentListItem = (text, currentLevel) => {
-    if (currentLevel === 0) return 'root';
+const findParentListItem = (textBeforeCursor, currentIndentLevel) => {
+    console.log('findParentListItem called with currentIndentLevel:', currentIndentLevel);
+    console.log('textBeforeCursor:', textBeforeCursor);
 
-    const lines = text.split('\n');
-    let listBlockStartIndex = lines.length - 1;
+    if (currentIndentLevel === 0) {
+        console.log('Root level detected, returning "root"');
+        return 'root';
+    }
 
-    // 1. Find the start of the current contiguous list block
-    // A block starts after a blank line or a line with less indentation.
-    // Start from the second-to-last line to avoid including the current line in the search
-    const startIndex = Math.max(0, lines.length - 2);
+    const lines = textBeforeCursor.split('\n');
 
-    for (let i = startIndex; i >= 0; i--) {
+    // Look backwards from the current position to find the parent
+    // Start from the line before the current line
+    for (let i = lines.length - 1; i >= 0; i--) {
         const line = lines[i];
-        const lineIndent = (line.match(/^[\t ]*/) || [''])[0];
-        const lineIndentLevel = Math.floor(lineIndent.split('').reduce((total, char) =>
-            total + (char === '\t' ? 4 : 1), 0) / 4);
+        const lineIndent = line.match(/^ */)[0];
+        const lineIndentLevel = Math.floor(lineIndent.length / 4);
 
-        // If we find a line with less indentation or a blank line, we've found our block start
-        if (lineIndentLevel < currentLevel || !line.trim()) {
-            listBlockStartIndex = i + 1;
+        // Skip empty lines
+        if (!line.trim()) {
+            continue;
+        }
+
+        // If we find a line with exactly one level less indentation that's a list item
+        if (lineIndentLevel === currentIndentLevel - 1) {
+            const parentMatch = line.trim().match(/^(\d+)\.\s*/);
+            if (parentMatch) {
+                // Found a valid parent, create a stable ID
+                console.log(`Found parent: ${parentMatch[1]} at line ${i}`);
+                return `${parentMatch[1]}_${i}`;
+            }
+        }
+
+        // If we find a line with less indentation than our target parent level,
+        // we've gone too far back without finding a parent
+        if (lineIndentLevel < currentIndentLevel - 1) {
             break;
         }
-
-        // If we reach the top of the file, the entire block starts at index 0
-        if (i === 0) {
-            listBlockStartIndex = 0;
-        }
     }
 
-    // 2. Look for the parent on the line immediately preceding the block
-    const parentLineIndex = listBlockStartIndex - 1;
-    if (parentLineIndex >= 0) {
-        const parentLine = lines[parentLineIndex];
-        const parentIndent = (parentLine.match(/^[\t ]*/) || [''])[0];
-        const parentIndentLevel = Math.floor(parentIndent.split('').reduce((total, char) => total + (char === '\t' ? 4 : 1), 0) / 4);
-        const parentMatch = parentLine.trim().match(/^(\d+)\.\s*/);
-
-        if (parentIndentLevel === currentLevel - 1 && parentMatch) {
-            // Found a valid parent, create a stable ID
-            return `${parentMatch[1]}_${parentLineIndex}`;
-        }
-    }
-
-    // 3. If no parent is found, it's an "orphan" list.
-    // Its ID is based on its own starting position to keep it stable.
-    return `noparent_${currentLevel}_${listBlockStartIndex}`;
+    // If no parent is found, create a unique ID based on the current context
+    console.log('No parent found, creating orphan ID');
+    return `orphan_${currentIndentLevel}_${lines.length}`;
 };
+
+
+
 
 const handleEnter = (event) => {
 
@@ -364,7 +394,6 @@ const handleEnter = (event) => {
     // Check if we're in a list item
     const currentLine = value.substring(value.lastIndexOf('\n', start - 1) + 1, start);
     const isInListItem = currentLine.match(/^\s*(\d+\.|[-*+])\s/);
-
     if (isInListItem) {
         // Find the next line
         //start searching for \n from start point to find next line
@@ -451,17 +480,14 @@ const handleFormat = ({ prefix, suffix }) => {
     const beforeText = formData.value.content.substring(0, start);
     const afterText = formData.value.content.substring(end);
 
+    // Extract current line information - centralized for reuse
+    const currentLineStart = beforeText.lastIndexOf('\n') + 1;
+    const currentLineText = beforeText.substring(currentLineStart);
+    // Get current line's indentation
+    const currentLineIndent = currentLineText.match(/^ */)[0];
+
     const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
-    // Match list markers at start of line:
-    // - \s* : any number of spaces at start
-    // - (?:\d+\.\s*|[-*+]\s*) : either a number followed by dot, or a bullet (-/*/+)
-    // - $ : ensure nothing else follows (empty line after marker)
-    // Check if we need a newline for list items
-    // Check if prefix is a list marker (ordered or unordered)
-    // - Optional whitespace, followed by either:
-    //   - A number and a dot (1.)
-    //   - A bullet point (-, *, +)
-    // - Optional trailing whitespace
+
     const isListMarker = /^\s*(?:\d+\.|[-*+])(?:\s|$)/.test(prefix);
     const needsNewLine = isListMarker && !isLineStart;
 
@@ -471,39 +497,50 @@ const handleFormat = ({ prefix, suffix }) => {
     if (prefix.match(/^\s*\d+\.\s+$/)) {
         ({ number, indent } = getOrderListCounter(beforeText));
     } else if (prefix.match(/^\s*[-*+]\s+$/)) {
-  
-        // For unordered lists, maintain current indentation
-        const lastLineEnd = beforeText.lastIndexOf('\n');
-        const currentLine = beforeText.substring(lastLineEnd + 1);
-        indent = currentLinesIndention(currentLine);
+        // For unordered lists, we'll handle indentation separately
+        // No need to set indent here as we'll use indentToUse later
     }
-    /**
-     * Determines if we're starting a new sublist by checking if the current line is empty.
-     * This is true in two cases:
-     * 1. There are no newlines in beforeText (lastIndexOf returns -1)
-     * 2. The text after the last newline is empty or only whitespace
-     * 
-     * This helps prevent double-indentation when creating the first item in a sublist.
-     * @type {boolean}
-     */
-    // Check if we're starting a new sublist by looking at the previous line
-    const prevLineEnd = beforeText.lastIndexOf('\n', beforeText.lastIndexOf('\n') - 1);
-    const prevLine = beforeText.substring(prevLineEnd + 1, beforeText.lastIndexOf('\n')).trim();
-    
-    // It's a new sublist if:
-    // 1. Previous line has content (not empty)
-    // 2. Current line is empty
-    // 3. Previous line is a list item
-    const isNewSublist = prevLine.match(/^\s*[-*+]\s+\S+/) && 
-        beforeText.substring(beforeText.lastIndexOf('\n') + 1).trim() === '';
+
+    // Find out how this line relates to the previous list item
+    const {
+        isNewSublist,      // Is this line indented more than the previous?
+        isSameLevel,       // Is this line at the same level as the previous?
+        isOutdented,       // Is this line outdented compared to the previous?
+        prevLineIndent     // The spaces before the previous line
+    } = getListRelationship(beforeText, currentLineIndent);
+
+
+    // Determine the indentation to use based on the relationship
+    let indentToUse;
+    if (isNewSublist) {
+        // Check if user already manually indented
+
+        const targetIndent = prevLineIndent + '    ';
+        const currentIndent = currentLineIndent || '';
+
+        // Only add indentation if user hasn't already done so
+        if (currentIndent.length < targetIndent.length) {
+            indentToUse = targetIndent;
+        } else {
+            // User already indented manually, respect their indentation
+            indentToUse = currentIndent;
+        }
+    } else if (isSameLevel) {
+        indentToUse = prevLineIndent;
+    } else if (isOutdented) {
+        indentToUse = currentLineIndent;
+    } else {
+        indentToUse = currentLineIndent || '';
+    }
+
 
     if (number) {
-        // Only add indentation if it's not a new sublist (indent is already in the prefix)
-        insertion = (isNewSublist ? '' : indent) + number + '. ' + selectedText + suffix;
+        // For ordered lists
+        insertion = indentToUse + number + '. ' + selectedText + suffix;
     } else if (prefix.match(/^\s*[-*+]\s+$/)) {
-        console.log('isNewSubList, indent', isNewSublist, indent.length);
-        // For unordered lists, only add indentation if it's not a new sublist
-        insertion = indent + prefix + selectedText + suffix;
+        // For unordered lists - extract just the list marker without spaces
+        const listMarker = prefix.trim();
+        insertion = indentToUse + listMarker + ' ' + selectedText + suffix;
     } else {
         insertion = prefix + selectedText + suffix;
     }
@@ -514,28 +551,9 @@ const handleFormat = ({ prefix, suffix }) => {
         const lastLine = beforeText.substring(lastLineEnd + 1);
         const isPreviousLineEmpty = lastLine.trim() === '';
 
-        // For unordered lists
-        if (prefix.match(/^\s*[-*+]\s*$/)) {
-            // Get current line's indentation
-            const lastLineEnd = beforeText.lastIndexOf('\n');
-            const currentLine = beforeText.substring(lastLineEnd + 1);
-            const currentIndent = currentLinesIndention(currentLine);
-
-            // Clean up any extra spaces and maintain current indentation
-            insertion = insertion.replace(/^(\s*[-*+])\s*/, (match, bullet) => {
-                // Use exactly 4 spaces for sublists, no indentation for top level
-                return (isNewSublist ? '    ' : currentIndent || '') + '-' + ' ';
-            });
-
-            // Add newline if needed, maintaining current indentation
-            if (needsNewLine && !isPreviousLineEmpty) {
-                insertion = '\n' + insertion;
-            }
-        } else if (number) {
-            // For ordered lists, just handle newlines if needed
-            if (needsNewLine && !isPreviousLineEmpty) {
-                insertion = '\n' + insertion;
-            }
+        // Add newline if needed for both ordered and unordered lists
+        if (needsNewLine && !isPreviousLineEmpty) {
+            insertion = '\n' + insertion;
         }
     }
 
@@ -547,19 +565,22 @@ const handleFormat = ({ prefix, suffix }) => {
         // Position cursor inside the code block
         newCursorPos += prefix.length;
     } else if (number) {
-        // Calculate cursor position based on whether it's a new sublist or not
-        const indentLength = isNewSublist ? 0 : indent.length;
+        // Calculate cursor position based on whether we should skip indentation
+        // Place cursor right after the list marker (after the '. ' part)
         const numberLength = number.toString().length;
-        newCursorPos += indentLength + numberLength + 2 + selectedText.length; // +2 for '. '
+        newCursorPos = beforeText.length + numberLength + 2 + selectedText.length; // +2 for '. ', indentation already included in beforeText
     } else if (prefix.match(/^\s*[-*+]\s+$/)) {
         // For unordered lists, account for indentation and list marker
-        newCursorPos += indent.length + prefix.trim().length + 1 + selectedText.length; // +1 for the space after marker
+        newCursorPos = beforeText.length + prefix.trim().length + 1 + selectedText.length; // +1 for the space after marker, indentation already included in beforeText
     } else {
         // Default: position after the inserted prefix
-        newCursorPos += prefix.length + selectedText.length;
+        newCursorPos = beforeText.length + prefix.length + selectedText.length;
     }
 
-    formData.value.content = beforeText + insertion + afterText;
+    // To prevent double indentation, replace the current line's manual indent
+    // with our calculated insertion text.
+    const textBeforeCurrentLine = beforeText.substring(0, beforeText.length - currentLineIndent.length);
+    formData.value.content = textBeforeCurrentLine + insertion + afterText;
 
     // Set cursor position after the inserted text
     nextTick(() => {
@@ -567,6 +588,10 @@ const handleFormat = ({ prefix, suffix }) => {
         textarea.setSelectionRange(newCursorPos, newCursorPos);
     });
 };
+
+
+
+
 const navigateToManagePosts = () => {
     router.push('/admin/manage-posts');
 };
