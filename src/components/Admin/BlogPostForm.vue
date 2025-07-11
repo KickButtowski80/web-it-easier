@@ -120,7 +120,7 @@ import Notification from '@/components/UI/Notification.vue'
 import { useNotification } from '@/utils/helpers'
 import MarkdownToolbar from '../UI/MarkdownToolbar.vue';
 import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
-import { handleTab, handleShiftTab, getListRelationship } from '@/utils/textareaHelpers';
+import { handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo, determineListType, shouldInsertNewLine } from '@/utils/textareaHelpers';
 const {
     showNotification,
     notificationMessage,
@@ -245,7 +245,7 @@ const currentLinesIndention = (text) => {
  * @returns {Object} - The next counter and indentation information
  */
 const getOrderListCounter = (beforeText) => {
-
+ 
 
     // Get the current line's indentation
     const indentStr = currentLinesIndention(beforeText);
@@ -463,10 +463,12 @@ const handleEnter = (event) => {
     const beforeText = value.substring(0, start);
     const afterText = value.substring(end);
     formData.value.content = beforeText + '\n' + afterText;
-    const newCursorPos = start + 1;
+    // Calculate cursor position after newline: start + 1 (for the '\n' character)
+    // This positions the cursor at the beginning of the new line
+    const newLineCursorPos = start + 1;
     nextTick(() => {
         textarea.focus();
-        textarea.setSelectionRange(newCursorPos, newCursorPos);
+        textarea.setSelectionRange(newLineCursorPos, newLineCursorPos);
     });
 };
 
@@ -476,27 +478,27 @@ const handleFormat = ({ prefix, suffix }) => {
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
+    // Get current line information using the helper function
+    const { 
+        lineStart: currentLineStart, 
+        lineText: currentLineText, 
+        lineIndent: currentLineIndent, 
+        isLineStart, 
+        isInListItem 
+    } = getCurrentLineInfo(formData.value.content, start);
+
     const selectedText = formData.value.content.substring(start, end);
     const beforeText = formData.value.content.substring(0, start);
     const afterText = formData.value.content.substring(end);
 
-    // Extract current line information - centralized for reuse
-    const currentLineStart = beforeText.lastIndexOf('\n') + 1;
-    const currentLineText = beforeText.substring(currentLineStart);
-    // Get current line's indentation
-    const currentLineIndent = currentLineText.match(/^ */)[0];
-
-    const isLineStart = start === 0 || formData.value.content.charAt(start - 1) === '\n';
-
-    const isListMarker = /^\s*(?:\d+\.|[-*+])(?:\s|$)/.test(prefix);
-    const needsNewLine = isListMarker && !isLineStart;
+    const { isList: isListMarker, isOrdered, isUnordered } = determineListType(prefix);
 
     let newCursorPos = start;
     let insertion;
     let { number, indent } = { number: null, indent: '' };
-    if (prefix.match(/^\s*\d+\.\s+$/)) {
+    if (isOrdered) {
         ({ number, indent } = getOrderListCounter(beforeText));
-    } else if (prefix.match(/^\s*[-*+]\s+$/)) {
+    } else if (isUnordered) {
         // For unordered lists, we'll handle indentation separately
         // No need to set indent here as we'll use indentToUse later
     }
@@ -534,27 +536,21 @@ const handleFormat = ({ prefix, suffix }) => {
     }
 
 
-    if (number) {
+    if (isOrdered) {
         // For ordered lists
         insertion = indentToUse + number + '. ' + selectedText + suffix;
-    } else if (prefix.match(/^\s*[-*+]\s+$/)) {
+    } else if (isUnordered) {
         // For unordered lists - extract just the list marker without spaces
         const listMarker = prefix.trim();
         insertion = indentToUse + listMarker + ' ' + selectedText + suffix;
     } else {
+        // For all other markdown elements
         insertion = prefix + selectedText + suffix;
     }
 
-    // Handle list items formatting
-    if (isListMarker) {
-        const lastLineEnd = beforeText.lastIndexOf('\n');
-        const lastLine = beforeText.substring(lastLineEnd + 1);
-        const isPreviousLineEmpty = lastLine.trim() === '';
-
-        // Add newline if needed for both ordered and unordered lists
-        if (needsNewLine && !isPreviousLineEmpty) {
-            insertion = '\n' + insertion;
-        }
+    // Add newline before list items when needed (edge cases handled in shouldInsertNewLine)
+    if (shouldInsertNewLine(beforeText, isListMarker, isLineStart)) {
+        insertion = '\n' + insertion;
     }
 
     // Special handling for different markdown elements
@@ -569,7 +565,7 @@ const handleFormat = ({ prefix, suffix }) => {
         // Place cursor right after the list marker (after the '. ' part)
         const numberLength = number.toString().length;
         newCursorPos = beforeText.length + numberLength + 2 + selectedText.length; // +2 for '. ', indentation already included in beforeText
-    } else if (prefix.match(/^\s*[-*+]\s+$/)) {
+    } else if (isUnordered) {
         // For unordered lists, account for indentation and list marker
         newCursorPos = beforeText.length + prefix.trim().length + 1 + selectedText.length; // +1 for the space after marker, indentation already included in beforeText
     } else {
