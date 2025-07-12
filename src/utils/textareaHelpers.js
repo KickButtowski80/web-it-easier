@@ -1,10 +1,43 @@
 import { nextTick } from 'vue';
 
 /**
+ * Extracts information about the current line where the cursor is positioned
+ * @param {string} content - The full text content
+ * @param {number} cursorPosition - The current cursor position
+ * @returns {Object} - An object containing:
+ *   - lineStart: number - Start position of the current line
+ *   - lineText: string - Full text of the current line
+ *   - lineIndent: string - The indentation (spaces) at the start of the line
+ *   - isLineStart: boolean - Whether the cursor is at the start of the line
+ *   - isInListItem: boolean - Whether the current line is a list item (starts with - * or 1.)
+ */
+export const getCurrentLineInfo = (content, cursorPosition) => {
+    const lineStart = content.lastIndexOf('\n', cursorPosition - 1) + 1;
+    const lineEnd = content.indexOf('\n', cursorPosition);
+    const lineText = content.substring(
+        lineStart,
+        lineEnd === -1 ? content.length : lineEnd
+    );
+    const lineIndent = (lineText.match(/^ */) || [''])[0];
+    const isLineStart = cursorPosition === 0 || content.charAt(cursorPosition - 1) === '\n';
+    const isInListItem = lineText.match(/^\s*(\d+\.|[-*+])\s/) !== null;
+
+    return {
+        lineStart,
+        lineText,
+        lineIndent,
+        isLineStart,
+        isInListItem
+    };
+};
+
+/**
  * Handles Tab key in textarea with smart indentation for lists
  * @param {Event} e - The keydown event
  * @param {Object} formData - Reactive form data containing content
  */
+const TAB_SIZE = 4; // Consistent 4-space tabs
+
 export const handleTab = (e, formData) => {
     e.preventDefault();
     const textarea = e.target;
@@ -17,21 +50,21 @@ export const handleTab = (e, formData) => {
     const lineEnd = value.indexOf('\n', start);
     const currentLine = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
     
-    // Check if we're in a list item
-    const isListItem = /^\s*[\d+.]\s+.*$/.test(currentLine) || /^\s*[-*+]\s+.*$/.test(currentLine);
+    // Check if we're in a list item (using explicit spaces)
+    const isListItem = /^[ ]*[\d+.]\s+.*$/.test(currentLine) || /^[ ]*[-*+]\s+.*$/.test(currentLine);
     const isAtStartOfLine = start === lineStart;
     
-    // If at start of line or in a list item, add 4 spaces
+    // If at start of line or in a list item, add TAB_SIZE spaces
     if (isAtStartOfLine || isListItem) {
-        const newText = value.substring(0, start) + '    ' + value.substring(start);
+        const newText = value.substring(0, start) + ' '.repeat(TAB_SIZE) + value.substring(start);
         formData.content = newText;
         nextTick(() => {
-            textarea.selectionStart = textarea.selectionEnd = start + 4;
+            textarea.selectionStart = textarea.selectionEnd = start + TAB_SIZE;
         });
     } else {
         // Standard tab behavior - align to next tab stop
         const lineUpToCursor = value.substring(lineStart, start);
-        const spacesToAdd = 4 - (lineUpToCursor.length % 4);
+        const spacesToAdd = TAB_SIZE - (lineUpToCursor.length % TAB_SIZE);
         const newText = value.substring(0, start) + ' '.repeat(spacesToAdd) + value.substring(start);
         formData.content = newText;
         nextTick(() => {
@@ -173,4 +206,117 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
         isOutdented,
         prevLineIndent: lastListItemIndent // Return ACTUAL indentation, not normalized
     };
+};
+
+/**
+ * Determines if a prefix is a list marker and its type
+ * @param {string} prefix - The prefix to check
+ * @returns {Object} - An object containing:
+ *   - isList: boolean - Whether the prefix is a list marker
+ *   - isOrdered: boolean - Whether it's an ordered list
+ *   - isUnordered: boolean - Whether it's an unordered list
+ */
+export const determineListType = (prefix) => {
+    const isOrdered = /^\s*\d+\.\s+$/.test(prefix);
+    const isUnordered = /^\s*[-*+]\s+$/.test(prefix);
+    return {
+        isList: isOrdered || isUnordered,
+        isOrdered,
+        isUnordered
+    };
+};
+
+
+/**
+ * Determines if a newline should be inserted before a list marker.
+ * Handles edge cases to prevent double newlines or incorrect line breaks.
+ * 
+ * @param {string} beforeText - The text content before the cursor position
+ * @param {boolean} isListMarker - Whether the current formatting action is for a list item
+ * @param {boolean} isLineStart - Whether the cursor is at the start of a line
+ * @param {string} insertion - The text being inserted
+ * @returns {boolean} True if a newline should be inserted, false otherwise
+ * 
+ * @example
+ * // Returns false - not a list item
+ * shouldInsertNewLine('Some text', false, false);
+ * 
+ * @example
+ * // Returns false - already at line start
+ * shouldInsertNewLine('\n', true, true);
+ * 
+ * @example
+ * // Returns true - needs newline before list item
+ * shouldInsertNewLine('Some text', true, false);
+ */
+/**
+ * Determines if a newline should be inserted before a list marker
+ * @param {string} beforeText - Text before the cursor
+ * @param {boolean} isListMarker - If the current action is a list marker
+ * @param {boolean} isLineStart - If cursor is at line start
+ * @param {string} [insertion=''] - The text being inserted
+ * @returns {boolean} True if newline should be inserted
+ */
+export function shouldInsertNewLine(beforeText, isListMarker, isLineStart, insertion) {
+    // Early exit conditions
+    if (!isListMarker || isLineStart) return false;
+    if (!beforeText.length) return false; // start of document
+    
+    // Get the current line's content
+    const lastNewline = beforeText.lastIndexOf('\n');
+    const lastLine = beforeText.slice(lastNewline + 1);
+    
+    // Check if current line has a list marker (ordered or unordered)
+    const hasListMarker = /^\s*\d+\.\s*/.test(lastLine) || // Matches "1. " or "  1. "
+                        /^\s*[-*+]\s+/.test(lastLine);     // Matches "- ", "* ", "+ "
+    
+    // Check if we're inserting a sub-list (indented list)
+    const isSubList = /^\s{4,}(?:\d+\.|[-*+])\s/.test(insertion);
+    
+    // Insert newline if:
+    // 1. Current line has a list marker, or
+    // 2. We're inserting a sub-list, or
+    // 3. Current line has content and we're not at line start
+    return hasListMarker || isSubList || (lastLine.trim().length > 0 && !isLineStart);
+}
+
+
+ 
+/**
+ * Calculates the new cursor position after text insertion
+ * @param {Object} options - Position calculation options
+ * @param {string} options.beforeText - Text before the cursor
+ * @param {string} options.selectedText - Currently selected text
+ * @param {string} options.prefix - Text being inserted before selection
+ * @param {string} options.suffix - Text being inserted after selection
+ * @param {boolean} options.isOrdered - If the current format is an ordered list
+ * @param {boolean} options.isUnordered - If the current format is an unordered list
+ * @param {number} [options.number] - The list number (for ordered lists)
+ * @returns {number} The new cursor position
+ */
+export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suffix, isOrdered, isUnordered, number }) => {
+    // For links and images, position cursor inside the URL
+    if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
+        return beforeText.length + prefix.length;
+    }
+    
+    // For code blocks, position inside the block
+    if (prefix === '```\n' && suffix === '\n```') {
+        return beforeText.length + prefix.length;
+    }
+    
+    // For ordered lists, account for number and indentation
+    if (isOrdered && number !== undefined) {
+  
+        const numberLength = number.toString().length;
+        return beforeText.length + numberLength + 2 + selectedText.length; // +1 for '.' (after the dot)
+    }
+    
+    // For unordered lists, account for list marker
+    if (isUnordered) {
+        return beforeText.length + prefix.trim().length + 1 + selectedText.length; // +1 for space after marker
+    }
+    
+    // Default case: position after the inserted prefix
+    return beforeText.length + prefix.length + selectedText.length;
 };
