@@ -120,7 +120,8 @@ import Notification from '@/components/UI/Notification.vue'
 import { useNotification } from '@/utils/helpers'
 import MarkdownToolbar from '../UI/MarkdownToolbar.vue';
 import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
-import { handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo, determineListType, shouldInsertNewLine } from '@/utils/textareaHelpers';
+import { handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo,
+     determineListType, shouldInsertNewLine, calculateCursorPosition } from '@/utils/textareaHelpers';
 const {
     showNotification,
     notificationMessage,
@@ -549,34 +550,35 @@ const handleFormat = ({ prefix, suffix }) => {
     }
 
     // Add newline before list items when needed (edge cases handled in shouldInsertNewLine)
-    if (shouldInsertNewLine(beforeText, isListMarker, isLineStart)) {
+    if (shouldInsertNewLine(beforeText, isListMarker, isLineStart, insertion)) {
+        debugger;
         insertion = '\n' + insertion;
     }
 
-    // Special handling for different markdown elements
-    if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
-        // Position cursor inside the link/image URL
-        newCursorPos += prefix.length;
-    } else if (prefix === '```\n' && suffix === '\n```') {
-        // Position cursor inside the code block
-        newCursorPos += prefix.length;
-    } else if (number) {
-        // Calculate cursor position based on whether we should skip indentation
-        // Place cursor right after the list marker (after the '. ' part)
-        const numberLength = number.toString().length;
-        newCursorPos = beforeText.length + numberLength + 2 + selectedText.length; // +2 for '. ', indentation already included in beforeText
-    } else if (isUnordered) {
-        // For unordered lists, account for indentation and list marker
-        newCursorPos = beforeText.length + prefix.trim().length + 1 + selectedText.length; // +1 for the space after marker, indentation already included in beforeText
-    } else {
-        // Default: position after the inserted prefix
-        newCursorPos = beforeText.length + prefix.length + selectedText.length;
-    }
+    // Calculate the new cursor position using the helper function
+    newCursorPos = calculateCursorPosition({
+        beforeText,
+        selectedText,
+        prefix,
+        suffix,
+        insertion,  // Pass the full insertion string
+        isOrdered: !!number,
+        isUnordered,
+        number
+    });
+    debugger;
 
-    // To prevent double indentation, replace the current line's manual indent
-    // with our calculated insertion text.
-    const textBeforeCurrentLine = beforeText.substring(0, beforeText.length - currentLineIndent.length);
-    formData.value.content = textBeforeCurrentLine + insertion + afterText;
+    let lastN =beforeText.lastIndexOf('\n')
+ 
+beforeText.substring(0, lastN-1)
+//     const textBeforeCurrentLine = beforeText.substring(0, beforeText.length - currentLineIndent.length);
+//     // formData.value.content = textBeforeCurrentLine + insertion + afterText;
+//     formData.value.content = beforeText.substring(0, lastN).concat(insertion, afterText);
+
+
+ debugger;
+formData.value.content = beforeText + insertion + afterText;
+
 
     // Set cursor position after the inserted text
     nextTick(() => {

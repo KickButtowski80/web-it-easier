@@ -265,7 +265,7 @@ export function shouldInsertNewLine(beforeText, isListMarker, isLineStart, inser
     // Get the current line's content
     const lastNewline = beforeText.lastIndexOf('\n');
     const lastLine = beforeText.slice(lastNewline + 1);
-    
+    debugger;
     // Check if current line has a list marker (ordered or unordered)
     const hasListMarker = /^\s*\d+\.\s*/.test(lastLine) || // Matches "1. " or "  1. "
                         /^\s*[-*+]\s+/.test(lastLine);     // Matches "- ", "* ", "+ "
@@ -289,12 +289,13 @@ export function shouldInsertNewLine(beforeText, isListMarker, isLineStart, inser
  * @param {string} options.selectedText - Currently selected text
  * @param {string} options.prefix - Text being inserted before selection
  * @param {string} options.suffix - Text being inserted after selection
+ * @param {string} [options.insertion] - The complete text being inserted (including prefix and any formatting)
  * @param {boolean} options.isOrdered - If the current format is an ordered list
  * @param {boolean} options.isUnordered - If the current format is an unordered list
  * @param {number} [options.number] - The list number (for ordered lists)
  * @returns {number} The new cursor position
  */
-export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suffix, isOrdered, isUnordered, number }) => {
+export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suffix, insertion, isOrdered, isUnordered, number }) => {
     // For links and images, position cursor inside the URL
     if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
         return beforeText.length + prefix.length;
@@ -305,16 +306,31 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
         return beforeText.length + prefix.length;
     }
     
-    // For ordered lists, account for number and indentation
+    // For ordered lists, use the insertion text if available for more accurate positioning
     if (isOrdered && number !== undefined) {
-  
+        if (insertion) {
+            // Find the position after the dot in the insertion
+            const dotIndex = insertion.indexOf('.');
+            if (dotIndex !== -1) {
+                return beforeText.length + dotIndex + 1; // Position after the dot
+            }
+        }
+        // Fallback to the original calculation if no insertion or no dot found
         const numberLength = number.toString().length;
-        return beforeText.length + numberLength + 2 + selectedText.length; // +1 for '.' (after the dot)
+        return beforeText.length + numberLength + 1; // Position after the dot
     }
     
-    // For unordered lists, account for list marker
+    // For unordered lists, use the insertion text if available
     if (isUnordered) {
-        return beforeText.length + prefix.trim().length + 1 + selectedText.length; // +1 for space after marker
+        if (insertion) {
+            // Position after the list marker and space
+            const markerEnd = insertion.match(/^\s*[-*+]\s/);
+            if (markerEnd) {
+                return beforeText.length + markerEnd[0].length;
+            }
+        }
+        // Fallback to the original calculation
+        return beforeText.length + prefix.trim().length + 1; // +1 for space after marker
     }
     
     // Default case: position after the inserted prefix
