@@ -265,7 +265,16 @@ const getOrderListCounter = (beforeText) => {
     // Find the previous counter at this level to continue numbering
     let counterValue = 1;
     let foundExistingCounter = false;
-
+    const hasOrderedLists = (content) => {
+        if (!content) return false;
+        return content.split('\n').some(line => /^\s*\d+\.\s?/.test(line.trim()));
+    };
+    
+    if (!hasOrderedLists(beforeText)) {
+        orderListCounters.value = {};
+        counterValue = 1; 
+        foundExistingCounter = false;
+    }
     // First, check if we already have a counter for this exact composite key
     if (orderListCounters.value[compositeKey] !== undefined) {
         counterValue = orderListCounters.value[compositeKey] + 1;
