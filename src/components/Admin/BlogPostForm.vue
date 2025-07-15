@@ -193,9 +193,9 @@ const isSubmitting = ref(false);
 const isLoading = ref(false);
 
 const previewContent = computed(() => {
-    return renderMarkdown(formData.value.content || '');
+    const html = renderMarkdown(formData.value.content || '');
+    return html;
 });
-
 const buttonText = computed(() => {
     if (isSubmitting.value) {
         return isEditMode.value ? 'Updating...' : 'Publishing...';
@@ -562,11 +562,6 @@ const handleFormat = ({ prefix, suffix }) => {
         isUnordered,
         number
     });
-    debugger;
-
-
-
-
     formData.value.content = beforeText + insertion + afterText;
 
 

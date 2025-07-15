@@ -30,7 +30,17 @@
           </ul>
         </nav>
 
-        <div class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4" v-html="renderedContent"></div>
+        <!-- 
+          Main content container with prose styling
+          - Uses direct CSS selectors (no :deep) because:
+            1. v-html content renders as direct children
+            2. No component boundaries to cross
+            3. Styles apply directly to rendered markdown
+          - ID 'post-content' provides styling hook
+          - 'prose' class applies Tailwind typography
+          - 'whitespace-pre-wrap' preserves formatting
+        -->
+        <div  id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4" v-html="renderedContent"></div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite">
         <div class="animate-pulse">
@@ -187,8 +197,9 @@ function deslugify(slug) {
 }
 
 const renderedContent = computed(() => {
-  if (!post.value || !post.value.content) return "";
-  return renderMarkdown(post.value.content);
+  if (!post.value || !post.value.content) return ""; 
+  const html = renderMarkdown(post.value.content);  
+  return html;
 });
 
 const toc = computed(() => {
@@ -240,7 +251,44 @@ function scrollToSection(id) {
 
 <style>
 
+/* 
+  :deep() is a Vue scoped CSS feature that allows styling child components or dynamic content.
+  The selector inside :deep() will be left untouched, allowing it to target nested elements.
+  In this case, we're styling ordered lists within elements that have the 'prose' class.
+*/
 
+#post-content.prose:has(ul) {
+    list-style-type: disc;
+    padding-left: 2rem;
+}
+
+#post-content.prose:has(ol) {
+    list-style-type: decimal;
+    padding-left: 2rem;
+}
+
+/* Nested list styles */
+#post-content.prose ul ul {
+    list-style-type: circle;
+}
+
+#post-content.prose ol ol {
+    list-style-type: lower-alpha;
+}
+
+#post-content.prose ol ol ol {
+    list-style-type: lower-roman;
+}
+
+#post-content.prose blockquote {
+    border-left: 4px solid #e5e7eb;
+    /* Light gray border on the left */
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    color: #4b5563;
+    /* Slightly darker text */
+    font-style: italic;
+}
 
 
 
@@ -264,7 +312,7 @@ pre>code {
   display: block;
 }
 
-.prose code {
+#post-content.prose code {
   background-color: rgba(59, 130, 246, 0.1);
   padding: 0.2em 0.6em;
   border-radius: 6px;
