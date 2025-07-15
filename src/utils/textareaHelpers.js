@@ -335,8 +335,7 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
     }
 
     // For unordered lists, use the insertion text if available
-    if (isUnordered) {
-     
+    if (isUnordered) {     
         if (insertion) {
             // Position after the list marker and space
             const markerEnd = insertion.match(/^\s*[-*+]\s?/);
