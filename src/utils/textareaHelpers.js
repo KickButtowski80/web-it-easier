@@ -179,8 +179,8 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
             prevLineIndent: actualPrevLineIndent
         };
     }
-    
- 
+
+
 
     // If no list items found, return basic relationship
     if (!foundListItem) {
@@ -336,9 +336,10 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
 
     // For unordered lists, use the insertion text if available
     if (isUnordered) {
+     
         if (insertion) {
             // Position after the list marker and space
-            const markerEnd = insertion.match(/^\s*[-*+]\s/);
+            const markerEnd = insertion.match(/^\s*[-*+]\s?/);
             if (markerEnd) {
                 return beforeText.length + markerEnd[0].length;
             }
