@@ -506,6 +506,7 @@ const handleFormat = ({ prefix, suffix }) => {
 
 
     let indentToUse = currentLineIndent || '';
+ 
     if (isNewSublist) {
         const targetIndent = prevLineIndent + '    '; // Base 4-space increment
 

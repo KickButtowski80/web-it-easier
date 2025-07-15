@@ -136,7 +136,7 @@ export const handleShiftTab = (e, formData) => {
 export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
     // Split text into lines and remove the current line (which is incomplete)
     const allLines = textBeforeCursor.split('\n');
-    const listPattern = /^\s*\d+\.\s*|^\s*[-*+]\s+/;
+    const listPattern = /^\s*\d+\.\s*|^\s*[-*+]\s*/;
 
     // Skip the current line which is the last one in the array
     // We're only interested in complete previous lines
@@ -151,7 +151,7 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
     // Scan backwards through previous lines only
     for (let i = previousLines.length - 1; i >= 0; i--) {
         const line = previousLines[i];
-
+        debugger;
         // Skip completely empty lines
         if (line.length === 0) continue;
 
@@ -176,9 +176,11 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
             isNewSublist: false,
             isSameLevel: false,
             isOutdented: false,
-            prevLineIndent: ''
+            prevLineIndent: actualPrevLineIndent
         };
     }
+    
+ 
 
     // If no list items found, return basic relationship
     if (!foundListItem) {
@@ -270,7 +272,7 @@ export function shouldInsertNewLine(beforeText, isListMarker, isLineStart, inser
     const lastNewline = beforeText.lastIndexOf('\n') + 1;
     const lastLine = beforeText.slice(lastNewline);
 
-    debugger;
+
 
     // Never insert newline if the last line is empty (already has a newline)
     if (beforeText.replace(/[ ]+$/, '').endsWith('\n')) {
