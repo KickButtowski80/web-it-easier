@@ -49,11 +49,11 @@ export const handleTab = (e, formData) => {
     const lineStart = value.lastIndexOf('\n', start - 1) + 1;
     const lineEnd = value.indexOf('\n', start);
     const currentLine = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
-    
+
     // Check if we're in a list item (using explicit spaces)
     const isListItem = /^[ ]*[\d+.]\s+.*$/.test(currentLine) || /^[ ]*[-*+]\s+.*$/.test(currentLine);
     const isAtStartOfLine = start === lineStart;
-    
+
     // If at start of line or in a list item, add TAB_SIZE spaces
     if (isAtStartOfLine || isListItem) {
         const newText = value.substring(0, start) + ' '.repeat(TAB_SIZE) + value.substring(start);
@@ -96,7 +96,7 @@ export const handleShiftTab = (e, formData) => {
 
     // Check if we're in a list item
     const isListItem = /^\s*[\d+.]\s+.*$/.test(line) || /^\s*[-*+]\s+.*$/.test(line);
-    
+
     // Calculate spaces to remove
     let spacesToRemove;
     if (isListItem) {
@@ -110,8 +110,8 @@ export const handleShiftTab = (e, formData) => {
 
     // Create new line with reduced indentation
     const newLine = line.substring(spacesToRemove);
-    const newText = value.substring(0, lineStart) + newLine + 
-                   value.substring(lineEnd === -1 ? value.length : lineEnd);
+    const newText = value.substring(0, lineStart) + newLine +
+        value.substring(lineEnd === -1 ? value.length : lineEnd);
 
     formData.content = newText;
 
@@ -137,30 +137,30 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
     // Split text into lines and remove the current line (which is incomplete)
     const allLines = textBeforeCursor.split('\n');
     const listPattern = /^\s*\d+\.\s*|^\s*[-*+]\s+/;
-    
+
     // Skip the current line which is the last one in the array
     // We're only interested in complete previous lines
-    
+
     let actualPrevLine = '';
     let actualPrevLineIndent = '';
     let lastListItemLine = '';
     let lastListItemIndent = '';
     let foundListItem = false;
- 
+
     const previousLines = allLines.slice(0, -1);
     // Scan backwards through previous lines only
     for (let i = previousLines.length - 1; i >= 0; i--) {
         const line = previousLines[i];
-        
+
         // Skip completely empty lines
         if (line.length === 0) continue;
-        
+
         // Record non-empty lines as we find them
         if (line.trim() !== '') {
             actualPrevLine = line;
             actualPrevLineIndent = line.match(/^ */)[0];
         }
-        
+
         // Look for the most recent list item for context
         if (line && listPattern.test(line)) {
             lastListItemLine = line;
@@ -169,7 +169,7 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
             break; // Found what we need
         }
     }
-    
+
     // If no lines found at all
     if (!actualPrevLine) {
         return {
@@ -179,7 +179,7 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
             prevLineIndent: ''
         };
     }
-    
+
     // If no list items found, return basic relationship
     if (!foundListItem) {
         return {
@@ -189,17 +189,17 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
             prevLineIndent: actualPrevLineIndent
         };
     }
-    
+
     // Compare actual indentation lengths (preserve exact spacing)
     const currentIndent = currentLineIndent ?? '';
     const currentLevel = currentIndent.length;
     const prevLevel = lastListItemIndent.length;
-    
+
     // Determine relationships based on actual indentation
     const isNewSublist = foundListItem && currentLevel > prevLevel;
     const isSameLevel = foundListItem && currentLevel === prevLevel;
     const isOutdented = currentLevel < prevLevel;
-    
+
     return {
         isNewSublist,
         isSameLevel,
@@ -261,18 +261,29 @@ export function shouldInsertNewLine(beforeText, isListMarker, isLineStart, inser
     // Early exit conditions
     if (!isListMarker || isLineStart) return false;
     if (!beforeText.length) return false; // start of document
-    
+    // Detect if there's a newline before the trailing spaces
+    const hasTerminalNewline = /\n\s*$/.test(beforeText);
+    if (hasTerminalNewline) {
+        return false;
+    }
     // Get the current line's content
-    const lastNewline = beforeText.lastIndexOf('\n');
-    const lastLine = beforeText.slice(lastNewline + 1);
+    const lastNewline = beforeText.lastIndexOf('\n') + 1;
+    const lastLine = beforeText.slice(lastNewline);
+
     debugger;
+
+    // Never insert newline if the last line is empty (already has a newline)
+    if (beforeText.replace(/[ ]+$/, '').endsWith('\n')) {
+        return false;
+    }
+
     // Check if current line has a list marker (ordered or unordered)
     const hasListMarker = /^\s*\d+\.\s*/.test(lastLine) || // Matches "1. " or "  1. "
-                        /^\s*[-*+]\s+/.test(lastLine);     // Matches "- ", "* ", "+ "
-    
+        /^\s*[-*+]\s+/.test(lastLine);     // Matches "- ", "* ", "+ "
+
     // Check if we're inserting a sub-list (indented list)
     const isSubList = /^\s{4,}(?:\d+\.|[-*+])\s/.test(insertion);
-    
+
     // Insert newline if:
     // 1. Current line has a list marker, or
     // 2. We're inserting a sub-list, or
@@ -281,7 +292,7 @@ export function shouldInsertNewLine(beforeText, isListMarker, isLineStart, inser
 }
 
 
- 
+
 /**
  * Calculates the new cursor position after text insertion
  * @param {Object} options - Position calculation options
@@ -300,14 +311,15 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
     if ((prefix === '[' && suffix === '](url)') || (prefix === '![' && suffix === '](image-url)')) {
         return beforeText.length + prefix.length;
     }
-    
+
     // For code blocks, position inside the block
     if (prefix === '```\n' && suffix === '\n```') {
         return beforeText.length + prefix.length;
     }
-    
+
     // For ordered lists, use the insertion text if available for more accurate positioning
     if (isOrdered && number !== undefined) {
+
         if (insertion) {
             // Find the position after the dot in the insertion
             const dotIndex = insertion.indexOf('.');
@@ -319,7 +331,7 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
         const numberLength = number.toString().length;
         return beforeText.length + numberLength + 1; // Position after the dot
     }
-    
+
     // For unordered lists, use the insertion text if available
     if (isUnordered) {
         if (insertion) {
@@ -332,7 +344,7 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
         // Fallback to the original calculation
         return beforeText.length + prefix.trim().length + 1; // +1 for space after marker
     }
-    
+
     // Default case: position after the inserted prefix
     return beforeText.length + prefix.length + selectedText.length;
 };

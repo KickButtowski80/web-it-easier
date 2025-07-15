@@ -120,8 +120,10 @@ import Notification from '@/components/UI/Notification.vue'
 import { useNotification } from '@/utils/helpers'
 import MarkdownToolbar from '../UI/MarkdownToolbar.vue';
 import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
-import { handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo,
-     determineListType, shouldInsertNewLine, calculateCursorPosition } from '@/utils/textareaHelpers';
+import {
+    handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo,
+    determineListType, shouldInsertNewLine, calculateCursorPosition
+} from '@/utils/textareaHelpers';
 const {
     showNotification,
     notificationMessage,
@@ -246,7 +248,7 @@ const currentLinesIndention = (text) => {
  * @returns {Object} - The next counter and indentation information
  */
 const getOrderListCounter = (beforeText) => {
- 
+
 
     // Get the current line's indentation
     const indentStr = currentLinesIndention(beforeText);
@@ -255,14 +257,10 @@ const getOrderListCounter = (beforeText) => {
     const indentLevel = Math.floor(indentStr.length / 4); // 0 = top level, 1 = 1 tab, etc.
 
 
-    console.log(`Current indent level: ${indentLevel}`);
-
     const parentId = findParentListItem(beforeText, indentLevel);
-    console.log(`Parent ID: ${parentId}`);
 
     // Create composite key using both level and parent
     const compositeKey = `level_${indentLevel}_${parentId}`;
-    console.log(`Composite key: ${compositeKey}`);
 
     // Find the previous counter at this level to continue numbering
     let counterValue = 1;
@@ -272,7 +270,6 @@ const getOrderListCounter = (beforeText) => {
     if (orderListCounters.value[compositeKey] !== undefined) {
         counterValue = orderListCounters.value[compositeKey] + 1;
         foundExistingCounter = true;
-        console.log(`Found existing counter for ${compositeKey}: ${counterValue - 1}`);
     } else {
         // If no exact match, look for any counter at this level with the same parent
         for (const [key, value] of Object.entries(orderListCounters.value)) {
@@ -285,7 +282,6 @@ const getOrderListCounter = (beforeText) => {
                 if (keyLevel === indentLevel && keyParent === parentId) {
                     counterValue = value + 1;
                     foundExistingCounter = true;
-                    console.log(`Found matching parent counter at ${key}: ${value}`);
                     break;
                 }
             }
@@ -303,13 +299,11 @@ const getOrderListCounter = (beforeText) => {
             // But only if we're not in the middle of a sublist
             if (keyLevel > indentLevel && !key.startsWith(`level_${indentLevel + 1}_${parentId}`)) {
                 keysToDelete.push(key);
-                console.log(`Marking for deletion (deeper level): ${key}`);
             }
 
             // Delete counters for lists at the same level with different parents
             if (keyLevel === indentLevel && key !== compositeKey) {
                 keysToDelete.push(key);
-                console.log(`Marking for deletion (same level, different parent): ${key}`);
             }
         }
     }
@@ -317,13 +311,10 @@ const getOrderListCounter = (beforeText) => {
     // Actually delete the marked keys
     keysToDelete.forEach(key => {
         delete orderListCounters.value[key];
-        console.log(`Deleted counter: ${key}`);
     });
 
     // Update the counter
     orderListCounters.value[compositeKey] = counterValue;
-    console.log(`Set counter for ${compositeKey}: ${counterValue}`);
-    console.log('All counters:', JSON.stringify(orderListCounters.value, null, 2));
 
     return {
         number: orderListCounters.value[compositeKey],
@@ -480,16 +471,16 @@ const handleFormat = ({ prefix, suffix }) => {
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     // Get current line information using the helper function
-    const { 
-        lineStart: currentLineStart, 
-        lineText: currentLineText, 
-        lineIndent: currentLineIndent, 
-        isLineStart, 
-        isInListItem 
+    const {
+        lineStart: currentLineStart,
+        lineText: currentLineText,
+        lineIndent: currentLineIndent,
+        isLineStart,
+        isInListItem
     } = getCurrentLineInfo(formData.value.content, start);
 
     const selectedText = formData.value.content.substring(start, end);
-    const beforeText = formData.value.content.substring(0, start);
+    let beforeText = formData.value.content.substring(0, start);
     const afterText = formData.value.content.substring(end);
 
     const { isList: isListMarker, isOrdered, isUnordered } = determineListType(prefix);
@@ -513,37 +504,43 @@ const handleFormat = ({ prefix, suffix }) => {
     } = getListRelationship(beforeText, currentLineIndent);
 
 
-    // Determine the indentation to use based on the relationship
-    let indentToUse;
+
+    let indentToUse = currentLineIndent || '';
     if (isNewSublist) {
-        // Check if user already manually indented
+        const targetIndent = prevLineIndent + '    '; // Base 4-space increment
 
-        const targetIndent = prevLineIndent + '    ';
-        const currentIndent = currentLineIndent || '';
+        // Check if user manually entered exactly 4 spaces
+        const hasManual4Spaces = beforeText.endsWith('    ');
 
-        // Only add indentation if user hasn't already done so
-        if (currentIndent.length < targetIndent.length) {
+        // Always respect manual 4-space indentation
+        if (hasManual4Spaces) {
+            indentToUse = "";
+        }
+        // Otherwise apply standard indentation rules
+        else if (currentLineIndent.length % 4 !== 0) {
+            // Normalize irregular indentation
+            indentToUse = targetIndent;
+        } else if (currentLineIndent.length < targetIndent.length) {
+            // Add indentation if below target level
             indentToUse = targetIndent;
         } else {
-            // User already indented manually, respect their indentation
-            indentToUse = currentIndent;
+            // Keep existing valid indentation
+            indentToUse = currentLineIndent;
         }
     } else if (isSameLevel) {
         indentToUse = prevLineIndent;
-    } else if (isOutdented) {
-        indentToUse = currentLineIndent;
-    } else {
-        indentToUse = currentLineIndent || '';
     }
 
+    // Ensure we never have undefined indentation
+    indentToUse = indentToUse || '';
 
     if (isOrdered) {
         // For ordered lists
-        insertion = indentToUse + number + '. ' + selectedText + suffix;
+        insertion = indentToUse + number + '.' + selectedText + suffix;
     } else if (isUnordered) {
         // For unordered lists - extract just the list marker without spaces
         const listMarker = prefix.trim();
-        insertion = indentToUse + listMarker + ' ' + selectedText + suffix;
+        insertion = indentToUse + listMarker + '' + selectedText + suffix;
     } else {
         // For all other markdown elements
         insertion = prefix + selectedText + suffix;
@@ -551,7 +548,6 @@ const handleFormat = ({ prefix, suffix }) => {
 
     // Add newline before list items when needed (edge cases handled in shouldInsertNewLine)
     if (shouldInsertNewLine(beforeText, isListMarker, isLineStart, insertion)) {
-        debugger;
         insertion = '\n' + insertion;
     }
 
@@ -568,16 +564,10 @@ const handleFormat = ({ prefix, suffix }) => {
     });
     debugger;
 
-    let lastN =beforeText.lastIndexOf('\n')
- 
-beforeText.substring(0, lastN-1)
-//     const textBeforeCurrentLine = beforeText.substring(0, beforeText.length - currentLineIndent.length);
-//     // formData.value.content = textBeforeCurrentLine + insertion + afterText;
-//     formData.value.content = beforeText.substring(0, lastN).concat(insertion, afterText);
 
 
- debugger;
-formData.value.content = beforeText + insertion + afterText;
+
+    formData.value.content = beforeText + insertion + afterText;
 
 
     // Set cursor position after the inserted text
@@ -709,6 +699,25 @@ const handleSubmit = async () => {
     list-style-type: decimal;
     /* Numbers for ordered lists */
     padding-left: 1.5rem;
+}
+
+:deep(.prose ul),
+:deep(.prose ol) {
+    padding-left: 2rem; /* Increased base padding */
+    margin-top: 0.25rem;
+}
+
+/* Different list markers for nested levels */
+:deep(.prose ul ul) {
+    list-style-type: circle;
+}
+
+:deep(.prose ol ol) {
+    list-style-type: lower-alpha; 
+}
+
+:deep(.prose ol ol ol) {
+    list-style-type: lower-roman;
 }
 
 :deep(.prose blockquote) {
