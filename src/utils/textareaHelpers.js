@@ -151,7 +151,7 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
     // Scan backwards through previous lines only
     for (let i = previousLines.length - 1; i >= 0; i--) {
         const line = previousLines[i];
-        debugger;
+
         // Skip completely empty lines
         if (line.length === 0) continue;
 
