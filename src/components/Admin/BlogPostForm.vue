@@ -269,6 +269,8 @@ const getOrderListCounter = (beforeText) => {
         if (!content) return false;
         return content.split('\n').some(line => /^\s*\d+\.\s?/.test(line.trim()));
     };
+
+    debugger;
     
     if (!hasOrderedLists(beforeText)) {
         orderListCounters.value = {};
@@ -338,11 +340,9 @@ const getOrderListCounter = (beforeText) => {
  * @returns {string} - A unique identifier for the parent list item
  */
 const findParentListItem = (textBeforeCursor, currentIndentLevel) => {
-    console.log('findParentListItem called with currentIndentLevel:', currentIndentLevel);
-    console.log('textBeforeCursor:', textBeforeCursor);
+   
 
     if (currentIndentLevel === 0) {
-        console.log('Root level detected, returning "root"');
         return 'root';
     }
 
@@ -362,10 +362,9 @@ const findParentListItem = (textBeforeCursor, currentIndentLevel) => {
 
         // If we find a line with exactly one level less indentation that's a list item
         if (lineIndentLevel === currentIndentLevel - 1) {
-            const parentMatch = line.trim().match(/^(\d+)\.\s*/);
+            const parentMatch = line.trim().match(/^(\d+\.\s*|[-*+]\s*)/);
             if (parentMatch) {
                 // Found a valid parent, create a stable ID
-                console.log(`Found parent: ${parentMatch[1]} at line ${i}`);
                 return `${parentMatch[1]}_${i}`;
             }
         }
@@ -378,7 +377,6 @@ const findParentListItem = (textBeforeCursor, currentIndentLevel) => {
     }
 
     // If no parent is found, create a unique ID based on the current context
-    console.log('No parent found, creating orphan ID');
     return `orphan_${currentIndentLevel}_${lines.length}`;
 };
 
