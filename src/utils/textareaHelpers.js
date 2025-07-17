@@ -1,5 +1,19 @@
 import { nextTick } from 'vue';
 
+
+/**
+ * Gets the indentation of the current line
+ * @param {string} text - The text to analyze
+ * @returns {string} - The indentation string (spaces/tabs)
+ */
+export const currentLinesIndention = (text) => {
+    const currentLineStart = text.lastIndexOf('\n') + 1;
+    const currentLine = text.substring(currentLineStart);
+    return currentLine.match(/^ */)[0];
+};
+
+
+
 /**
  * Extracts information about the current line where the cursor is positioned
  * @param {string} content - The full text content
@@ -335,7 +349,7 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
     }
 
     // For unordered lists, use the insertion text if available
-    if (isUnordered) {     
+    if (isUnordered) {
         if (insertion) {
             // Position after the list marker and space
             const markerEnd = insertion.match(/^\s*[-*+]\s?/);
@@ -349,4 +363,14 @@ export const calculateCursorPosition = ({ beforeText, selectedText, prefix, suff
 
     // Default case: position after the inserted prefix
     return beforeText.length + prefix.length + selectedText.length;
+};
+
+/**
+ * Detects the list number from the given content
+ * @param {string} content - The content to analyze
+ * @returns {number|null} The list number if found, null otherwise
+ */
+export const detectListNumber = (content) => {
+    const match = content?.match(/^(\d+)\.?$/);
+    return match ? parseInt(match[1]) : null;
 };
