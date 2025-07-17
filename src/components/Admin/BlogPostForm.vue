@@ -72,8 +72,8 @@
                             @keydown.tab.exact.prevent="handleTabWrapper"
                             @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
                             @keydown.enter.exact.prevent="handleEnter" @keydown.esc="handleEsc"
-                            placeholder="Write your post content in markdown..." required
-                            :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
+                            @keydown.backspace="handleBackspace" placeholder="Write your post content in markdown..."
+                            required :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
                 </textarea>
                         <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
                     </div>
@@ -122,7 +122,9 @@ import MarkdownToolbar from '../UI/MarkdownToolbar.vue';
 import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
 import {
     handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo,
-    determineListType, shouldInsertNewLine, calculateCursorPosition
+    determineListType, shouldInsertNewLine, calculateCursorPosition,
+    currentLinesIndention,
+    detectListNumber
 } from '@/utils/textareaHelpers';
 const {
     showNotification,
@@ -226,20 +228,34 @@ const handleShiftTabWrapper = (event) => {
 };
 
 
-/**
- * Gets the indentation of the current line
- * @param {string} text - The text to analyze
- * @returns {string} - The indentation string (spaces/tabs)
- */
-const currentLinesIndention = (text) => {
-    const currentLineStart = text.lastIndexOf('\n') + 1;
-    const currentLine = text.substring(currentLineStart);
-    return currentLine.match(/^ */)[0];
+const lastBackspacedNumber = ref(null);
+
+// Handle backspace key for list number detection
+const handleBackspace = (event) => {
+    // If there's no event, it's not a relevant action, so we can exit.
+    if (!event || event.key !== 'Backspace') {
+        return null;
+    }
+
+
+    const text = formData.value.content;
+    const cursorPositionStart = event.target.selectionStart;
+    const cursorPositionEnd = event.target.selectionEnd;
+    const deletedChar = text.substring(cursorPositionStart - 1, cursorPositionEnd);
+
+    // Check if the current line looks like a numbered list item (e.g., "  3  ")
+    const listNumberMatch = deletedChar.match(/^\s*(\d+)\s*$/);
+
+    if (listNumberMatch){
+        lastBackspacedNumber.value = parseInt(listNumberMatch[1], 10);
+        return;
+    }
+
+  lastBackspacedNumber.value = null;
+
+
+
 };
-
-
-
-
 
 
 /**
@@ -247,7 +263,7 @@ const currentLinesIndention = (text) => {
  * @param {string} beforeText - The text before the cursor
  * @returns {Object} - The next counter and indentation information
  */
-const getOrderListCounter = (beforeText) => {
+const getOrderListCounter = (beforeText, event) => {
 
 
     // Get the current line's indentation
@@ -270,13 +286,25 @@ const getOrderListCounter = (beforeText) => {
         return content.split('\n').some(line => /^\s*\d+\.\s?/.test(line.trim()));
     };
 
-    debugger;
-    
+
+
     if (!hasOrderedLists(beforeText)) {
         orderListCounters.value = {};
-        counterValue = 1; 
+        counterValue = 1;
         foundExistingCounter = false;
     }
+   
+    if (lastBackspacedNumber.value !== null) {
+        const backspaceValue = lastBackspacedNumber.value;
+        lastBackspacedNumber.value = null; // Reset after use
+        orderListCounters.value[compositeKey] = backspaceValue;
+        counterValue = backspaceValue;
+        return {
+            number: backspaceValue,
+            indent: indentStr
+        };
+    }
+
     // First, check if we already have a counter for this exact composite key
     if (orderListCounters.value[compositeKey] !== undefined) {
         counterValue = orderListCounters.value[compositeKey] + 1;
@@ -340,7 +368,7 @@ const getOrderListCounter = (beforeText) => {
  * @returns {string} - A unique identifier for the parent list item
  */
 const findParentListItem = (textBeforeCursor, currentIndentLevel) => {
-   
+
 
     if (currentIndentLevel === 0) {
         return 'root';
@@ -513,7 +541,7 @@ const handleFormat = ({ prefix, suffix }) => {
 
 
     let indentToUse = currentLineIndent || '';
- 
+
     if (isNewSublist) {
         const targetIndent = prevLineIndent + '    '; // Base 4-space increment
 
@@ -706,7 +734,8 @@ const handleSubmit = async () => {
 
 :deep(.prose ul),
 :deep(.prose ol) {
-    padding-left: 2rem; /* Increased base padding */
+    padding-left: 2rem;
+    /* Increased base padding */
     margin-top: 0.25rem;
 }
 
@@ -716,7 +745,7 @@ const handleSubmit = async () => {
 }
 
 :deep(.prose ol ol) {
-    list-style-type: lower-alpha; 
+    list-style-type: lower-alpha;
 }
 
 :deep(.prose ol ol ol) {
