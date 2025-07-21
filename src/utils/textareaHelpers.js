@@ -34,10 +34,12 @@ export const getCurrentLineInfo = (content, cursorPosition) => {
     );
     const lineIndent = (lineText.match(/^ */) || [''])[0];
     const isLineStart = cursorPosition === 0 || content.charAt(cursorPosition - 1) === '\n';
-    const isInListItem = lineText.match(/^\s*(\d+\.|[-*+])\s/) !== null;
+    // const isInListItem = lineText.match(/^\s*(\d+\.|[-*+])\s/) !== null;
+    const isInListItem = lineText.match(/^\s*(?:\d+\.\s?|[-*+]\s?)/) !== null;
 
     return {
         lineStart,
+        lineEnd,
         lineText,
         lineIndent,
         isLineStart,
@@ -59,17 +61,19 @@ export const handleTab = (e, formData) => {
     const end = textarea.selectionEnd;
     const value = formData.content;
 
+    const { lineStart, lineEnd, lineText, isInListItem} = getCurrentLineInfo(value, start);
+    //use helper function above getCurrentLineInfo till 70
     // Get the current line
-    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
-    const lineEnd = value.indexOf('\n', start);
-    const currentLine = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
-
+    // const lineStart1 = value.lastIndexOf('\n', start - 1) + 1;
+    // const lineEnd1 = value.indexOf('\n', start);
+    // const currentLine1 = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
+    debugger;
     // Check if we're in a list item (using explicit spaces)
-    const isListItem = /^[ ]*[\d+.]\s+.*$/.test(currentLine) || /^[ ]*[-*+]\s+.*$/.test(currentLine);
+    const isListItem = /^[ ]*[\d+.]\s+.*$/.test(lineText) || /^[ ]*[-*+]\s+.*$/.test(lineText);
     const isAtStartOfLine = start === lineStart;
 
     // If at start of line or in a list item, add TAB_SIZE spaces
-    if (isAtStartOfLine || isListItem) {
+    if (isAtStartOfLine || isInListItem) {
         const newText = value.substring(0, start) + ' '.repeat(TAB_SIZE) + value.substring(start);
         formData.content = newText;
         nextTick(() => {
@@ -150,6 +154,7 @@ export const handleShiftTab = (e, formData) => {
 export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
     // Split text into lines and remove the current line (which is incomplete)
     const allLines = textBeforeCursor.split('\n');
+    //either make it global or make it helper func
     const listPattern = /^\s*\d+\.\s*|^\s*[-*+]\s*/;
 
     // Skip the current line which is the last one in the array
@@ -160,7 +165,8 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
     let lastListItemLine = '';
     let lastListItemIndent = '';
     let foundListItem = false;
-
+// why counting all the previous lines 
+// you just need to infer where you at based on the previous lines indention
     const previousLines = allLines.slice(0, -1);
     // Scan backwards through previous lines only
     for (let i = previousLines.length - 1; i >= 0; i--) {
