@@ -58,29 +58,22 @@ export const handleTab = (e, formData) => {
     e.preventDefault();
     const textarea = e.target;
     const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
     const value = formData.content;
 
-    const { lineStart, lineEnd, lineText, isInListItem} = getCurrentLineInfo(value, start);
-    //use helper function above getCurrentLineInfo till 70
-    // Get the current line
-    // const lineStart1 = value.lastIndexOf('\n', start - 1) + 1;
-    // const lineEnd1 = value.indexOf('\n', start);
-    // const currentLine1 = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
-    debugger;
+     const { lineStart, lineEnd, lineText, isInListItem} = getCurrentLineInfo(value, start);
+   
     // Check if we're in a list item (using explicit spaces)
-    const isListItem = /^[ ]*[\d+.]\s+.*$/.test(lineText) || /^[ ]*[-*+]\s+.*$/.test(lineText);
     const isAtStartOfLine = start === lineStart;
 
     // If at start of line or in a list item, add TAB_SIZE spaces
-    if (isAtStartOfLine || isInListItem) {
+    if (isAtStartOfLine || isInListItem) {     
         const newText = value.substring(0, start) + ' '.repeat(TAB_SIZE) + value.substring(start);
         formData.content = newText;
         nextTick(() => {
             textarea.selectionStart = textarea.selectionEnd = start + TAB_SIZE;
         });
     } else {
-        // Standard tab behavior - align to next tab stop
+       // Standard tab behavior - align to next tab stop
         const lineUpToCursor = value.substring(lineStart, start);
         const spacesToAdd = TAB_SIZE - (lineUpToCursor.length % TAB_SIZE);
         const newText = value.substring(0, start) + ' '.repeat(spacesToAdd) + value.substring(start);
@@ -100,24 +93,20 @@ export const handleShiftTab = (e, formData) => {
     e.preventDefault();
     const textarea = e.target;
     const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
     const value = formData.content;
 
     // Get the current line
-    const lineStart = value.lastIndexOf('\n', start - 1) + 1;
-    const lineEnd = value.indexOf('\n', start);
-    const line = value.substring(lineStart, lineEnd === -1 ? value.length : lineEnd);
-
+    const { lineStart, lineEnd, lineText, isInListItem} = getCurrentLineInfo(value, start);
     // Find leading spaces
-    const leadingSpaces = line.match(/^ +/);
+    const leadingSpaces = lineText.match(/^ +/);
     if (!leadingSpaces) return; // No spaces to remove
 
     // Check if we're in a list item
-    const isListItem = /^\s*[\d+.]\s+.*$/.test(line) || /^\s*[-*+]\s+.*$/.test(line);
+
 
     // Calculate spaces to remove
     let spacesToRemove;
-    if (isListItem) {
+    if (isInListItem) {
         // For list items, always remove 4 spaces or go to start of line
         spacesToRemove = Math.min(4, leadingSpaces[0].length);
     } else {
@@ -127,7 +116,7 @@ export const handleShiftTab = (e, formData) => {
     }
 
     // Create new line with reduced indentation
-    const newLine = line.substring(spacesToRemove);
+    const newLine = lineText.substring(spacesToRemove);
     const newText = value.substring(0, lineStart) + newLine +
         value.substring(lineEnd === -1 ? value.length : lineEnd);
 
