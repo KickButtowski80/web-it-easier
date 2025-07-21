@@ -230,34 +230,6 @@ const handleShiftTabWrapper = (event) => {
 
 const lastBackspacedNumber = ref(null);
 
-// Handle backspace key for list number detection
-// const handleBackspace = (event) => {
-//     // If there's no event, it's not a relevant action, so we can exit.
-//     if (!event || event.key !== 'Backspace') {
-//         return null;
-//     }
-
-//     const text = formData.value.content;
-//     debugger;
-//     const cursorPositionStart = event.target.selectionStart;
-//     const cursorPositionEnd = event.target.selectionEnd;
-//     let deletedChar = text.substring(cursorPositionStart - 1, cursorPositionEnd);
-//    // Example: deletedChar = '\n        2.'
-// const match = deletedChar.match(/\n(\s*)\d/);
-// const indentLength = match ? match[1].length : 0;
-// const indent = match ? match[1] : '';
-//     // deletedChar = deletedChar.split(/[.\n]/).filter(Boolean)[0].trim()
-
-//     // Check if the current line looks like a numbered list item (e.g., "  3  ")
-//     const listNumberMatch = deletedChar.match(/^(\d+)$/);
-
-//     if (listNumberMatch) {
-//         lastBackspacedNumber.value = parseInt(listNumberMatch[1], 10);
-//         return;
-//     }
-
-//     lastBackspacedNumber.value = null;
-// };
 
 const handleBackspace = (event) => {
     if (!event || event.key !== 'Backspace') {
@@ -275,11 +247,6 @@ const handleBackspace = (event) => {
         return null;
     }
  
-    // Get the indentation before the number
-    const match = deletedChar.match(/\n(\s*)\d/);
-    const indent = match ? match[1] : '';
-    const indentLength = indent.length;
-
     // Get the number being backspaced
     const numberMatch = deletedChar.trim().match(/^(\d+)/);
     if (!numberMatch) {
@@ -287,11 +254,9 @@ const handleBackspace = (event) => {
         return null;
     }
 
-    // Store both the number and its indentation
+    // Store both the number
     lastBackspacedNumber.value = {
         number: parseInt(numberMatch[1], 10),
-        indent: indent,
-        indentLength: indentLength
     };
 
     const beforeCursor = text.substring(0, cursorPositionStart);
@@ -348,12 +313,9 @@ const handleBackspace = (event) => {
             const backspaceValue = lastBackspacedNumber.value;
             lastBackspacedNumber.value = null; // Reset after use
             orderListCounters.value[compositeKey] = backspaceValue.number;
-            debugger;
-            const targetIndent = backspaceValue.indent;
             counterValue = backspaceValue.number;
             return {
-                number: backspaceValue.number,
-                indent: targetIndent
+                number: backspaceValue.number
             };
         }
 
@@ -408,8 +370,7 @@ const handleBackspace = (event) => {
         orderListCounters.value[compositeKey] = counterValue;
 
         return {
-            number: orderListCounters.value[compositeKey],
-            indent: indentStr
+            number: orderListCounters.value[compositeKey]
         };
     };
 
@@ -574,9 +535,10 @@ const handleBackspace = (event) => {
 
         let newCursorPos = start;
         let insertion;
-        let { number, indent } = { number: null, indent: '' };
+        let { number, indent } = { number: null, indent: '---' };
         if (isOrdered) {
             ({ number, indent } = getOrderListCounter(beforeText));
+            console.log('indent is', indent)
         } else if (isUnordered) {
             // For unordered lists, we'll handle indentation separately
             // No need to set indent here as we'll use indentToUse later
