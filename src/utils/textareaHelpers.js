@@ -369,3 +369,10 @@ export const detectListNumber = (content) => {
     const match = content?.match(/^(\d+)\.?$/);
     return match ? parseInt(match[1]) : null;
 };
+
+
+ 
+export const hasOrderedLists = (content) => {
+    if (!content) return false;
+    return content.split('\n').some(line => /^\s*\d+\.\s?/.test(line.trim()));
+};
