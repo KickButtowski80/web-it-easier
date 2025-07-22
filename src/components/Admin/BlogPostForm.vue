@@ -320,24 +320,18 @@ const getOrderListCounter = (beforeText, afterText) => {
         if (firstBackspacedNumber.value !== null) {
             // Get the next number in sequence
             counterValue = orderListCounters.value[compositeKey] + 1;
-            
+
             // If we've reached or passed the backspaced number, jump to after the existing content
             if (counterValue > firstBackspacedNumber.value) {
                 // Find the highest number in the entire list (beforeText + afterText)
-                const allNumbers = [];
-                const allNumberRegex = /^(\d+)\./gm;
-                let allMatch;
                 const fullText = beforeText + afterText;
-                while ((allMatch = allNumberRegex.exec(fullText)) !== null) {
-                    allNumbers.push(parseInt(allMatch[1], 10));
-                }
+                const maxNumber = Math.max(0, ...fullText.match(/\d+/g)?.map(Number) || [0]);
+             ;
+                const nextNumber = maxNumber;
 
-                const maxNumber = allNumbers.length > 0 ? Math.max(...allNumbers) : 0;
-                const nextNumber = maxNumber ;
-                
                 // Update the counter to the next available number
                 orderListCounters.value[compositeKey] = nextNumber;
-                
+
                 const result = {
                     number: nextNumber,
                     shouldJump: true,
@@ -345,7 +339,7 @@ const getOrderListCounter = (beforeText, afterText) => {
                 };
                 firstBackspacedNumber.value = null;
                 return result;
-          
+
             }
         } else {
 
@@ -568,7 +562,7 @@ const handleFormat = ({ prefix, suffix }) => {
 
     if (isOrdered) {
         ({ number, shouldJump } = getOrderListCounter(beforeText, afterText));
-        
+
         // If we're jumping, handle cursor positioning after the text is inserted
         if (shouldJump) {
             nextTick(() => {
