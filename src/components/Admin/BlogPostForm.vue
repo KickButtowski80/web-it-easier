@@ -320,7 +320,6 @@ const getOrderListCounter = (beforeText, afterText) => {
         if (firstBackspacedNumber.value !== null) {
             // Get the next number in sequence
             counterValue = orderListCounters.value[compositeKey] + 1;
-
             // If we've reached or passed the backspaced number, jump to after the existing content
             if (counterValue > firstBackspacedNumber.value) {
                 // Find the highest number in the entire list (beforeText + afterText)
