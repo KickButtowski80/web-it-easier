@@ -124,7 +124,8 @@ import {
     handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo,
     determineListType, shouldInsertNewLine, calculateCursorPosition,
     currentLinesIndention,
-    detectListNumber
+    detectListNumber,
+    hasOrderedLists
 } from '@/utils/textareaHelpers';
 const {
     showNotification,
@@ -295,21 +296,13 @@ const handleBackspace = (event) => {
 
         // Find the previous counter at this level to continue numbering
         let counterValue = 1;
-        let foundExistingCounter = false;
-        const hasOrderedLists = (content) => {
-            if (!content) return false;
-            return content.split('\n').some(line => /^\s*\d+\.\s?/.test(line.trim()));
-        };
-
-
-
+    
+      
         if (!hasOrderedLists(beforeText)) {
             orderListCounters.value = {};
             counterValue = 1;
-            foundExistingCounter = false;
         }
-        if (lastBackspacedNumber.value !== null) {
-        
+        if (lastBackspacedNumber.value !== null) {        
             const backspaceValue = lastBackspacedNumber.value;
             lastBackspacedNumber.value = null; // Reset after use
             orderListCounters.value[compositeKey] = backspaceValue.number;
@@ -334,7 +327,6 @@ const handleBackspace = (event) => {
                     // If we find a counter at the same level with the same parent, continue from it
                     if (keyLevel === indentLevel && keyParent === parentId) {
                         counterValue = value + 1;
-                        foundExistingCounter = true;
                         break;
                     }
                 }
