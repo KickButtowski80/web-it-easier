@@ -241,13 +241,13 @@ const handleBackspace = (event) => {
     const cursorPositionStart = event.target.selectionStart;
     const cursorPositionEnd = event.target.selectionEnd;
     let deletedChar = text.substring(cursorPositionStart - 1, cursorPositionEnd);
- 
+
 
     if (/^[.\n]$/.test(deletedChar)) {
         // Handle dot or newline case
         return null;
     }
- 
+
     // Get the number being backspaced
     const numberMatch = deletedChar.trim().match(/^(\d+)/);
     if (!numberMatch) {
@@ -273,450 +273,450 @@ const handleBackspace = (event) => {
         });
         return;
     }
-    };
-    /**
-     * Get the next ordered list counter and indentation string
-     * @param {string} beforeText - The text before the cursor
-     * @returns {Object} - The next counter and indentation information
-     */
-    const getOrderListCounter = (beforeText) => {
+};
+/**
+ * Get the next ordered list counter and indentation string
+ * @param {string} beforeText - The text before the cursor
+ * @returns {Object} - The next counter and indentation information
+ */
+const getOrderListCounter = (beforeText) => {
 
 
-        // Get the current line's indentation
-        const indentStr = currentLinesIndention(beforeText);
+    // Get the current line's indentation
+    const indentStr = currentLinesIndention(beforeText);
 
-        // Calculate indentation level based on spaces (4 spaces = 1 level)
-        const indentLevel = Math.floor(indentStr.length / 4); // 0 = top level, 1 = 1 tab, etc.
+    // Calculate indentation level based on spaces (4 spaces = 1 level)
+    const indentLevel = Math.floor(indentStr.length / 4); // 0 = top level, 1 = 1 tab, etc.
 
 
-        const parentId = findParentListItem(beforeText, indentLevel);
+    const parentId = findParentListItem(beforeText, indentLevel);
 
-        // Create composite key using both level and parent
-        const compositeKey = `level_${indentLevel}_${parentId}`;
+    // Create composite key using both level and parent
+    const compositeKey = `level_${indentLevel}_${parentId}`;
 
-        // Find the previous counter at this level to continue numbering
-        let counterValue = 1;
-    
-      
-        if (!hasOrderedLists(beforeText)) {
-            orderListCounters.value = {};
-            counterValue = 1;
-        }
-        if (lastBackspacedNumber.value !== null) {        
-            const backspaceValue = lastBackspacedNumber.value;
-            lastBackspacedNumber.value = null; // Reset after use
-            orderListCounters.value[compositeKey] = backspaceValue.number;
-            counterValue = backspaceValue.number;
-            return {
-                number: backspaceValue.number
-            };
-        }
+    // Find the previous counter at this level to continue numbering
+    let counterValue = 1;
 
-        // First, check if we already have a counter for this exact composite key
-        if (orderListCounters.value[compositeKey] !== undefined) {
-            counterValue = orderListCounters.value[compositeKey] + 1;
-            foundExistingCounter = true;
-        } else {
-            // If no exact match, look for any counter at this level with the same parent
-            for (const [key, value] of Object.entries(orderListCounters.value)) {
-                const keyLevelMatch = key.match(/level_(\d+)_(.*)/);
-                if (keyLevelMatch) {
-                    const keyLevel = parseInt(keyLevelMatch[1], 10);
-                    const keyParent = keyLevelMatch[2];
 
-                    // If we find a counter at the same level with the same parent, continue from it
-                    if (keyLevel === indentLevel && keyParent === parentId) {
-                        counterValue = value + 1;
-                        break;
-                    }
-                }
-            }
-        }
+    if (!hasOrderedLists(beforeText)) {
+        orderListCounters.value = {};
+        counterValue = 1;
+    }
+    if (lastBackspacedNumber.value !== null) {
+        const backspaceValue = lastBackspacedNumber.value;
+        lastBackspacedNumber.value = null; // Reset after use
+        orderListCounters.value[compositeKey] = backspaceValue.number;
+        counterValue = backspaceValue.number;
+        return {
+            number: backspaceValue.number
+        };
+    }
 
-        // Clean up counters that are no longer needed
-        const keysToDelete = [];
-        for (const key in orderListCounters.value) {
-            const keyLevelMatch = key.match(/level_(\d+)_/);
+    // First, check if we already have a counter for this exact composite key
+    if (orderListCounters.value[compositeKey] !== undefined) {
+        counterValue = orderListCounters.value[compositeKey] + 1;
+
+    } else {
+        // If no exact match, look for any counter at this level with the same parent
+        for (const [key, value] of Object.entries(orderListCounters.value)) {
+            const keyLevelMatch = key.match(/level_(\d+)_(.*)/);
             if (keyLevelMatch) {
                 const keyLevel = parseInt(keyLevelMatch[1], 10);
+                const keyParent = keyLevelMatch[2];
 
-                // Delete counters for any lists nested deeper than the current level
-                // But only if we're not in the middle of a sublist
-                if (keyLevel > indentLevel && !key.startsWith(`level_${indentLevel + 1}_${parentId}`)) {
-                    keysToDelete.push(key);
-                }
-
-                // Delete counters for lists at the same level with different parents
-                if (keyLevel === indentLevel && key !== compositeKey) {
-                    keysToDelete.push(key);
+                // If we find a counter at the same level with the same parent, continue from it
+                if (keyLevel === indentLevel && keyParent === parentId) {
+                    counterValue = value + 1;
+                    break;
                 }
             }
         }
+    }
 
-        // Actually delete the marked keys
-        keysToDelete.forEach(key => {
-            delete orderListCounters.value[key];
-        });
+    // Clean up counters that are no longer needed
+    const keysToDelete = [];
+    for (const key in orderListCounters.value) {
+        const keyLevelMatch = key.match(/level_(\d+)_/);
+        if (keyLevelMatch) {
+            const keyLevel = parseInt(keyLevelMatch[1], 10);
 
-        // Update the counter
-        orderListCounters.value[compositeKey] = counterValue;
+            // Delete counters for any lists nested deeper than the current level
+            // But only if we're not in the middle of a sublist
+            if (keyLevel > indentLevel && !key.startsWith(`level_${indentLevel + 1}_${parentId}`)) {
+                keysToDelete.push(key);
+            }
 
-        return {
-            number: orderListCounters.value[compositeKey]
-        };
+            // Delete counters for lists at the same level with different parents
+            if (keyLevel === indentLevel && key !== compositeKey) {
+                keysToDelete.push(key);
+            }
+        }
+    }
+
+    // Actually delete the marked keys
+    keysToDelete.forEach(key => {
+        delete orderListCounters.value[key];
+    });
+
+    // Update the counter
+    orderListCounters.value[compositeKey] = counterValue;
+
+    return {
+        number: orderListCounters.value[compositeKey]
     };
+};
 
-    /**
-     * Helper function to find the parent list item for hierarchical tracking
-     * @param {string} textBeforeCursor - The text before the cursor
-     * @param {number} currentIndentLevel - The current indentation level
-     * @returns {string} - A unique identifier for the parent list item
-     */
-    const findParentListItem = (textBeforeCursor, currentIndentLevel) => {
+/**
+ * Helper function to find the parent list item for hierarchical tracking
+ * @param {string} textBeforeCursor - The text before the cursor
+ * @param {number} currentIndentLevel - The current indentation level
+ * @returns {string} - A unique identifier for the parent list item
+ */
+const findParentListItem = (textBeforeCursor, currentIndentLevel) => {
 
 
-        if (currentIndentLevel === 0) {
-            return 'root';
+    if (currentIndentLevel === 0) {
+        return 'root';
+    }
+
+    const lines = textBeforeCursor.split('\n');
+
+    // Look backwards from the current position to find the parent
+    // Start from the line before the current line
+    for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i];
+        const lineIndent = line.match(/^ */)[0];
+        const lineIndentLevel = Math.floor(lineIndent.length / 4);
+
+        // Skip empty lines
+        if (!line.trim()) {
+            continue;
         }
 
-        const lines = textBeforeCursor.split('\n');
-
-        // Look backwards from the current position to find the parent
-        // Start from the line before the current line
-        for (let i = lines.length - 1; i >= 0; i--) {
-            const line = lines[i];
-            const lineIndent = line.match(/^ */)[0];
-            const lineIndentLevel = Math.floor(lineIndent.length / 4);
-
-            // Skip empty lines
-            if (!line.trim()) {
-                continue;
-            }
-
-            // If we find a line with exactly one level less indentation that's a list item
-            if (lineIndentLevel === currentIndentLevel - 1) {
-                const parentMatch = line.trim().match(/^(\d+\.\s*|[-*+]\s*)/);
-                if (parentMatch) {
-                    // Found a valid parent, create a stable ID
-                    return `${parentMatch[1]}_${i}`;
-                }
-            }
-
-            // If we find a line with less indentation than our target parent level,
-            // we've gone too far back without finding a parent
-            if (lineIndentLevel < currentIndentLevel - 1) {
-                break;
+        // If we find a line with exactly one level less indentation that's a list item
+        if (lineIndentLevel === currentIndentLevel - 1) {
+            const parentMatch = line.trim().match(/^(\d+\.\s*|[-*+]\s*)/);
+            if (parentMatch) {
+                // Found a valid parent, create a stable ID
+                return `${parentMatch[1]}_${i}`;
             }
         }
 
-        // If no parent is found, create a unique ID based on the current context
-        return `orphan_${currentIndentLevel}_${lines.length}`;
-    };
-
-
-
-
-    const handleEnter = (event) => {
-
-        const textarea = event.target;
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const value = formData.value.content;
-
-        // Check if we're in a list item
-        const currentLine = value.substring(value.lastIndexOf('\n', start - 1) + 1, start);
-        const isInListItem = currentLine.match(/^\s*(\d+\.|[-*+])\s?/);
-        if (isInListItem) {
-            // Find the next line
-            //start searching for \n from start point to find next line
-            const nextLineStart = value.indexOf('\n', start) + 1;
-
-            if (nextLineStart === 0) {
-                // No next line, create a new list item
-                event.preventDefault();
-                const beforeText = value.substring(0, start);
-                const afterText = value.substring(end);
-
-                // Extract current list marker info
-                const listMatch = currentLine.match(/^(\s*)(\d+\.|[-*+])(\s+)/);
-                if (!listMatch) return;
-
-                const [_, indent, marker, space] = listMatch;
-                let newMarker;
-
-                if (marker.match(/\d+\./)) {
-                    // For ordered lists, increment the number
-                    const currentNumber = parseInt(marker, 10);
-                    newMarker = `${currentNumber + 1}.`;
-                } else {
-                    // For unordered lists, keep the same marker
-                    newMarker = marker;
-                }
-
-                // Create new list item with same indentation
-                const newListItem = `\n${indent}${newMarker}${space}`;
-                formData.value.content = beforeText + newListItem + afterText;
-
-                // Position cursor after the new list marker
-                const newCursorPos = start + newListItem.length;
-                nextTick(() => {
-                    textarea.focus();
-                    textarea.setSelectionRange(newCursorPos, newCursorPos);
-                });
-                return;
-            }
-
-
-            // Check if there is a next line and it's a list item
-            if (nextLineStart > 0) {
-                const nextLineEnd = value.indexOf('\n', nextLineStart);
-                const nextLine = nextLineEnd === -1 ?
-                    value.substring(nextLineStart) :
-                    value.substring(nextLineStart, nextLineEnd);
-
-                const nextListItemMatch = nextLine.match(/^\s*(\d+\.|[-*+])\s/);
-
-                if (nextListItemMatch) {
-                    // Just move the cursor to after the list marker
-                    event.preventDefault();
-                    const newPosition = nextLineStart + nextListItemMatch[0].length;
-
-                    nextTick(() => {
-                        textarea.focus();
-                        textarea.setSelectionRange(newPosition, newPosition);
-                    });
-                    return;
-                }
-            }
+        // If we find a line with less indentation than our target parent level,
+        // we've gone too far back without finding a parent
+        if (lineIndentLevel < currentIndentLevel - 1) {
+            break;
         }
+    }
 
-        // Default enter behavior
-        event.preventDefault();
-        const beforeText = value.substring(0, start);
-        const afterText = value.substring(end);
-        formData.value.content = beforeText + '\n' + afterText;
-        // Calculate cursor position after newline: start + 1 (for the '\n' character)
-        // This positions the cursor at the beginning of the new line
-        const newLineCursorPos = start + 1;
-        nextTick(() => {
-            textarea.focus();
-            textarea.setSelectionRange(newLineCursorPos, newLineCursorPos);
-        });
-    };
-
-    const handleFormat = ({ prefix, suffix }) => {
-        const textarea = contentTextarea.value;
-        if (!textarea) return;
-
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        // Get current line information using the helper function
-        const {
-            lineStart: currentLineStart,
-            lineText: currentLineText,
-            lineIndent: currentLineIndent,
-            isLineStart,
-            isInListItem
-        } = getCurrentLineInfo(formData.value.content, start);
-
-        const selectedText = formData.value.content.substring(start, end);
-        let beforeText = formData.value.content.substring(0, start);
-        const afterText = formData.value.content.substring(end);
-
-        const { isList: isListMarker, isOrdered, isUnordered } = determineListType(prefix);
-
-        let newCursorPos = start;
-        let insertion;
-        let { number, indent } = { number: null, indent: '---' };
-        if (isOrdered) {
-            ({ number, indent } = getOrderListCounter(beforeText));
-            console.log('indent is', indent)
-        } else if (isUnordered) {
-            // For unordered lists, we'll handle indentation separately
-            // No need to set indent here as we'll use indentToUse later
-        }
-
-        // Find out how this line relates to the previous list item
-        const {
-            isNewSublist,      // Is this line indented more than the previous?
-            isSameLevel,       // Is this line at the same level as the previous?
-            isOutdented,       // Is this line outdented compared to the previous?
-            prevLineIndent     // The spaces before the previous line
-        } = getListRelationship(beforeText, currentLineIndent);
+    // If no parent is found, create a unique ID based on the current context
+    return `orphan_${currentIndentLevel}_${lines.length}`;
+};
 
 
 
-        let indentToUse = currentLineIndent || '';
-     
-        if (isNewSublist) {
-            const targetIndent = prevLineIndent + '    '; // Base 4-space increment
 
-            // Check if user manually entered exactly 4 spaces
-            const hasManual4Spaces = beforeText.endsWith('    ');
+const handleEnter = (event) => {
 
-            // Always respect manual 4-space indentation
-            if (hasManual4Spaces) {
-                indentToUse = "";
-            }
-            // Otherwise apply standard indentation rules
-            else if (currentLineIndent.length % 4 !== 0) {
-                // Normalize irregular indentation
-                indentToUse = targetIndent;
-            } else if (currentLineIndent.length < targetIndent.length) {
-                // Add indentation if below target level
-                indentToUse = targetIndent;
+    const textarea = event.target;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const value = formData.value.content;
+
+    // Check if we're in a list item
+    const currentLine = value.substring(value.lastIndexOf('\n', start - 1) + 1, start);
+    const isInListItem = currentLine.match(/^\s*(\d+\.|[-*+])\s?/);
+    if (isInListItem) {
+        // Find the next line
+        //start searching for \n from start point to find next line
+        const nextLineStart = value.indexOf('\n', start) + 1;
+
+        if (nextLineStart === 0) {
+            // No next line, create a new list item
+            event.preventDefault();
+            const beforeText = value.substring(0, start);
+            const afterText = value.substring(end);
+
+            // Extract current list marker info
+            const listMatch = currentLine.match(/^(\s*)(\d+\.|[-*+])(\s+)/);
+            if (!listMatch) return;
+
+            const [_, indent, marker, space] = listMatch;
+            let newMarker;
+
+            if (marker.match(/\d+\./)) {
+                // For ordered lists, increment the number
+                const currentNumber = parseInt(marker, 10);
+                newMarker = `${currentNumber + 1}.`;
             } else {
-                // Keep existing valid indentation
-                indentToUse = currentLineIndent;
+                // For unordered lists, keep the same marker
+                newMarker = marker;
             }
-        } else if (isSameLevel) {
-            indentToUse = prevLineIndent;
-        }
 
-        // Ensure we never have undefined indentation
-        indentToUse = indentToUse || '';
+            // Create new list item with same indentation
+            const newListItem = `\n${indent}${newMarker}${space}`;
+            formData.value.content = beforeText + newListItem + afterText;
 
-        if (isOrdered) {
-            // For ordered lists
-            insertion = indentToUse + number + '.' + selectedText + suffix;
-        } else if (isUnordered) {
-            // For unordered lists - extract just the list marker without spaces
-            const listMarker = prefix.trim();
-            insertion = indentToUse + listMarker + '' + selectedText + suffix;
-        } else {
-            // For all other markdown elements
-            insertion = prefix + selectedText + suffix;
-        }
-
-        // Add newline before list items when needed (edge cases handled in shouldInsertNewLine)
-        if (shouldInsertNewLine(beforeText, isListMarker, isLineStart, insertion)) {
-            insertion = '\n' + insertion;
-        }
-
-        // Calculate the new cursor position using the helper function
-        newCursorPos = calculateCursorPosition({
-            beforeText,
-            selectedText,
-            prefix,
-            suffix,
-            insertion,  // Pass the full insertion string
-            isOrdered: !!number,
-            isUnordered,
-            number
-        });
-        formData.value.content = beforeText + insertion + afterText;
-
-
-        // Set cursor position after the inserted text
-        nextTick(() => {
-            textarea.focus();
-            textarea.setSelectionRange(newCursorPos, newCursorPos);
-        });
-    };
-
-
-
-
-    const navigateToManagePosts = () => {
-        router.push('/admin/manage-posts');
-    };
-    const cancelEdit = () => {
-        const { title, content, featureImage, date, readingTime } = formData.value;
-        const defaultDate = new Date().toISOString().split('T')[0];
-
-        // Check if any field has been modified from its default/empty state
-        const hasChanges = title ||
-            content ||
-            featureImage ||
-            date !== defaultDate ||
-            readingTime !== 5;
-
-        if (!hasChanges) {
-            navigateToManagePosts();
-        } else {
-            confirmDialog.value?.show();
-        }
-    };
-
-    const validateForm = () => {
-        let isValid = true;
-        formErrors.value = {}; // Reset errors
-
-        // Title validation
-        if (!formData.value.title?.trim()) {
-            formErrors.value.title = 'Title is required';
-            isValid = false;
-        }
-
-        // Date validation
-        if (!formData.value.date) {
-            formErrors.value.date = 'Date is required';
-            isValid = false;
-        }
-
-        // Content validation
-        if (!formData.value.content?.trim()) {
-            formErrors.value.content = 'Content is required';
-            isValid = false;
-        }
-
-        return isValid;
-    };
-
-    const handleSubmit = async () => {
-        if (isSubmitting.value) return; // Prevent double submit
-        isSubmitting.value = true;
-
-        // Validate form
-        if (!validateForm()) {
-            // Focus the first field with an error
-            const firstErrorField = Object.keys(formErrors.value).find(key => formErrors.value[key]);
-            if (firstErrorField) {
-                nextTick(() => {
-                    document.getElementById(firstErrorField)?.focus();
-                });
-            }
-            isSubmitting.value = false;
+            // Position cursor after the new list marker
+            const newCursorPos = start + newListItem.length;
+            nextTick(() => {
+                textarea.focus();
+                textarea.setSelectionRange(newCursorPos, newCursorPos);
+            });
             return;
         }
 
-        try {
-            const postData = {
-                ...formData.value,
-                date: new Date(formData.value.date)
-            };
 
-            if (isEditMode.value && postId.value) {
-                // Update existing post
-                await updatePost(postId.value, postData);
-                showNotify('Post updated successfully!', 'success');
-            } else {
-                // Add new post
-                postData.createdAt = new Date();
-                await addPost(postData);
-                showNotify('Post published successfully!', 'success');
+        // Check if there is a next line and it's a list item
+        if (nextLineStart > 0) {
+            const nextLineEnd = value.indexOf('\n', nextLineStart);
+            const nextLine = nextLineEnd === -1 ?
+                value.substring(nextLineStart) :
+                value.substring(nextLineStart, nextLineEnd);
+
+            const nextListItemMatch = nextLine.match(/^\s*(\d+\.|[-*+])\s/);
+
+            if (nextListItemMatch) {
+                // Just move the cursor to after the list marker
+                event.preventDefault();
+                const newPosition = nextLineStart + nextListItemMatch[0].length;
+
+                nextTick(() => {
+                    textarea.focus();
+                    textarea.setSelectionRange(newPosition, newPosition);
+                });
+                return;
             }
-
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            await router.push('/blog');
-
-            // Reset form after successful submission if it was a new post
-            if (!isEditMode.value) {
-                formData.value = {
-                    title: '',
-                    date: new Date().toISOString().split('T')[0],
-                    readingTime: 5,
-                    featureImage: '',
-                    content: ''
-                };
-            }
-        } catch (error) {
-            console.error(`Error ${isEditMode.value ? 'updating' : 'publishing'} post:`, error);
-            showNotify(`Failed to ${isEditMode.value ? 'update' : 'publish'} post. ${error.message || 'Please try again.'}`, 'error');
-        } finally {
-            isSubmitting.value = false;
         }
     }
+
+    // Default enter behavior
+    event.preventDefault();
+    const beforeText = value.substring(0, start);
+    const afterText = value.substring(end);
+    formData.value.content = beforeText + '\n' + afterText;
+    // Calculate cursor position after newline: start + 1 (for the '\n' character)
+    // This positions the cursor at the beginning of the new line
+    const newLineCursorPos = start + 1;
+    nextTick(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newLineCursorPos, newLineCursorPos);
+    });
+};
+
+const handleFormat = ({ prefix, suffix }) => {
+    const textarea = contentTextarea.value;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    // Get current line information using the helper function
+    const {
+        lineStart: currentLineStart,
+        lineText: currentLineText,
+        lineIndent: currentLineIndent,
+        isLineStart,
+        isInListItem
+    } = getCurrentLineInfo(formData.value.content, start);
+
+    const selectedText = formData.value.content.substring(start, end);
+    let beforeText = formData.value.content.substring(0, start);
+    const afterText = formData.value.content.substring(end);
+
+    const { isList: isListMarker, isOrdered, isUnordered } = determineListType(prefix);
+
+    let newCursorPos = start;
+    let insertion;
+    let { number, indent } = { number: null, indent: '---' };
+    if (isOrdered) {
+        ({ number, indent } = getOrderListCounter(beforeText));
+        console.log('indent is', indent)
+    } else if (isUnordered) {
+        // For unordered lists, we'll handle indentation separately
+        // No need to set indent here as we'll use indentToUse later
+    }
+
+    // Find out how this line relates to the previous list item
+    const {
+        isNewSublist,      // Is this line indented more than the previous?
+        isSameLevel,       // Is this line at the same level as the previous?
+        isOutdented,       // Is this line outdented compared to the previous?
+        prevLineIndent     // The spaces before the previous line
+    } = getListRelationship(beforeText, currentLineIndent);
+
+
+
+    let indentToUse = currentLineIndent || '';
+
+    if (isNewSublist) {
+        const targetIndent = prevLineIndent + '    '; // Base 4-space increment
+
+        // Check if user manually entered exactly 4 spaces
+        const hasManual4Spaces = beforeText.endsWith('    ');
+
+        // Always respect manual 4-space indentation
+        if (hasManual4Spaces) {
+            indentToUse = "";
+        }
+        // Otherwise apply standard indentation rules
+        else if (currentLineIndent.length % 4 !== 0) {
+            // Normalize irregular indentation
+            indentToUse = targetIndent;
+        } else if (currentLineIndent.length < targetIndent.length) {
+            // Add indentation if below target level
+            indentToUse = targetIndent;
+        } else {
+            // Keep existing valid indentation
+            indentToUse = currentLineIndent;
+        }
+    } else if (isSameLevel) {
+        indentToUse = prevLineIndent;
+    }
+
+    // Ensure we never have undefined indentation
+    indentToUse = indentToUse || '';
+
+    if (isOrdered) {
+        // For ordered lists
+        insertion = indentToUse + number + '.' + selectedText + suffix;
+    } else if (isUnordered) {
+        // For unordered lists - extract just the list marker without spaces
+        const listMarker = prefix.trim();
+        insertion = indentToUse + listMarker + '' + selectedText + suffix;
+    } else {
+        // For all other markdown elements
+        insertion = prefix + selectedText + suffix;
+    }
+
+    // Add newline before list items when needed (edge cases handled in shouldInsertNewLine)
+    if (shouldInsertNewLine(beforeText, isListMarker, isLineStart, insertion)) {
+        insertion = '\n' + insertion;
+    }
+
+    // Calculate the new cursor position using the helper function
+    newCursorPos = calculateCursorPosition({
+        beforeText,
+        selectedText,
+        prefix,
+        suffix,
+        insertion,  // Pass the full insertion string
+        isOrdered: !!number,
+        isUnordered,
+        number
+    });
+    formData.value.content = beforeText + insertion + afterText;
+
+
+    // Set cursor position after the inserted text
+    nextTick(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+    });
+};
+
+
+
+
+const navigateToManagePosts = () => {
+    router.push('/admin/manage-posts');
+};
+const cancelEdit = () => {
+    const { title, content, featureImage, date, readingTime } = formData.value;
+    const defaultDate = new Date().toISOString().split('T')[0];
+
+    // Check if any field has been modified from its default/empty state
+    const hasChanges = title ||
+        content ||
+        featureImage ||
+        date !== defaultDate ||
+        readingTime !== 5;
+
+    if (!hasChanges) {
+        navigateToManagePosts();
+    } else {
+        confirmDialog.value?.show();
+    }
+};
+
+const validateForm = () => {
+    let isValid = true;
+    formErrors.value = {}; // Reset errors
+
+    // Title validation
+    if (!formData.value.title?.trim()) {
+        formErrors.value.title = 'Title is required';
+        isValid = false;
+    }
+
+    // Date validation
+    if (!formData.value.date) {
+        formErrors.value.date = 'Date is required';
+        isValid = false;
+    }
+
+    // Content validation
+    if (!formData.value.content?.trim()) {
+        formErrors.value.content = 'Content is required';
+        isValid = false;
+    }
+
+    return isValid;
+};
+
+const handleSubmit = async () => {
+    if (isSubmitting.value) return; // Prevent double submit
+    isSubmitting.value = true;
+
+    // Validate form
+    if (!validateForm()) {
+        // Focus the first field with an error
+        const firstErrorField = Object.keys(formErrors.value).find(key => formErrors.value[key]);
+        if (firstErrorField) {
+            nextTick(() => {
+                document.getElementById(firstErrorField)?.focus();
+            });
+        }
+        isSubmitting.value = false;
+        return;
+    }
+
+    try {
+        const postData = {
+            ...formData.value,
+            date: new Date(formData.value.date)
+        };
+
+        if (isEditMode.value && postId.value) {
+            // Update existing post
+            await updatePost(postId.value, postData);
+            showNotify('Post updated successfully!', 'success');
+        } else {
+            // Add new post
+            postData.createdAt = new Date();
+            await addPost(postData);
+            showNotify('Post published successfully!', 'success');
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        await router.push('/blog');
+
+        // Reset form after successful submission if it was a new post
+        if (!isEditMode.value) {
+            formData.value = {
+                title: '',
+                date: new Date().toISOString().split('T')[0],
+                readingTime: 5,
+                featureImage: '',
+                content: ''
+            };
+        }
+    } catch (error) {
+        console.error(`Error ${isEditMode.value ? 'updating' : 'publishing'} post:`, error);
+        showNotify(`Failed to ${isEditMode.value ? 'update' : 'publish'} post. ${error.message || 'Please try again.'}`, 'error');
+    } finally {
+        isSubmitting.value = false;
+    }
+}
 </script>
 
 <style scoped>
