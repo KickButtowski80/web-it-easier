@@ -71,7 +71,7 @@
                         <textarea ref="contentTextarea" id="content" v-model="formData.content"
                             @keydown.tab.exact.prevent="handleTabWrapper"
                             @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
-                            @keydown.enter.exact.prevent="handleEnter" @keydown.esc="handleEsc"
+                            @keydown.enter.exact.prevent="handleEnter1" @keydown.esc="handleEsc"
                             @keydown.backspace="handleBackspace" placeholder="Write your post content in markdown..."
                             required :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
                 </textarea>
@@ -250,10 +250,10 @@ const handleBackspace = (event) => {
 
     // Get the number being backspaced
     const lastBackspacedNumberMatch = deletedText.trim().match(/^(\d+)/);
-
     const firstBackspaceNumberMatch = deletedText.trim().match(/(\d+)(?=\.?$)/);
 
     firstBackspacedNumber.value = firstBackspaceNumberMatch ? parseInt(firstBackspaceNumberMatch[0], 10) : null;
+    lastBackspacedNumber.value = lastBackspacedNumberMatch ? parseInt(lastBackspacedNumberMatch[0], 10) : null;
 
     if (!lastBackspacedNumberMatch || !firstBackspaceNumberMatch) {
         lastBackspacedNumber.value = null;
@@ -262,7 +262,6 @@ const handleBackspace = (event) => {
     }
 
     // Store both the number
-    lastBackspacedNumber.value = parseInt(lastBackspacedNumberMatch[0], 10);
 
     const beforeCursor = text.substring(0, cursorPositionStart);
     const listMarkerMatch = beforeCursor.match(/(\d+)\.$/);
@@ -322,10 +321,10 @@ const getOrderListCounter = (beforeText, afterText) => {
             counterValue = orderListCounters.value[compositeKey] + 1;
             // If we've reached or passed the backspaced number, jump to after the existing content
             if (counterValue > firstBackspacedNumber.value) {
+
                 // Find the highest number in the entire list (beforeText + afterText)
                 const fullText = beforeText + afterText;
                 const maxNumber = Math.max(0, ...fullText.match(/\d+/g)?.map(Number) || [0]);
-             ;
                 const nextNumber = maxNumber;
 
                 // Update the counter to the next available number
@@ -587,12 +586,12 @@ const handleFormat = ({ prefix, suffix }) => {
 
 
     let indentToUse = currentLineIndent || '';
+    const hasManual4Spaces = beforeText.endsWith('    ');
 
     if (isNewSublist) {
         const targetIndent = prevLineIndent + '    '; // Base 4-space increment
 
         // Check if user manually entered exactly 4 spaces
-        const hasManual4Spaces = beforeText.endsWith('    ');
 
         // Always respect manual 4-space indentation
         if (hasManual4Spaces) {
@@ -610,7 +609,11 @@ const handleFormat = ({ prefix, suffix }) => {
             indentToUse = currentLineIndent;
         }
     } else if (isSameLevel) {
-        indentToUse = prevLineIndent;
+        if (hasManual4Spaces) {
+            indentToUse = "";
+        } else {
+            indentToUse = prevLineIndent;
+        }
     }
 
     // Ensure we never have undefined indentation
