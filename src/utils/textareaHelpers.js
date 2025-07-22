@@ -372,6 +372,21 @@ export const detectListNumber = (content) => {
 
 
  
+/**
+ * Checks if the given content contains any ordered list items.
+ * An ordered list item is defined as a line that starts with a number followed by a dot (e.g., '1. ', '2. Item').
+ *
+ * @example
+ * // returns true
+ * hasOrderedLists('1. First item\n2. Second item');
+ *
+ * @example
+ * // returns false
+ * hasOrderedLists('- Unordered list\n* Another item');
+ *
+ * @param {string} content - The text content to check for ordered lists
+ * @returns {boolean} Returns true if any line in the content matches an ordered list pattern, false otherwise
+ */
 export const hasOrderedLists = (content) => {
     if (!content) return false;
     return content.split('\n').some(line => /^\s*\d+\.\s?/.test(line.trim()));
