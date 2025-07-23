@@ -261,7 +261,7 @@ const getOrderListCounter = (beforeText, afterText) => {
 
     // First, check if we already have a counter for this exact composite key
     if (orderListCounters.value[compositeKey] !== undefined) {
-       counterValue = orderListCounters.value[compositeKey] + 1;
+        counterValue = orderListCounters.value[compositeKey] + 1;
     } else {
         // If no exact match, look for any counter at this level with the same parent
         for (const [key, value] of Object.entries(orderListCounters.value)) {
