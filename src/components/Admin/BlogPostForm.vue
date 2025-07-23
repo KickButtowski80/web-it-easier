@@ -72,8 +72,8 @@
                             @keydown.tab.exact.prevent="handleTabWrapper"
                             @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
                             @keydown.enter.exact.prevent="handleEnter1" @keydown.esc="handleEsc"
-                            @keydown.backspace="handleBackspace" placeholder="Write your post content in markdown..."
-                            required :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
+                            placeholder="Write your post content in markdown..." required
+                            :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
                 </textarea>
                         <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
                     </div>
@@ -123,7 +123,7 @@ import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
 import {
     handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo,
     determineListType, shouldInsertNewLine, calculateCursorPosition,
-    currentLinesIndention,getNumbersAtIndentationLevel,
+    currentLinesIndention, getNumbersAtIndentationLevel,
     detectListNumber,
     hasOrderedLists
 } from '@/utils/textareaHelpers';
@@ -229,55 +229,7 @@ const handleShiftTabWrapper = (event) => {
 };
 
 
-const lastBackspacedNumber = ref(null);
-const firstBackspacedNumber = ref(null);
 
-const handleBackspace = (event) => {
-
-    if (!event || event.key !== 'Backspace') {
-        return null;
-    }
-
-    const text = formData.value.content;
-    const cursorPositionStart = event.target.selectionStart;
-    const cursorPositionEnd = event.target.selectionEnd;
-    let deletedText = text.substring(cursorPositionStart - 1, cursorPositionEnd);
-
-    // Handle dot or newline case
-    if (/^[.\n]$/.test(deletedText)) {
-        return null;
-    }
-
-    // Get the number being backspaced
-    const lastBackspacedNumberMatch = deletedText.trim().match(/^(\d+)/);
-    const firstBackspaceNumberMatch = deletedText.trim().match(/(\d+)(?=\.?$)/);
-
-    firstBackspacedNumber.value = firstBackspaceNumberMatch ? parseInt(firstBackspaceNumberMatch[0], 10) : null;
-    lastBackspacedNumber.value = lastBackspacedNumberMatch ? parseInt(lastBackspacedNumberMatch[0], 10) : null;
-
-    if (!lastBackspacedNumberMatch || !firstBackspaceNumberMatch) {
-        lastBackspacedNumber.value = null;
-        firstBackspacedNumber.value = null;
-        return null;
-    }
-
-    // Store both the number
-
-    const beforeCursor = text.substring(0, cursorPositionStart);
-    const listMarkerMatch = beforeCursor.match(/(\d+)\.$/);
-    if (listMarkerMatch) {
-        // Remove the entire list marker (number + dot)
-        const markerLength = listMarkerMatch[0].length;
-        const newText = text.substring(0, cursorPositionStart - markerLength) + text.substring(cursorPositionEnd);
-        formData.value.content = newText;
-        // Set cursor after removing marker
-
-        nextTick(() => {
-            event.target.setSelectionRange(cursorPositionStart - markerLength, cursorPositionStart - markerLength);
-        });
-        return;
-    }
-};
 /**
  * Get the next ordered list counter and indentation string
  * @param {string} beforeText - The text before the cursor
@@ -306,51 +258,10 @@ const getOrderListCounter = (beforeText, afterText) => {
         orderListCounters.value = {};
         counterValue = 1;
     }
-    if (lastBackspacedNumber.value !== null) {
-        const lastBackspacedNumberValue = lastBackspacedNumber.value;
-        lastBackspacedNumber.value = null; // Reset after use
-        orderListCounters.value[compositeKey] = lastBackspacedNumberValue;
-        return {
-            number: lastBackspacedNumberValue
-        };
-    }
+
     // First, check if we already have a counter for this exact composite key
     if (orderListCounters.value[compositeKey] !== undefined) {
-        if (firstBackspacedNumber.value !== null) {
-            // Get the next number in sequence
-            counterValue = orderListCounters.value[compositeKey] + 1;
-            // If we've reached or passed the backspaced number, jump to after the existing content
-            if (counterValue > firstBackspacedNumber.value) {
-
-                // Get current line's indentation
-                const currentLine = beforeText.split('\n').pop() || '';
-                const currentIndent = (currentLine.match(/^(\s*)/) || [''])[0];
-                
-                // Find all numbers at the same indentation level
-                const numbersAtLevel = getNumbersAtIndentationLevel(beforeText, afterText, currentIndent);
-                
-                // Get the next number in sequence at this indentation level
-                const maxNumber = numbersAtLevel.length > 0 ? Math.max(...numbersAtLevel) : 0;
-                const nextNumber = maxNumber;
-
-                // Update the counter to the next available number
-                orderListCounters.value[compositeKey] = nextNumber;
-
-                const result = {
-                    number: nextNumber,
-                    shouldJump: true,
-                    jumpPosition: beforeText.length + afterText.length
-                };
-                firstBackspacedNumber.value = null;
-                return result;
-
-            }
-        } else {
-
-            // Normal increment behavior
-            counterValue = orderListCounters.value[compositeKey] + 1;
-        }
-
+       counterValue = orderListCounters.value[compositeKey] + 1;
     } else {
         // If no exact match, look for any counter at this level with the same parent
         for (const [key, value] of Object.entries(orderListCounters.value)) {
