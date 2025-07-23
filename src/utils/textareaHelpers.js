@@ -60,20 +60,20 @@ export const handleTab = (e, formData) => {
     const start = textarea.selectionStart;
     const value = formData.content;
 
-     const { lineStart, lineEnd, lineText, isInListItem} = getCurrentLineInfo(value, start);
-   
+    const { lineStart, lineEnd, lineText, isInListItem } = getCurrentLineInfo(value, start);
+
     // Check if we're in a list item (using explicit spaces)
     const isAtStartOfLine = start === lineStart;
 
     // If at start of line or in a list item, add TAB_SIZE spaces
-    if (isAtStartOfLine || isInListItem) {     
+    if (isAtStartOfLine || isInListItem) {
         const newText = value.substring(0, start) + ' '.repeat(TAB_SIZE) + value.substring(start);
         formData.content = newText;
         nextTick(() => {
             textarea.selectionStart = textarea.selectionEnd = start + TAB_SIZE;
         });
     } else {
-       // Standard tab behavior - align to next tab stop
+        // Standard tab behavior - align to next tab stop
         const lineUpToCursor = value.substring(lineStart, start);
         const spacesToAdd = TAB_SIZE - (lineUpToCursor.length % TAB_SIZE);
         const newText = value.substring(0, start) + ' '.repeat(spacesToAdd) + value.substring(start);
@@ -96,7 +96,7 @@ export const handleShiftTab = (e, formData) => {
     const value = formData.content;
 
     // Get the current line
-    const { lineStart, lineEnd, lineText, isInListItem} = getCurrentLineInfo(value, start);
+    const { lineStart, lineEnd, lineText, isInListItem } = getCurrentLineInfo(value, start);
     // Find leading spaces
     const leadingSpaces = lineText.match(/^ +/);
     if (!leadingSpaces) return; // No spaces to remove
@@ -154,8 +154,8 @@ export const getListRelationship = (textBeforeCursor, currentLineIndent) => {
     let lastListItemLine = '';
     let lastListItemIndent = '';
     let foundListItem = false;
-// why counting all the previous lines 
-// you just need to infer where you at based on the previous lines indention
+    // why counting all the previous lines 
+    // you just need to infer where you at based on the previous lines indention
     const previousLines = allLines.slice(0, -1);
     // Scan backwards through previous lines only
     for (let i = previousLines.length - 1; i >= 0; i--) {
@@ -371,7 +371,7 @@ export const detectListNumber = (content) => {
 };
 
 
- 
+
 /**
  * Checks if the given content contains any ordered list items.
  * An ordered list item is defined as a line that starts with a number followed by a dot (e.g., '1. ', '2. Item').
@@ -391,3 +391,22 @@ export const hasOrderedLists = (content) => {
     if (!content) return false;
     return content.split('\n').some(line => /^\s*\d+\.\s?/.test(line.trim()));
 };
+
+
+
+
+
+export function getNumbersAtIndentationLevel(beforeText, afterText, currentIndent) {
+
+    const lines = (beforeText + afterText).split('\n');
+    const filteredLines = lines
+        .filter(line => {
+            const lineIndent = (line.match(/^(\s*)/) || [''])[0];
+            return lineIndent.length === currentIndent.length && /^\s*\d+\./.test(line);
+        })
+        .map(line => {
+            const match = line.match(/\d+/);
+            return match ? parseInt(match[0], 10) : 0;
+        });
+    return filteredLines;
+}

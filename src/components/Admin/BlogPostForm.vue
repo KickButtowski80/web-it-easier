@@ -123,7 +123,7 @@ import ConfirmationDialog from '@/components/UI/ConfirmationDialog.vue';
 import {
     handleTab, handleShiftTab, getListRelationship, getCurrentLineInfo,
     determineListType, shouldInsertNewLine, calculateCursorPosition,
-    currentLinesIndention,
+    currentLinesIndention,getNumbersAtIndentationLevel,
     detectListNumber,
     hasOrderedLists
 } from '@/utils/textareaHelpers';
@@ -322,9 +322,15 @@ const getOrderListCounter = (beforeText, afterText) => {
             // If we've reached or passed the backspaced number, jump to after the existing content
             if (counterValue > firstBackspacedNumber.value) {
 
-                // Find the highest number in the entire list (beforeText + afterText)
-                const fullText = beforeText + afterText;
-                const maxNumber = Math.max(0, ...fullText.match(/\d+/g)?.map(Number) || [0]);
+                // Get current line's indentation
+                const currentLine = beforeText.split('\n').pop() || '';
+                const currentIndent = (currentLine.match(/^(\s*)/) || [''])[0];
+                
+                // Find all numbers at the same indentation level
+                const numbersAtLevel = getNumbersAtIndentationLevel(beforeText, afterText, currentIndent);
+                
+                // Get the next number in sequence at this indentation level
+                const maxNumber = numbersAtLevel.length > 0 ? Math.max(...numbersAtLevel) : 0;
                 const nextNumber = maxNumber;
 
                 // Update the counter to the next available number
