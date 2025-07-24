@@ -91,7 +91,7 @@ const updateCanonicalTag = async () => {
       if (post.value && post.value.title) {
         // Create the canonical URL using the proper slug format
         const slug = titleToSlug(post.value.title);
-        canonicalUrl.value = `https://izak-portfolio.vercel.app/blog/${slug}`;
+        canonicalUrl.value = `https://web-it-easier.vercel.app/blog/${slug}`;
 
         // Store the default canonical if not already stored
         if (!defaultCanonical.value) {
