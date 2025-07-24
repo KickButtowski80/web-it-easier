@@ -120,7 +120,7 @@ const updateCanonicalTag = async () => {
           document.head.appendChild(link);
         }
         // Update page title with post title for better SEO
-        document.title = `${post.value.title} | Izak's Portfolio`;
+        document.title = `${post.value.title} | Web It Easier`;
       }
 
       // Always resolve the promise when done
