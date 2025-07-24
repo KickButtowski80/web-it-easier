@@ -13,7 +13,7 @@ export const updateSitemap = async () => {
     // Base URLs
     sitemapEntries.push(`
       <url>
-        <loc>https://izak-portfolio.vercel.app/</loc>
+        <loc>https://web-it-easier.vercel.app/</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
@@ -24,7 +24,7 @@ export const updateSitemap = async () => {
     posts.forEach(post => {
       sitemapEntries.push(`
         <url>
-          <loc>https://izak-portfolio.vercel.app/blog/${titleToSlug(post.data().title)}</loc>
+          <loc>https://web-it-easier.vercel.app/blog/${titleToSlug(post.data().title)}</loc>
           <lastmod>${new Date(post.data().updatedAt?.toDate() || new Date()).toISOString().split('T')[0]}</lastmod>
           <changefreq>monthly</changefreq>
           <priority>0.8</priority>

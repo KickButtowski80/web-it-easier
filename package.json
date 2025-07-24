@@ -1,5 +1,5 @@
 {
-  "name": "izak-portfolio",
+  "name": "web-it-easier",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,7 +15,8 @@
     "test:api:cjs": "node test-api.js",
     "test:api": "pnpm test:api:esm || pnpm test:api:cjs",
     "test:env": "node test-env.js",
-    "test:env:dotenv": "node -r dotenv/config test-env.js"
+    "test:env:dotenv": "node -r dotenv/config test-env.js",
+    "generate:og": "node scripts/generate-og-image.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
