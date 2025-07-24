@@ -1,4 +1,4 @@
-# IT Group Portfolio
+# Web It Easier
 
 [![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=flat&logo=vuedotjs&logoColor=4FC08D)](https://vuejs.org/)
 [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=flat&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
@@ -31,7 +31,7 @@
 
 ## Live Demo
 
-[Visit Website](https://izak-portfolio.vercel.app)
+[Visit Website](https://web-it-easier.vercel.app)
 
 ## Contact
 
@@ -39,4 +39,4 @@ For inquiries or collaborations, please reach out at [pazpaz25@gmail.com](mailto
 
 ---
 
-Made with ❤️ by IT Group
+Made with ❤️ by Web It Easier
