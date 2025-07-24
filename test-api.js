@@ -2,7 +2,7 @@
 const http = require('http');
 
 const postData = JSON.stringify({
-  url: 'https://izak-portfolio.vercel.app/blog/fffff',
+  url: 'https://web-it-easier.vercel.app/blog/fffff',
   type: 'URL_UPDATED'
 });
 
