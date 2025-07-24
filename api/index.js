@@ -52,7 +52,7 @@ export default async function handler(req, res) {
   // --- CORS Security Check ---
   // To protect the API, we only allow requests from specific, trusted domains.
   const allowedOrigins = [
-    'https://izak-portfolio.vercel.app',  // The live, public website
+    'https://web-it-easier.vercel.app',  // The live, public website
     'http://localhost:3000'               // The local development environment
   ];
 
