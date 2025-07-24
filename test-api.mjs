@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const postData = JSON.stringify({
-  url: 'https://izak-portfolio.vercel.app/blog/the-business-impact-of-website-speed',
+  url: 'https://web-it-easier.vercel.app/blog/the-business-impact-of-website-speed',
   type: 'URL_UPDATED'
 });
 
