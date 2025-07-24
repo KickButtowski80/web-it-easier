@@ -13,7 +13,7 @@ export const updateSitemap = async () => {
     // Base URLs
     sitemapEntries.push(`
       <url>
-        <loc>https://izak-portfolio.vercel.app/</loc>
+        <loc>https://web-it-easier.vercel.app/</loc>
         <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
