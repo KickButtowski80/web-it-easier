@@ -15,7 +15,7 @@
     :duration="3000"
   />
   <main
-    class="md:overflow-visible mt-[4rem]  pb-[50px]
+    class="md:overflow-visible mt-[4rem] mb-[13rem] pb-[50px]
      md:pb-0"
     id="main-content"
     tabindex="-1"
@@ -38,25 +38,25 @@
       class="tap-area top-left" 
       @click="handleTap(1)" 
       aria-label="Top left tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
     <button 
       class="tap-area top-right" 
       @click="handleTap(2)" 
       aria-label="Top right tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
     <button 
       class="tap-area bottom-left" 
       @click="handleTap(3)" 
       aria-label="Bottom left tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
     <button 
       class="tap-area bottom-right" 
       @click="handleTap(4)" 
       aria-label="Bottom right tap area"
-      tabindex="0"
+      tabindex="-1"
     ></button>
   </div>
 </template>
@@ -206,7 +206,7 @@ const checkMobile = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999;
+  z-index: 1;
   pointer-events: none; /* Allow clicks to pass through by default */
 }
 
