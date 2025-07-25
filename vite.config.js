@@ -11,19 +11,6 @@ export default defineConfig(({ mode }) => {
   const enableSourceMap = mode === 'analysis' || mode === 'development';
 
   return {
-    base: '/',
-    server: {
-      port: 3000,
-      strictPort: true,
-      open: true,
-      watch: {
-        usePolling: true
-      }
-    },
-    preview: {
-      port: 3000,
-      strictPort: true
-    },
     build: {
       outDir: "dist",
       sourcemap: enableSourceMap,  // Enable source maps for analysis and development
@@ -134,6 +121,10 @@ export default defineConfig(({ mode }) => {
         "@": resolve(__dirname, "src")
       }
     },
-    // Server configuration is now at the top
+    server: {
+      watch: {
+        usePolling: true
+      }
+    }
   };
 });

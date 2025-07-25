@@ -30,17 +30,7 @@
           </ul>
         </nav>
 
-        <!-- 
-          Main content container with prose styling
-          - Uses direct CSS selectors (no :deep) because:
-            1. v-html content renders as direct children
-            2. No component boundaries to cross
-            3. Styles apply directly to rendered markdown
-          - ID 'post-content' provides styling hook
-          - 'prose' class applies Tailwind typography
-          - 'whitespace-pre-wrap' preserves formatting
-        -->
-        <div  id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4" v-html="renderedContent"></div>
+        <div class="prose prose-lg max-w-none" v-html="renderedContent"></div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite">
         <div class="animate-pulse">
@@ -61,10 +51,15 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import Notification from '@/components/UI/Notification.vue'
-import { useNotification, titleToSlug } from "../utils/helpers";
-import { renderMarkdown } from "../utils/markdown";
+import { useNotification } from "../utils/helpers"
+
+import { marked } from "marked";
+import { gfmHeadingId } from "marked-gfm-heading-id";
+import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import { getPost } from "../config/firebase";
+import { titleToSlug } from "../utils/helpers";
+import DOMPurify from "dompurify";
 import { useRoute } from "vue-router";
 
 // Props
@@ -85,7 +80,8 @@ const {
 const isMounted = ref(true);
 const post = ref(null);
 const defaultCanonical = ref(null);
- 
+const route = useRoute();
+
 // Set up canonical URL management
 const canonicalUrl = ref('');
 
@@ -195,11 +191,23 @@ onUnmounted(() => {
 function deslugify(slug) {
   return slug.replace(/-/g, ' ');
 }
-
+// Computed properties
 const renderedContent = computed(() => {
-  if (!post.value || !post.value.content) return ""; 
-  const html = renderMarkdown(post.value.content);  
-  return html;
+  if (!post.value || !post.value.content) return "";
+  // Configure marked to use highlight.js for code blocks
+  marked.setOptions({
+    highlight: function (code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+      return hljs.highlightAuto(code).value;
+    },
+    breaks: true,
+    gfm: true,
+    langPrefix: "language-none",
+  });
+  marked.use(gfmHeadingId());
+  return DOMPurify.sanitize(marked(post.value.content));
 });
 
 const toc = computed(() => {
@@ -250,49 +258,6 @@ function scrollToSection(id) {
 </script>
 
 <style>
-
-/* 
-  :deep() is a Vue scoped CSS feature that allows styling child components or dynamic content.
-  The selector inside :deep() will be left untouched, allowing it to target nested elements.
-  In this case, we're styling ordered lists within elements that have the 'prose' class.
-*/
-
-#post-content.prose:has(ul) {
-    list-style-type: disc;
-    padding-left: 2rem;
-}
-
-#post-content.prose:has(ol) {
-    list-style-type: decimal;
-    padding-left: 2rem;
-}
-
-/* Nested list styles */
-#post-content.prose ul ul {
-    list-style-type: circle;
-}
-
-#post-content.prose ol ol {
-    list-style-type: lower-alpha;
-}
-
-#post-content.prose ol ol ol {
-    list-style-type: lower-roman;
-}
-
-#post-content.prose blockquote {
-    border-left: 4px solid #e5e7eb;
-    /* Light gray border on the left */
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-    color: #4b5563;
-    /* Slightly darker text */
-    font-style: italic;
-}
-
-
-
-
 /* Base code block styling */
 pre {
   background-color: #f6f8fa;
@@ -312,7 +277,7 @@ pre>code {
   display: block;
 }
 
-#post-content.prose code {
+.prose code {
   background-color: rgba(59, 130, 246, 0.1);
   padding: 0.2em 0.6em;
   border-radius: 6px;

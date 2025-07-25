@@ -16,7 +16,7 @@
                 {{ post.title }}
               </h2>
 
-              <div class="mb-4 prose max-w-none" v-html="renderMarkdown(post.content.substring(0, 100) + '...')"></div>
+              <p class="mb-4">{{ post.content.substring(0, 100) }}...</p>
 
               <footer class="text-gray-600 mt-auto">
                 <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
@@ -46,7 +46,6 @@ import { getPosts, auth } from '../config/firebase'
 import { ref, onMounted } from 'vue'
 import Notification from '../components/UI/Notification.vue';
 import { useNotification } from '../utils/helpers'
-import { renderMarkdown } from '../utils/markdown';
 const {
   showNotification,
   notificationMessage,
@@ -92,7 +91,6 @@ export default {
       formatDate,
       formatDateISO,
       titleToSlug,
-      renderMarkdown,
       notificationMessage,
       notificationType,
       notificationIcon,
