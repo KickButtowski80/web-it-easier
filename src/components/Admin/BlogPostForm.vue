@@ -574,9 +574,6 @@ const handleFormat = ({ prefix, suffix }) => {
     });
 };
 
-
-
-
 const navigateToManagePosts = () => {
     router.push('/admin/manage-posts');
 };
