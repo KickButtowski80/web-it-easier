@@ -1,3 +1,4 @@
+import { withDirectives } from "vue";
 const plugin = require('tailwindcss/plugin');
 
 /** @type {import('tailwindcss').Config} */
@@ -8,9 +9,6 @@ export default {
       spacing: {
         'navbar-height': '3rem',
         'md-navbar-height': '6rem',
-      },
-      scrollPadding: {
-        'md-navbar-height': '6rem', // Add this line
       },
       backgroundPosition: {
         "right-bottom": "bottom 50% right 35%",
