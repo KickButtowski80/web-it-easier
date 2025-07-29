@@ -40,7 +40,8 @@
           - 'prose' class applies Tailwind typography
           - 'whitespace-pre-wrap' preserves formatting
         -->
-        <div  id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4" v-html="renderedContent"></div>
+        <div id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4"
+          v-html="renderedContent"></div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite">
         <div class="animate-pulse">
@@ -85,7 +86,7 @@ const {
 const isMounted = ref(true);
 const post = ref(null);
 const defaultCanonical = ref(null);
- 
+
 // Set up canonical URL management
 const canonicalUrl = ref('');
 
@@ -95,7 +96,10 @@ const updateCanonicalTag = async () => {
       if (post.value && post.value.title) {
         // Create the canonical URL using the proper slug format
         const slug = titleToSlug(post.value.title);
-        canonicalUrl.value = `https://web-it-easier.vercel.app/blog/${slug}`;
+        const baseUrl = import.meta.env.PROD
+          ? 'https://web-it-easier.vercel.app'
+          : window.location.origin;
+        canonicalUrl.value = `${baseUrl}/blog/${slug}`;
 
         // Store the default canonical if not already stored
         if (!defaultCanonical.value) {
@@ -197,8 +201,8 @@ function deslugify(slug) {
 }
 
 const renderedContent = computed(() => {
-  if (!post.value || !post.value.content) return ""; 
-  const html = renderMarkdown(post.value.content);  
+  if (!post.value || !post.value.content) return "";
+  const html = renderMarkdown(post.value.content);
   return html;
 });
 
@@ -250,7 +254,6 @@ function scrollToSection(id) {
 </script>
 
 <style>
-
 /* 
   :deep() is a Vue scoped CSS feature that allows styling child components or dynamic content.
   The selector inside :deep() will be left untouched, allowing it to target nested elements.
@@ -258,36 +261,36 @@ function scrollToSection(id) {
 */
 
 #post-content.prose:has(ul) {
-    list-style-type: disc;
-    padding-left: 2rem;
+  list-style-type: disc;
+  padding-left: 2rem;
 }
 
 #post-content.prose:has(ol) {
-    list-style-type: decimal;
-    padding-left: 2rem;
+  list-style-type: decimal;
+  padding-left: 2rem;
 }
 
 /* Nested list styles */
 #post-content.prose ul ul {
-    list-style-type: circle;
+  list-style-type: circle;
 }
 
 #post-content.prose ol ol {
-    list-style-type: lower-alpha;
+  list-style-type: lower-alpha;
 }
 
 #post-content.prose ol ol ol {
-    list-style-type: lower-roman;
+  list-style-type: lower-roman;
 }
 
 #post-content.prose blockquote {
-    border-left: 4px solid #e5e7eb;
-    /* Light gray border on the left */
-    padding-left: 1rem;
-    margin: 1.5rem 0;
-    color: #4b5563;
-    /* Slightly darker text */
-    font-style: italic;
+  border-left: 4px solid #e5e7eb;
+  /* Light gray border on the left */
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #4b5563;
+  /* Slightly darker text */
+  font-style: italic;
 }
 
 

@@ -72,6 +72,10 @@ export default {
         auth.onAuthStateChanged(user => {
           isAdmin.value = !!user
         })
+
+        // Update canonical URL using the shared utility function
+        updateCanonicalUrl();
+
       } catch (error) {
         console.error('Error fetching posts:', error)
       } finally {
