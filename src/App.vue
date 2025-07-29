@@ -1,63 +1,32 @@
 <template>
-  <a
-    href="#main-content"
-    class="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:bg-white focus-visible:text-blue-500 focus-visible:py-2 focus-visible:px-4 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-opacity-50 focus-visible:z-[9999]"
-  >
+  <a href="#main-content"
+    class="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:bg-white focus-visible:text-blue-500 focus-visible:py-2 focus-visible:px-4 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-opacity-50 focus-visible:z-[9999]">
     Skip to main content
   </a>
   <Menu />
   <GoBackTop />
-  <Notification
-    v-model="showNotification"
-    :message="notificationMessage"
-    :type="notificationType"
-    :icon="notificationIcon"
-    :duration="3000"
-  />
-  <main
-    class="md:overflow-visible mt-[4rem] mb-[13rem] pb-[50px]
-     md:pb-0"
-    id="main-content"
-    tabindex="-1"
-    role="main"
-  >
-  
-    <router-view v-slot="{ Component }" >
+  <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+    :icon="notificationIcon" :duration="3000" />
+  <main class="md:overflow-visible mt-[4rem] mb-[13rem] pb-[50px]
+     md:pb-0" id="main-content" tabindex="-1" role="main">
+
+    <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <!-- if render key is not used,
           the component will not be re-rendered when the route changes -->
         <!-- :key="`${$route.fullPath}_${$route.name}`" -->
-        <component :is="Component"  />
+        <component :is="Component" />
       </transition>
     </router-view>
   </main>
 
   <!-- Tap areas for secret sequence (mobile only) -->
   <div class="secret-tap-areas" v-if="isMobile && !isLoginPage" role="region" aria-label="Secret tap sequence area">
-    <button 
-      class="tap-area top-left" 
-      @click="handleTap(1)" 
-      aria-label="Top left tap area"
-      tabindex="-1"
-    ></button>
-    <button 
-      class="tap-area top-right" 
-      @click="handleTap(2)" 
-      aria-label="Top right tap area"
-      tabindex="-1"
-    ></button>
-    <button 
-      class="tap-area bottom-left" 
-      @click="handleTap(3)" 
-      aria-label="Bottom left tap area"
-      tabindex="-1"
-    ></button>
-    <button 
-      class="tap-area bottom-right" 
-      @click="handleTap(4)" 
-      aria-label="Bottom right tap area"
-      tabindex="-1"
-    ></button>
+    <button class="tap-area top-left" @click="handleTap(1)" aria-label="Top left tap area" tabindex="-1"></button>
+    <button class="tap-area top-right" @click="handleTap(2)" aria-label="Top right tap area" tabindex="-1"></button>
+    <button class="tap-area bottom-left" @click="handleTap(3)" aria-label="Bottom left tap area" tabindex="-1"></button>
+    <button class="tap-area bottom-right" @click="handleTap(4)" aria-label="Bottom right tap area"
+      tabindex="-1"></button>
   </div>
 </template>
 <script setup>
@@ -66,16 +35,22 @@ import Notification from "./components/UI/Notification.vue";
 import GoBackTop from "./components/GoBackTop.vue";
 import { ref, computed } from "vue";
 import { onMounted, onUnmounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { auth } from "@/config/firebase";
+import { updateCanonicalUrl } from "@/utils/seo-update-canonical-url";
+import { watch, nextTick } from "vue";
+
+
+
 const router = useRouter();
+const route = useRoute();
 const showNotification = ref(false);
 const notificationMessage = ref("");
 const notificationType = ref("info");
 const notificationIcon = ref("info-circle");
 // For secret tap sequence
 const tapSequence = ref([]);
-const correctSequence = [1, 2, 3, 4]; 
+const correctSequence = [1, 2, 3, 4];
 const sequenceTimeout = ref(null);
 
 // Handle key press for desktop - Alt+Shift+L for login access
@@ -90,20 +65,20 @@ const isLoginShortcut = (e) => {
 const handleKeyPress = async (e) => {
   // Check if user is already logged in
   const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
-  
+
   // Check for login shortcut
   if (!isLoginShortcut(e)) return;
-  
+
   // Prevent default behavior
   e.preventDefault();
-  
+
   // Handle login shortcut based on admin status
   if (isAdmin) {
     notificationMessage.value = "You are already logged in as an admin.";
     notificationType.value = "warning";
     showNotification.value = true;
     return;
-  } 
+  }
   navigateToLogin();
 };
 // Add this at the top of your script section
@@ -152,12 +127,12 @@ const navigateToLogin = async () => {
     showNotification.value = true;
     notificationMessage.value = "Navigating to login page";
     notificationType.value = "success";
-    
+
   } catch (error) {
     showNotification.value = true;
     notificationMessage.value = `Navigation failed: ${error.message}`;
     notificationType.value = "error";
-    
+
   }
 };
 
@@ -180,7 +155,30 @@ onMounted(() => {
 
   // Start observing the document body
   resizeObserver.observe(document.body);
+
+ 
+
+    nextTick(() => {
+      updateCanonicalUrl();
+    });
+
+
+
 });
+
+// Watch for route changes and update canonical URL
+watch(
+  () => route.fullPath,
+  () => {
+    // Use nextTick to ensure the DOM is updated
+    nextTick(() => {
+      const newCanonical = updateCanonicalUrl();
+      console.log('Route changed. New canonical:', newCanonical);
+    });
+  },
+  { immediate: true } // This ensures it runs on initial load
+);
+
 
 onUnmounted(() => {
   // Clean up event listeners
@@ -207,14 +205,16 @@ const checkMobile = () => {
   width: 100%;
   height: 100%;
   z-index: 1;
-  pointer-events: none; /* Allow clicks to pass through by default */
+  pointer-events: none;
+  /* Allow clicks to pass through by default */
 }
 
 .tap-area {
   position: absolute;
   width: 60px;
   height: 60px;
-  pointer-events: auto; /* Enable clicks on these areas */
+  pointer-events: auto;
+  /* Enable clicks on these areas */
   background-color: transparent;
   font-weight: bold;
   font-size: 20px;
