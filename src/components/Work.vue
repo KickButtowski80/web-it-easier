@@ -1,8 +1,9 @@
 <template>
-  <div class="grid place-items-center shadow-md">
-    <div
-      class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col"
-    >
+  <article 
+    :aria-label="'Project: ' + projectTitle"
+    class="grid place-items-center shadow-md"
+  >
+    <div class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col">
       <img
         class="min-w-full h-full object-contain border rounded-lg border-purple-800 my-5 overflow-hidden"
         :src="image"
@@ -10,53 +11,64 @@
         :alt="imageAlt"
         width="600"
         height="400"
+        :aria-hidden="!imageAlt"
       />
       <Transition name="slide-fade">
-        <div
+        <h2
           v-show="!readMoreStatus"
-          class="font-bold text-xl mb-2 text-blue-600 text-center"
+          class="font-bold text-xl mb-2 text-blue-700 text-center"
         >
           {{ projectTitle }}
-        </div>
+        </h2>
       </Transition>
       <section
-        class="font-bold text-xl mb-2 text-blue-600 flex justify-center items-center"
+        class="font-bold text-xl mb-2 text-blue-700 flex justify-center items-center"
       >
         <button
           @click="toggleReadMoreStatus"
-          aria-expanded="false"
-          aria-controls="cardInfo"
-          role="button"
-          class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900 flex item-center w-fit"
+          @keydown.enter.space.prevent="toggleReadMoreStatus"
+          :aria-expanded="readMoreStatus ? 'true' : 'false'"
+          :aria-controls="`card-${projectId}`"
+          :aria-label="`${readMoreStatus ? 'Collapse' : 'Expand'} project details for ${projectTitle}`"
+          class="focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-500 text-white bg-purple-700 hover:bg-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 flex item-center w-fit transition-all duration-200"
         >
           {{ readMoreText }}
+          <span class="sr-only">for {{ projectTitle }}</span>
         </button>
       </section>
 
       <Transition name="slide-fade" ref="cardInfo" class="cardInfo">
-        <div v-show="readMoreStatus">
+        <div 
+          v-show="readMoreStatus" 
+          :id="`card-${projectId}`"
+          role="region"
+          aria-live="polite"
+          class="cardInfo"
+        >
           <ActionButtons 
-          :liveView="liveView"
-          :codeView="codeView"
-          :privateRepo="privateRepo"
-          :projectTitle="projectTitle"
+            :liveView="liveView"
+            :codeView="codeView"
+            :privateRepo="privateRepo"
+            :projectTitle="projectTitle"
           />
-          <div class="gray-bg-card flex-grow">
-            <div class="font-bold text-xl mb-2 text-blue-600">
-              {{ projectTitle }}
-            </div>
+          <div class="gray-bg-card flex-grow" :aria-labelledby="`project-title-${projectId}`">
+            <h3 :id="`project-title-${projectId}`" class="sr-only">
+              Project Details: {{ projectTitle }}
+            </h3>
             <p class="text-gray-700 text-base h-80 overflow-y-auto">
               {{ description }}
             </p>
           </div>
           <div class="px-3 pt-4 pb-2">
-            <span
-              v-for="(tec, index) in technologiesUsed"
-              :key="index"
-              class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
-            >
-              #{{ tec }}
-            </span>
+            <ul class="list-none p-0 m-0">
+              <li 
+                v-for="(tec, index) in technologiesUsed"
+                :key="index"
+                class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+              >
+                #{{ tec }}
+              </li>
+            </ul>
             <p class="text-gray-900 leading-none mt-2">
               <span class="font-bold">Role:</span> Developer
             </p>
@@ -64,19 +76,31 @@
               <span class="font-bold">Completed:</span> January 2024
             </p>
           </div>
-          <div class="gray-bg-card h-48 overflow-y-auto mt-5">
-            <h3 class="font-bold text-lg mb-2 text-blue-600">Highlights</h3>
-            <ul class="list-disc pl-5 space-y-1 text-gray-600">
-              <li v-for="(highlight, index) in highlights" :key="index">
-                {{ highlight }}
-              </li>
-            </ul>
+          <div class="gray-bg-card mt-5">
+            <h3 class="font-bold text-lg mb-2 text-blue-700">
+              Highlights
+            </h3>
+            <div 
+              class="h-48 overflow-y-auto p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+              tabindex="0"
+              aria-label="Project highlights"
+            >
+              <ul class="space-y-2 pl-5 list-disc">
+                <li 
+                  v-for="(highlight, index) in highlights" 
+                  :key="index"
+                  class="text-gray-700"
+                >
+                  {{ highlight }}
+                </li>
+              </ul>
+            </div>
           </div>
     
         </div>
       </Transition>
     </div>
-  </div>
+  </article>
 </template>
 
 <script>
@@ -151,7 +175,7 @@ export default {
 <style scoped>
 .cardInfo {
   scroll-margin-top: 110px;
-  margin-bottom: 10px;
+  margin-bottom: 3rem;
 }
 @media screen and (max-width: 768px) {
   .cardInfo {
@@ -184,14 +208,5 @@ details summary::-webkit-details-marker {
   opacity: 0;
 }
 
-.hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
+
 </style>
