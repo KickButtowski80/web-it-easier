@@ -1,6 +1,37 @@
 /**
  * Sitemap Generator for web-it-easier.vercel.app
  * 
+ * REQUIREMENTS STATUS:
+ * 
+ * CORE FUNCTIONALITY:
+ * ✓ Pull all blog posts from Firestore 🧲
+ *   - Uses Firebase Admin SDK for secure access
+ *   - Fetches all posts in a single query
+ *   - Handles date formatting consistently
+ * 
+ * ✓ Accurate lastmod timestamps 📅
+ *   - Uses post's last modified date
+ *   - Falls back to current date if not available
+ *   - Properly formatted for sitemap spec
+ * 
+ * ✓ Pagination ready 📜
+ *   - Currently fetches all posts (optimized for small collections)
+ *   - Can be extended with Firestore's limit() and startAfter()
+ *   - Logs post count for monitoring
+ * 
+ * ✓ Valid sitemap.xml output 🪪
+ *   - Writes to public/sitemap.xml
+ *   - Follows sitemap.org protocol
+ *   - Includes proper XML headers and encoding
+ * 
+ * OPERATIONAL:
+ * ✓ Single source of truth for sitemap logic
+ * ✓ Auto-generation in deploy pipeline
+ * ✓ Graceful error handling
+ * ✓ Clear documentation for manual triggers
+ *   # Manual Trigger:
+ *   node scripts/generate-sitemap.mjs
+ * 
  * WHY THIS APPROACH?
  * 1. Environment Separation:
  *    - Frontend (browser) and Node.js have different requirements
@@ -10,15 +41,6 @@
  *    - firebase.js is configured for browser environment (uses import.meta.env)
  *    - This script needs Node.js environment variables (process.env)
  *    - Keeps frontend and backend concerns separate
- * 
- * 3. Benefits:
- *    - No browser-specific code in Node.js
- *    - Clear separation of concerns
- *    - Better error handling for server-side execution
- *    - Can be scheduled independently of the frontend
- * 
- * USAGE:
- *   node scripts/generate-sitemap.mjs
  */
 
 // Sitemap generator script for web-it-easier.vercel.app
