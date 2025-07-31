@@ -1,15 +1,15 @@
 <template>
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <article v-if="post" id="post-content">
-        <div class="text-center mb-8">
-          <h1 id="post-title" class="text-3xl md:text-4xl font-normal text-gray-800 dark:text-gray-100 mb-2 tracking-tight">
+      <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
+        <header class="text-center mb-8">
+          <h1 :id="'post-title-' + post.id" class="text-3xl md:text-4xl font-normal text-gray-800 dark:text-gray-100 mb-2 tracking-tight">
             {{ post.title }}
           </h1>
-          <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4"></div>
-        </div>
-        <div class="text-gray-600 mb-8">
-          <span class="mr-4">{{ formatDate(post.date) }}</span>
+          <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
+        </header>
+        <div :id="'post-meta-' + post.id" class="text-gray-600 dark:text-gray-400 mb-8 text-sm">
+          <time :datetime="post.date" class="mr-4">{{ formatDate(post.date) }}</time>
           <span>{{ post.readingTime }} min read</span>
         </div>
 
@@ -45,18 +45,25 @@
           - 'prose' class applies Tailwind typography
           - 'whitespace-pre-wrap' preserves formatting
         -->
-        <div id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4"
-          v-html="renderedContent"></div>
-      </article>
-      <div v-else class="text-center py-12" role="status" aria-live="polite">
-        <div class="animate-pulse">
-          <div class="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
-          <div class="h-4 bg-gray-200 rounded w-1/4 mx-auto mb-8"></div>
-          <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
-          <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
-          <div class="h-4 bg-gray-200 rounded w-3/4 mb-8"></div>
+        <div id="post-content" 
+          class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4"
+          role="article"
+          aria-label="Blog post content"
+          v-html="renderedContent">
         </div>
-        <p class="text-gray-500 mt-4">Loading post...</p>
+      </article>
+      <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true">
+        <div class="animate-pulse" role="presentation">
+          <div class="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4" aria-hidden="true"></div>
+          <div class="h-4 bg-gray-200 rounded w-1/4 mx-auto mb-8" aria-hidden="true"></div>
+          <div class="h-4 bg-gray-200 rounded w-full mb-2" aria-hidden="true"></div>
+          <div class="h-4 bg-gray-200 rounded w-full mb-2" aria-hidden="true"></div>
+          <div class="h-4 bg-gray-200 rounded w-3/4 mb-8" aria-hidden="true"></div>
+        </div>
+        <p class="text-gray-500 mt-4">
+          <span class="sr-only">Status: </span>
+          Loading post...
+        </p>
       </div>
     </div>
     <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
@@ -265,7 +272,7 @@ function scrollToSection(id) {
   This is particularly useful for styling content that's dynamically inserted into the DOM,
   such as markdown-rendered content.
 */
-#post-content {
+#post-content[id="post-{{ post.title }}"] {
   /* Target all direct child elements of the post content */
   & > * {
     margin-bottom: 1.5rem;
