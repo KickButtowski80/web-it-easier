@@ -2,7 +2,12 @@
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
       <article v-if="post" id="post-content">
-        <h1 id="post-title" class="text-4xl font-bold mb-4" v-html="post.title"></h1>
+        <div class="text-center mb-8">
+          <h1 id="post-title" class="text-3xl md:text-4xl font-normal text-gray-800 dark:text-gray-100 mb-2 tracking-tight">
+            {{ post.title }}
+          </h1>
+          <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4"></div>
+        </div>
         <div class="text-gray-600 mb-8">
           <span class="mr-4">{{ formatDate(post.date) }}</span>
           <span>{{ post.readingTime }} min read</span>
@@ -257,78 +262,193 @@ function scrollToSection(id) {
 /* 
   :deep() is a Vue scoped CSS feature that allows styling child components or dynamic content.
   The selector inside :deep() will be left untouched, allowing it to target nested elements.
-  In this case, we're styling ordered lists within elements that have the 'prose' class.
+  This is particularly useful for styling content that's dynamically inserted into the DOM,
+  such as markdown-rendered content.
 */
+#post-content {
+  /* Target all direct child elements of the post content */
+  & > * {
+    margin-bottom: 1.5rem;
+  }
 
-#post-content.prose:has(ul) {
-  list-style-type: disc;
-  padding-left: 2rem;
+  /* Heading 1 - 3D Text Effect */
+  h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 3rem 0 2rem;
+    line-height: 1.1;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+
+  }
+ 
+  /* Heading 2 - Gradient Background with Clip Text */
+  h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 3rem 0 1.5rem;
+    padding: 0.5rem 1.5rem;
+    line-height: 1.3;
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientFlow 8s ease infinite;
+    background-size: 200% 200%;
+  }
+
+  h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+    border-radius: 2px;
+    transform: scaleX(0.8);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  h2:hover::before {
+    transform: scaleX(1);
+  }
+
+  /* Heading 3 - Animated Underline */
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e40af;
+    margin: 2.5rem 0 1.5rem;
+    padding-bottom: 0.5rem;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+  }
+
+  h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    transform: translateX(-100%);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  h3:hover::after {
+    transform: translateX(0);
+  }
+
+  /* Simple Post Title */
+  #post-title {
+    line-height: 1.3;
+  }
+
+  /* Style links */
+  a {
+    color: #3b82f6;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+
+  /* Style lists */
+  ul, ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Style blockquotes */
+  blockquote {
+    border-left: 4px solid #e5e7eb;
+    padding: 0.5rem 0 0.5rem 1rem;
+    margin: 1rem 0;
+    color: #4b5563;
+    font-style: italic;
+  }
+
+  /* Animated Gradient HR */
+  hr {
+    border: none;
+    height: 3px;
+    margin: 2.5rem 0;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
+    background-size: 200% auto;
+    border-radius: 3px;
+    animation: gradientFlow 8s ease infinite;
+  }
+
+  @keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Code blocks */
+  pre {
+    background-color: #1e293b;
+    border-radius: 8px;
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    position: relative;
+  }
+
+  /* Language label for code blocks */
+  pre::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    transform: translateY(-50%);
+    background: #3b82f6;
+    color: white;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Inline code */
+  code:not(pre code) {
+    background-color: rgba(59, 130, 246, 0.1);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    color: #3b82f6;
+    transition: all 0.2s ease;
+  }
+  
+  code:not(pre code):hover {
+    background-color: rgba(59, 130, 246, 0.15);
+  }
 }
-
-#post-content.prose:has(ol) {
-  list-style-type: decimal;
-  padding-left: 2rem;
-}
-
-/* Nested list styles */
-#post-content.prose ul ul {
-  list-style-type: circle;
-}
-
-#post-content.prose ol ol {
-  list-style-type: lower-alpha;
-}
-
-#post-content.prose ol ol ol {
-  list-style-type: lower-roman;
-}
-
-#post-content.prose blockquote {
-  border-left: 4px solid #e5e7eb;
-  /* Light gray border on the left */
-  padding-left: 1rem;
-  margin: 1.5rem 0;
-  color: #4b5563;
-  /* Slightly darker text */
-  font-style: italic;
-}
-
-
-
-
-/* Base code block styling */
-pre {
-  background-color: #f6f8fa;
-  border-radius: 6px;
-  padding: 0.5rem;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  font-size: clamp(1rem, 2vw + 0.5rem, 1.1rem);
-  font-weight: 500;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-}
-
-/* Code content styling */
-pre>code {
-  /* all: unset; */
-  display: block;
-}
-
-#post-content.prose code {
-  background-color: rgba(59, 130, 246, 0.1);
-  padding: 0.2em 0.6em;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  margin: 0 2px;
-}
-
 
 /* Add styling for the prose content */
-
 
 .prose h1 {
   font-size: 2.5rem;
