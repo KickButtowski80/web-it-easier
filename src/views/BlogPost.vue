@@ -551,27 +551,128 @@ function scrollToSection(id) {
   margin-bottom: 1rem;
 }
 
+/* Base unordered list styling */
 .prose ul {
-  list-style-type: disc;
-  margin-left: 1.5rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  list-style: none;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background-color: #e2e8f0; /* Medium gray background */
+  border-radius: 8px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
+/* List items */
+.prose ul > li {
+  position: relative;
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  line-height: 1.6;
+  border-radius: 4px;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+/* Dark mode support */
+.dark .prose ul {
+  background-color: #1e293b; /* Dark slate */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Custom bullet points */
+.prose ul > li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #3b82f6; /* Blue bullet points */
+  font-weight: bold;
+  font-size: 1.2em;
+  line-height: 1.2;
+}
+
+/* Nested lists */
+.prose ul ul {
+  margin: 0.5rem 0 0.5rem 1.5rem;
+  padding-left: 1rem;
+}
+
+/* Nested list bullets */
+.prose ul ul > li::before {
+  content: '◦';
+  color: #60a5fa; /* Lighter blue for nested items */
+}
+
+/* Add subtle hover effect */
+.prose ul > li:hover {
+  transform: translateX(2px);
+}
+
+/* Better spacing between list items and paragraphs */
+.prose ul + p,
+.prose p + ul {
+  margin-top: 1.25rem;
+}
+
+/* Base code styling */
 .prose code {
   background-color: #8b8989;
-  /* Medium grey background */
   color: #0A0A50;
-  /* Dark blue for accessible contrast */
   padding: 0.4em 0.8em;
-  min-width: 2.5em;
   display: inline-block;
-  text-align: center;
-  font-weight: 500;
   font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  font-size: 1rem;
+  font-size: clamp(0.85em, 3.5vw + 0.1em, 1em);
   border-radius: 3px;
-  line-height: 1.4;
+  line-height: 2.2;
+  word-break: break-word;
+
+  text-align: left;
+  min-width: min(2.5em, 100%);
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+
+
+/* Prevent long strings from breaking layout */
+.prose code {
+  hyphens: none;
+  -webkit-hyphens: none;
+  -ms-hyphens: none;
+  -moz-hyphens: none;
+}
+
+/* Better touch targets for mobile */
+@media (hover: none) {
+  .prose code {
+    padding: 0.3em 0.6em;
+  }
+}
+
+/* Fix arrow list spacing on mobile */
+.prose ul > li {
+  position: relative;
+  padding-left: 1.75rem; /* Space for bullet */
+  text-indent: -0.5rem; /* Pull text back toward bullet */
+}
+
+/* For arrow lists specifically */
+.prose ul > li:has(> code:first-child) {
+  padding-left: 0.5rem;
+  text-indent: 0;
+}
+
+.prose ul > li > code:first-child {
+  margin-right: 0.25rem;
+  margin-left: -0.25rem;
+}
+
+/* Adjust for very small screens */
+@media (max-width: 320px) {
+  .prose ul > li:has(> code:first-child) {
+    padding-left: 0.25rem;
+  }
+  
+  .prose ul > li > code:first-child {
+    margin-right: 0.15rem;
+    margin-left: -0.15rem;
+  }
 }
 
 
