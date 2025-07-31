@@ -283,7 +283,7 @@ function scrollToSection(id) {
     position: relative;
 
   }
- 
+
   /* Heading 2 - Gradient Background with Clip Text */
   h2 {
     font-size: 2rem;
@@ -347,12 +347,33 @@ function scrollToSection(id) {
     transform: translateX(0);
   }
 
-  /* Simple Post Title */
+  /* Post Title Styles */
+  .title-wrapper {
+    padding: 1rem 0;
+    margin: 2rem 0;
+    position: relative;
+  }
+  
   #post-title {
-    line-height: 1.3;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+    transition: color 0.3s ease;
+  }
+  
+  #post-title:hover {
+    color: #1e40af; /* Slightly darker blue on hover */
+  }
+  
+  #post-title span {
+    transition: transform 0.3s ease;
+  }
+  
+  #post-title:hover span {
+    transform: scaleX(1);
   }
 
-  /* Style links */
+  Style links
   a {
     color: #3b82f6;
     text-decoration: none;
@@ -606,17 +627,21 @@ h3 {
   background: transparent;
 }
 
-.toc-bedazzled a {
+/* TOC specific styles - higher specificity */
+#table-of-contents.toc-bedazzled a {
   background: rgba(255, 255, 255, 0.4);
   border-radius: 0.5rem;
   padding: 0.2rem 0.6rem;
   transition: background 0.2s, color 0.2s;
 }
 
-.toc-bedazzled a:hover {
-  background: #a5b4fc;
-  color: #fff;
+#table-of-contents.toc-bedazzled a:hover {
+  background: #717ec3;
+  /* Changed text color for better contrast and aesthetic */
+  color: #1A202C; /* A deep, rich blue/charcoal for improved aesthetic and contrast */
+  text-decoration: none;
 }
+
 
 .toc-bedazzled::after {
   content: "";
