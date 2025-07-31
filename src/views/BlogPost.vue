@@ -11,8 +11,10 @@
           </h1>
           <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
         </header>
-        <div :id="'post-meta-' + post.id" class="text-gray-600 dark:text-gray-400 mb-8 text-sm">
-          <time :datetime="post.date" class="mr-4">{{ formatDate(post.date) }}</time>
+        <div :id="'post-meta-' + post.id" class="text-gray-600 dark:text-gray-500 mb-8 text-base">
+          <time :datetime="post.date" class="mr-4">
+            {{ formatDate(post.date) }}
+          </time>
           <span>{{ post.readingTime }} min read</span>
         </div>
 
