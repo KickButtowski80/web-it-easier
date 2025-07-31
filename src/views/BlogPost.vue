@@ -709,14 +709,17 @@ h3 {
   border-radius: 0.5rem;
   padding: 0.2rem 0.6rem;
   transform: translateX(-4px);
+  font-size: clamp(0.85em, 3.5vw + 0.1em, 1em);
+  font-weight: clamp(400, 10vw + 400, 700);
   transition: color 0.2s, transform 0.2s, background-color 0.2s;
 }
 
 
 .toc-bedazzled a:hover {
   transform: translateX(4px);
-  background-color: rgb(124, 124, 231);
-  color: #1A202C;
+  background-color: #4f46e5;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .toc-bedazzled a.active {
