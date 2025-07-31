@@ -3,8 +3,8 @@
     <div class="max-w-4xl mx-auto">
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
-          <h1 :id="'post-title-' + post.id" 
-              class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
+          <h1 :id="'post-title-' + post.id"
+            class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
             <span class="group inline-block w-full max-w-4xl px-8 py-4 rounded-2xl bg-gray-50/40 dark:bg-gray-800/20
              backdrop-blur-sm hover:bg-gray-50/60 dark:hover:bg-gray-800/30 transition-colors duration-200">
               <span class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 bg-clip-text text-transparent
@@ -54,11 +54,8 @@
           - 'prose' class applies Tailwind typography
           - 'whitespace-pre-wrap' preserves formatting
         -->
-        <div id="post-content" 
-          class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4"
-          role="article"
-          aria-label="Blog post content"
-          v-html="renderedContent">
+        <div id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4" role="article"
+          aria-label="Blog post content" v-html="renderedContent">
         </div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true">
@@ -282,8 +279,9 @@ function scrollToSection(id) {
   such as markdown-rendered content.
 */
 #post-content[id="post-{{ post.title }}"] {
+
   /* Target all direct child elements of the post content */
-  & > * {
+  &>* {
     margin-bottom: 1.5rem;
   }
 
@@ -369,28 +367,28 @@ function scrollToSection(id) {
     margin: 2rem 0;
     position: relative;
   }
-  
+
   #post-title {
     position: relative;
     display: inline-block;
     padding-bottom: 0.5rem;
     transition: color 0.3s ease;
   }
-  
+
   #post-title:hover {
-    color: #1e40af; /* Slightly darker blue on hover */
+    color: #1e40af;
+    /* Slightly darker blue on hover */
   }
-  
+
   #post-title span {
     transition: transform 0.3s ease;
   }
-  
+
   #post-title:hover span {
     transform: scaleX(1);
   }
 
-  Style links
-  a {
+  Style links a {
     color: #3b82f6;
     text-decoration: none;
     transition: color 0.2s ease;
@@ -402,7 +400,8 @@ function scrollToSection(id) {
   }
 
   /* Style lists */
-  ul, ol {
+  ul,
+  ol {
     padding-left: 1.5rem;
     margin: 1rem 0;
   }
@@ -432,24 +431,33 @@ function scrollToSection(id) {
   }
 
   @keyframes gradientFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
   }
 
   /* Code blocks */
   pre {
-    background-color: #1e293b;
-    border-radius: 8px;
-    padding: 1.25rem;
+    background-color: #161b22;
+    border-radius: 6px;
+    padding: 1.5rem 1.25rem 1.25rem;
     overflow-x: auto;
     margin: 1.5rem 0;
     font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
     font-size: 0.9em;
     line-height: 1.6;
     color: #e2e8f0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     position: relative;
+    border: 1px solid #2d3748;
+
   }
 
   /* Language label for code blocks */
@@ -457,16 +465,17 @@ function scrollToSection(id) {
     content: attr(data-language);
     position: absolute;
     top: 0;
-    right: 1rem;
+    right: 1.25rem;
     transform: translateY(-50%);
-    background: #3b82f6;
-    color: white;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 4px;
+    background: #2d3748;
+    color: #a0aec0;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0 0 4px 4px;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   /* Inline code */
@@ -479,13 +488,22 @@ function scrollToSection(id) {
     color: #3b82f6;
     transition: all 0.2s ease;
   }
-  
+
   code:not(pre code):hover {
     background-color: rgba(59, 130, 246, 0.15);
   }
 }
 
 /* Add styling for the prose content */
+
+.prose {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+
+
 
 .prose h1 {
   font-size: 2.5rem;
@@ -541,10 +559,21 @@ function scrollToSection(id) {
 }
 
 .prose code {
-  background-color: rgba(175, 184, 193, 0.2);
-  padding: 0.2em 0.4em;
-  border-radius: 6px;
+  background-color: #8b8989;
+  /* Medium grey background */
+  color: #0A0A50;
+  /* Dark blue for accessible contrast */
+  padding: 0.4em 0.8em;
+  min-width: 2.5em;
+  display: inline-block;
+  text-align: center;
+  font-weight: 500;
+  font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 1rem;
+  border-radius: 3px;
+  line-height: 1.4;
 }
+
 
 .prose h2:target {
   color: #3b82f6;
@@ -654,7 +683,8 @@ h3 {
 #table-of-contents.toc-bedazzled a:hover {
   background: #717ec3;
   /* Changed text color for better contrast and aesthetic */
-  color: #1A202C; /* A deep, rich blue/charcoal for improved aesthetic and contrast */
+  color: #1A202C;
+  /* A deep, rich blue/charcoal for improved aesthetic and contrast */
   text-decoration: none;
 }
 
