@@ -343,23 +343,28 @@ body {
   box-sizing: border-box;
 }
 
+#post-content h3 {
+  /* overflow: hidden; */
+  /* Ensures the pseudo-element doesn't overflow */
+  position: relative;
+}
+
 #post-content h3::before {
   content: '';
   position: absolute;
-  visibility: hidden;
   bottom: 0;
   left: 0;
   width: 100%;
   height: 4px;
   background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transform: scaleX(0);
   transform-origin: left;
-  transform: translateX(-100%);
-  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 
 #post-content h3:hover::before {
-  visibility: visible;
-  transform: translateX(0);
+  transform: scaleX(1);
 }
 
 
