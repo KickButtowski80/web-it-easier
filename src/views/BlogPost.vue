@@ -2,9 +2,12 @@
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
-        <header class="text-center mb-8">
-          <h1 :id="'post-title-' + post.id" class="text-3xl md:text-4xl font-normal text-gray-800 dark:text-gray-100 mb-2 tracking-tight">
+        <header class="text-center my-8">
+          <h1 :id="'post-title-' + post.id" 
+              class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
+            <span class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 bg-clip-text text-transparent">
             {{ post.title }}
+          </span>
           </h1>
           <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
         </header>
@@ -78,7 +81,7 @@ import { useNotification, titleToSlug } from "../utils/helpers";
 import { renderMarkdown } from "../utils/markdown";
 import "highlight.js/styles/github.css";
 import { getPost } from "../config/firebase";
-import { useRoute } from "vue-router";
+
 
 // Props
 const props = defineProps({
