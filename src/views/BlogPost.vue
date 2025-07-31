@@ -5,9 +5,13 @@
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id" 
               class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
-            <span class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 bg-clip-text text-transparent">
-            {{ post.title }}
-          </span>
+            <span class="group inline-block w-full max-w-4xl px-8 py-4 rounded-2xl bg-gray-50/40 dark:bg-gray-800/20
+             backdrop-blur-sm hover:bg-gray-50/60 dark:hover:bg-gray-800/30 transition-colors duration-200">
+              <span class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 bg-clip-text text-transparent
+                         group-hover:opacity-90 transition-opacity duration-200">
+                {{ post.title }}
+              </span>
+            </span>
           </h1>
           <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
         </header>
