@@ -283,7 +283,7 @@ body {
 }
 
 #post-content h1 {
-  font-size: 3rem;
+  font-size: clamp(2rem, 8vw, 3rem);
   font-weight: 900;
   margin: 3rem 0 2rem;
   line-height: 1.1;
@@ -294,7 +294,7 @@ body {
 }
 
 #post-content h2 {
-  font-size: 2rem;
+  font-size: clamp(2rem, 6vw, 2rem);
   font-weight: 800;
   margin: 3rem 0 1.5rem;
   padding: 0.5rem 1.5rem;
@@ -328,7 +328,7 @@ body {
 }
 
 #post-content h3 {
-  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 4vw, 1.5rem);
   font-weight: 700;
   color: #1e40af;
   margin: 2.5rem 0 1.5rem;
@@ -347,6 +347,112 @@ body {
   /* overflow: hidden; */
   /* Ensures the pseudo-element doesn't overflow */
   position: relative;
+}
+
+/* Paragraph Styling */
+#post-content p {
+  margin: 1.8em 0;
+  line-height: 1.8;
+  color: #2d3748;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  word-wrap: break-word;
+  hyphens: auto;
+  text-align: justify;
+  text-justify: inter-word;
+  position: relative;
+  padding: 1.5rem 1.75rem;
+  background: rgba(249, 250, 251, 0.7);
+  border-radius: 12px;
+  border-left: 4px solid #3b82f6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+#post-content p:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+  background: rgba(249, 250, 251, 0.9);
+}
+
+/* First paragraph after headings */
+#post-content h2 + p,
+#post-content h3 + p {
+  margin-top: clamp(1.2em, 2vw, 2em);
+  font-size: clamp(1.2rem, 2vw, 1.2rem);
+  line-height: 1.9;
+  color: #1a202c;
+  background: rgba(236, 242, 253, 0.7);
+  border-left-color: #2563eb;
+}
+
+/* Dark mode support */
+.dark #post-content p {
+  color: #e2e8f0;
+  background: rgba(30, 41, 59, 0.4);
+  border-left-color: #60a5fa;
+}
+
+.dark #post-content p:hover {
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.dark #post-content h2 + p,
+.dark #post-content h3 + p {
+  background: rgba(30, 58, 138, 0.3);
+  color: #f8fafc;
+}
+
+/* Blockquote-like styling for important paragraphs */
+#post-content p.important {
+  background: rgba(121, 127, 133, 0.7);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-left: 4px solid #2563eb;
+  font-style: italic;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+#post-content p.important:hover {
+  transform: translateY(-2px);
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+#post-content p.important::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#post-content p.important:hover::before {
+ 
+  opacity: 1;
+}
+
+.dark #post-content p.important {
+  background: rgba(30, 58, 138, 0.2);
+  border-color: rgba(96, 165, 250, 0.3);
+  border-left-color: #60a5fa;
+}
+
+.dark #post-content p.important:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);
+}
+
+/* Last paragraph in a section */
+#post-content p:last-child {
+  margin-bottom: 2.5em;
 }
 
 #post-content h3::before {
