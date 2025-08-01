@@ -562,11 +562,101 @@ a:hover {
 }
 
 #post-content blockquote {
-  border-left: 4px solid #e5e7eb;
-  padding: 0.5rem 0 0.5rem 1rem;
-  margin: 1rem 0;
-  color: #4b5563;
-  font-style: italic;
+  position: relative;
+  margin: 2rem 0;
+  padding: 1.25rem 1.5rem 1.25rem 2.5rem;
+  color: #374151;
+  font-style: normal;
+  background: #f3f4f6;
+  border-radius: 0.5rem;
+  border-left: 4px solid #3b82f6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  transition-property: background-color, border-color, box-shadow, transform;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  cursor: default;
+}
+
+#post-content blockquote:hover {
+  background: #e5e7eb;
+  border-left-color: #2563eb;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transform: translateY(-1px);
+}
+
+#post-content blockquote::before {
+  content: '\201C';
+  position: absolute;
+  top: 0.25rem;
+  left: 0.5rem;
+  font-size: 3rem;
+  line-height: 1;
+  color: #e5e7eb;
+  font-family: Georgia, serif;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+/* Adjust for larger screens */
+@media (min-width: 640px) {
+  #post-content blockquote {
+    padding: 1.5rem 2rem 1.5rem 3.5rem;
+  }
+  
+  #post-content blockquote::before {
+    font-size: 4rem;
+    top: 0.5rem;
+    left: 0.75rem;
+  }
+}
+
+#post-content blockquote p {
+  position: relative;
+  margin: 0.5rem 0;
+  font-size: 1.1em;
+  font-weight: 450; /* Slightly bolder than normal text */
+  line-height: 1.6;
+  color: #1f2937;
+  z-index: 2;
+}
+
+#post-content blockquote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.9em;
+  color: #6b7280;
+  font-style: normal;
+  font-weight: 500;
+}
+
+#post-content blockquote cite::before {
+  content: '\2014\00A0';
+}
+
+#post-content blockquote:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-left-color: #2563eb;
+}
+
+/* Dark mode support */
+.dark #post-content blockquote {
+  background: #1f2937;
+  color: #e5e7eb;
+  border-left-color: #60a5fa;
+}
+
+.dark #post-content blockquote::before {
+  color: #374151;
+}
+
+.dark #post-content blockquote p {
+  color: #f3f4f6;
+}
+
+.dark #post-content blockquote cite {
+  color: #9ca3af;
 }
 
 #post-content hr {
