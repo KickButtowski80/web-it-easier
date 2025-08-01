@@ -305,7 +305,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientFlow 8s ease infinite;
+  animation: gradientFlow 2s ease forwards;
   background-size: 200% 200%;
 }
 
@@ -580,7 +580,7 @@ a:hover {
   background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
   background-size: 200% auto;
   border-radius: 3px;
-  animation: gradientFlow 8s ease infinite;
+  animation: gradientFlow 2s ease forwards;
 }
 
 @keyframes gradientFlow {
