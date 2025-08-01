@@ -284,7 +284,7 @@ body {
 
 #post-content h1 {
   font-size: clamp(2rem, 8vw, 3rem);
-  font-weight: clamp(900, 10vw, 900);
+  font-weight: 900;
   margin: 3rem 0 2rem;
   line-height: 1.1;
   color: #2563eb;
@@ -295,7 +295,7 @@ body {
 
 #post-content h2 {
   font-size: clamp(2rem, 6vw, 2rem);
-  font-weight: clamp(800, 10vw, 800);
+  font-weight: 800;
   margin: 3rem 0 1.5rem;
   padding: 0.5rem 1.5rem;
   line-height: 1.3;
@@ -318,7 +318,7 @@ body {
   height: 4px;
   background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
   border-radius: 2px;
-  transform: scaleX(0.1);
+  transform: scaleX(0.4);
   transform-origin: left;
   transition: transform 0.3s ease;
 }
@@ -341,13 +341,28 @@ body {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-}
-
-#post-content h3 {
-  /* overflow: hidden; */
-  /* Ensures the pseudo-element doesn't overflow */
   position: relative;
 }
+
+#post-content h3::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+  border-radius: 2px;
+  transform: scaleX(0.4);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+#post-content h3:hover::before {
+  transform: scaleX(1);
+}
+
+ 
 
 /* Paragraph Styling */
 #post-content p {
@@ -454,26 +469,7 @@ body {
 #post-content p:last-child {
   margin-bottom: 2.5em;
 }
-
-#post-content h3::before {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-#post-content h3:hover::before {
-  transform: scaleX(1);
-}
-
-
+ 
 
 
 .title-wrapper {
