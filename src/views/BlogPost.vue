@@ -563,7 +563,8 @@ a:hover {
 
 #post-content blockquote {
   position: relative;
-  margin: 2rem 0;
+  display: block;
+  margin: 1rem 0;
   padding: 1.25rem 1.5rem 1.25rem 2.5rem;
   color: #374151;
   font-style: normal;
@@ -576,6 +577,8 @@ a:hover {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   cursor: default;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #post-content blockquote:hover {
@@ -583,6 +586,9 @@ a:hover {
   border-left-color: #2563eb;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transform: translateY(-1px);
+   p {
+    all:unset;
+   }
 }
 
 #post-content blockquote::before {
@@ -592,11 +598,14 @@ a:hover {
   left: 0.5rem;
   font-size: 3rem;
   line-height: 1;
-  color: #e5e7eb;
+  color: #5e6b85;
   font-family: Georgia, serif;
   z-index: 1;
   opacity: 0.8;
 }
+
+
+
 
 /* Adjust for larger screens */
 @media (min-width: 640px) {
@@ -619,6 +628,14 @@ a:hover {
   line-height: 1.6;
   color: #1f2937;
   z-index: 2;
+  /* Reset any unwanted styles from parent elements */
+  all: unset;
+  display: block;
+}
+
+/* Prevent cascading resets to child elements */
+#post-content blockquote p * {
+  all: revert;
 }
 
 #post-content blockquote cite {
