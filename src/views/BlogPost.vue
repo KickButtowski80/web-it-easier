@@ -608,6 +608,7 @@ a:hover {
   line-height: 1.6;
   color: #e2e8f0;
   position: relative;
+  border-top: 2rem solid #2f55a0;
 
 }
 
