@@ -673,7 +673,42 @@ a:hover {
 }
 
 .dark #post-content blockquote cite {
-  color: #9ca3af;
+  margin: 0;
+  padding: 0.5rem 1.5rem 1.5rem;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Style paragraphs that are immediately followed by a list */
+#post-content p + ul,
+#post-content p + ol {
+  position: relative;
+  padding: 1.25rem 1.5rem 1.25rem 3rem;
+  background: rgba(249, 250, 251, 0.9);
+  border-radius: 0.5rem;
+  border-left: 3px solid #3b82f6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+/* Style the paragraph that comes before a list */
+#post-content p:has(+ ul),
+#post-content p:has(+ ol) {
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+/* Dark mode support */
+.dark #post-content p + ul,
+.dark #post-content p + ol {
+  background: rgba(30, 41, 59, 0.4);
+  border-left-color: #60a5fa;
+}
+
+.dark #post-content p:has(+ ul),
+.dark #post-content p:has(+ ol) {
+  color: #f3f4f6;
 }
 
 #post-content hr {
