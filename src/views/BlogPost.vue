@@ -519,16 +519,16 @@ a:hover {
   margin-bottom: 0.75rem;
   padding: 0.75rem 1rem 0.75rem 2rem;
   background: rgba(249, 250, 251, 0.7);
-  border-radius: 8px;
-  border-left: 3px solid #3b82f6;
+  border-radius: 0.5rem;
+  border-left: 0.1875rem solid #3b82f6;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.05);
 }
 
 #post-content li:hover {
-  transform: translateX(4px);
+  transform: translateX(0.25rem);
   background: rgba(59, 130, 246, 0.05);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.06);
 }
 
 /* Custom bullet point */
@@ -537,7 +537,7 @@ a:hover {
   position: absolute;
   left: 0.75rem;
   color: #3b82f6;
-  font-size: 1.25em;
+  font-size: 1.25rem;
   line-height: 1.4;
   transition: transform 0.2s ease;
 }
@@ -570,8 +570,8 @@ a:hover {
   font-style: normal;
   background: #f3f4f6;
   border-radius: 0.5rem;
-  border-left: 4px solid #3b82f6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+  border-left: 0.25rem solid #3b82f6;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.03);
   transition-property: background-color, border-color, box-shadow, transform;
   transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -584,11 +584,11 @@ a:hover {
 #post-content blockquote:hover {
   background: #e5e7eb;
   border-left-color: #2563eb;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transform: translateY(-1px);
-   p {
-    all:unset;
-   }
+  box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.05), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.03);
+  transform: translateY(-0.0625rem);
+  p {
+    all: unset;
+  }
 }
 
 #post-content blockquote::before {
@@ -608,7 +608,7 @@ a:hover {
 
 
 /* Adjust for larger screens */
-@media (min-width: 640px) {
+@media (min-width: 40rem) {
   #post-content blockquote {
     padding: 1.5rem 2rem 1.5rem 3.5rem;
   }
@@ -678,11 +678,11 @@ a:hover {
 
 #post-content hr {
   border: none;
-  height: 3px;
+  height: 0.1875rem;
   margin: 2.5rem 0;
   background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #f59e0b, #3b82f6);
   background-size: 200% auto;
-  border-radius: 3px;
+  border-radius: 0.1875rem;
   animation: gradientFlow 2s ease forwards;
 }
 
@@ -703,7 +703,7 @@ a:hover {
 
 #post-content pre {
   background-color: #161b22;
-  border-radius: 6px;
+  border-radius: 0.375rem;
   text-align: center;
   overflow-x: auto;
   margin: 1.5rem 0;
@@ -712,7 +712,6 @@ a:hover {
   color: #e2e8f0;
   position: relative;
   border-top: 2rem solid #2f55a0;
-
 }
 
 
@@ -720,10 +719,13 @@ a:hover {
   white-space: pre-wrap;
   word-wrap: break-word;
   display: block;
+  padding: 1rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .prose {
-  max-width: 800px;
+  max-width: 50rem;
   margin: 2rem auto;
   padding: 1rem;
 }
@@ -734,7 +736,7 @@ a:hover {
   margin-bottom: 1.5rem;
   font-weight: 700;
   color: #1f2937;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 0.125rem solid #e5e7eb;
   padding-bottom: 0.5rem;
 }
 
@@ -744,7 +746,7 @@ a:hover {
   margin-bottom: 1.5rem;
   font-weight: 600;
   color: #374151;
-  border-left: 4px solid #3b82f6;
+  border-left: 0.25rem solid #3b82f6;
   padding-left: 0.75rem;
   position: relative;
 }
@@ -779,21 +781,21 @@ a:hover {
   margin: 1.5rem 0;
   padding: 1.5rem;
   background-color: #e2e8f0;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.1);
 }
 
 .prose ul>li {
   position: relative;
   padding: 0.5rem 0.5rem 0.5rem 2rem;
   line-height: 1.6;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .dark .prose ul {
   background-color: #1e293b;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.2);
 }
 
 .prose ul>li::before {
