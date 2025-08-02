@@ -791,6 +791,75 @@ a:focus-visible {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Table Styling */
+#post-content table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
+  font-size: 0.95em;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s ease;
+}
+
+#post-content table:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+#post-content th,
+#post-content td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+#post-content th {
+  background-color: #f7fafc;
+  font-weight: 600;
+  color: #2d3748;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+#post-content tr:last-child td {
+  border-bottom: none;
+}
+
+#post-content tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+#post-content tbody tr:last-child {
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
+  overflow: hidden;
+}
+
+/* Striped rows */
+#post-content tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+  #post-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 0.5rem;
+  }
+  
+  #post-content th,
+  #post-content td {
+    min-width: 120px;
+  }
+}
+
 /* Dark mode support */
 .dark #post-content p + ul,
 .dark #post-content p + ol,
@@ -798,6 +867,31 @@ a:focus-visible {
 .dark #post-content h4 + ol {
   background: rgba(30, 41, 59, 0.4);
   border-left-color: #60a5fa;
+}
+
+/* Dark mode table styles */
+.dark #post-content table {
+  background: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark #post-content th {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-bottom-color: #334155;
+}
+
+.dark #post-content td {
+  border-bottom-color: #334155;
+  color: #cbd5e1;
+}
+
+.dark #post-content tbody tr:hover {
+  background-color: #1e293b;
+}
+
+.dark #post-content tbody tr:nth-child(even) {
+  background-color: rgba(30, 41, 59, 0.5);
 }
 
 .dark #post-content p:has(+ ul),
