@@ -778,19 +778,6 @@ a:focus-visible {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-/* Screen Reader Only Utility */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
 /* Table Styling */
 #post-content {
   margin: 2rem 0;
