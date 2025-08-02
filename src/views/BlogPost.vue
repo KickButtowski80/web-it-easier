@@ -510,12 +510,17 @@ body {
 a {
   color: #3b82f6;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, outline 0.2s ease;
+  border-radius: 0.25rem;
+  outline: none;
 }
 
-a:hover {
+a:hover,
+a:focus-visible {
   color: #2563eb;
   text-decoration: underline;
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 #post-content ul,
@@ -533,12 +538,16 @@ a:hover {
   border-left: 0.1875rem solid #3b82f6;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.05);
+  outline: none;
 }
 
-#post-content li:hover {
+#post-content li:hover,
+#post-content li:focus-visible {
   transform: translateX(0.25rem);
   background: rgba(59, 130, 246, 0.05);
   box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.06);
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 /* Custom bullet point */
@@ -582,13 +591,20 @@ a:hover {
   border-radius: 0.5rem;
   border-left: 0.25rem solid #3b82f6;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.03);
-  transition-property: background-color, border-color, box-shadow, transform;
+  transition-property: background-color, border-color, box-shadow, transform, outline;
   transition-duration: 0.2s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
   cursor: default;
   width: 100%;
   box-sizing: border-box;
+  outline: none;
+}
+
+#post-content blockquote:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  transform: translateY(-1px);
 }
 
 #post-content blockquote:hover {
@@ -720,16 +736,20 @@ a:hover {
   color: #3b82f6;
   font-size: 1.2em;
   font-weight: bold;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease, scale 0.5s ease;
   opacity: 0.8;
   transform-origin: left center;
 }
 
 /* Hover effects */
 #post-content p:has(+ ul):hover,
-#post-content p:has(+ ol):hover {
+#post-content p:has(+ ol):hover,
+#post-content p:has(+ ul):focus-visible,
+#post-content p:has(+ ol):focus-visible {
   background: rgba(239, 246, 255, 0.9);
-  transform: translateX(4px);
+  transform: translateX(4px) scale(1.05);
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
 }
 
 #post-content p:has(+ ul):hover::before,
@@ -742,7 +762,7 @@ a:hover {
 #post-content p:has(+ ul):hover,
 #post-content p:has(+ ol):hover {
   background: rgba(239, 246, 255, 0.9);
-  transform: translateX(10px);
+  transform: translateX(10px) scale(1.05);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -798,6 +818,8 @@ a:hover {
 #post-content pre {
   background-color: #161b22;
   border-radius: 0.375rem;
+  outline: none;
+  transition: box-shadow 0.2s ease;
   text-align: center;
   overflow-x: auto;
   margin: 1.5rem 0;
@@ -806,6 +828,12 @@ a:hover {
   color: #e2e8f0;
   position: relative;
   border-top: 2rem solid #2f55a0;
+}
+
+#post-content pre:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
 
