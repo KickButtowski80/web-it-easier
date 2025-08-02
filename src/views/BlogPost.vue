@@ -532,7 +532,7 @@ a:focus-visible {
   background: rgba(249, 250, 251, 0.7);
   border-radius: 0.5rem;
   border-left: 0.1875rem solid #3b82f6;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.05);
   outline: none;
 }
@@ -589,9 +589,10 @@ a:focus-visible {
   border-radius: 0.5rem;
   border-left: 0.25rem solid #3b82f6;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.03);
-  transition-property: background-color, border-color, box-shadow, transform, outline;
-  transition-duration: 0.2s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s ease, 
+              background-color 0.2s ease, 
+              border-color 0.2s ease, 
+              box-shadow 0.2s ease;
   overflow: hidden;
   cursor: default;
   width: 100%;
@@ -608,11 +609,8 @@ a:focus-visible {
 #post-content blockquote:hover {
   background: #e5e7eb;
   border-left-color: #2563eb;
-  box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.05), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.03);
-  transform: translateY(-0.0625rem);
-  p {
-    all: unset;
-  }
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 #post-content blockquote::before {
@@ -627,9 +625,6 @@ a:focus-visible {
   z-index: 1;
   opacity: 0.8;
 }
-
-
-
 
 /* Adjust for larger screens */
 @media (min-width: 40rem) {
@@ -648,12 +643,10 @@ a:focus-visible {
   position: relative;
   margin: 0.5rem 0;
   font-size: 1.1em;
-  font-weight: 450; /* Slightly bolder than normal text */
+  font-weight: 450;
   line-height: 1.6;
   color: #1f2937;
   z-index: 2;
-  /* Reset any unwanted styles from parent elements */
-  all: unset;
   display: block;
 }
 
@@ -673,12 +666,6 @@ a:focus-visible {
 
 #post-content blockquote cite::before {
   content: '\2014\00A0';
-}
-
-#post-content blockquote:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  border-left-color: #2563eb;
 }
 
 /* Dark mode support */
