@@ -383,6 +383,16 @@ body {
   transition: all 0.3s ease;
 }
 
+/* 
+#post-content p:before{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  border-left: 4px solid #4067a6;
+} */
 /* Hover effect */
 #post-content p:hover {
   transform: translateY(-2px);
@@ -394,7 +404,7 @@ body {
 #post-content h2 + p,
 #post-content h3 + p {
   margin-top: clamp(1.2em, 2vw, 2em);
-  font-size: clamp(1.2rem, 2vw, 1.2rem);
+  font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.9;
   color: #1a202c;
   background: rgba(236, 242, 253, 0.7);
@@ -680,23 +690,72 @@ a:hover {
 }
 
 /* Style paragraphs that are immediately followed by a list */
-#post-content p + ul,
-#post-content p + ol {
-  position: relative;
-  padding: 1.25rem 1.5rem 1.25rem 3rem;
-  background: rgba(249, 250, 251, 0.9);
-  border-radius: 0.5rem;
-  border-left: 3px solid #3b82f6;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
-}
-
-/* Style the paragraph that comes before a list */
 #post-content p:has(+ ul),
 #post-content p:has(+ ol) {
-  margin-bottom: 0.25rem;
+  position: relative;
+  top: 2rem;
+  margin-bottom: 0;
+  padding: 1.25rem 1.5rem 0.75rem 3rem; /* Increased padding for custom marker */
+  background: rgba(249, 250, 251, 0.9);
+  border-radius: 0.5rem 0.5rem 0 0;
+  border-left: 3px solid #3b82f6;
   font-weight: 500;
   color: #1f2937;
+  transition: 
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Rotating arrow marker */
+#post-content p:has(+ ul)::before,
+#post-content p:has(+ ol)::before {
+  content: '›';
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(0);
+  color: #3b82f6;
+  font-size: 1.2em;
+  font-weight: bold;
+  transition: transform 0.5s ease;
+  opacity: 0.8;
+  transform-origin: left center;
+}
+
+/* Hover effects */
+#post-content p:has(+ ul):hover,
+#post-content p:has(+ ol):hover {
+  background: rgba(239, 246, 255, 0.9);
+  transform: translateX(4px);
+}
+
+#post-content p:has(+ ul):hover::before,
+#post-content p:has(+ ol):hover::before {
+  transform: translateY(-50%) rotate(90deg);
+  color: #2563eb;
+  left: 0.8rem; /* Slight adjustment to compensate for rotation */
+}
+
+#post-content p:has(+ ul):hover,
+#post-content p:has(+ ol):hover {
+  background: rgba(239, 246, 255, 0.9);
+  transform: translateX(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Style the list that follows a paragraph */
+#post-content p + ul,
+#post-content p + ol {
+  margin-top: 0;
+  padding: 0.25rem 1.5rem 1.25rem 3rem;
+  background: rgba(249, 250, 251, 0.9);
+  border-radius: 0 0 0.5rem 0.5rem;
+  border-left: 3px solid #3b82f6;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* Dark mode support */
