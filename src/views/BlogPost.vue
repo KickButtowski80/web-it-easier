@@ -830,8 +830,19 @@ a:focus-visible {
   border-bottom: none;
 }
 
+#post-content tbody tr {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              background-color 0.2s ease,
+              box-shadow 0.2s ease;
+  transform-origin: left center;
+}
+
 #post-content tbody tr:hover {
   background-color: #f8fafc;
+  transform: scale(1.01);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  position: relative;
+  z-index: 1;
 }
 
 #post-content tbody tr:last-child {
@@ -888,6 +899,7 @@ a:focus-visible {
 
 .dark #post-content tbody tr:hover {
   background-color: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
 }
 
 .dark #post-content tbody tr:nth-child(even) {
