@@ -414,7 +414,8 @@ body {
 }
 
 .dark #post-content h2 + p,
-.dark #post-content h3 + p {
+.dark #post-content h3 + p,
+.dark #post-content h4 + p {
   background: rgba(30, 58, 138, 0.3);
   color: #f8fafc;
 }
@@ -704,7 +705,10 @@ a:focus-visible {
 
 /* Style paragraphs that are immediately followed by a list */
 #post-content p:has(+ ul),
-#post-content p:has(+ ol) {
+#post-content h4:has(+ ul),
+#post-content p:has(+ ol),
+#post-content h4:has(+ ol),
+#post-content p:has(+ h2) {
   position: relative;
   top: 2rem;
   margin-bottom: 0;
@@ -724,7 +728,11 @@ a:focus-visible {
 
 /* Rotating arrow marker */
 #post-content p:has(+ ul)::before,
-#post-content p:has(+ ol)::before {
+#post-content h4:has(+ ul)::before,
+#post-content p:has(+ ol)::before,
+#post-content h4:has(+ ol)::before 
+
+{
   content: '›';
   position: absolute;
   left: 1rem;
@@ -752,14 +760,18 @@ a:focus-visible {
 }
 
 #post-content p:has(+ ul):hover::before,
-#post-content p:has(+ ol):hover::before {
+#post-content p:has(+ ol):hover::before,
+#post-content h4:has(+ ul):hover::before,
+#post-content h4:has(+ ol):hover::before {
   transform: translateY(-50%) rotate(90deg);
   color: #2563eb;
   left: 0.8rem; /* Slight adjustment to compensate for rotation */
 }
 
 #post-content p:has(+ ul):hover,
-#post-content p:has(+ ol):hover {
+#post-content p:has(+ ol):hover,
+#post-content h4:has(+ ul):hover,
+#post-content h4:has(+ ol):hover {
   background: rgba(239, 246, 255, 0.9);
   transform: translateX(10px) scale(1.05);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -767,7 +779,9 @@ a:focus-visible {
 
 /* Style the list that follows a paragraph */
 #post-content p + ul,
-#post-content p + ol {
+#post-content p + ol,
+#post-content h4 + ul,
+#post-content h4 + ol {
   margin-top: 0;
   padding: 0.25rem 1.5rem 1.25rem 3rem;
   background: rgba(249, 250, 251, 0.9);
@@ -779,7 +793,9 @@ a:focus-visible {
 
 /* Dark mode support */
 .dark #post-content p + ul,
-.dark #post-content p + ol {
+.dark #post-content p + ol,
+.dark #post-content h4 + ul,
+.dark #post-content h4 + ol {
   background: rgba(30, 41, 59, 0.4);
   border-left-color: #60a5fa;
 }
