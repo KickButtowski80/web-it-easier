@@ -380,19 +380,9 @@ body {
   border-radius: 12px;
   border-left: 4px solid #3b82f6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-/* 
-#post-content p:before{
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 100%;
-  border-left: 4px solid #4067a6;
-} */
 /* Hover effect */
 #post-content p:hover {
   transform: translateY(-2px);
@@ -402,7 +392,8 @@ body {
 
 /* First paragraph after headings */
 #post-content h2 + p,
-#post-content h3 + p {
+#post-content h3 + p,
+#post-content h4 + p {
   margin-top: clamp(1.2em, 2vw, 2em);
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.9;
