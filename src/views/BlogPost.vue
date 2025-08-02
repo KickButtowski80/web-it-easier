@@ -515,12 +515,16 @@ a {
   outline: none;
 }
 
-a:hover,
-a:focus-visible {
+a:hover {
   color: #2563eb;
   text-decoration: underline;
+}
+
+a:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
+  color: #2563eb;
+  text-decoration: underline;
 }
 
 #post-content ul,
@@ -541,11 +545,13 @@ a:focus-visible {
   outline: none;
 }
 
-#post-content li:hover,
-#post-content li:focus-visible {
+#post-content li:hover {
   transform: translateX(0.25rem);
   background: rgba(59, 130, 246, 0.05);
   box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.06);
+}
+
+#post-content li:focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
@@ -743,11 +749,13 @@ a:focus-visible {
 
 /* Hover effects */
 #post-content p:has(+ ul):hover,
-#post-content p:has(+ ol):hover,
-#post-content p:has(+ ul):focus-visible,
-#post-content p:has(+ ol):focus-visible {
+#post-content p:has(+ ol):hover {
   background: rgba(239, 246, 255, 0.9);
   transform: translateX(4px) scale(1.05);
+}
+
+#post-content p:has(+ ul):focus-visible,
+#post-content p:has(+ ol):focus-visible {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
