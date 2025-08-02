@@ -779,16 +779,80 @@ a:focus-visible {
 }
 
 /* Table Styling */
+#post-content {
+  margin: 2rem 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+/* Mobile-first: Card layout */
 #post-content table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 2rem 0;
+  border-collapse: collapse;
   font-size: 0.95em;
   border-radius: 0.75rem;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s ease;
+  margin: 0 auto;
+  display: block;
+}
+
+/* Default table styles for larger screens */
+@media (min-width: 768px) {
+  #post-content table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+}
+
+/* Mobile card layout */
+@media (max-width: 767px) {
+  #post-content table,
+  #post-content thead,
+  #post-content tbody,
+  #post-content th,
+  #post-content td,
+  #post-content tr {
+    display: block;
+  }
+  
+  #post-content thead {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  #post-content tr {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+  
+  #post-content td {
+    border: none;
+    border-bottom: 1px solid #e2e8f0;
+    position: relative;
+    padding-left: 50%;
+    white-space: normal;
+    text-align: left;
+  }
+  
+  #post-content td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0.5rem;
+    width: 45%;
+    padding-right: 1rem;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #4a5568;
+  }
+  
+  #post-content td:last-child {
+    border-bottom: 0;
+  }
 }
 
 #post-content table:hover {
