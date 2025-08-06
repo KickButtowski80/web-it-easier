@@ -42,11 +42,12 @@
 
 <script>
 import { formatDate, titleToSlug } from '../utils/helpers';
-import { getPosts, auth } from '../config/firebase'
-import { ref, onMounted } from 'vue'
+import { getPosts, auth } from '../config/firebase';
+import { ref, onMounted, nextTick } from 'vue';
 import Notification from '../components/UI/Notification.vue';
-import { useNotification } from '../utils/helpers'
+import { useNotification } from '../utils/helpers';
 import { renderMarkdown } from '../utils/markdown';
+import { updateCanonicalUrl } from '../utils/seo-update-canonical-url';
 const {
   showNotification,
   notificationMessage,
@@ -67,19 +68,38 @@ export default {
     onMounted(async () => {
       try {
         posts.value = await getPosts()
-
         // Check if user is logged in
         auth.onAuthStateChanged(user => {
           isAdmin.value = !!user
         })
 
-        // Update canonical URL using the shared utility function
-        updateCanonicalUrl();
+        // Wait for the next DOM update cycle
+        await nextTick();
+        
+        try {
+          console.log('Updating canonical URL for blog page...');
+          const canonicalUrl = updateCanonicalUrl();
+          console.log('Canonical URL set to:', canonicalUrl);
+          
+          // Verify the canonical tag was created/updated
+          const canonicalTag = document.querySelector('link[rel="canonical"]');
+          if (canonicalTag) {
+            console.log('Canonical tag found in DOM:', {
+              href: canonicalTag.href,
+              outerHTML: canonicalTag.outerHTML
+            });
+          } else {
+            console.warn('Warning: Canonical tag not found in DOM after update');
+          }
+        } catch (err) {
+          console.error('Error updating canonical URL:', err);
+        }
 
       } catch (error) {
-        console.error('Error fetching posts:', error)
+        console.error('Error fetching posts:', error);
+        showNotify('Failed to load blog posts. Please try again later.', 'error');
       } finally {
-        loading.value = false
+        loading.value = false;
       }
     })
 

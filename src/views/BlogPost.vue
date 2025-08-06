@@ -60,13 +60,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
-import Notification from '@/components/UI/Notification.vue'
-import { useNotification, titleToSlug } from "../utils/helpers";
-import { renderMarkdown } from "../utils/markdown";
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { getPost } from '@/config/firebase';
+import { titleToSlug, useNotification } from '@/utils/helpers';
+import { renderMarkdown } from '@/utils/markdown';
+import { updateCanonicalUrl } from '@/utils/seo-update-canonical-url';
+import Notification from '@/components/UI/Notification.vue';
 import "highlight.js/styles/github.css";
-import { getPost } from "../config/firebase";
-import { useRoute } from "vue-router";
+ 
+
 
 // Props
 const props = defineProps({
@@ -91,61 +93,48 @@ const defaultCanonical = ref(null);
 const canonicalUrl = ref('');
 
 const updateCanonicalTag = async () => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (post.value && post.value.title) {
-        // Create the canonical URL using the proper slug format
-        const slug = titleToSlug(post.value.title);
-        const baseUrl = import.meta.env.PROD
-          ? 'https://web-it-easier.vercel.app'
-          : window.location.origin;
-        canonicalUrl.value = `${baseUrl}/blog/${slug}`;
-
-        // Store the default canonical if not already stored
-        if (!defaultCanonical.value) {
-          const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
-          if (defaultCanonicalEl) {
-            defaultCanonical.value = defaultCanonicalEl.outerHTML;
-            defaultCanonicalEl.remove();
-          }
-        }
-
-        // Add the canonical tag to the document head
-        const link = document.createElement('link');
-        link.rel = 'canonical';
-        link.href = canonicalUrl.value;
-        // Find the canonical URL comment
-        const canonicalComment = Array.from(document.head.childNodes).find(
-          node => node.nodeType === Node.COMMENT_NODE &&
-            node.textContent.trim() === 'Canonical URL'
-        );
-
-        if (canonicalComment) {
-          // Insert after the comment
-          document.head.insertBefore(link, canonicalComment.nextSibling);
-        } else {
-          // Fallback to appending if comment not found
-          document.head.appendChild(link);
-        }
-        // Update page title with post title for better SEO
-        document.title = `${post.value.title} | Web It Easier`;
-      }
-
-      // Always resolve the promise when done
-      resolve();
-    } catch (error) {
-      console.error('Error updating canonical tag:', error);
-      reject(error);
+  console.group('[BlogPost] Updating canonical URL');
+  
+  if (!post.value?.title) {
+    console.warn('Post title not available, cannot generate canonical URL');
+    console.groupEnd();
+    return null;
+  }
+  
+  try {
+    const slug = titleToSlug(post.value.title);
+    const baseUrl = import.meta.env.PROD
+      ? 'https://web-it-easier.vercel.app'
+      : window.location.origin;
+    
+    // Generate the canonical URL
+    canonicalUrl.value = `${baseUrl}/blog/${slug}`;
+    console.log('Generated canonical URL:', canonicalUrl.value);
+    
+    // Update the canonical URL using the shared utility
+    console.log('Calling updateCanonicalUrl()...');
+    const result = updateCanonicalUrl();
+    
+    if (result) {
+      console.log('✅ Successfully updated canonical URL');
+      console.log('Current canonical tag:', document.querySelector('link[rel="canonical"]')?.outerHTML);
+    } else {
+      console.warn('⚠️ Failed to update canonical URL');
     }
-  });
+    
+    console.groupEnd();
+    return result;
+  } catch (error) {
+    console.error('❌ Error updating canonical tag:', error);
+    console.groupEnd();
+    return null;
+  }
 };
 onMounted(async () => {
-
-
+  // Initialize default canonical URL
   const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
   if (defaultCanonicalEl) {
     defaultCanonical.value = defaultCanonicalEl.outerHTML;
-    defaultCanonicalEl.remove();
   }
 
   isMounted.value = true;
@@ -292,9 +281,6 @@ function scrollToSection(id) {
   /* Slightly darker text */
   font-style: italic;
 }
-
-
-
 
 /* Base code block styling */
 pre {

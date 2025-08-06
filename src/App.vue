@@ -158,22 +158,48 @@ onMounted(() => {
 
  
 
+    console.group('[App] Initial mount');
     nextTick(() => {
-      updateCanonicalUrl();
+      console.log('DOM ready, updating canonical URL...');
+      const canonicalUrl = updateCanonicalUrl();
+      if (canonicalUrl) {
+        console.log('✅ Initial canonical URL set to:', canonicalUrl);
+      } else {
+        console.warn('⚠️ Failed to set initial canonical URL');
+      }
+      console.groupEnd();
     });
-
-
-
 });
 
 // Watch for route changes and update canonical URL
 watch(
   () => route.fullPath,
-  () => {
+  (newPath, oldPath) => {
+    console.group(`[App] Route changed from ${oldPath} to ${newPath}`);
+    
     // Use nextTick to ensure the DOM is updated
     nextTick(() => {
+      console.log('DOM updated, updating canonical URL...');
       const newCanonical = updateCanonicalUrl();
-      console.log('Route changed. New canonical:', newCanonical);
+      
+      if (newCanonical) {
+        console.log('✅ Updated canonical URL to:', newCanonical);
+        
+        // Verify the canonical tag in the DOM
+        const canonicalTag = document.querySelector('link[rel="canonical"]');
+        if (canonicalTag) {
+          console.log('Canonical tag in DOM:', {
+            href: canonicalTag.href,
+            outerHTML: canonicalTag.outerHTML
+          });
+        } else {
+          console.warn('❌ Canonical tag not found in DOM');
+        }
+      } else {
+        console.warn('⚠️ Failed to update canonical URL');
+      }
+      
+      console.groupEnd();
     });
   },
   { immediate: true } // This ensures it runs on initial load
