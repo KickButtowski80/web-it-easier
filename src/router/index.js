@@ -17,12 +17,8 @@ const unsubscribeInitialAuthListener = onAuthStateChanged(auth, (user) => {
   unsubscribeInitialAuthListener(); // Unsubscribe after the first check
 });
 
-// Set up the auth listener once
-// const unsubscribe = onAuthStateChanged(auth, (user) => {
-//   console.log('Auth state changed:', user ? 'User logged in' : 'No user');
-//   authReady = true;
-//   currentAuthUser = user;
-// });
+// Admin email from environment variables
+const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL || 'pazpaz22@yahoo.com';
 
 const routes = [
   {
@@ -143,107 +139,84 @@ router.afterEach((to) => {
   console.group(`[Router] Navigation to ${to.path}`);
   console.log('From:', window.location.href);
   
-  // Use nextTick to ensure the DOM has been updated
+  // Use nextTick to ensure the DOM has been updated after route navigation
   nextTick(() => {
-    console.log('DOM updated, scheduling canonical URL update...');
+    console.log('Executing canonical URL update...');
     
-    // Add a small delay to ensure all components have been rendered
-    nextTick(() => {
-      console.log('Executing canonical URL update...');
-      
-      // Dynamically import the function to avoid SSR issues and for better code splitting
-      import('@/utils/seo-update-canonical-url')
-        .then(module => {
-          // Use nextTick to ensure the DOM is updated
-          import('vue').then(({ nextTick }) => {
-            nextTick(() => {
-              console.log('Canonical URL module loaded');
-              const canonicalUrl = module.updateCanonicalUrl();
-              
-              if (canonicalUrl) {
-                console.log(`✅ Successfully updated canonical URL to: ${canonicalUrl}`);
-                
-                // Verify the canonical tag exists in the DOM
-                const canonicalTag = document.querySelector('link[rel="canonical"]');
-                if (canonicalTag) {
-                  console.log('✅ Verified canonical tag in DOM:', {
-                    href: canonicalTag.href,
-                    outerHTML: canonicalTag.outerHTML
-                  });
-                } else {
-                  console.warn('❌ Canonical tag not found in DOM after update');
-                }
-              } else {
-                console.warn('⚠️ Failed to update canonical URL');
-              }
+    // Dynamically import the function to avoid SSR issues and for better code splitting
+    import('@/utils/seo-update-canonical-url')
+      .then(module => {
+        console.log('Canonical URL module loaded');
+        const canonicalUrl = module.updateCanonicalUrl();
+        
+        if (canonicalUrl) {
+          console.log(`✅ Successfully updated canonical URL to: ${canonicalUrl}`);
+          
+          // Verify the canonical tag exists in the DOM
+          const canonicalTag = document.querySelector('link[rel="canonical"]');
+          if (canonicalTag) {
+            console.log('✅ Verified canonical tag in DOM:', {
+              href: canonicalTag.href,
+              outerHTML: canonicalTag.outerHTML
             });
-          });
-        })
-        .catch(error => {
-          console.error('❌ Failed to load or execute canonical URL module:', error);
-        })
-        .finally(() => {
-          console.groupEnd();
-        });
-    });
+          } else {
+            console.warn('❌ Canonical tag not found in DOM after update');
+          }
+        } else {
+          console.warn('⚠️ Failed to update canonical URL');
+        }
+      })
+      .catch(error => {
+        console.error('❌ Failed to load or execute canonical URL module:', error);
+      })
+      .finally(() => {
+        console.groupEnd();
+      });
   });
 });
 
 router.beforeEach(async (to, from, next) => {
+  // Wait for auth to be ready
   await authReadyPromise;
-  const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
-
-  if (to.name === 'Login' && isAdmin) {
-    // If already logged in, redirect away from login page
-    next({
-      name: 'ManagePosts', query: {
-        notify: 'already-logged-in',
-        type: 'warning'
-      }
-    }); 
-  }
-  else {
-    next();
-  }
-});
-router.beforeEach(async (to, from, next) => {
+  
+  // Check if user is admin
+  const isAdmin = auth.currentUser?.email === ADMIN_EMAIL;
   const requiresAuth = to.meta.requiresAuth;
+  const requiresAdmin = to.meta.role === 'admin';
+
+  // Handle login page redirection if already logged in
+  if (to.name === 'Login' && isAdmin) {
+    return next({
+      name: 'ManagePosts',
+      query: { notify: 'already-logged-in', type: 'warning' }
+    });
+  }
+
   try {
-    // Wait for the initial Firebase auth check to complete
-    // await authReadyPromise;
+    // Handle protected routes
+    if (requiresAuth || requiresAdmin) {
+      // Wait for the initial Firebase auth check to complete
+      await Promise.race([
+        authReadyPromise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase initialization timeout')), 5000))
+      ]);
 
-    await Promise.race([
-      authReadyPromise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase initialization timeout')), 5000))
-    ]);
+      // Check if user is authenticated
+      if (!auth.currentUser) {
+        console.log('Auth required but no user, redirecting to login');
+        return next({ name: 'Login', query: { redirect: to.fullPath } });
+      }
 
-    // Get the current user directly from Firebase auth
-    const user = auth.currentUser;
-
-    if (requiresAuth && !user) {
-      console.log('[Router Guard] Auth required, but no user. Redirecting to login.');
-      // Redirect to login, preserving the intended destination
-      next({ name: 'Login', query: { redirect: to.fullPath } });
-    } else {
-      console.log('[Router Guard] Access granted. Proceeding.');
-      next(); // Proceed with navigation
+      // Check if admin role is required
+      if (requiresAdmin && !isAdmin) {
+        console.log('Admin access required, redirecting to home');
+        return next({ name: 'Home' });
+      }
     }
 
-    // If auth isn't ready yet, show a loading indicator
-    // if (!authReady) {
-    //   console.log('Auth not ready yet, showing loading screen');
-    //   next({ name: 'Loading' }); 
-    //   return;
-    // }
-
-    // Auth is ready, make the actual check
-    // if (requiresAuth && !currentAuthUser) {
-    //   console.log('Auth required but no user, redirecting to login');
-    //   next({ name: 'Login', query: { redirect: to.fullPath } });
-    // } else {
-    //   console.log('Proceeding with navigation');
-    //   next();
-    // }
+    // Allow access to the route
+    console.log('Proceeding with navigation to', to.path);
+    next();
   } catch (error) {
     console.error('Error in router guard:', error);
     next({ name: 'Login' });
