@@ -132,6 +132,63 @@ const router = createRouter({
     return { top: 0 };
   }
 })
+// Update canonical URL after each route change
+router.afterEach((to) => {
+  // Only run on client-side
+  if (typeof window === 'undefined') {
+    console.log('[Router] Server-side rendering, skipping canonical URL update');
+    return;
+  }
+  
+  console.group(`[Router] Navigation to ${to.path}`);
+  console.log('From:', window.location.href);
+  
+  // Use nextTick to ensure the DOM has been updated
+  nextTick(() => {
+    console.log('DOM updated, scheduling canonical URL update...');
+    
+    // Add a small delay to ensure all components have been rendered
+    nextTick(() => {
+      console.log('Executing canonical URL update...');
+      
+      // Dynamically import the function to avoid SSR issues and for better code splitting
+      import('@/utils/seo-update-canonical-url')
+        .then(module => {
+          // Use nextTick to ensure the DOM is updated
+          import('vue').then(({ nextTick }) => {
+            nextTick(() => {
+              console.log('Canonical URL module loaded');
+              const canonicalUrl = module.updateCanonicalUrl();
+              
+              if (canonicalUrl) {
+                console.log(`✅ Successfully updated canonical URL to: ${canonicalUrl}`);
+                
+                // Verify the canonical tag exists in the DOM
+                const canonicalTag = document.querySelector('link[rel="canonical"]');
+                if (canonicalTag) {
+                  console.log('✅ Verified canonical tag in DOM:', {
+                    href: canonicalTag.href,
+                    outerHTML: canonicalTag.outerHTML
+                  });
+                } else {
+                  console.warn('❌ Canonical tag not found in DOM after update');
+                }
+              } else {
+                console.warn('⚠️ Failed to update canonical URL');
+              }
+            });
+          });
+        })
+        .catch(error => {
+          console.error('❌ Failed to load or execute canonical URL module:', error);
+        })
+        .finally(() => {
+          console.groupEnd();
+        });
+    });
+  });
+});
+
 router.beforeEach(async (to, from, next) => {
   await authReadyPromise;
   const isAdmin = auth.currentUser?.email === "pazpaz22@yahoo.com";
