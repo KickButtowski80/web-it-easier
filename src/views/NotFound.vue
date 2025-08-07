@@ -1,21 +1,54 @@
 <template>
-  <div class="not-found" role="region" aria-labelledby="notfound-title">
-    <section class="not-found-content" tabindex="-1" aria-label="404 Not Found Page">
-      <h1 id="notfound-title">404</h1>
+  <div class="not-found" role="main" aria-labelledby="notfound-title">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <div class="not-found-content" tabindex="-1" ref="mainContent" id="main-content">
+      <h1 id="notfound-title" class="sr-only">Page Not Found</h1>
+      <div class="error-code" aria-hidden="true">404</div>
+      <div role="status" aria-live="polite" class="sr-only">Page not found</div>
       <p>Oops! The page you're looking for doesn't exist.</p>
       <p>It might have been moved or deleted, or you might have mistyped the URL.</p>
-      <RouterLink :to="{ name: 'Home' }" class="home-link" aria-label="Return Home">Return Home</RouterLink>
-    </section>
+      <RouterLink 
+        :to="{ name: 'Home' }" 
+        class="home-link" 
+        aria-label="Return to home page"
+      >
+        Return Home
+      </RouterLink>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "NotFound"
+  name: "NotFound",
+  mounted() {
+    // Update page title
+    document.title = 'Page Not Found | Your Site Name';
+    
+    // Focus the main content for screen readers
+    this.$refs.mainContent.focus();
+  }
 };
 </script>
 
 <style scoped>
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #3b0764;
+  color: white;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.3s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+
+
 .not-found {
   min-height: 80vh;
   display: flex;
@@ -26,7 +59,7 @@ export default {
   background: linear-gradient(135deg, rgba(192,132,252,0.8) 0%, rgba(224,242,254,0.8) 50%, rgba(237,233,254,0.8) 100%);
 }
 .not-found::before {
-  content: "9999";
+  content: "";
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(
@@ -39,12 +72,21 @@ export default {
 .not-found-content {
   position: relative;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(4px);
   border-radius: 12px;
   padding: 3rem 2rem;
   text-align: center;
   color: #1e293b;
+  outline: none;
+}
+
+.error-code {
+  font-size: 6rem;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 1rem;
+  color: #3b0764;
 }
 .home-link {
   display: inline-block;

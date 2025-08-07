@@ -77,9 +77,22 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => lazyLoad('views/NotFound')
+    component: () => import('../views/NotFound.vue'),
+    meta: { status: 404 }
   }
 ]
+
+// Navigation guard to handle status codes
+const setStatus = (to, from, next) => {
+  // Set status code for 404 pages
+  if (to.meta.status === 404) {
+    // This will be handled by the server-side rendering or a server config
+    document.title = 'Page Not Found';
+    // Set meta tag for status code (useful for static site generators)
+    document.documentElement.setAttribute('data-status', '404');
+  }
+  next();
+};
 
 const router = createRouter({
   history: createWebHistory(),
@@ -174,6 +187,9 @@ router.afterEach((to) => {
       });
   });
 });
+
+// Set status code before each navigation
+router.beforeEach(setStatus);
 
 router.beforeEach(async (to, from, next) => {
   // Wait for auth to be ready
