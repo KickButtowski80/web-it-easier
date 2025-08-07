@@ -5,7 +5,7 @@
     class="flex flex-col items-center justify-center relative py-16"
   >
     <header class="text-center mb-20 relative z-20">
-      <h1 class="font-bold py-6 text-3xl">Hire Us</h1>
+      <h1 class="font-bold py-6 text-3xl">Hire Our Team</h1>
     </header>
 
     <div
@@ -27,7 +27,7 @@
               width="300"
               height="300"
             />
-            <h3 class="text-lg font-semibold">Lead Developer</h3>
+            <p class="text-lg font-semibold" role="doc-subtitle">Lead Developer</p>
             <a href="#sam-info" class="text-blue-700 underline">more info...</a>
           </div>
           <div>
@@ -38,7 +38,7 @@
               class="float-right w-1/2 overflow-hidden"
               loading="lazy"
             />
-            <h3 class="text-lg font-semibold">Founder / Developer</h3>
+            <p class="text-lg font-semibold" role="doc-subtitle">Founder / Developer</p>
             <a href="#izak-info" class="text-blue-700 underline"
               >more info...</a
             >
@@ -52,11 +52,11 @@
         <section class="col-span-1">
           <div class="card">
             <div class="font-normal text-gray-900">
-              <h2
+              <h3
                 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
               >
                 Contact Us to make your dream a reality
-              </h2>
+              </h3>
               <div class="flex flex-col gap-5 mt-16">
                 <div>
                   Tel:
@@ -111,15 +111,13 @@
             class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
           >
             <a href="#close"> X </a>
-            <h1 class="font-bold py-3 text-3xl">Samuel C Tyler</h1>
-            <h2>Lead Developer</h2>
+            <h2 class="font-bold py-3 text-3xl">Samuel C Tyler</h2>
+            <p class="text-xl font-semibold mb-4" role="doc-subtitle">Lead Developer</p>
             <img
               src="/programmers/Samuel-C-Tyler.svg"
               alt="Samuel C Tyler the leader coder"
-              class="float-right overflow-hidden"
+              class="float-right overflow-hidden w-1/2 fit-content"
               loading="lazy"
-              width="300"
-              height="300"
             />
             <p>
               Web Application Developer with 10+ years experience in modern,
@@ -138,13 +136,13 @@
             class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
           >
             <a href="#close"> X </a>
-            <h1 class="font-bold py-3 text-3xl">Izak Tarashandegan</h1>
-            <h2>Founder / Coder</h2>
+            <h2 class="font-bold py-3 text-3xl">Izak Tarashandegan</h2>
+            <p class="text-xl font-semibold mb-4" role="doc-subtitle">Founder / Coder</p>
             <img
               src="/programmers/izak-t.svg"
               alt="izak tarashandegan the founder and coder"
-              class="float-right overflow-hidden"
-              loading="lazy"
+              class="float-right overflow-hidden w-1/2 fit-content"
+              loading="lazy"           
             />
             <p>
               At IT, we specialize in helping businesses build a strong internet
