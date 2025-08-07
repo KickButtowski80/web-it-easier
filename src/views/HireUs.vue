@@ -52,11 +52,11 @@
         <section class="col-span-1">
           <div class="card">
             <div class="font-normal text-gray-900">
-              <h3
+              <h2
                 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
               >
                 Contact Us to make your dream a reality
-              </h3>
+              </h2>
               <div class="flex flex-col gap-5 mt-16">
                 <div>
                   Tel:
