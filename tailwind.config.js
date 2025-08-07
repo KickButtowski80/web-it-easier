@@ -123,7 +123,7 @@ export default {
         "open-door-knob": "open-door-knob 3s ease 2.5s forwards",
         "slogan": "slogan 0.5s ease-in-out 3.75s forwards",
         "slogan-tagline": "slogan 0.5s ease-in-out 4s forwards",
-        "sun-appears": "sun-appears 3.54s ease-in-out 3.75s forwards",
+        "sun-appears": "sun-appears 3.5s ease-in-out 3.75s forwards",
         "bg-appears": "bg-appears 5s ease-in-out 3.25s forwards",
       },
     },
