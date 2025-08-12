@@ -306,6 +306,9 @@ pre>code {
   display: block;
 }
 
+
+.prose h2, .prose h3, .prose h4 { scroll-margin-top: 5rem; }
+
 #post-content.prose code {
   background-color: rgba(59, 130, 246, 0.1);
   padding: 0.2em 0.6em;
