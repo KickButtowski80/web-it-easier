@@ -306,6 +306,17 @@ pre>code {
   display: block;
 }
 
+/* Dark mode styles for code blocks */
+@media (prefers-color-scheme: dark) {
+  pre {
+    background-color: #111827; /* gray-900 */
+    color: #e5e7eb;            /* gray-200 text for good contrast */
+  }
+  pre > code {
+    color: inherit;            /* ensure code text follows pre color */
+  }
+}
+
 
 .prose h2, .prose h3, .prose h4 { scroll-margin-top: 5rem; }
 
