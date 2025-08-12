@@ -18,7 +18,7 @@
 
               <div class="mb-4 prose max-w-none" v-html="renderMarkdown(post.content.substring(0, 100) + '...')"></div>
 
-              <footer class="text-gray-600 mt-auto">
+              <footer class="text-gray-600 dark:text-gray-400 mt-auto">
                 <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
                 <span><span class="sr-only">Reading time: </span>{{ post.readingTime }} min read</span>
               </footer>

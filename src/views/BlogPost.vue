@@ -3,7 +3,7 @@
     <div class="max-w-4xl mx-auto">
       <article v-if="post" id="post-article">
         <h1 id="post-title" class="text-4xl font-bold mb-4" v-html="post.title"></h1>
-        <div class="text-gray-600 mb-8">
+        <div class="text-gray-600 dark:text-gray-400 mb-8">
           <time class="mr-4" :datetime="new Date(post.date).toISOString().split('T')[0]">{{ formatDate(post.date) }}</time>
           <span>{{ post.readingTime }} min read</span>
         </div>
@@ -11,13 +11,13 @@
         <!-- Table of Contents -->
         <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
-          <h3 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h3>
+          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">Table of Contents</h3>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
               'ml-8': item.level === 'h4'
             }">
-              <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors" :class="{
+              <a :href="`#${item.id}`" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors" :class="{
                 'font-semibold': item.level === 'h2',
                 'text-[1rem]': item.level === 'h3',
                 'text-sm': item.level === 'h4'
