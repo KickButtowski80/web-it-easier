@@ -95,6 +95,9 @@ export default {
           console.error('Error updating canonical URL:', err);
         }
 
+        // Set page title for SEO
+        document.title = 'Blog | Web It Easier - Web Development Insights & Tips';
+
       } catch (error) {
         console.error('Error fetching posts:', error);
         showNotify('Failed to load blog posts. Please try again later.', 'error');

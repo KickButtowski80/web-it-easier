@@ -11,7 +11,7 @@
         <!-- Table of Contents -->
         <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
-          <h2 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h2>
+          <h3 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h3>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
@@ -182,7 +182,12 @@ onUnmounted(() => {
     }
   }
 
-  document.title = "Izak's Portfolio";
+  // Set dynamic page title based on post content
+  if (post.value?.title) {
+    document.title = `${post.value.title} | Web It Easier`;
+  } else {
+    document.title = "Blog Post | Web It Easier";
+  }
 });
 
 function deslugify(slug) {
