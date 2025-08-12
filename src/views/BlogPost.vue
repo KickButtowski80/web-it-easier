@@ -399,6 +399,29 @@ pre>code {
   background-color: rgba(59, 130, 246, 0.1);
 }
 
+/* Accessible focus styles for Table of Contents links */
+#table-of-contents a {
+  display: block;              /* full-row target for easier focus/click */
+  padding: 0.125rem 0.25rem;   /* subtle hit-area padding */
+  border-radius: 0.375rem;     /* rounded corners */
+  outline: none;               /* remove default outline, we add our own */
+}
+
+#table-of-contents a:focus-visible {
+  outline: 2px solid #2563eb;        /* blue visible outline */
+  outline-offset: 2px;               
+  background-color: rgba(37, 99, 235, 0.08); /* subtle bg to reinforce focus */
+  color: #1f2937; /* ensure strong contrast in light mode */
+}
+
+@media (prefers-color-scheme: dark) {
+  #table-of-contents a:focus-visible {
+    outline-color: #60a5fa; /* lighter blue for dark mode */
+    background-color: rgba(96, 165, 250, 0.15);
+    color: #f9fafb; /* near-white for contrast */
+  }
+}
+
 /* Table of Contents Styling */
 
 nav h2 {
