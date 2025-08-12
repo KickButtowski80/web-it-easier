@@ -1,10 +1,10 @@
 <template>
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <article v-if="post" id="post-content">
+      <article v-if="post" id="post-article">
         <h1 id="post-title" class="text-4xl font-bold mb-4" v-html="post.title"></h1>
         <div class="text-gray-600 mb-8">
-          <span class="mr-4">{{ formatDate(post.date) }}</span>
+          <time class="mr-4" :datetime="new Date(post.date).toISOString().split('T')[0]">{{ formatDate(post.date) }}</time>
           <span>{{ post.readingTime }} min read</span>
         </div>
 
@@ -143,6 +143,12 @@ onMounted(async () => {
     const postData = await getPost(title);
     if (isMounted.value && postData) {
       post.value = postData;
+      // Set dynamic page title based on post content (SEO)
+      if (post.value?.title) {
+        document.title = `${post.value.title} | Web It Easier`;
+      } else {
+        document.title = "Blog Post | Web It Easier";
+      }
       await updateCanonicalTag();
     }
   } catch (error) {
@@ -182,12 +188,6 @@ onUnmounted(() => {
     }
   }
 
-  // Set dynamic page title based on post content
-  if (post.value?.title) {
-    document.title = `${post.value.title} | Web It Easier`;
-  } else {
-    document.title = "Blog Post | Web It Easier";
-  }
 });
 
 function deslugify(slug) {
