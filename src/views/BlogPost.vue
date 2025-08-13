@@ -84,6 +84,7 @@ import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
 import { updateCanonicalUrl } from '@/utils/seo-update-canonical-url';
 import Notification from '@/components/UI/Notification.vue';
+import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
  
 
@@ -243,14 +244,6 @@ const toc = computed(() => {
   return headings
 })
 
-// Methods
-function formatDate(date) {
-  return new Date(date).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
 
 
 
@@ -319,14 +312,14 @@ body {
   margin: 2.5rem 0 1.5rem;
   padding: 0.75rem 1rem;
   display: inline-block;
+  box-sizing: border-box;
   position: relative;
   background-color: rgba(37, 99, 235, 0.05);
   border-left: 4px solid #3b82f6;
   border-radius: 0 4px 4px 0;
   width: 100%;
   max-width: 100%;
-  box-sizing: border-box;
-  position: relative;
+ 
 }
 
 #post-content h3::before {
@@ -347,14 +340,13 @@ body {
   transform: scaleX(1);
 }
 
- 
-
-/* Paragraph Styling */
 #post-content p {
   margin: 1.8em 0;
   line-height: 1.8;
   color: #2d3748;
   font-size: 1.125rem;
+}
+
 #post-content.prose ol ol {
   list-style-type: lower-alpha;
 }
@@ -1209,7 +1201,7 @@ a:focus-visible {
 /* Dark mode overrides for stronger contrast */
 @media (prefers-color-scheme: dark) {
   .prose h1 {
-    color: #1a1818; /* Pure white for h1 */
+    color: #1a1818;
     font-weight: 700;
   }
   .prose h2 {
@@ -1316,20 +1308,13 @@ h3 {
   margin-bottom: 1rem;
 }
 
-/* Add scroll margin to headings - using CSS variables */
+
 .prose h2,
 .prose h3,
 .prose h4 {
-  scroll-margin-top: 5rem; /* Default for mobile */
+  scroll-margin-top: 6rem;
 }
-/* For medium screens and up */
-@media (min-width: 768px) {
-  .prose h2,
-  .prose h3,
-  .prose h4 {
-    scroll-margin-top: 3rem;
-  }
-}
+
 
 .toc-bedazzled {
   position: relative;
