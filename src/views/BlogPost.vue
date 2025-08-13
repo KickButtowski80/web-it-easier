@@ -11,17 +11,17 @@
         <!-- Table of Contents -->
         <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
-          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">Table of Contents</h3>
+          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">Table of Contents</h3>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
               'ml-8': item.level === 'h4'
             }">
-              <a :href="`#${item.id}`" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors" :class="{
+              <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" :class="{
                 'font-semibold': item.level === 'h2',
                 'text-[1rem]': item.level === 'h3',
                 'text-sm': item.level === 'h4'
-              }" @click="scrollToSection(item.id)">
+              }">
                 <span v-if="item.level === 'h3'">→ </span>
                 <span v-if="item.level === 'h4'">⟶ </span>
                 {{ item.text }}
@@ -40,7 +40,7 @@
           - 'prose' class applies Tailwind typography
           - 'whitespace-pre-wrap' preserves formatting
         -->
-        <div id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4"
+        <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
           v-html="renderedContent"></div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite">
@@ -234,6 +234,7 @@ function formatDate(date) {
   });
 }
 
+/*
 function scrollToSection(id) {
   const element = document.getElementById(id);
   if (element) {
@@ -244,6 +245,17 @@ function scrollToSection(id) {
     });
   }
 }
+*/
+
+/*
+// Deprecated: relying on native anchor behavior with global scroll padding
+function scrollToSection(id) {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+*/
 
 </script>
 
@@ -305,20 +317,6 @@ pre>code {
   /* all: unset; */
   display: block;
 }
-
-/* Dark mode styles for code blocks */
-@media (prefers-color-scheme: dark) {
-  pre {
-    background-color: #111827; /* gray-900 */
-    color: #e5e7eb;            /* gray-200 text for good contrast */
-  }
-  pre > code {
-    color: inherit;            /* ensure code text follows pre color */
-  }
-}
-
-
-.prose h2, .prose h3, .prose h4 { scroll-margin-top: 5rem; }
 
 #post-content.prose code {
   background-color: rgba(59, 130, 246, 0.1);
@@ -413,6 +411,51 @@ pre>code {
   background-color: rgba(59, 130, 246, 0.1);
 }
 
+/* Dark mode overrides for stronger contrast */
+@media (prefers-color-scheme: dark) {
+  .prose h1 {
+    color: #1a1818; /* Pure white for h1 */
+    font-weight: 700;
+  }
+  .prose h2 {
+    color: #1a1818;
+    font-weight: 600;
+  }
+  .prose h3 {
+    color: #1a1818;
+    font-weight: 600;
+  }
+  .prose h4 {
+    color: #1a1818;
+    font-weight: 600;
+  }
+
+  /* Target highlight on headings in dark mode */
+  .prose h2:target,
+  .prose h3:target,
+  .prose h4:target {
+    background-color: rgba(59, 130, 246, 0.18); /* slightly stronger for dark */
+  }
+
+  /* Blockquote contrast in dark mode */
+  #post-content.prose blockquote {
+    border-left: 4px solid #374151; /* gray-700 */
+    color: #d1d5db; /* gray-300 */
+  }
+
+  /* Inline code contrast in dark mode */
+  #post-content.prose code {
+    color: #93c5fd; /* blue-300 */
+    background-color: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.35);
+  }
+
+  /* Base code block background lift for dark mode (keep hljs theme intact) */
+  pre {
+    background-color: rgba(17, 24, 39, 0.6); /* gray-900 w/ translucency */
+  }
+}
+
 /* Accessible focus styles for Table of Contents links */
 #table-of-contents a {
   display: block;              /* full-row target for easier focus/click */
@@ -485,9 +528,8 @@ h3 {
 .prose h2,
 .prose h3,
 .prose h4 {
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 5rem;
 }
-
 
 .toc-bedazzled {
   position: relative;

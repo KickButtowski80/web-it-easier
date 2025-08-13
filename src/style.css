@@ -11,6 +11,12 @@
    'Helvetica Neue', Arial, sans-serif;
     @apply scroll-p-navbar-height  md:scroll-p-md-navbar-height;
   }
+
+
+  body {
+    /* Global light/dark surfaces and text */
+    @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100;
+  }
     /* Apply Alata once it's loaded */
     .fonts-loaded {
       font-family: 'Alata', -apple-system, BlinkMacSystemFont, 
