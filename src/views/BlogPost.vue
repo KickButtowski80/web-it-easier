@@ -25,17 +25,20 @@
         <!-- Table of Contents -->
         <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
-          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">Table of Contents</h3>
+          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">Table of Contents
+          </h3>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
               'ml-8': item.level === 'h4'
             }">
-              <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" :class="{
-                'font-semibold': item.level === 'h2',
-                'text-[1rem]': item.level === 'h3',
-                'text-sm': item.level === 'h4'
-              }">
+              <a :href="`#${item.id}`"
+                class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                :class="{
+                  'font-semibold': item.level === 'h2',
+                  'text-[1rem]': item.level === 'h3',
+                  'text-sm': item.level === 'h4'
+                }">
                 <span v-if="item.level === 'h3'">→ </span>
                 <span v-if="item.level === 'h4'">⟶ </span>
                 {{ item.text }}
@@ -54,8 +57,8 @@
           - 'prose' class applies Tailwind typography
           - 'whitespace-pre-wrap' preserves formatting
         -->
-        <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4" role="article"
-          aria-label="Blog post content" v-html="renderedContent">
+        <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
+          role="article" aria-label="Blog post content" v-html="renderedContent">
         </div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true">
@@ -86,7 +89,7 @@ import { updateCanonicalUrl } from '@/utils/seo-update-canonical-url';
 import Notification from '@/components/UI/Notification.vue';
 import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
- 
+
 
 
 // Props
@@ -113,34 +116,34 @@ const canonicalUrl = ref('');
 
 const updateCanonicalTag = async () => {
   console.group('[BlogPost] Updating canonical URL');
-  
+
   if (!post.value?.title) {
     console.warn('Post title not available, cannot generate canonical URL');
     console.groupEnd();
     return null;
   }
-  
+
   try {
     const slug = titleToSlug(post.value.title);
     const baseUrl = import.meta.env.PROD
       ? 'https://web-it-easier.vercel.app'
       : window.location.origin;
-    
+
     // Generate the canonical URL
     canonicalUrl.value = `${baseUrl}/blog/${slug}`;
     console.log('Generated canonical URL:', canonicalUrl.value);
-    
+
     // Update the canonical URL using the shared utility
     console.log('Calling updateCanonicalUrl()...');
     const result = updateCanonicalUrl();
-    
+
     if (result) {
       console.log('✅ Successfully updated canonical URL');
       console.log('Current canonical tag:', document.querySelector('link[rel="canonical"]')?.outerHTML);
     } else {
       console.warn('⚠️ Failed to update canonical URL');
     }
-    
+
     console.groupEnd();
     return result;
   } catch (error) {
@@ -274,7 +277,7 @@ body {
 #post-content h2 {
   font-size: clamp(2rem, 6vw, 2rem);
   font-weight: 800;
-  margin: 3rem 0 1.5rem;
+  margin: 2rem 0 1rem;
   padding: 0.5rem 1.5rem;
   line-height: 1.3;
   display: inline-block;
@@ -305,11 +308,16 @@ body {
   transform: scaleX(1);
 }
 
+#post-content h2+h3 {
+  margin-top: 2.5rem;  
+}
+
+
 #post-content h3 {
   font-size: clamp(1.5rem, 4vw, 1.5rem);
   font-weight: 700;
   color: #1e40af;
-  margin: 2.5rem 0 1.5rem;
+  margin: 1.75rem 0 0.9rem;
   padding: 0.75rem 1rem;
   display: inline-block;
   box-sizing: border-box;
@@ -319,7 +327,7 @@ body {
   border-radius: 0 4px 4px 0;
   width: 100%;
   max-width: 100%;
- 
+  
 }
 
 #post-content h3::before {
@@ -341,8 +349,8 @@ body {
 }
 
 #post-content p {
-  margin: 1.8em 0;
-  line-height: 1.8;
+  margin: 1.25em 0;
+  line-height: 1.7;
   color: #2d3748;
   font-size: 1.125rem;
 }
@@ -393,10 +401,10 @@ pre {
 }
 
 /* First paragraph after headings */
-#post-content h2 + p,
-#post-content h3 + p,
-#post-content h4 + p {
-  margin-top: clamp(1.2em, 2vw, 2em);
+#post-content h2+p,
+#post-content h3+p,
+#post-content h4+p {
+  margin-top: clamp(0.5em, 1.2vw, 1em);
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.9;
   color: #1a202c;
@@ -415,9 +423,9 @@ pre {
   background: rgba(30, 41, 59, 0.6);
 }
 
-.dark #post-content h2 + p,
-.dark #post-content h3 + p,
-.dark #post-content h4 + p {
+.dark #post-content h2+p,
+.dark #post-content h3+p,
+.dark #post-content h4+p {
   background: rgba(30, 58, 138, 0.3);
   color: #f8fafc;
 }
@@ -429,8 +437,8 @@ pre {
   border-left: 4px solid #2563eb;
   font-style: italic;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-              border-color 0.3s ease,
-              box-shadow 0.3s ease;
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -454,7 +462,7 @@ pre {
 }
 
 #post-content p.important:hover::before {
- 
+
   opacity: 1;
 }
 
@@ -473,7 +481,7 @@ pre {
 #post-content p:last-child {
   margin-bottom: 2.5em;
 }
- 
+
 
 
 .title-wrapper {
@@ -591,10 +599,10 @@ a:focus-visible {
   border-radius: 0.5rem;
   border-left: 0.25rem solid #3b82f6;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.03);
-  transition: transform 0.2s ease, 
-              background-color 0.2s ease, 
-              border-color 0.2s ease, 
-              box-shadow 0.2s ease;
+  transition: transform 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
   overflow: hidden;
   cursor: default;
   width: 100%;
@@ -633,7 +641,7 @@ a:focus-visible {
   #post-content blockquote {
     padding: 1.5rem 2rem 1.5rem 3.5rem;
   }
-  
+
   #post-content blockquote::before {
     font-size: 4rem;
     top: 0.5rem;
@@ -701,13 +709,14 @@ a:focus-visible {
   position: relative;
   top: 2rem;
   margin-bottom: 0;
-  padding: 1.25rem 1.5rem 0.75rem 3rem; /* Increased padding for custom marker */
+  padding: 1.25rem 1.5rem 0.75rem 3rem;
+  /* Increased padding for custom marker */
   background: rgba(249, 250, 251, 0.9);
   border-radius: 0.5rem 0.5rem 0 0;
   border-left: 3px solid #3b82f6;
   font-weight: 500;
   color: #1f2937;
-  transition: 
+  transition:
     background-color 0.2s ease,
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -719,9 +728,7 @@ a:focus-visible {
 #post-content p:has(+ ul)::before,
 #post-content h4:has(+ ul)::before,
 #post-content p:has(+ ol)::before,
-#post-content h4:has(+ ol)::before 
-
-{
+#post-content h4:has(+ ol)::before {
   content: '›';
   position: absolute;
   left: 1rem;
@@ -754,7 +761,8 @@ a:focus-visible {
 #post-content h4:has(+ ol):hover::before {
   transform: translateY(-50%) rotate(90deg);
   color: #2563eb;
-  left: 0.8rem; /* Slight adjustment to compensate for rotation */
+  left: 0.8rem;
+  /* Slight adjustment to compensate for rotation */
 }
 
 #post-content p:has(+ ul):hover,
@@ -767,10 +775,10 @@ a:focus-visible {
 }
 
 /* Style the list that follows a paragraph */
-#post-content p + ul,
-#post-content p + ol,
-#post-content h4 + ul,
-#post-content h4 + ol {
+#post-content p+ul,
+#post-content p+ol,
+#post-content h4+ul,
+#post-content h4+ol {
   margin-top: 0;
   padding: 0.25rem 1.5rem 1.25rem 3rem;
   background: rgba(249, 250, 251, 0.9);
@@ -810,6 +818,7 @@ a:focus-visible {
 
 /* Mobile card layout */
 @media (max-width: 767px) {
+
   #post-content table,
   #post-content thead,
   #post-content tbody,
@@ -818,7 +827,7 @@ a:focus-visible {
   #post-content tr {
     display: block;
   }
-  
+
   #post-content thead,
   .sr-only {
     position: absolute;
@@ -831,14 +840,14 @@ a:focus-visible {
     white-space: nowrap;
     border-width: 0;
   }
-  
+
   #post-content tr {
     border: 1px solid #e2e8f0;
     border-radius: 0.5rem;
     margin-bottom: 1rem;
     padding: 0.5rem;
   }
-  
+
   #post-content td {
     border: none;
     border-bottom: 1px solid #e2e8f0;
@@ -847,7 +856,7 @@ a:focus-visible {
     white-space: normal;
     text-align: left;
   }
-  
+
   #post-content td:before {
     content: attr(data-label);
     position: absolute;
@@ -858,7 +867,7 @@ a:focus-visible {
     font-weight: 600;
     color: #4a5568;
   }
-  
+
   #post-content td:last-child {
     border-bottom: 0;
   }
@@ -891,9 +900,9 @@ a:focus-visible {
 }
 
 #post-content tbody tr {
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-              background-color 0.2s ease,
-              box-shadow 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
   transform-origin: left center;
 }
 
@@ -924,7 +933,7 @@ a:focus-visible {
     -webkit-overflow-scrolling: touch;
     border-radius: 0.5rem;
   }
-  
+
   #post-content th,
   #post-content td {
     min-width: 120px;
@@ -932,10 +941,10 @@ a:focus-visible {
 }
 
 /* Dark mode support */
-.dark #post-content p + ul,
-.dark #post-content p + ol,
-.dark #post-content h4 + ul,
-.dark #post-content h4 + ol {
+.dark #post-content p+ul,
+.dark #post-content p+ol,
+.dark #post-content h4+ul,
+.dark #post-content h4+ol {
   background: rgba(30, 41, 59, 0.4);
   border-left-color: #60a5fa;
 }
@@ -1204,14 +1213,17 @@ a:focus-visible {
     color: #1a1818;
     font-weight: 700;
   }
+
   .prose h2 {
     color: #1a1818;
     font-weight: 600;
   }
+
   .prose h3 {
     color: #1a1818;
     font-weight: 600;
   }
+
   .prose h4 {
     color: #1a1818;
     font-weight: 600;
@@ -1221,48 +1233,62 @@ a:focus-visible {
   .prose h2:target,
   .prose h3:target,
   .prose h4:target {
-    background-color: rgba(59, 130, 246, 0.18); /* slightly stronger for dark */
+    background-color: rgba(59, 130, 246, 0.18);
+    /* slightly stronger for dark */
   }
 
   /* Blockquote contrast in dark mode */
   #post-content.prose blockquote {
-    border-left: 4px solid #374151; /* gray-700 */
-    color: #d1d5db; /* gray-300 */
+    border-left: 4px solid #374151;
+    /* gray-700 */
+    color: #d1d5db;
+    /* gray-300 */
   }
 
   /* Inline code contrast in dark mode */
   #post-content.prose code {
-    color: #93c5fd; /* blue-300 */
+    color: #93c5fd;
+    /* blue-300 */
     background-color: rgba(59, 130, 246, 0.18);
     border-color: rgba(59, 130, 246, 0.35);
   }
 
   /* Base code block background lift for dark mode (keep hljs theme intact) */
   pre {
-    background-color: rgba(17, 24, 39, 0.6); /* gray-900 w/ translucency */
+    background-color: rgba(17, 24, 39, 0.6);
+    /* gray-900 w/ translucency */
   }
 }
 
 /* Accessible focus styles for Table of Contents links */
 #table-of-contents a {
-  display: block;              /* full-row target for easier focus/click */
-  padding: 0.125rem 0.25rem;   /* subtle hit-area padding */
-  border-radius: 0.375rem;     /* rounded corners */
-  outline: none;               /* remove default outline, we add our own */
+  display: block;
+  /* full-row target for easier focus/click */
+  padding: 0.125rem 0.25rem;
+  /* subtle hit-area padding */
+  border-radius: 0.375rem;
+  /* rounded corners */
+  outline: none;
+  /* remove default outline, we add our own */
 }
 
 #table-of-contents a:focus-visible {
-  outline: 2px solid #2563eb;        /* blue visible outline */
-  outline-offset: 2px;               
-  background-color: rgba(37, 99, 235, 0.08); /* subtle bg to reinforce focus */
-  color: #1f2937; /* ensure strong contrast in light mode */
+  outline: 2px solid #2563eb;
+  /* blue visible outline */
+  outline-offset: 2px;
+  background-color: rgba(37, 99, 235, 0.08);
+  /* subtle bg to reinforce focus */
+  color: #1f2937;
+  /* ensure strong contrast in light mode */
 }
 
 @media (prefers-color-scheme: dark) {
   #table-of-contents a:focus-visible {
-    outline-color: #60a5fa; /* lighter blue for dark mode */
+    outline-color: #60a5fa;
+    /* lighter blue for dark mode */
     background-color: rgba(96, 165, 250, 0.15);
-    color: #f9fafb; /* near-white for contrast */
+    color: #f9fafb;
+    /* near-white for contrast */
   }
 }
 
