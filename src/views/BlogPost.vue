@@ -410,6 +410,7 @@ pre {
   color: #1a202c;
   background: rgba(236, 242, 253, 0.7);
   border-left-color: #2563eb;
+  padding: 1rem;
 }
 
 /* Dark mode support */
