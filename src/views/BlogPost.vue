@@ -1037,6 +1037,65 @@ a:focus-visible {
   line-height: 1.6;
 }
 
+/* Improve syntax readability in dark mode (override light GitHub theme tokens) */
+.dark #post-content pre {
+  background-color: #0b1220; /* deeper dark for contrast */
+  color: #e5e7eb;            /* base foreground */
+}
+
+.dark #post-content pre .hljs {
+  background: transparent;
+  color: #e5e7eb; /* default text */
+}
+
+/* Token colors tuned for dark background */
+.dark #post-content pre .hljs-comment,
+.dark #post-content pre .hljs-quote {
+  color: #9ca3af; /* gray-400 */
+  font-style: italic;
+}
+
+.dark #post-content pre .hljs-keyword,
+.dark #post-content pre .hljs-selector-tag,
+.dark #post-content pre .hljs-literal,
+.dark #post-content pre .hljs-built_in,
+.dark #post-content pre .hljs-type {
+  color: #93c5fd; /* blue-300 */
+}
+
+.dark #post-content pre .hljs-string,
+.dark #post-content pre .hljs-symbol,
+.dark #post-content pre .hljs-bullet,
+.dark #post-content pre .hljs-addition {
+  color: #86efac; /* green-300 */
+}
+
+.dark #post-content pre .hljs-number,
+.dark #post-content pre .hljs-attr,
+.dark #post-content pre .hljs-attribute,
+.dark #post-content pre .hljs-template-variable,
+.dark #post-content pre .hljs-variable {
+  color: #fde68a; /* amber-200 */
+}
+
+.dark #post-content pre .hljs-title,
+.dark #post-content pre .hljs-section,
+.dark #post-content pre .hljs-selector-id,
+.dark #post-content pre .hljs-selector-class {
+  color: #c4b5fd; /* violet-300 */
+}
+
+.dark #post-content pre .hljs-name,
+.dark #post-content pre .hljs-tag,
+.dark #post-content pre .hljs-meta {
+  color: #fca5a5; /* red-300 */
+}
+
+/* Selection inside code blocks in dark mode */
+.dark #post-content pre ::selection {
+  background: rgba(96, 165, 250, 0.25); /* blue-400/25 */
+}
+
 .prose {
   max-width: 50rem;
   margin: 2rem auto;
@@ -1143,22 +1202,20 @@ a:focus-visible {
 .prose code {
   background-color: #8b8989;
   color: #0A0A50;
-  padding: 0.4em 0.8em;
-  display: inline-block;
+  padding: 0.15em 0.35em;
+  display: inline;
+  vertical-align: baseline;
   font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-  font-size: clamp(0.85em, 3.5vw + 0.1em, 1em);
-  border-radius: 3px;
-  line-height: 2.2;
+  font-size: clamp(0.9em, 0.6vw + 0.85em, 1em);
+  border-radius: 0.25rem;
+  line-height: inherit;
   word-break: break-word;
-  min-width: min(2.5em, 100%);
-  max-width: 100%;
-  overflow-x: auto;
 }
 
 
 @media (hover: none) {
   .prose code {
-    padding: 0.3em 0.6em;
+    padding: 0.2em 0.45em;
   }
 }
 
