@@ -48,15 +48,14 @@
         </div>
       </div>
     </div>
-    <p
-      class="text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 text-center animate-slogan"
-    >
-      The Door to
-      <!-- <br> -->
-      an easier future
-      <br />
-      <span class="font-thin text-xl">one website at a time</span>
-    </p>
+    <div class="text-center">
+      <h1 class="text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan">
+        The Door to an easier digital future
+      </h1>
+      <p class="font-thin text-xl opacity-0 animate-slogan-tagline">
+        one website at a time
+      </p>
+    </div>
   </section>
   <div class="flex items-center justify-center">
     <button

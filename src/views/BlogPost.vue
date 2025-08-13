@@ -1,23 +1,23 @@
 <template>
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <article v-if="post" id="post-content">
+      <article v-if="post" id="post-article">
         <h1 id="post-title" class="text-4xl font-bold mb-4" v-html="post.title"></h1>
-        <div class="text-gray-600 mb-8">
-          <span class="mr-4">{{ formatDate(post.date) }}</span>
+        <div class="text-gray-600 dark:text-gray-400 mb-8">
+          <time class="mr-4" :datetime="new Date(post.date).toISOString().split('T')[0]">{{ formatDate(post.date) }}</time>
           <span>{{ post.readingTime }} min read</span>
         </div>
 
         <!-- Table of Contents -->
         <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
-          <h2 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h2>
+          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100">Table of Contents</h3>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
               'ml-8': item.level === 'h4'
             }">
-              <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors" :class="{
+              <a :href="`#${item.id}`" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors" :class="{
                 'font-semibold': item.level === 'h2',
                 'text-[1rem]': item.level === 'h3',
                 'text-sm': item.level === 'h4'
@@ -143,6 +143,12 @@ onMounted(async () => {
     const postData = await getPost(title);
     if (isMounted.value && postData) {
       post.value = postData;
+      // Set dynamic page title based on post content (SEO)
+      if (post.value?.title) {
+        document.title = `${post.value.title} | Web It Easier`;
+      } else {
+        document.title = "Blog Post | Web It Easier";
+      }
       await updateCanonicalTag();
     }
   } catch (error) {
@@ -182,7 +188,6 @@ onUnmounted(() => {
     }
   }
 
-  document.title = "Izak's Portfolio";
 });
 
 function deslugify(slug) {
@@ -301,6 +306,20 @@ pre>code {
   display: block;
 }
 
+/* Dark mode styles for code blocks */
+@media (prefers-color-scheme: dark) {
+  pre {
+    background-color: #111827; /* gray-900 */
+    color: #e5e7eb;            /* gray-200 text for good contrast */
+  }
+  pre > code {
+    color: inherit;            /* ensure code text follows pre color */
+  }
+}
+
+
+.prose h2, .prose h3, .prose h4 { scroll-margin-top: 5rem; }
+
 #post-content.prose code {
   background-color: rgba(59, 130, 246, 0.1);
   padding: 0.2em 0.6em;
@@ -392,6 +411,29 @@ pre>code {
   color: #3b82f6;
   padding-left: 1.5rem;
   background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Accessible focus styles for Table of Contents links */
+#table-of-contents a {
+  display: block;              /* full-row target for easier focus/click */
+  padding: 0.125rem 0.25rem;   /* subtle hit-area padding */
+  border-radius: 0.375rem;     /* rounded corners */
+  outline: none;               /* remove default outline, we add our own */
+}
+
+#table-of-contents a:focus-visible {
+  outline: 2px solid #2563eb;        /* blue visible outline */
+  outline-offset: 2px;               
+  background-color: rgba(37, 99, 235, 0.08); /* subtle bg to reinforce focus */
+  color: #1f2937; /* ensure strong contrast in light mode */
+}
+
+@media (prefers-color-scheme: dark) {
+  #table-of-contents a:focus-visible {
+    outline-color: #60a5fa; /* lighter blue for dark mode */
+    background-color: rgba(96, 165, 250, 0.15);
+    color: #f9fafb; /* near-white for contrast */
+  }
 }
 
 /* Table of Contents Styling */
