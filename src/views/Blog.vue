@@ -5,20 +5,20 @@
 
     <section aria-label="Blog posts">
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 list-none p-0">
-        <li v-for="post in posts" :key="titleToSlug(post.title)" class="post-item">
-          <article class="h-full relative">
-            <router-link :to="'/blog/' + titleToSlug(post.title)" class="block h-full bg-white rounded-lg shadow-2xl overflow-hidden 
-              post-preview hover:shadow-lg transition-shadow p-8 
+        <li v-for="(post, i) in posts" :key="titleToSlug(post.title) + '-' + i" class="post-item">
+          <article class="h-full relative" :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`">
+            <router-link :to="'/blog/' + titleToSlug(post.title)" class="block h-full bg-white dark:bg-gray-800 rounded-lg shadow-2xl overflow-hidden 
+              post-preview hover:shadow-lg dark:hover:shadow-md transition-shadow p-8 
+              text-gray-900 dark:text-gray-100
               focus-visible:outline-none focus-visible:ring-2 
-              focus-visible:ring-offset-2 focus-visible:ring-indigo-500"
-              :aria-labelledby="`post-title-${titleToSlug(post.title)}`">
-              <h2 :id="`post-title-${titleToSlug(post.title)}`" class="text-2xl font-bold mb-4">
+              focus-visible:ring-offset-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400">
+              <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="text-2xl font-bold mb-4">
                 {{ post.title }}
               </h2>
 
-              <div class="mb-4 prose max-w-none" v-html="renderMarkdown(post.content.substring(0, 100) + '...')"></div>
+              <div class="mb-4 prose dark:prose-invert max-w-none" v-html="renderMarkdown(post.content.substring(0, 100) + '...')"></div>
 
-              <footer class="text-gray-600 mt-auto">
+              <footer class="text-gray-600 dark:text-gray-400 mt-auto">
                 <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
                 <span><span class="sr-only">Reading time: </span>{{ post.readingTime }} min read</span>
               </footer>
