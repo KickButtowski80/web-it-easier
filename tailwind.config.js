@@ -3,6 +3,7 @@ const plugin = require('tailwindcss/plugin');
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       spacing: {
@@ -10,6 +11,7 @@ export default {
         'md-navbar-height': '6rem',
       },
       scrollPadding: {
+        'navbar-height': '3rem',
         'md-navbar-height': '6rem', // Add this line
       },
       backgroundPosition: {
@@ -81,12 +83,14 @@ export default {
             transform: "scale(1) rotateY(70deg) translateZ(-2.25rem)",
           },
         },
-        slogan: {
+        "slogan": {
           "0%": {
             opacity: 0,
+            transform: 'translateY(10px)'
           },
           "100%": {
             opacity: 1,
+            transform: 'translateY(0)'
           },
         },
         "bg-appears": {
@@ -119,8 +123,9 @@ export default {
         "rotate-letter-left": "rotate-letter-left 2s  ease 1s forwards",
         "open-door": "open-door 3s ease 2.5s forwards",
         "open-door-knob": "open-door-knob 3s ease 2.5s forwards",
-        slogan: "slogan 3s ease-in-out 3.75s forwards",
-        "sun-appears": "sun-appears 5s ease-in-out 3.75s forwards",
+        "slogan": "slogan 0.5s ease-in-out 3.75s forwards",
+        "slogan-tagline": "slogan 0.5s ease-in-out 4s forwards",
+        "sun-appears": "sun-appears 3.5s ease-in-out 3.75s forwards",
         "bg-appears": "bg-appears 5s ease-in-out 3.25s forwards",
       },
     },

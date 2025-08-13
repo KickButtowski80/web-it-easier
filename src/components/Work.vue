@@ -2,6 +2,8 @@
   <article 
     :aria-label="'Project: ' + projectTitle"
     class="grid place-items-center shadow-md"
+    :data-expanded="readMoreStatus"
+    :class="{ 'pointer-events-none': !readMoreStatus }"
   >
     <div class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col">
       <img
@@ -51,7 +53,14 @@
             :privateRepo="privateRepo"
             :projectTitle="projectTitle"
           />
-          <div class="gray-bg-card flex-grow" :aria-labelledby="`project-title-${projectId}`">
+          <div 
+            ref="descriptionSection"
+            class="gray-bg-card flex-grow transition-opacity duration-200"
+            :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
+            :aria-labelledby="`project-title-${projectId}`"
+            :aria-hidden="!readMoreStatus"
+            :tabindex="readMoreStatus ? '0' : '-1'"
+          >
             <h3 :id="`project-title-${projectId}`" class="sr-only">
               Project Details: {{ projectTitle }}
             </h3>
@@ -59,7 +68,13 @@
               {{ description }}
             </p>
           </div>
-          <div class="px-3 pt-4 pb-2">
+          <div 
+            ref="techSection"
+            class="px-3 pt-4 pb-2 transition-opacity duration-200"
+            :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
+            :aria-hidden="!readMoreStatus"
+            :tabindex="readMoreStatus ? '0' : '-1'"
+          >
             <ul class="list-none p-0 m-0">
               <li 
                 v-for="(tec, index) in technologiesUsed"
@@ -76,7 +91,13 @@
               <span class="font-bold">Completed:</span> January 2024
             </p>
           </div>
-          <div class="gray-bg-card mt-5">
+          <div 
+            ref="highlightsSection"
+            class="gray-bg-card mt-5 transition-opacity duration-200"
+            :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
+            :aria-hidden="!readMoreStatus"
+            :tabindex="readMoreStatus ? '0' : '-1'"
+          >
             <h3 class="font-bold text-lg mb-2 text-blue-700">
               Highlights
             </h3>
@@ -136,18 +157,43 @@ export default {
       const readMoreText = computed(() => {
         return !readMoreStatus.value ? "Read More" : "Read Less";
       });
-      const toggleReadMoreStatus = () => {
-        readMoreStatus.value = !readMoreStatus.value;
-        if (readMoreStatus.value) {
-          // If read more is clicked (going to "Read Less"), scroll to the card info
-          nextTick(() => {
-            cardInfo.value.scrollIntoView({
-              behavior: "smooth",
-              inline: "center",
-            });
-          });
+      const descriptionSection = ref(null);
+      const techSection = ref(null);
+      const highlightsSection = ref(null);
+      
+      const toggleReadMoreStatus = (event) => {
+        // Prevent default only for keyboard events to avoid double-triggering with click
+        if (event.type === 'keydown') {
+          event.preventDefault();
         }
+        
+        const wasExpanded = readMoreStatus.value;
+        readMoreStatus.value = !wasExpanded;
+        
+        nextTick(() => {
+          if (!wasExpanded) {
+            // When expanding, focus the first focusable element in the expanded content
+            const firstFocusable = descriptionSection.value?.querySelector('[tabindex]') || 
+                                 techSection.value?.querySelector('[tabindex]') || 
+                                 highlightsSection.value?.querySelector('[tabindex]');
+            
+            if (firstFocusable) {
+              firstFocusable.focus({ preventScroll: true });
+            }
+            
+            // Smooth scroll to the card
+            cardInfo.value?.scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+              inline: "center"
+            });
+          } else {
+            // When collapsing, return focus to the toggle button
+            event.target?.focus?.();
+          }
+        });
       };
+      
       return {
         projectId,
         image,
@@ -168,6 +214,30 @@ export default {
         cardInfo,
       };
     }
+    
+    // Return default values if no projectInfo is provided
+    return {
+      projectId: '',
+      image: '',
+      imageAlt: '',
+      projectTitle: '',
+      clientName: '',
+      description: '',
+      technologiesUsed: [],
+      startDate: '',
+      endDate: '',
+      highlights: [],
+      liveView: '',
+      codeView: '',
+      privateRepo: false,
+      readMoreText: 'Read More',
+      readMoreStatus: false,
+      toggleReadMoreStatus: () => {},
+      cardInfo: null,
+      descriptionSection: null,
+      techSection: null,
+      highlightsSection: null
+    };
   },
 };
 </script>

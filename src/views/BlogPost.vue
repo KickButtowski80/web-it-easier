@@ -25,17 +25,17 @@
         <!-- Table of Contents -->
         <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
-          <h2 id="toc-heading" class="text-lg font-semibold mb-2">Table of Contents</h2>
+          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">Table of Contents</h3>
           <ul class="space-y-1">
             <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
               'ml-8': item.level === 'h4'
             }">
-              <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 transition-colors" :class="{
+              <a :href="`#${item.id}`" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors" :class="{
                 'font-semibold': item.level === 'h2',
                 'text-[1rem]': item.level === 'h3',
                 'text-sm': item.level === 'h4'
-              }" @click="scrollToSection(item.id)">
+              }">
                 <span v-if="item.level === 'h3'">→ </span>
                 <span v-if="item.level === 'h4'">⟶ </span>
                 {{ item.text }}
@@ -54,7 +54,7 @@
           - 'prose' class applies Tailwind typography
           - 'whitespace-pre-wrap' preserves formatting
         -->
-        <div id="post-content" class="prose prose-lg max-w-none whitespace-pre-wrap tab-size-4" role="article"
+        <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4" role="article"
           aria-label="Blog post content" v-html="renderedContent">
         </div>
       </article>
@@ -78,12 +78,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
-import Notification from '@/components/UI/Notification.vue'
-import { useNotification, titleToSlug } from "../utils/helpers";
-import { renderMarkdown } from "../utils/markdown";
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { getPost } from '@/config/firebase';
+import { titleToSlug, useNotification } from '@/utils/helpers';
+import { renderMarkdown } from '@/utils/markdown';
+import { updateCanonicalUrl } from '@/utils/seo-update-canonical-url';
+import Notification from '@/components/UI/Notification.vue';
 import "highlight.js/styles/github.css";
-import { getPost } from "../config/firebase";
+ 
 
 
 // Props
@@ -109,61 +111,48 @@ const defaultCanonical = ref(null);
 const canonicalUrl = ref('');
 
 const updateCanonicalTag = async () => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (post.value && post.value.title) {
-        // Create the canonical URL using the proper slug format
-        const slug = titleToSlug(post.value.title);
-        const baseUrl = import.meta.env.PROD
-          ? 'https://web-it-easier.vercel.app'
-          : window.location.origin;
-        canonicalUrl.value = `${baseUrl}/blog/${slug}`;
-
-        // Store the default canonical if not already stored
-        if (!defaultCanonical.value) {
-          const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
-          if (defaultCanonicalEl) {
-            defaultCanonical.value = defaultCanonicalEl.outerHTML;
-            defaultCanonicalEl.remove();
-          }
-        }
-
-        // Add the canonical tag to the document head
-        const link = document.createElement('link');
-        link.rel = 'canonical';
-        link.href = canonicalUrl.value;
-        // Find the canonical URL comment
-        const canonicalComment = Array.from(document.head.childNodes).find(
-          node => node.nodeType === Node.COMMENT_NODE &&
-            node.textContent.trim() === 'Canonical URL'
-        );
-
-        if (canonicalComment) {
-          // Insert after the comment
-          document.head.insertBefore(link, canonicalComment.nextSibling);
-        } else {
-          // Fallback to appending if comment not found
-          document.head.appendChild(link);
-        }
-        // Update page title with post title for better SEO
-        document.title = `${post.value.title} | Web It Easier`;
-      }
-
-      // Always resolve the promise when done
-      resolve();
-    } catch (error) {
-      console.error('Error updating canonical tag:', error);
-      reject(error);
+  console.group('[BlogPost] Updating canonical URL');
+  
+  if (!post.value?.title) {
+    console.warn('Post title not available, cannot generate canonical URL');
+    console.groupEnd();
+    return null;
+  }
+  
+  try {
+    const slug = titleToSlug(post.value.title);
+    const baseUrl = import.meta.env.PROD
+      ? 'https://web-it-easier.vercel.app'
+      : window.location.origin;
+    
+    // Generate the canonical URL
+    canonicalUrl.value = `${baseUrl}/blog/${slug}`;
+    console.log('Generated canonical URL:', canonicalUrl.value);
+    
+    // Update the canonical URL using the shared utility
+    console.log('Calling updateCanonicalUrl()...');
+    const result = updateCanonicalUrl();
+    
+    if (result) {
+      console.log('✅ Successfully updated canonical URL');
+      console.log('Current canonical tag:', document.querySelector('link[rel="canonical"]')?.outerHTML);
+    } else {
+      console.warn('⚠️ Failed to update canonical URL');
     }
-  });
+    
+    console.groupEnd();
+    return result;
+  } catch (error) {
+    console.error('❌ Error updating canonical tag:', error);
+    console.groupEnd();
+    return null;
+  }
 };
 onMounted(async () => {
-
-
+  // Initialize default canonical URL
   const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
   if (defaultCanonicalEl) {
     defaultCanonical.value = defaultCanonicalEl.outerHTML;
-    defaultCanonicalEl.remove();
   }
 
   isMounted.value = true;
@@ -172,6 +161,12 @@ onMounted(async () => {
     const postData = await getPost(title);
     if (isMounted.value && postData) {
       post.value = postData;
+      // Set dynamic page title based on post content (SEO)
+      if (post.value?.title) {
+        document.title = `${post.value.title} | Web It Easier`;
+      } else {
+        document.title = "Blog Post | Web It Easier";
+      }
       await updateCanonicalTag();
     }
   } catch (error) {
@@ -211,7 +206,6 @@ onUnmounted(() => {
     }
   }
 
-  document.title = "Izak's Portfolio";
 });
 
 function deslugify(slug) {
@@ -258,16 +252,7 @@ function formatDate(date) {
   });
 }
 
-function scrollToSection(id) {
-  const element = document.getElementById(id);
-  if (element) {
-    // Use scrollIntoView with block: "start" and a scroll margin
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
-  }
-}
+
 
 </script>
 
@@ -370,6 +355,31 @@ body {
   line-height: 1.8;
   color: #2d3748;
   font-size: 1.125rem;
+#post-content.prose ol ol {
+  list-style-type: lower-alpha;
+}
+
+#post-content.prose ol ol ol {
+  list-style-type: lower-roman;
+}
+
+#post-content.prose blockquote {
+  border-left: 4px solid #e5e7eb;
+  /* Light gray border on the left */
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #4b5563;
+  /* Slightly darker text */
+  font-style: italic;
+}
+
+/* Base code block styling */
+pre {
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  padding: 0.5rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
   word-wrap: break-word;
   hyphens: auto;
   text-align: justify;
@@ -1196,6 +1206,76 @@ a:focus-visible {
   background-color: rgba(59, 130, 246, 0.1);
 }
 
+/* Dark mode overrides for stronger contrast */
+@media (prefers-color-scheme: dark) {
+  .prose h1 {
+    color: #1a1818; /* Pure white for h1 */
+    font-weight: 700;
+  }
+  .prose h2 {
+    color: #1a1818;
+    font-weight: 600;
+  }
+  .prose h3 {
+    color: #1a1818;
+    font-weight: 600;
+  }
+  .prose h4 {
+    color: #1a1818;
+    font-weight: 600;
+  }
+
+  /* Target highlight on headings in dark mode */
+  .prose h2:target,
+  .prose h3:target,
+  .prose h4:target {
+    background-color: rgba(59, 130, 246, 0.18); /* slightly stronger for dark */
+  }
+
+  /* Blockquote contrast in dark mode */
+  #post-content.prose blockquote {
+    border-left: 4px solid #374151; /* gray-700 */
+    color: #d1d5db; /* gray-300 */
+  }
+
+  /* Inline code contrast in dark mode */
+  #post-content.prose code {
+    color: #93c5fd; /* blue-300 */
+    background-color: rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.35);
+  }
+
+  /* Base code block background lift for dark mode (keep hljs theme intact) */
+  pre {
+    background-color: rgba(17, 24, 39, 0.6); /* gray-900 w/ translucency */
+  }
+}
+
+/* Accessible focus styles for Table of Contents links */
+#table-of-contents a {
+  display: block;              /* full-row target for easier focus/click */
+  padding: 0.125rem 0.25rem;   /* subtle hit-area padding */
+  border-radius: 0.375rem;     /* rounded corners */
+  outline: none;               /* remove default outline, we add our own */
+}
+
+#table-of-contents a:focus-visible {
+  outline: 2px solid #2563eb;        /* blue visible outline */
+  outline-offset: 2px;               
+  background-color: rgba(37, 99, 235, 0.08); /* subtle bg to reinforce focus */
+  color: #1f2937; /* ensure strong contrast in light mode */
+}
+
+@media (prefers-color-scheme: dark) {
+  #table-of-contents a:focus-visible {
+    outline-color: #60a5fa; /* lighter blue for dark mode */
+    background-color: rgba(96, 165, 250, 0.15);
+    color: #f9fafb; /* near-white for contrast */
+  }
+}
+
+/* Table of Contents Styling */
+
 nav h2 {
   margin-left: -1rem;
   padding-left: 1rem;
@@ -1236,10 +1316,19 @@ h3 {
   margin-bottom: 1rem;
 }
 
+/* Add scroll margin to headings - using CSS variables */
 .prose h2,
 .prose h3,
 .prose h4 {
-  scroll-margin-top: 1.5rem;
+  scroll-margin-top: 5rem; /* Default for mobile */
+}
+/* For medium screens and up */
+@media (min-width: 768px) {
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    scroll-margin-top: 3rem;
+  }
 }
 
 .toc-bedazzled {
