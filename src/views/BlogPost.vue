@@ -524,11 +524,20 @@ h3 {
   margin-bottom: 1rem;
 }
 
-/* Add scroll margin to headings */
+/* Add scroll margin to headings - using CSS variables */
 .prose h2,
 .prose h3,
 .prose h4 {
-  scroll-margin-top: 5rem;
+  scroll-margin-top: 5rem; /* Default for mobile */
+}
+
+/* For medium screens and up */
+@media (min-width: 768px) {
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    scroll-margin-top: 3rem;
+  }
 }
 
 .toc-bedazzled {

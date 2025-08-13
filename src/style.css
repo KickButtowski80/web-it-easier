@@ -5,6 +5,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-margin-top: 1.5rem;
     /* font-family: system-ui; */
    /* Fallback to system fonts while Alata loads */
    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
