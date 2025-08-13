@@ -3,6 +3,7 @@ const plugin = require('tailwindcss/plugin');
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  darkMode: 'class',
   theme: {
     extend: {
       spacing: {
@@ -10,6 +11,7 @@ export default {
         'md-navbar-height': '6rem',
       },
       scrollPadding: {
+        'navbar-height': '3rem',
         'md-navbar-height': '6rem', // Add this line
       },
       backgroundPosition: {
