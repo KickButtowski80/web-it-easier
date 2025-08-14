@@ -1318,6 +1318,124 @@ a:focus-visible {
   }
 }
 
+/* --- Callout blocks (CSS-only, additive) --- */
+/* Usage in Markdown (raw HTML allowed):
+   > <blockquote class="callout info">
+   >   <p>Your message</p>
+   > </blockquote>
+   Or simply write raw HTML blockquote with class in the Markdown document.
+*/
+
+#post-content.prose blockquote.callout {
+  position: relative;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  padding: 1rem 1rem 1rem 1.25rem;
+  margin: 1.25rem 0;
+}
+
+#post-content.prose blockquote.callout .callout-title {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Info */
+#post-content.prose blockquote.callout.info {
+  border-left-color: #60a5fa; /* blue-400 */
+  background-color: rgba(96, 165, 250, 0.12);
+}
+
+/* Warning */
+#post-content.prose blockquote.callout.warning {
+  border-left-color: #f59e0b; /* amber-500 */
+  background-color: rgba(245, 158, 11, 0.12);
+}
+
+/* Tip */
+#post-content.prose blockquote.callout.tip {
+  border-left-color: #34d399; /* emerald-400 */
+  background-color: rgba(52, 211, 153, 0.12);
+}
+
+/* Stats */
+#post-content.prose blockquote.callout.stats {
+  border-left-color: #a78bfa; /* violet-400 */
+  background-color: rgba(167, 139, 250, 0.12);
+}
+
+/* Dark theme variants */
+.dark #post-content.prose blockquote.callout.info {
+  border-left-color: #60a5fa;
+  background-color: rgba(96, 165, 250, 0.18);
+}
+.dark #post-content.prose blockquote.callout.warning {
+  border-left-color: #f59e0b;
+  background-color: rgba(245, 158, 11, 0.18);
+}
+.dark #post-content.prose blockquote.callout.tip {
+  border-left-color: #34d399;
+  background-color: rgba(52, 211, 153, 0.18);
+}
+.dark #post-content.prose blockquote.callout.stats {
+  border-left-color: #a78bfa;
+  background-color: rgba(167, 139, 250, 0.18);
+}
+
+/* Callout icons (emoji for broad compatibility) */
+#post-content.prose blockquote.callout {
+  padding-left: 2.8rem; /* extra room for larger icon */
+  color: #1f2937; /* ensure readable text in light theme */
+  display: flex; /* single centering method */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#post-content.prose blockquote.callout::before {
+  position: absolute;
+  left: 0.6rem;
+  top: 50%; /* vertically center relative to blockquote */
+  transform: translateY(-50%);
+  font-size: 1.4rem; /* ensure glyph sits centered within circle */
+  line-height: 1;
+  width: 2.2rem;
+  height: 2.2rem;
+display: content;
+  border-radius: 50%; /* perfect circle when w==h */
+  box-shadow: 0 1px 1px rgba(0,0,0,0.12);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.35); /* improve emoji legibility */
+  color: #fff; /* improve monochrome glyph legibility; emojis may keep native coloring */
+  z-index: 1; /* ensure icon sits above background */
+  overflow: hidden; /* prevent emoji overflow from circle */
+}
+
+/* Improve text contrast inside callouts */
+#post-content.prose blockquote.callout p,
+#post-content.prose blockquote.callout li,
+#post-content.prose blockquote.callout a {
+  color: #1f2937; /* gray-800 for light theme */
+}
+
+.dark #post-content.prose blockquote.callout,
+.dark #post-content.prose blockquote.callout p,
+.dark #post-content.prose blockquote.callout li,
+.dark #post-content.prose blockquote.callout a,
+.dark #post-content.prose blockquote.callout code {
+  color: #e5e7eb; /* gray-200 for dark theme */
+}
+
+#post-content.prose blockquote.callout.info::before { content: 'ℹ️'; background-color: #60a5fa; border: 2px solid #3b82f6; }
+#post-content.prose blockquote.callout.warning::before { content: '⚠️'; background-color: #f59e0b; border: 2px solid #d97706; }
+#post-content.prose blockquote.callout.tip::before { content: '💡'; background-color: #10b981; border: 2px solid #059669; }
+#post-content.prose blockquote.callout.stats::before { content: '📊'; background-color: #8b5cf6; border: 2px solid #7c3aed; }
+
+/* Dark theme icon backdrops */
+.dark #post-content.prose blockquote.callout.info::before { background-color: #1e3a8a; border-color: #1d4ed8; }
+.dark #post-content.prose blockquote.callout.warning::before { background-color: #7c2d12; border-color: #b45309; }
+.dark #post-content.prose blockquote.callout.tip::before { background-color: #065f46; border-color: #047857; }
+.dark #post-content.prose blockquote.callout.stats::before { background-color: #4c1d95; border-color: #6d28d9; }
+
 /* Accessible focus styles for Table of Contents links */
 #table-of-contents a {
   display: block;
