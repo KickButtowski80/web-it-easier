@@ -1408,8 +1408,8 @@ a:focus-visible {
 /* Icon styles */
 #post-content.prose blockquote.callout .callout-icon {
   flex: 0 0 auto;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3.75rem;
+  height: 3.75rem;
   margin-top: 0.25rem; /* Align with first line of text */
 }
 
@@ -1422,6 +1422,8 @@ a:focus-visible {
   
   #post-content.prose blockquote.callout .callout-icon {
     margin-top: 0;
+    width: 2.75rem;
+    height: 2.75rem;
   }
 }
 
@@ -1446,15 +1448,23 @@ a:focus-visible {
 #post-content.prose blockquote.callout .callout-icon {
   display: inline-block; /* span needs a box for width/height to apply */
   line-height: 0; /* avoid baseline quirks */
-  width: 2.5rem; /* 40px */
-  height: 2.5rem;
+  width: 3.75rem; /* desktop badge size */
+  height: 3.75rem;
   border-radius: 50%;
   background-color: var(--badge-bg, #2563eb);
   border: 1px solid var(--badge-border, #1e40af);
   box-shadow: 0 1px 2px rgba(0,0,0,0.14);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 62% 62%;
+  background-size: 80% 80%;
+}
+
+/* Ensure mobile override comes AFTER the final base block */
+@media (max-width: 767px) {
+  #post-content.prose blockquote.callout .callout-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
 }
 
 /* Suppress decorative quotes inside callouts (from Typography plugin/UA) */
@@ -1469,26 +1479,27 @@ a:focus-visible {
 #post-content.prose blockquote.callout.info .callout-icon {
   --badge-bg: #2563eb; /* blue-600 */
   --badge-border: #1e40af; /* blue-800 */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='8'/><path d='M12 16v-4'/><circle cx='12' cy='8' r='1.2' fill='%23fff' stroke='none'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='8'/><circle cx='12' cy='12' r='7' fill='%2393c5fd' stroke='none'/><path d='M12 16v-4'/><circle cx='12' cy='8' r='1.2' fill='%23fff' stroke='none'/></svg>");
 }
 
 #post-content.prose blockquote.callout.warning .callout-icon {
   --badge-bg: #b45309; /* amber-700 */
   --badge-border: #7c2d12; /* deeper amber */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 7l8 14H4L12 7z'/><path d='M12 11v4'/><circle cx='12' cy='17' r='1' fill='%23fff' stroke='none'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 7l8 14H4L12 7z' fill='%23fbbf24'/><path d='M12 11v4'/><circle cx='12' cy='17' r='1' fill='%23fff' stroke='none'/></svg>");
   background-position: 50% 48%; /* slight optical nudge upward */
 }
 
 #post-content.prose blockquote.callout.tip .callout-icon {
   --badge-bg: #047857; /* emerald-700 */
   --badge-border: #065f46; /* deep teal */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 6v6'/><path d='M9 12l3-6 3 6'/><path d='M9 16h6'/></svg>");
+  /* Lightbulb icon (clearer meaning) */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18h6'/><path d='M10 21h4'/><path d='M8 11a4 4 0 118 0c0 1.7-.9 2.7-1.9 3.6-.7.6-1.1 1.2-1.1 2.4h-2c0-1.2-.4-1.8-1.1-2.4C8.9 13.7 8 12.7 8 11z' fill='%23fde047'/><path d='M12 7v3'/></svg>");
 }
 
 #post-content.prose blockquote.callout.stats .callout-icon {
   --badge-bg: #6d28d9; /* violet-700 */
   --badge-border: #4c1d95; /* violet-900 */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='12' width='3' height='6' rx='1'/><rect x='11' y='9' width='3' height='9' rx='1'/><rect x='16' y='6' width='3' height='12' rx='1'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='12' width='3' height='6' rx='1' fill='%2334d399'/><rect x='11' y='9' width='3' height='9' rx='1' fill='%2360a5fa'/><rect x='16' y='6' width='3' height='12' rx='1' fill='%23facc15'/></svg>");
   background-position: 50% 48%; /* bars visually heavy at bottom */
 }
 
