@@ -154,9 +154,13 @@ function preprocessCallouts(src) {
     // Convert the collected body back to a single string and wrap in a
     // blockquote element with the appropriate callout type for CSS styling.
     const inner = body.join('\n');
+    // Structured markup for stable layout and accessibility
     out.push(`<blockquote class="callout ${mapped}">`);
+    out.push(`<span class="callout-icon" aria-hidden="true"></span>`);
+    out.push(`<div class="callout-body">`);
     out.push(inner);
-    out.push(`</blockquote>`);
+    out.push(`</div>`);
+    out.push('</blockquote>');
   }
 
   return out.join('\n');

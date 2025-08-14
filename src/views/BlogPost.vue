@@ -1382,33 +1382,78 @@ a:focus-visible {
   background-color: rgba(167, 139, 250, 0.18);
 }
 
-/* Callout icons (emoji for broad compatibility) */
+/* Callout layout (structured markup) */
 #post-content.prose blockquote.callout {
-  padding-left: 2.8rem; /* extra room for larger icon */
-  color: #1f2937; /* ensure readable text in light theme */
-  display: flex; /* single centering method */
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 2.5rem 1fr; /* 40px icon + fluid content */
+  column-gap: 0.75rem;
+  row-gap: 0.25rem;
+  align-items: start;
+  padding: 1rem; /* even padding now that icon is real element */
+  color: #1f2937; /* readable text in light theme */
 }
 
-#post-content.prose blockquote.callout::before {
-  position: absolute;
-  left: 0.6rem;
-  top: 50%; /* vertically center relative to blockquote */
-  transform: translateY(-50%);
-  font-size: 1.4rem; /* ensure glyph sits centered within circle */
-  line-height: 1;
-  width: 2.2rem;
-  height: 2.2rem;
-display: content;
-  border-radius: 50%; /* perfect circle when w==h */
-  box-shadow: 0 1px 1px rgba(0,0,0,0.12);
-  text-shadow: 0 1px 1px rgba(0,0,0,0.35); /* improve emoji legibility */
-  color: #fff; /* improve monochrome glyph legibility; emojis may keep native coloring */
-  z-index: 1; /* ensure icon sits above background */
-  overflow: hidden; /* prevent emoji overflow from circle */
+/* Explicit areas */
+#post-content.prose blockquote.callout .callout-icon { grid-column: 1; }
+#post-content.prose blockquote.callout .callout-body { grid-column: 2; }
+
+/* Trim top/bottom margins inside body */
+#post-content.prose blockquote.callout .callout-body > :first-child { margin-top: 0; }
+#post-content.prose blockquote.callout .callout-body > :last-child { margin-bottom: 0; }
+
+/* Icon base */
+#post-content.prose blockquote.callout .callout-icon {
+  align-self: start; /* top-align to first line */
+  justify-self: center;
+  width: 2.5rem; /* 40px */
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--badge-bg, #2563eb);
+  border: 1px solid var(--badge-border, #1e40af);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.14);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 66% 66%;
 }
+
+/* Suppress decorative quotes inside callouts (from Typography plugin/UA) */
+#post-content.prose blockquote.callout::before,
+#post-content.prose blockquote.callout::after,
+#post-content.prose blockquote.callout p:first-of-type::before,
+#post-content.prose blockquote.callout p:last-of-type::after {
+  content: none !important;
+}
+
+/* Icon artwork per variant */
+#post-content.prose blockquote.callout.info .callout-icon {
+  --badge-bg: #2563eb; /* blue-600 */
+  --badge-border: #1e40af; /* blue-800 */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='8'/><path d='M12 16v-4'/><circle cx='12' cy='8' r='1.2' fill='%23fff' stroke='none'/></svg>");
+}
+
+#post-content.prose blockquote.callout.warning .callout-icon {
+  --badge-bg: #b45309; /* amber-700 */
+  --badge-border: #7c2d12; /* deeper amber */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 7l8 14H4L12 7z'/><path d='M12 11v4'/><circle cx='12' cy='17' r='1' fill='%23fff' stroke='none'/></svg>");
+}
+
+#post-content.prose blockquote.callout.tip .callout-icon {
+  --badge-bg: #047857; /* emerald-700 */
+  --badge-border: #065f46; /* deep teal */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 6v6'/><path d='M9 12l3-6 3 6'/><path d='M9 16h6'/></svg>");
+}
+
+#post-content.prose blockquote.callout.stats .callout-icon {
+  --badge-bg: #6d28d9; /* violet-700 */
+  --badge-border: #4c1d95; /* violet-900 */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='12' width='3' height='6' rx='1'/><rect x='11' y='9' width='3' height='9' rx='1'/><rect x='16' y='6' width='3' height='12' rx='1'/></svg>");
+}
+
+/* Dark theme icon backdrops */
+.dark #post-content.prose blockquote.callout.info .callout-icon { --badge-bg: #1d4ed8; --badge-border: #1e3a8a; }
+.dark #post-content.prose blockquote.callout.warning .callout-icon { --badge-bg: #b45309; --badge-border: #7c2d12; }
+.dark #post-content.prose blockquote.callout.tip .callout-icon { --badge-bg: #059669; --badge-border: #065f46; }
+.dark #post-content.prose blockquote.callout.stats .callout-icon { --badge-bg: #7c3aed; --badge-border: #4c1d95; }
 
 /* Improve text contrast inside callouts */
 #post-content.prose blockquote.callout p,
@@ -1425,16 +1470,16 @@ display: content;
   color: #e5e7eb; /* gray-200 for dark theme */
 }
 
-#post-content.prose blockquote.callout.info::before { content: 'ℹ️'; background-color: #60a5fa; border: 2px solid #3b82f6; }
-#post-content.prose blockquote.callout.warning::before { content: '⚠️'; background-color: #f59e0b; border: 2px solid #d97706; }
-#post-content.prose blockquote.callout.tip::before { content: '💡'; background-color: #10b981; border: 2px solid #059669; }
-#post-content.prose blockquote.callout.stats::before { content: '📊'; background-color: #8b5cf6; border: 2px solid #7c3aed; }
+#post-content.prose blockquote.callout.info::before { --badge-bg: #2563eb; --badge-border: #1e40af; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='7' r='1.5'/><path d='M12 11v6'/></svg>"); }
+#post-content.prose blockquote.callout.warning::before { --badge-bg: #b45309; --badge-border: #7c2d12; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 4l8 14H4L12 4z'/><path d='M12 10v4'/><circle cx='12' cy='17' r='1'/></svg>"); }
+#post-content.prose blockquote.callout.tip::before { --badge-bg: #047857; --badge-border: #065f46; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 10a3 3 0 116 0c0 1.2-.6 2-1.5 2.8-.6.5-.9 1.2-.9 1.9v.3'/><path d='M10 17h4'/><path d='M10 20h4'/></svg>"); }
+#post-content.prose blockquote.callout.stats::before { --badge-bg: #6d28d9; --badge-border: #4c1d95; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='12' width='3' height='6' rx='1'/><rect x='11' y='9' width='3' height='9' rx='1'/><rect x='16' y='6' width='3' height='12' rx='1'/></svg>"); }
 
 /* Dark theme icon backdrops */
-.dark #post-content.prose blockquote.callout.info::before { background-color: #1e3a8a; border-color: #1d4ed8; }
-.dark #post-content.prose blockquote.callout.warning::before { background-color: #7c2d12; border-color: #b45309; }
-.dark #post-content.prose blockquote.callout.tip::before { background-color: #065f46; border-color: #047857; }
-.dark #post-content.prose blockquote.callout.stats::before { background-color: #4c1d95; border-color: #6d28d9; }
+.dark #post-content.prose blockquote.callout.info::before { --badge-bg: #1d4ed8; --badge-border: #1e3a8a; }
+.dark #post-content.prose blockquote.callout.warning::before { --badge-bg: #b45309; --badge-border: #7c2d12; }
+.dark #post-content.prose blockquote.callout.tip::before { --badge-bg: #059669; --badge-border: #065f46; }
+.dark #post-content.prose blockquote.callout.stats::before { --badge-bg: #7c3aed; --badge-border: #4c1d95; }
 
 /* Accessible focus styles for Table of Contents links */
 #table-of-contents a {
