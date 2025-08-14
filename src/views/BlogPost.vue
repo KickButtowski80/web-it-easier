@@ -1382,29 +1382,70 @@ a:focus-visible {
   background-color: rgba(167, 139, 250, 0.18);
 }
 
-/* Callout layout (structured markup) */
+/* Callout base styles */
 #post-content.prose blockquote.callout {
-  display: grid;
-  grid-template-columns: 2.5rem 1fr; /* 40px icon + fluid content */
-  column-gap: 0.75rem;
-  row-gap: 0.25rem;
-  align-items: start;
-  padding: 1rem; /* even padding now that icon is real element */
-  color: #1f2937; /* readable text in light theme */
+  color: #1f2937;
+  margin: 1.5rem 0;
+  padding: 0;
+  border: none;
 }
 
-/* Explicit areas */
-#post-content.prose blockquote.callout .callout-icon { grid-column: 1; }
-#post-content.prose blockquote.callout .callout-body { grid-column: 2; }
+/* Callout body layout */
+#post-content.prose blockquote.callout .callout-body {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  align-items: flex-start;
+  min-width: 0; /* Allow shrinking past content size */
+}
+
+/* Callout content takes remaining space */
+#post-content.prose blockquote.callout .callout-content {
+  flex: 1;
+  min-width: 0; /* Allows text to wrap properly */
+}
+
+/* Icon styles */
+#post-content.prose blockquote.callout .callout-icon {
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-top: 0.25rem; /* Align with first line of text */
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  #post-content.prose blockquote.callout .callout-body {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  #post-content.prose blockquote.callout .callout-icon {
+    margin-top: 0;
+  }
+}
 
 /* Trim top/bottom margins inside body */
 #post-content.prose blockquote.callout .callout-body > :first-child { margin-top: 0; }
 #post-content.prose blockquote.callout .callout-body > :last-child { margin-bottom: 0; }
+/* Code blocks inside callouts: enable horizontal scroll on small screens */
+#post-content.prose blockquote.callout .callout-body pre {
+  margin: 0; /* remove outer gaps to give code more room */
+  padding: 0; /* option B: no inner padding */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+#post-content.prose blockquote.callout .callout-body pre code {
+  display: inline-block;
+  min-width: max-content; /* keep code on one line and let pre scroll */
+  white-space: pre;
+}
 
 /* Icon base */
 #post-content.prose blockquote.callout .callout-icon {
-  align-self: start; /* top-align to first line */
-  justify-self: center;
+  display: inline-block; /* span needs a box for width/height to apply */
+  line-height: 0; /* avoid baseline quirks */
   width: 2.5rem; /* 40px */
   height: 2.5rem;
   border-radius: 50%;
@@ -1413,7 +1454,7 @@ a:focus-visible {
   box-shadow: 0 1px 2px rgba(0,0,0,0.14);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 66% 66%;
+  background-size: 62% 62%;
 }
 
 /* Suppress decorative quotes inside callouts (from Typography plugin/UA) */
@@ -1435,6 +1476,7 @@ a:focus-visible {
   --badge-bg: #b45309; /* amber-700 */
   --badge-border: #7c2d12; /* deeper amber */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 7l8 14H4L12 7z'/><path d='M12 11v4'/><circle cx='12' cy='17' r='1' fill='%23fff' stroke='none'/></svg>");
+  background-position: 50% 48%; /* slight optical nudge upward */
 }
 
 #post-content.prose blockquote.callout.tip .callout-icon {
@@ -1447,6 +1489,7 @@ a:focus-visible {
   --badge-bg: #6d28d9; /* violet-700 */
   --badge-border: #4c1d95; /* violet-900 */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='12' width='3' height='6' rx='1'/><rect x='11' y='9' width='3' height='9' rx='1'/><rect x='16' y='6' width='3' height='12' rx='1'/></svg>");
+  background-position: 50% 48%; /* bars visually heavy at bottom */
 }
 
 /* Dark theme icon backdrops */
@@ -1454,6 +1497,41 @@ a:focus-visible {
 .dark #post-content.prose blockquote.callout.warning .callout-icon { --badge-bg: #b45309; --badge-border: #7c2d12; }
 .dark #post-content.prose blockquote.callout.tip .callout-icon { --badge-bg: #059669; --badge-border: #065f46; }
 .dark #post-content.prose blockquote.callout.stats .callout-icon { --badge-bg: #7c3aed; --badge-border: #4c1d95; }
+
+/* Mobile-specific adjustments */
+@media (max-width: 767px) {
+  #post-content.prose blockquote.callout .callout-body {
+    padding: 0.75rem;
+    min-width: 0;
+  }
+  
+  #post-content.prose blockquote.callout .callout-icon {
+    width: 2rem;
+    height: 2rem;
+    background-size: 64% 64%;
+  }
+  
+  /* Stack content when icon is inside */
+  #post-content.prose blockquote.callout .callout-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  /* Prefer soft-wrap over horizontal scrolling for tiny screens */
+  #post-content.prose blockquote.callout .callout-body pre {
+    margin: 0;
+    padding: 0;
+    overflow-x: visible;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  
+  #post-content.prose blockquote.callout .callout-body pre code {
+    min-width: 0;
+    white-space: inherit; /* follow pre */
+    overflow-wrap: anywhere; /* allow breaking long tokens */
+  }
+}
 
 /* Improve text contrast inside callouts */
 #post-content.prose blockquote.callout p,

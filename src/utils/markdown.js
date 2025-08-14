@@ -151,15 +151,33 @@ function preprocessCallouts(src) {
       }
     }
 
-    // Convert the collected body back to a single string and wrap in a
-    // blockquote element with the appropriate callout type for CSS styling.
+    /**
+     * Convert markdown callout to HTML structure
+     * 
+     * Example Input:
+     * > **Note:** This is a callout
+     * > with multiple lines
+     * 
+     * Generates HTML:
+     * <blockquote class="callout note">
+     *   <div class="callout-body">
+     *     <span class="callout-icon" aria-hidden="true"></span>
+     *     <div class="callout-content">
+     *       <strong>Note:</strong> This is a callout<br>with multiple lines
+     *     </div>
+     *   </div>
+     * </blockquote>
+     * 
+     * Callout types: info, warning, tip, stats (defaults to info)
+     */
     const inner = body.join('\n');
-    // Structured markup for stable layout and accessibility
     out.push(`<blockquote class="callout ${mapped}">`);
-    out.push(`<span class="callout-icon" aria-hidden="true"></span>`);
-    out.push(`<div class="callout-body">`);
-    out.push(inner);
-    out.push(`</div>`);
+    out.push(`  <div class="callout-body">`);
+    out.push(`    <span class="callout-icon" aria-hidden="true"></span>`);
+    out.push(`    <div class="callout-content">`);
+    out.push(inner);  // The actual markdown content goes here
+    out.push(`    </div>`);
+    out.push(`  </div>`);
     out.push('</blockquote>');
   }
 
