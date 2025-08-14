@@ -1,0 +1,215 @@
+/* --- Callout blocks (CSS-only, additive) --- */
+/* Usage in Markdown (raw HTML allowed):
+   > <blockquote class="callout info">
+   >   <p>Your message</p>
+   > </blockquote>
+   Or simply write raw HTML blockquote with class in the Markdown document.
+*/
+
+#post-content.prose blockquote.callout {
+  position: relative;
+  border-left-width: 4px;
+  border-radius: 0.5rem;
+  background: rgba(243, 244, 246, 0.6);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  margin: 1.25rem 0;
+}
+
+#post-content.prose blockquote.callout .callout-title {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Info */
+#post-content.prose blockquote.callout.info {
+  border-left-color: #1e40af; /* stronger blue-800 */
+  background-color: rgba(96, 165, 250, 0.12);
+}
+
+/* Warning */
+#post-content.prose blockquote.callout.warning {
+  border-left-color: #7c2d12; /* stronger amber-900 */
+  background-color: rgba(245, 158, 11, 0.12);
+}
+
+/* Tip */
+#post-content.prose blockquote.callout.tip {
+  border-left-color: #065f46; /* stronger deep teal */
+  background-color: rgba(52, 211, 153, 0.12);
+}
+
+/* Stats */
+#post-content.prose blockquote.callout.stats {
+  border-left-color: #4c1d95; /* stronger violet-900 */
+  background-color: rgba(167, 139, 250, 0.12);
+}
+
+/* Dark theme variants */
+.dark #post-content.prose blockquote.callout.info {
+  border-left-color: #1e3a8a; /* darker for contrast */
+  background-color: rgba(96, 165, 250, 0.18);
+}
+.dark #post-content.prose blockquote.callout.warning {
+  border-left-color: #7c2d12;
+  background-color: rgba(245, 158, 11, 0.18);
+}
+.dark #post-content.prose blockquote.callout.tip {
+  border-left-color: #065f46;
+  background-color: rgba(52, 211, 153, 0.18);
+}
+.dark #post-content.prose blockquote.callout.stats {
+  border-left-color: #4c1d95;
+  background-color: rgba(167, 139, 250, 0.18);
+}
+
+/* Callout base styles */
+#post-content.prose blockquote.callout {
+  color: #1f2937;
+  margin: 1.5rem 0;
+  padding: 0;
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+
+/* Callout body layout */
+#post-content.prose blockquote.callout .callout-body {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  align-items: flex-start;
+  min-width: 0; /* Allow shrinking past content size */
+}
+
+/* Callout content takes remaining space */
+#post-content.prose blockquote.callout .callout-content {
+  flex: 1;
+  min-width: 0; /* Allows text to wrap properly */
+}
+#post-content.prose blockquote.callout .callout-icon {
+  display: inline-block; /* span needs a box for width/height to apply */
+  line-height: 0; /* avoid baseline quirks */
+  flex: 0 0 auto; /* don't shrink the badge */
+  width: 4rem; /* 40px */
+  height: 4rem; /* 40px */
+  border-radius: 9999px;
+  background: var(--badge-bg, #2563eb);
+  border: 2px solid var(--badge-border, #1e40af);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 70% 70%;
+  margin-top: 0.25rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+  #post-content.prose blockquote.callout .callout-body {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  #post-content.prose blockquote.callout .callout-icon {
+    margin-top: 0;
+  }
+}
+
+/* Trim top/bottom margins inside body */
+#post-content.prose blockquote.callout .callout-body > :first-child { margin-top: 0; }
+#post-content.prose blockquote.callout .callout-body > :last-child { margin-bottom: 0; }
+
+/* Code blocks inside callouts: enable horizontal scroll on small screens */
+#post-content.prose blockquote.callout .callout-body pre {
+  margin: 0; /* remove outer gaps to give code more room */
+  padding: 0; /* option B: no inner padding */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+#post-content.prose blockquote.callout .callout-body pre code {
+  display: inline-block;
+  min-width: max-content; /* keep code on one line and let pre scroll */
+  white-space: pre;
+}
+
+/* Suppress decorative quotes inside callouts (from Typography plugin/UA) */
+#post-content.prose blockquote.callout::before,
+#post-content.prose blockquote.callout::after,
+#post-content.prose blockquote.callout p:first-of-type::before,
+#post-content.prose blockquote.callout p:last-of-type::after {
+  content: none !important;
+}
+
+/* Icon artwork per variant */
+#post-content.prose blockquote.callout.info .callout-icon {
+  --badge-bg: #2563eb; /* blue-600 */
+  --badge-border: #1e40af; /* blue-800 */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='8'/><circle cx='12' cy='12' r='7' fill='%2393c5fd' stroke='none'/><path d='M12 16v-4'/><circle cx='12' cy='8' r='1.2' fill='%23fff' stroke='none'/></svg>");
+}
+
+#post-content.prose blockquote.callout.warning .callout-icon {
+  --badge-bg: #b45309; /* amber-700 */
+  --badge-border: #7c2d12; /* deeper amber */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 7l8 14H4L12 7z' fill='%23fbbf24'/><path d='M12 11v4'/><circle cx='12' cy='17' r='1' fill='%23fff' stroke='none'/></svg>");
+  background-position: 49% 15%; /* slight optical nudge upward */
+}
+
+#post-content.prose blockquote.callout.tip .callout-icon {
+  --badge-bg: #047857; /* emerald-700 */
+  --badge-border: #065f46; /* deep teal */
+  /* Lightbulb icon (clearer meaning) */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18h6'/><path d='M10 21h4'/><path d='M8 11a4 4 0 118 0c0 1.7-.9 2.7-1.9 3.6-.7.6-1.1 1.2-1.1 2.4h-2c0-1.2-.4-1.8-1.1-2.4C8.9 13.7 8 12.7 8 11z' fill='%23fde047'/><path d='M12 7v3'/></svg>");
+}
+
+#post-content.prose blockquote.callout.stats .callout-icon {
+  --badge-bg: #6d28d9; /* violet-700 */
+  --badge-border: #4c1d95; /* violet-900 */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='12' width='3' height='6' rx='1' fill='%2334d399'/><rect x='11' y='9' width='3' height='9' rx='1' fill='%2360a5fa'/><rect x='16' y='6' width='3' height='12' rx='1' fill='%23facc15'/></svg>");
+  background-position: 50% 48%; /* bars visually heavy at bottom */
+}
+
+/* Dark theme icon backdrops */
+.dark #post-content.prose blockquote.callout.info .callout-icon { --badge-bg: #1d4ed8; --badge-border: #1e3a8a; }
+.dark #post-content.prose blockquote.callout.warning .callout-icon { --badge-bg: #b45309; --badge-border: #7c2d12; }
+.dark #post-content.prose blockquote.callout.tip .callout-icon { --badge-bg: #059669; --badge-border: #065f46; }
+.dark #post-content.prose blockquote.callout.stats .callout-icon { --badge-bg: #7c3aed; --badge-border: #4c1d95; }
+
+/* Mobile-specific adjustments */
+@media (max-width: 767px) {
+  
+  /* Stack content when icon is inside */
+  #post-content.prose blockquote.callout .callout-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  /* Prefer soft-wrap over horizontal scrolling for tiny screens */
+  #post-content.prose blockquote.callout .callout-body pre {
+    margin: 0;
+    padding: 0;
+    overflow-x: visible;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  
+  #post-content.prose blockquote.callout .callout-body pre code {
+    min-width: 0;
+    white-space: inherit; /* follow pre */
+    overflow-wrap: anywhere; /* allow breaking long tokens */
+  }
+}
+
+/* Improve text contrast inside callouts */
+#post-content.prose blockquote.callout p,
+#post-content.prose blockquote.callout li,
+#post-content.prose blockquote.callout a {
+  color: #1f2937; /* gray-800 for light theme */
+}
+
+.dark #post-content.prose blockquote.callout,
+.dark #post-content.prose blockquote.callout p,
+.dark #post-content.prose blockquote.callout li,
+.dark #post-content.prose blockquote.callout a,
+.dark #post-content.prose blockquote.callout code {
+  color: #e5e7eb; /* gray-200 for dark theme */
+}
