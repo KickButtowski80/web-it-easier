@@ -1342,43 +1342,43 @@ a:focus-visible {
 
 /* Info */
 #post-content.prose blockquote.callout.info {
-  border-left-color: #60a5fa; /* blue-400 */
+  border-left-color: #1e40af; /* stronger blue-800 */
   background-color: rgba(96, 165, 250, 0.12);
 }
 
 /* Warning */
 #post-content.prose blockquote.callout.warning {
-  border-left-color: #f59e0b; /* amber-500 */
+  border-left-color: #7c2d12; /* stronger amber-900 */
   background-color: rgba(245, 158, 11, 0.12);
 }
 
 /* Tip */
 #post-content.prose blockquote.callout.tip {
-  border-left-color: #34d399; /* emerald-400 */
+  border-left-color: #065f46; /* stronger deep teal */
   background-color: rgba(52, 211, 153, 0.12);
 }
 
 /* Stats */
 #post-content.prose blockquote.callout.stats {
-  border-left-color: #a78bfa; /* violet-400 */
+  border-left-color: #4c1d95; /* stronger violet-900 */
   background-color: rgba(167, 139, 250, 0.12);
 }
 
 /* Dark theme variants */
 .dark #post-content.prose blockquote.callout.info {
-  border-left-color: #60a5fa;
+  border-left-color: #1e3a8a; /* darker for contrast */
   background-color: rgba(96, 165, 250, 0.18);
 }
 .dark #post-content.prose blockquote.callout.warning {
-  border-left-color: #f59e0b;
+  border-left-color: #7c2d12;
   background-color: rgba(245, 158, 11, 0.18);
 }
 .dark #post-content.prose blockquote.callout.tip {
-  border-left-color: #34d399;
+  border-left-color: #065f46;
   background-color: rgba(52, 211, 153, 0.18);
 }
 .dark #post-content.prose blockquote.callout.stats {
-  border-left-color: #a78bfa;
+  border-left-color: #4c1d95;
   background-color: rgba(167, 139, 250, 0.18);
 }
 
@@ -1387,7 +1387,8 @@ a:focus-visible {
   color: #1f2937;
   margin: 1.5rem 0;
   padding: 0;
-  border: none;
+  border-left-width: 4px;
+  border-left-style: solid;
 }
 
 /* Callout body layout */
@@ -1404,13 +1405,20 @@ a:focus-visible {
   flex: 1;
   min-width: 0; /* Allows text to wrap properly */
 }
-
-/* Icon styles */
 #post-content.prose blockquote.callout .callout-icon {
-  flex: 0 0 auto;
-  width: 3.75rem;
+  display: inline-block; /* span needs a box for width/height to apply */
+  line-height: 0; /* avoid baseline quirks */
+  flex: 0 0 auto; /* don't shrink the badge */
+  width: 3.75rem; /* desktop badge size */
   height: 3.75rem;
-  margin-top: 0.25rem; /* Align with first line of text */
+  margin-top: 0.25rem; /* align with first text line */
+  border-radius: 50%;
+  background-color: var(--badge-bg, #2563eb);
+  border: 1px solid var(--badge-border, #1e40af);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.14);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 80% 80%;
 }
 
 /* Responsive adjustments */
@@ -1422,8 +1430,6 @@ a:focus-visible {
   
   #post-content.prose blockquote.callout .callout-icon {
     margin-top: 0;
-    width: 2.75rem;
-    height: 2.75rem;
   }
 }
 
@@ -1444,28 +1450,7 @@ a:focus-visible {
   white-space: pre;
 }
 
-/* Icon base */
-#post-content.prose blockquote.callout .callout-icon {
-  display: inline-block; /* span needs a box for width/height to apply */
-  line-height: 0; /* avoid baseline quirks */
-  width: 3.75rem; /* desktop badge size */
-  height: 3.75rem;
-  border-radius: 50%;
-  background-color: var(--badge-bg, #2563eb);
-  border: 1px solid var(--badge-border, #1e40af);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.14);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 80% 80%;
-}
 
-/* Ensure mobile override comes AFTER the final base block */
-@media (max-width: 767px) {
-  #post-content.prose blockquote.callout .callout-icon {
-    width: 2.75rem;
-    height: 2.75rem;
-  }
-}
 
 /* Suppress decorative quotes inside callouts (from Typography plugin/UA) */
 #post-content.prose blockquote.callout::before,
@@ -1511,16 +1496,7 @@ a:focus-visible {
 
 /* Mobile-specific adjustments */
 @media (max-width: 767px) {
-  #post-content.prose blockquote.callout .callout-body {
-    padding: 0.75rem;
-    min-width: 0;
-  }
-  
-  #post-content.prose blockquote.callout .callout-icon {
-    width: 2rem;
-    height: 2rem;
-    background-size: 64% 64%;
-  }
+ 
   
   /* Stack content when icon is inside */
   #post-content.prose blockquote.callout .callout-content {
@@ -1558,17 +1534,6 @@ a:focus-visible {
 .dark #post-content.prose blockquote.callout code {
   color: #e5e7eb; /* gray-200 for dark theme */
 }
-
-#post-content.prose blockquote.callout.info::before { --badge-bg: #2563eb; --badge-border: #1e40af; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='7' r='1.5'/><path d='M12 11v6'/></svg>"); }
-#post-content.prose blockquote.callout.warning::before { --badge-bg: #b45309; --badge-border: #7c2d12; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 4l8 14H4L12 4z'/><path d='M12 10v4'/><circle cx='12' cy='17' r='1'/></svg>"); }
-#post-content.prose blockquote.callout.tip::before { --badge-bg: #047857; --badge-border: #065f46; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 10a3 3 0 116 0c0 1.2-.6 2-1.5 2.8-.6.5-.9 1.2-.9 1.9v.3'/><path d='M10 17h4'/><path d='M10 20h4'/></svg>"); }
-#post-content.prose blockquote.callout.stats::before { --badge-bg: #6d28d9; --badge-border: #4c1d95; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='6' y='12' width='3' height='6' rx='1'/><rect x='11' y='9' width='3' height='9' rx='1'/><rect x='16' y='6' width='3' height='12' rx='1'/></svg>"); }
-
-/* Dark theme icon backdrops */
-.dark #post-content.prose blockquote.callout.info::before { --badge-bg: #1d4ed8; --badge-border: #1e3a8a; }
-.dark #post-content.prose blockquote.callout.warning::before { --badge-bg: #b45309; --badge-border: #7c2d12; }
-.dark #post-content.prose blockquote.callout.tip::before { --badge-bg: #059669; --badge-border: #065f46; }
-.dark #post-content.prose blockquote.callout.stats::before { --badge-bg: #7c3aed; --badge-border: #4c1d95; }
 
 /* Accessible focus styles for Table of Contents links */
 #table-of-contents a {
