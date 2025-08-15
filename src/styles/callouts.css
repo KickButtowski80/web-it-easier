@@ -137,7 +137,7 @@
 #post-content.prose blockquote.callout::after,
 #post-content.prose blockquote.callout p:first-of-type::before,
 #post-content.prose blockquote.callout p:last-of-type::after {
-  content: none !important;
+  content: none;
 }
 
 /* Icon artwork per variant */
