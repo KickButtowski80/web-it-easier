@@ -107,6 +107,22 @@ export default marked;
  * @param {string} src - Raw Markdown source.
  * @returns {string} A Markdown string with callout blocks replaced by HTML blockquotes.
  */
+// NOTE ABOUT RAW HTML AND MARKED
+// --------------------------------
+// Marked (and CommonMark) treat a sequence of lines beginning with an HTML
+// block tag as a "raw HTML block" only when the opening tag starts at column 0
+// (no leading indentation). If these tags are indented, Marked may treat them
+// as part of a paragraph and emit wrapping <p> or insert <br> when `breaks: true`
+// is enabled. This is why we intentionally emit the callout HTML with NO leading
+// spaces below. Keeping tags left-aligned guarantees the block is parsed as raw
+// HTML and is not wrapped, which prevents stray <p></p> and <br> in the output.
+//
+// Additionally, when `breaks: true` is set:
+// - Single newlines or trailing spaces at the end of a line can produce <br>.
+// - A trailing blank line in the callout body can produce an empty <p>.
+// Authoring tip: avoid leaving a quoted blank line ("> ") at the very end of
+// a callout body and avoid trailing spaces on the final content line. If needed,
+// consider trimming `inner` before emitting.
 function preprocessCallouts(src) {
   const lines = src.split(/\r?\n/);
   const out = [];
@@ -171,13 +187,16 @@ function preprocessCallouts(src) {
      * Callout types: info, warning, tip, stats (defaults to info)
      */
     const inner = body.join('\n');
+    // IMPORTANT: All tags below are intentionally left-aligned (no leading
+    // spaces) so Marked recognizes this as a raw HTML block and does not wrap
+    // it with <p> or insert <br> around it.
     out.push(`<blockquote class="callout ${mapped}">`);
-    out.push(`  <div class="callout-body">`);
-    out.push(`    <span class="callout-icon" aria-hidden="true"></span>`);
-    out.push(`    <div class="callout-content">`);
+    out.push(`<div class="callout-body">`);
+    out.push(`<span class="callout-icon" aria-hidden="true"></span>`);
+    out.push(`<div class="callout-content">`);
     out.push(inner);  // The actual markdown content goes here
-    out.push(`    </div>`);
-    out.push(`  </div>`);
+    out.push(`</div>`);
+    out.push(`</div>`);
     out.push('</blockquote>');
   }
 
