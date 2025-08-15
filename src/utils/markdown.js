@@ -56,56 +56,83 @@ export function renderMarkdown(markdown) {
 export default marked;
 
 /**
- * Convert Markdown callout prefix format to raw HTML callouts.
- * Supports blocks like:
- * > [!INFO]\n
- * > paragraph...
+ * Convert Markdown blockquotes into styled callouts or quote blocks.
+ * 
+ * Supports two formats:
+ * 1. Callout blocks with type indicators:
+ *    > [!INFO]
+ *    > This is an info callout
  *
- * Types: INFO, WARNING, TIP, STATS (case-insensitive). Unknown types are left untouched.
+ * 2. Regular blockquotes (automatically styled as quotes):
+ *    > This is a regular quote that will be styled
+ *
+ * Supported Callout Types (case-insensitive):
+ * - INFO/NOTE: Informational callout
+ * - WARNING/CAUTION/IMPORTANT: Warning callout
+ * - TIP: Tip/advice callout
+ * - STATS/STAT: Statistics/data callout
+ * - QUOTE: Explicit quote styling (also used automatically for regular blockquotes)
+ *
+ * All callouts are wrapped in a <blockquote> with appropriate classes and include
+ * an icon for better visual distinction.
  */
+
 /**
- * Preprocess Markdown text to convert callout-style blockquotes into
- * semantic HTML <blockquote> elements with callout classes.
+ * Preprocess Markdown text to convert blockquotes into styled callouts or quotes.
  *
- * Input pattern (in Markdown):
- *   > [!TYPE]\n
- *   > body line 1\n
- *   > body line 2
+ * Input patterns (in Markdown):
+ *   1. Callout with type indicator:
+ *      > [!TYPE]
+ *      > Callout content line 1
+ *      > Callout content line 2
  *
- * Where TYPE is a word like INFO, WARNING, TIP, STATS, etc. The marker line must
- * appear alone (i.e., no trailing text after the closing "]").
+ *   2. Regular blockquote (automatically styled as quote):
+ *      > This is a regular quote
+ *      > that spans multiple lines
  *
- * What we output back into the Markdown stream (still a string, not DOM):
- *   <blockquote class="callout <mapped-type>">\n
- *   body line 1\n
- *   body line 2\n
+ * Output (HTML structure for both types):
+ *   <blockquote class="callout <type>">
+ *     <div class="callout-body">
+ *       <span class="callout-icon" aria-hidden="true"></span>
+ *       <div class="callout-content">
+ *         Content here with preserved Markdown
+ *       </div>
+ *     </div>
  *   </blockquote>
  *
- * Why we do it here:
- * - We keep authoring simple and portable; writers use familiar blockquote syntax.
- * - We avoid complex renderer overrides or DOM post-processing.
- * - CSS in `src/views/BlogPost.vue` targets `.callout.*` to provide visuals.
+ * Features:
+ * - Automatic detection of callout types via [!TYPE] marker
+ * - Regular blockquotes are automatically styled as quotes
+ * - Preserves all inner Markdown formatting
+ * - Accessible with proper ARIA attributes
+ * - Responsive design with hover effects
  *
- * Parsing rules and edge cases:
- * - Marker detection is strict: we only match a line that looks like
- *   /^\s*>\s*\[!\s*([A-Za-z]+)\s*\]\s*$/ (blockquote, [!TYPE], nothing else).
- *   This prevents accidental matches in normal quotes.
- * - TYPE is case-insensitive and mapped through `typeMap` for aliases
- *   (e.g., NOTE → info, CAUTION → warning, STAT → stats).
- * - After a marker, we consume subsequent lines that still start with '>' or '> '
- *   as the callout body. We strip a single leading '>' and one optional space so
- *   the inner text remains valid Markdown when Marked runs later.
- * - If TYPE is unknown, we treat the marker line as a normal line (no transformation).
- * - Sanitization is NOT done here; DOMPurify runs after Marked renders the HTML.
+ * Styling:
+ * - Uses CSS variables for theming (--badge-bg, --badge-border)
+ * - Icons are embedded as data URIs for performance
+ * - Dark mode support included
  *
  * Example:
  *   Input:
- *     > [!TIP]\n> Do the smallest thing first.\n> Profit.\n\nParagraph
- *   Output:
- *     <blockquote class="callout tip">\nDo the smallest thing first.\nProfit.\n</blockquote>\n\nParagraph
+ *     > [!TIP]
+ *     > Always measure before optimizing.
+ *     > 
+ *     > This is a multi-line tip with **bold** text.
  *
- * @param {string} src - Raw Markdown source.
- * @returns {string} A Markdown string with callout blocks replaced by HTML blockquotes.
+ *   Output:
+ *     <blockquote class="callout tip">
+ *       <div class="callout-body">
+ *         <span class="callout-icon" aria-hidden="true"></span>
+ *         <div class="callout-content">
+ *           Always measure before optimizing.
+ *           
+ *           This is a multi-line tip with <strong>bold</strong> text.
+ *         </div>
+ *       </div>
+ *     </blockquote>
+ *
+ * @param {string} src - Raw Markdown source text
+ * @returns {string} Processed Markdown with HTML callouts
  */
 // NOTE ABOUT RAW HTML AND MARKED
 // --------------------------------
@@ -123,27 +150,65 @@ export default marked;
 // Authoring tip: avoid leaving a quoted blank line ("> ") at the very end of
 // a callout body and avoid trailing spaces on the final content line. If needed,
 // consider trimming `inner` before emitting.
+/**
+ * Generates HTML for a callout/quote block
+ * @param {string} content - The content of the callout/quote
+ * @param {string} type - The type of callout (e.g., 'info', 'warning', 'quote')
+ * @returns {string} HTML string for the callout
+ */
+function generateCalloutHTML(content, type) {
+  return [
+    `<blockquote class="callout ${type}">`,
+    '  <div class="callout-body">',
+    '    <span class="callout-icon" aria-hidden="true"></span>',
+    '    <div class="callout-content">',
+    `      ${content}`,
+    '    </div>',
+    '  </div>',
+    '</blockquote>'
+  ].join('\n');
+}
+
 function preprocessCallouts(src) {
   const lines = src.split(/\r?\n/);
   const out = [];
   // Canonicalize incoming TYPE tokens to the CSS class we use for styling.
   // Left side are accepted author keywords; right side is the class modifier.
-  const typeMap = { info: 'info', warning: 'warning', tip: 'tip', stats: 'stats', stat: 'stats', note: 'info', caution: 'warning', important: 'warning' };
+  const typeMap = { 
+    info: 'info', 
+    warning: 'warning', 
+    tip: 'tip', 
+    stats: 'stats', 
+    stat: 'stats', 
+    note: 'info', 
+    caution: 'warning', 
+    important: 'warning',
+    quote: 'quote' // Add quote type for regular blockquotes
+  };
 
   let i = 0;
   while (i < lines.length) {
-    // Detect a standalone callout marker line like:
-    //   > [!INFO]
-    // Capture group 1 is the TYPE token.
-    const m = lines[i].match(/^\s*>\s*\[!\s*([A-Za-z]+)\s*\]\s*$/);
-    if (!m) {
+    // Check if this is a callout marker line like: > [!INFO]
+    const calloutMatch = lines[i].match(/^\s*>\s*\[!\s*([A-Za-z]+)\s*\]\s*$/);
+    const isRegularBlockquote = /^\s*>(?!\s*\[!\s*[A-Za-z]+\s*\])(.*)$/.test(lines[i]);
+    
+    // If it's a regular blockquote, wrap it with quote styling
+    if (isRegularBlockquote) {
+      const content = lines[i].replace(/^\s*>\s*/, '');
+      out.push(generateCalloutHTML(content, 'quote'));
+      i++;
+      continue;
+    }
+    
+    // If it's not a callout marker, just pass it through
+    if (!calloutMatch) {
       out.push(lines[i]);
       i++;
       continue;
     }
 
     // Normalize the TYPE to lowercase and map aliases (e.g., note → info).
-    const t = (m[1] || '').toLowerCase();
+    const t = (calloutMatch[1] || '').toLowerCase();
     const mapped = typeMap[t];
     if (!mapped) {
       // Unknown type: treat as normal line
@@ -187,17 +252,9 @@ function preprocessCallouts(src) {
      * Callout types: info, warning, tip, stats (defaults to info)
      */
     const inner = body.join('\n');
-    // IMPORTANT: All tags below are intentionally left-aligned (no leading
-    // spaces) so Marked recognizes this as a raw HTML block and does not wrap
-    // it with <p> or insert <br> around it.
-    out.push(`<blockquote class="callout ${mapped}">`);
-    out.push(`<div class="callout-body">`);
-    out.push(`<span class="callout-icon" aria-hidden="true"></span>`);
-    out.push(`<div class="callout-content">`);
-    out.push(inner);  // The actual markdown content goes here
-    out.push(`</div>`);
-    out.push(`</div>`);
-    out.push('</blockquote>');
+    // IMPORTANT: The generated HTML must be left-aligned (no leading spaces)
+    // so Marked recognizes it as a raw HTML block and doesn't wrap it with <p> or <br> tags
+    out.push(generateCalloutHTML(inner, mapped));
   }
 
   return out.join('\n');

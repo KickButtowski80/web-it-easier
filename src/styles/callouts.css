@@ -28,9 +28,10 @@
   background-color: rgba(96, 165, 250, 0.12);
 }
 
-/* Warning */
+/* Warning (accessible contrast) */
 #post-content.prose blockquote.callout.warning {
-  border-left-color: #7c2d12; /* stronger amber-900 */
+  /* Light mode: darker border for sufficient contrast */
+  border-left-color: #b45309; /* amber-700 */
   background-color: rgba(245, 158, 11, 0.12);
 }
 
@@ -38,6 +39,12 @@
 #post-content.prose blockquote.callout.tip {
   border-left-color: #065f46; /* stronger deep teal */
   background-color: rgba(52, 211, 153, 0.12);
+}
+
+/* Quote */
+#post-content.prose blockquote.callout.quote {
+  border-left-color: #374151; /* slate-700 for sufficient contrast in light */
+  background-color: rgba(107, 114, 128, 0.10); /* subtle slate tint */
 }
 
 /* Stats */
@@ -52,7 +59,8 @@
   background-color: rgba(96, 165, 250, 0.18);
 }
 .dark #post-content.prose blockquote.callout.warning {
-  border-left-color: #7c2d12;
+  /* Dark mode: lighter, saturated border for visibility on dark bg */
+  border-left-color: #f59e0b; /* amber-500 */
   background-color: rgba(245, 158, 11, 0.18);
 }
 .dark #post-content.prose blockquote.callout.tip {
@@ -88,31 +96,22 @@
   min-width: 0; /* Allows text to wrap properly */
 }
 #post-content.prose blockquote.callout .callout-icon {
-  display: inline-block; /* span needs a box for width/height to apply */
-  line-height: 0; /* avoid baseline quirks */
-  flex: 0 0 auto; /* don't shrink the badge */
-  width: 4rem; /* 40px */
-  height: 4rem; /* 40px */
+  display: inline-block;
+  line-height: 0;
+  flex: 0 0 auto;
+  width: 4rem;
+  height: 4rem;
   border-radius: 9999px;
   background: var(--badge-bg, #2563eb);
   border: 2px solid var(--badge-border, #1e40af);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 70% 70%;
+  background-size: 58% 58%;
   margin-top: 0.25rem;
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-/* Responsive adjustments */
-@media (max-width: 767px) {
-  #post-content.prose blockquote.callout .callout-body {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  #post-content.prose blockquote.callout .callout-icon {
-    margin-top: 0;
-  }
-}
+ 
 
 /* Trim top/bottom margins inside body */
 #post-content.prose blockquote.callout .callout-body > :first-child { margin-top: 0; }
@@ -132,13 +131,7 @@
   white-space: pre;
 }
 
-/* Suppress decorative quotes inside callouts (from Typography plugin/UA) */
-#post-content.prose blockquote.callout::before,
-#post-content.prose blockquote.callout::after,
-#post-content.prose blockquote.callout p:first-of-type::before,
-#post-content.prose blockquote.callout p:last-of-type::after {
-  content: none;
-}
+
 
 /* Icon artwork per variant */
 #post-content.prose blockquote.callout.info .callout-icon {
@@ -148,10 +141,24 @@
 }
 
 #post-content.prose blockquote.callout.warning .callout-icon {
+  /* Light mode badge: readable but not overpowering */
+  --badge-bg: #fcd34d; /* amber-300 */
+  --badge-border: #b45309; /* amber-700 */
+  /* High-contrast symbol for accessibility on amber bg */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f2937' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 4l9 16H3L12 4z' fill='%23fbbf24'/><line x1='12' y1='10' x2='12' y2='15' stroke='%231f2937'/><circle cx='12' cy='17.5' r='1.5' fill='%231f2937' stroke='none'/></svg>");
+  /* Restore per-variant centering/sizing */
+  background-position: 50% 56%;
+  background-size: 60% 60%;
+}
+
+/* Dark mode: adjust icon badge and symbol for contrast */
+.dark #post-content.prose blockquote.callout.warning .callout-icon {
   --badge-bg: #b45309; /* amber-700 */
-  --badge-border: #7c2d12; /* deeper amber */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 7l8 14H4L12 7z' fill='%23fbbf24'/><path d='M12 11v4'/><circle cx='12' cy='17' r='1' fill='%23fff' stroke='none'/></svg>");
-  background-position: 49% 15%; /* slight optical nudge upward */
+  --badge-border: #f59e0b; /* amber-500 */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f9fafb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 4l9 16H3L12 4z' fill='%23b45309'/><line x1='12' y1='10' x2='12' y2='15' stroke='%23f9fafb'/><circle cx='12' cy='17.5' r='1.5' fill='%23f9fafb' stroke='none'/></svg>");
+  /* Restore per-variant centering/sizing */
+  background-position: 50% 56%;
+  background-size: 60% 60%;
 }
 
 #post-content.prose blockquote.callout.tip .callout-icon {
@@ -159,6 +166,24 @@
   --badge-border: #065f46; /* deep teal */
   /* Lightbulb icon (clearer meaning) */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 18h6'/><path d='M10 21h4'/><path d='M8 11a4 4 0 118 0c0 1.7-.9 2.7-1.9 3.6-.7.6-1.1 1.2-1.1 2.4h-2c0-1.2-.4-1.8-1.1-2.4C8.9 13.7 8 12.7 8 11z' fill='%23fde047'/><path d='M12 7v3'/></svg>");
+}
+
+#post-content.prose blockquote.callout.quote .callout-icon {
+  --badge-bg: #4b5563;
+  --badge-border: #1f2937;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23ffffff' d='M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z'/><path fill='none' d='M0 0h24v24H0z'/></svg>");
+}
+
+#post-content.prose blockquote.callout.quote:hover .callout-icon {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+.dark #post-content.prose blockquote.callout.quote .callout-icon {
+  --badge-bg: #1f2937; /* slate-800 */
+  --badge-border: #9ca3af; /* slate-400 for visible ring on dark */
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23f9fafb' d='M6 17h3l2-4V7H5v6h3l-2 4z'/><path fill='none' d='M0 0h24v24H0z'/></svg>");
+  background-size: 58% 58%;
 }
 
 #post-content.prose blockquote.callout.stats .callout-icon {
@@ -170,23 +195,30 @@
 
 /* Dark theme icon backdrops */
 .dark #post-content.prose blockquote.callout.info .callout-icon { --badge-bg: #1d4ed8; --badge-border: #1e3a8a; }
-.dark #post-content.prose blockquote.callout.warning .callout-icon { --badge-bg: #b45309; --badge-border: #7c2d12; }
+.dark #post-content.prose blockquote.callout.warning .callout-icon {
+  --badge-bg: #b45309; /* amber-700 */
+  --badge-border: #d97706; /* amber-600 */
+}
 .dark #post-content.prose blockquote.callout.tip .callout-icon { --badge-bg: #059669; --badge-border: #065f46; }
 .dark #post-content.prose blockquote.callout.stats .callout-icon { --badge-bg: #7c3aed; --badge-border: #4c1d95; }
 
-/* Mobile-specific adjustments */
+/* Responsive adjustments */
 @media (max-width: 767px) {
+  #post-content.prose blockquote.callout .callout-body {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
   
-  /* Stack content when icon is inside */
+  #post-content.prose blockquote.callout .callout-icon {
+    margin-top: 0;
+  }
+  
   #post-content.prose blockquote.callout .callout-content {
     flex-direction: column;
     gap: 0.5rem;
   }
   
-  /* Prefer soft-wrap over horizontal scrolling for tiny screens */
   #post-content.prose blockquote.callout .callout-body pre {
-    margin: 0;
-    padding: 0;
     overflow-x: visible;
     white-space: pre-wrap;
     word-break: break-word;
@@ -194,8 +226,8 @@
   
   #post-content.prose blockquote.callout .callout-body pre code {
     min-width: 0;
-    white-space: inherit; /* follow pre */
-    overflow-wrap: anywhere; /* allow breaking long tokens */
+    white-space: inherit;
+    overflow-wrap: anywhere;
   }
 }
 

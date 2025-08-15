@@ -624,32 +624,6 @@ a:focus-visible {
   transform: translateY(-2px);
 }
 
-#post-content blockquote::before {
-  content: '\201C';
-  position: absolute;
-  top: 0.25rem;
-  left: 0.5rem;
-  font-size: 3rem;
-  line-height: 1;
-  color: #5e6b85;
-  font-family: Georgia, serif;
-  z-index: 1;
-  opacity: 0.8;
-}
-
-/* Adjust for larger screens */
-@media (min-width: 40rem) {
-  #post-content blockquote {
-    padding: 1.5rem 2rem 1.5rem 3.5rem;
-  }
-
-  #post-content blockquote::before {
-    font-size: 4rem;
-    top: 0.5rem;
-    left: 0.75rem;
-  }
-}
-
 #post-content blockquote p {
   position: relative;
   margin: 0.5rem 0;
@@ -684,10 +658,6 @@ a:focus-visible {
   background: #1f2937;
   color: #e5e7eb;
   border-left-color: #60a5fa;
-}
-
-.dark #post-content blockquote::before {
-  color: #374151;
 }
 
 .dark #post-content blockquote p {
