@@ -134,15 +134,16 @@ export default marked;
  * @param {string} src - Raw Markdown source text
  * @returns {string} Processed Markdown with HTML callouts
  */
-// NOTE ABOUT RAW HTML AND MARKED
-// --------------------------------
-// Marked (and CommonMark) treat a sequence of lines beginning with an HTML
-// block tag as a "raw HTML block" only when the opening tag starts at column 0
-// (no leading indentation). If these tags are indented, Marked may treat them
-// as part of a paragraph and emit wrapping <p> or insert <br> when `breaks: true`
-// is enabled. This is why we intentionally emit the callout HTML with NO leading
-// spaces below. Keeping tags left-aligned guarantees the block is parsed as raw
-// HTML and is not wrapped, which prevents stray <p></p> and <br> in the output.
+// IMPORTANT: Non-indented raw HTML for callouts
+// ---------------------------------------------
+// Marked/CommonMark treat HTML as a "raw HTML block" only if the opening tag
+// begins at column 0 (no leading spaces). If the tags are indented, Marked may
+// parse them as part of a paragraph and wrap with <p> or inject <br> (especially
+// with `breaks: true`).
+//
+// Therefore: the generated callout HTML below is intentionally left-aligned with
+// NO indentation. This guarantees the block is parsed as raw HTML and prevents
+// stray <p></p> and <br> wrappers.
 //
 // Additionally, when `breaks: true` is set:
 // - Single newlines or trailing spaces at the end of a line can produce <br>.
@@ -151,20 +152,23 @@ export default marked;
 // a callout body and avoid trailing spaces on the final content line. If needed,
 // consider trimming `inner` before emitting.
 /**
- * Generates HTML for a callout/quote block
- * @param {string} content - The content of the callout/quote
- * @param {string} type - The type of callout (e.g., 'info', 'warning', 'quote')
- * @returns {string} HTML string for the callout
+ * Generates raw HTML for a callout/quote block.
+ * NOTE: Output is deliberately left-aligned (no leading spaces) so Marked
+ * treats it as a raw HTML block and does not wrap it in <p> or insert <br>.
+ *
+ * @param {string} content - The inner HTML/Markdown for the callout body
+ * @param {string} type - The callout type (e.g., 'info', 'warning', 'quote')
+ * @returns {string} Left-aligned HTML string for the callout
  */
 function generateCalloutHTML(content, type) {
   return [
     `<blockquote class="callout ${type}">`,
-    '  <div class="callout-body">',
-    '    <span class="callout-icon" aria-hidden="true"></span>',
-    '    <div class="callout-content">',
-    `      ${content}`,
-    '    </div>',
-    '  </div>',
+    '<div class="callout-body">',
+    '<span class="callout-icon" aria-hidden="true"></span>',
+    '<div class="callout-content">',
+    `${content}`,
+    '</div>',
+    '</div>',
     '</blockquote>'
   ].join('\n');
 }
