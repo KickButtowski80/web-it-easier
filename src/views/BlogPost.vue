@@ -90,8 +90,6 @@ import Notification from '@/components/UI/Notification.vue';
 import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
 
-
-
 // Props
 const props = defineProps({
   slug: {
