@@ -1409,40 +1409,7 @@ a:focus-visible {
   }
 }
 
-/* Accessible focus styles for Table of Contents links */
-#table-of-contents a {
-  display: block;
-  /* full-row target for easier focus/click */
-  padding: 0.125rem 0.25rem;
-  /* subtle hit-area padding */
-  border-radius: 0.375rem;
-  /* rounded corners */
-  outline: none;
-  /* remove default outline, we add our own */
-}
-
-#table-of-contents a:focus-visible {
-  outline: 2px solid #2563eb;
-  /* blue visible outline */
-  outline-offset: 2px;
-  background-color: rgba(37, 99, 235, 0.08);
-  /* subtle bg to reinforce focus */
-  color: #1f2937;
-  /* ensure strong contrast in light mode */
-}
-
-@media (prefers-color-scheme: dark) {
-  #table-of-contents a:focus-visible {
-    outline-color: #60a5fa;
-    /* lighter blue for dark mode */
-    background-color: rgba(96, 165, 250, 0.15);
-    color: #f9fafb;
-    /* near-white for contrast */
-  }
-}
-
-/* Table of Contents Styling */
-
+/* Navigation styles - keeping only essential nav styles */
 nav h2 {
   margin-left: -1rem;
   padding-left: 1rem;
@@ -1458,126 +1425,24 @@ nav a {
   display: block;
   padding: 0.25rem 0;
   transition: color 0.2s ease;
-}
-
-nav a.font-semibold {
-  color: #1f2937;
-}
-
-nav a.text-sm {
-  color: #4b5563;
-}
-
-nav a.text-xs {
-  color: #6b7280;
-}
-
-nav a:hover {
-  color: #3b82f6;
   text-decoration: none;
 }
 
+/* Base heading styles */
 h2,
 h3 {
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
-
+/* Ensure proper scroll margin for anchor links */
 .prose h2,
 .prose h3,
 .prose h4 {
   scroll-margin-top: 6rem;
 }
-
-
-.toc-bedazzled {
-  position: relative;
-  overflow: hidden;
-  background: url("data:image/svg+xml;utf8,<svg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='20' cy='20' r='1.5' fill='%23a5b4fc' opacity='0.6'/><circle cx='10' cy='30' r='1' fill='%23f472b6' opacity='0.4'/><circle cx='30' cy='10' r='1' fill='%23fbbf24' opacity='0.4'/></svg>"),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.85) 70%, rgba(199, 210, 254, 0.7) 100%);
-  background-blend-mode: overlay;
-  border-radius: 1rem;
-  border: 2px solid #a5b4fc;
-  box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.09);
-  padding: 2rem 1.5rem;
-  transition: box-shadow 0.2s;
-  backdrop-filter: blur(2px);
-}
-
-.toc-bedazzled h2 {
-  color: #6366f1;
-  letter-spacing: 0.03em;
-}
-
-.toc-bedazzled ul {
-  background: transparent;
-}
-
-.toc-bedazzled a {
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 0.5rem;
-  padding: 0.2rem 0.6rem;
-  transform: translateX(-4px);
-  font-size: clamp(0.85em, 3.5vw + 0.1em, 1em);
-  font-weight: clamp(400, 10vw + 400, 700);
-  transition: color 0.2s, transform 0.2s, background-color 0.2s;
-}
-
-
-.toc-bedazzled a:hover {
-  transform: translateX(4px);
-  background-color: #4f46e5;
-  color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.toc-bedazzled a.active {
-  background: #717ec3;
-  color: #1A202C;
-  font-weight: bold;
-}
-
-/* Mobile TOC transition styles */
-@media (max-width: 639px) {
-  #table-of-contents .toc-body {
-    overflow: hidden;
-  }
-
-  .toc-slide-enter-active {
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-  }
-  
-  .toc-slide-leave-active {
-    transition: opacity 0.15s ease-in, transform 0.15s ease-in;
-  }
-  
-  .toc-slide-enter-from,
-  .toc-slide-leave-to {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  
-  .toc-slide-enter-to,
-  .toc-slide-leave-from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.toc-bedazzled::after {
-  content: "";
-  position: absolute;
-  bottom: 0.5rem;
-  right: 0.5rem;
-  width: 20rem;
-  height: 20rem;
-  opacity: 0.5;
-  pointer-events: none;
-  z-index: 1;
-  background: url("data:image/svg+xml;utf8,<svg width='320' height='320' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='0' y='0' width='32' height='32' fill='%236366f1' fill-opacity='0.6'/><rect x='32' y='32' width='32' height='32' fill='%23fbbf24' fill-opacity='0.5'/><circle cx='48' cy='16' r='10' fill='%23f472b6' fill-opacity='0.3'/><rect x='16' y='48' width='16' height='8' fill='%233b82f6' fill-opacity='0.4'/></svg>") no-repeat center/contain;
-}
 </style>
 
-<!-- Externalized callout styles -->
+<!-- Externalized styles -->
+<style src="@/styles/toc.css"></style>
 <style src="@/styles/callouts.css"></style>
