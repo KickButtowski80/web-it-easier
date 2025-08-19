@@ -23,11 +23,12 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled']" v-if="toc.length > 0" role="navigation"
+        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
           <h3 id="toc-heading" 
               class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200 cursor-pointer select-none"
               tabindex="0"
+              role="button"
               :aria-expanded="tocOpen"
               aria-controls="toc-body"
               @click="toggleToc"
@@ -40,8 +41,8 @@
               ▼
             </span>
           </h3>
-          <transition name="toc-slide" mode="out-in">
-            <ul id="toc-body" class="space-y-1 toc-body" v-show="showTocBody" v-if="tocOpen">
+          <transition name="toc-slide">
+            <ul id="toc-body" class="space-y-1 toc-body" v-show="showTocBody">
               <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
               'ml-8': item.level === 'h4'
@@ -133,7 +134,10 @@ const defaultMetaDescriptions = ref({
 
 // Mobile TOC drawer state (no visual change)
 const tocOpen = ref(false);
-const toggleToc = () => { tocOpen.value = !tocOpen.value; };
+const toggleToc = () => { 
+  tocOpen.value = !tocOpen.value; 
+  console.debug('[TOC] toggleToc ->', tocOpen.value);
+};
 const handleTocLinkClick = () => {
   // Auto-close only on small screens
   if (window.matchMedia('(max-width: 639px)').matches) {
@@ -141,9 +145,8 @@ const handleTocLinkClick = () => {
   }
 };
 
-// Mobile detection and TOC body visibility (desktop always visible)
-const isMobile = ref(typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false);
-const showTocBody = computed(() => !isMobile.value || tocOpen.value);
+// TOC body visibility (collapsible on all screen sizes)
+const showTocBody = computed(() => tocOpen.value);
 
 // Set up canonical URL management
 const canonicalUrl = ref('');
