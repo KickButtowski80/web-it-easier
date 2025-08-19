@@ -845,6 +845,19 @@ a:focus-visible {
   width: 100%;
 }
 
+/* Images: auto-center and constrain width */
+#post-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.25rem auto; /* centers and adds vertical rhythm */
+}
+
+/* Ensure linked images are still centered (common in Markdown) */
+#post-content a > img {
+  display: block;
+}
+
 /* Mobile-first: Card layout */
 #post-content table {
   width: 100%;
