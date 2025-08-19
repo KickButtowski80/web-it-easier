@@ -23,30 +23,24 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0" role="navigation"
-          aria-labelledby="toc-heading">
-          <h3 id="toc-heading" 
-              class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200 cursor-pointer select-none"
-              tabindex="0"
-              role="button"
-              :aria-expanded="tocOpen"
-              aria-controls="toc-body"
-              @click="toggleToc"
-              @keydown.enter.prevent="toggleToc"
-              @keydown.space.prevent="toggleToc"
-          >
-            Table of Contents
-            <span class="ml-2 text-sm transition-transform duration-200 inline-block" 
-                  :class="{ 'transform rotate-180': tocOpen }">
-              ▼
-            </span>
-          </h3>
+        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
+          role="navigation" aria-labelledby="toc-heading">
+          <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">
+            <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2"
+              :aria-expanded="tocOpen" aria-controls="toc-body" @click="toggleToc">
+              Table of Contents
+              <span class="ml-2 text-sm transition-transform duration-200 inline-block"
+                :class="{ 'transform rotate-180': tocOpen }" aria-hidden="true">
+                ▼
+              </span>
+            </button>
+          </h2>
           <transition name="toc-slide">
             <ul id="toc-body" class="space-y-1 toc-body" v-show="showTocBody">
               <li v-for="(item, index) in toc" :key="index" :class="{
-              'ml-4': item.level === 'h3',
-              'ml-8': item.level === 'h4'
-            }">
+                'ml-4': item.level === 'h3',
+                'ml-8': item.level === 'h4'
+              }">
                 <a :href="`#${item.id}`" @click="handleTocLinkClick"
                   class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
                   :class="{
@@ -134,8 +128,8 @@ const defaultMetaDescriptions = ref({
 
 // Mobile TOC drawer state (no visual change)
 const tocOpen = ref(false);
-const toggleToc = () => { 
-  tocOpen.value = !tocOpen.value; 
+const toggleToc = () => {
+  tocOpen.value = !tocOpen.value;
   console.debug('[TOC] toggleToc ->', tocOpen.value);
 };
 const handleTocLinkClick = () => {
@@ -420,7 +414,7 @@ body {
 }
 
 #post-content h2+h3 {
-  margin-top: 2.5rem;  
+  margin-top: 2.5rem;
 }
 
 
@@ -438,7 +432,7 @@ body {
   border-radius: 0 4px 4px 0;
   width: 100%;
   max-width: 100%;
-  
+
 }
 
 #post-content h3::before {
@@ -882,11 +876,12 @@ a:focus-visible {
   display: block;
   max-width: 100%;
   height: auto;
-  margin: 1.25rem auto; /* centers and adds vertical rhythm */
+  margin: 1.25rem auto;
+  /* centers and adds vertical rhythm */
 }
 
 /* Ensure linked images are still centered (common in Markdown) */
-#post-content a > img {
+#post-content a>img {
   display: block;
 }
 
@@ -1133,19 +1128,23 @@ a:focus-visible {
 
 /* Improve syntax readability in dark mode (override light GitHub theme tokens) */
 .dark #post-content pre {
-  background-color: #0b1220; /* deeper dark for contrast */
-  color: #e5e7eb;            /* base foreground */
+  background-color: #0b1220;
+  /* deeper dark for contrast */
+  color: #e5e7eb;
+  /* base foreground */
 }
 
 .dark #post-content pre .hljs {
   background: transparent;
-  color: #e5e7eb; /* default text */
+  color: #e5e7eb;
+  /* default text */
 }
 
 /* Token colors tuned for dark background */
 .dark #post-content pre .hljs-comment,
 .dark #post-content pre .hljs-quote {
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
+  /* gray-400 */
   font-style: italic;
 }
 
@@ -1154,14 +1153,16 @@ a:focus-visible {
 .dark #post-content pre .hljs-literal,
 .dark #post-content pre .hljs-built_in,
 .dark #post-content pre .hljs-type {
-  color: #93c5fd; /* blue-300 */
+  color: #93c5fd;
+  /* blue-300 */
 }
 
 .dark #post-content pre .hljs-string,
 .dark #post-content pre .hljs-symbol,
 .dark #post-content pre .hljs-bullet,
 .dark #post-content pre .hljs-addition {
-  color: #86efac; /* green-300 */
+  color: #86efac;
+  /* green-300 */
 }
 
 .dark #post-content pre .hljs-number,
@@ -1169,25 +1170,29 @@ a:focus-visible {
 .dark #post-content pre .hljs-attribute,
 .dark #post-content pre .hljs-template-variable,
 .dark #post-content pre .hljs-variable {
-  color: #fde68a; /* amber-200 */
+  color: #fde68a;
+  /* amber-200 */
 }
 
 .dark #post-content pre .hljs-title,
 .dark #post-content pre .hljs-section,
 .dark #post-content pre .hljs-selector-id,
 .dark #post-content pre .hljs-selector-class {
-  color: #c4b5fd; /* violet-300 */
+  color: #c4b5fd;
+  /* violet-300 */
 }
 
 .dark #post-content pre .hljs-name,
 .dark #post-content pre .hljs-tag,
 .dark #post-content pre .hljs-meta {
-  color: #fca5a5; /* red-300 */
+  color: #fca5a5;
+  /* red-300 */
 }
 
 /* Selection inside code blocks in dark mode */
 .dark #post-content pre ::selection {
-  background: rgba(96, 165, 250, 0.25); /* blue-400/25 */
+  background: rgba(96, 165, 250, 0.25);
+  /* blue-400/25 */
 }
 
 .prose {
