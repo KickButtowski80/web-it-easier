@@ -89,6 +89,7 @@ import { updateCanonicalUrl } from '@/utils/seo-update-canonical-url';
 import Notification from '@/components/UI/Notification.vue';
 import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
+import { updateMetaDescriptions } from '@/utils/seo-update-description';
 
 // Props
 const props = defineProps({
@@ -108,6 +109,12 @@ const {
 const isMounted = ref(true);
 const post = ref(null);
 const defaultCanonical = ref(null);
+// Store default meta descriptions to restore on unmount
+const defaultMetaDescriptions = ref({
+  description: null,
+  og: null,
+  twitter: null,
+});
 
 // Set up canonical URL management
 const canonicalUrl = ref('');
@@ -157,6 +164,14 @@ onMounted(async () => {
     defaultCanonical.value = defaultCanonicalEl.outerHTML;
   }
 
+  // Capture current meta descriptions to restore later
+  const descTag = document.querySelector('meta[name="description"]');
+  const ogDescTag = document.querySelector('meta[property="og:description"]');
+  const twDescTag = document.querySelector('meta[property="twitter:description"]');
+  defaultMetaDescriptions.value.description = descTag?.getAttribute('content') || null;
+  defaultMetaDescriptions.value.og = ogDescTag?.getAttribute('content') || null;
+  defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
+
   isMounted.value = true;
   const title = deslugify(props.slug);
   try {
@@ -170,6 +185,47 @@ onMounted(async () => {
         document.title = "Blog Post | Web It Easier";
       }
       await updateCanonicalTag();
+      // Generate and apply per-post meta description (no UI summary)
+      const description = (() => {
+        // Prefer explicit description if provided
+        if (post.value?.description && typeof post.value.description === 'string') {
+          return post.value.description.trim();
+        }
+        // Fallback: derive from first paragraph of raw markdown (faster, no DOM parsing)
+        try {
+          const md = String(post.value?.content || '');
+          // First non-empty block (split by blank lines)
+          const firstBlock = (md.split(/\n\s*\n/).find(b => b.trim().length) || md).trim();
+          // Strip common markdown syntax
+          let text = firstBlock
+            .replace(/^```[\s\S]*?```/gm, '')        // fenced code blocks
+            .replace(/`[^`]*`/g, '')                   // inline code
+            .replace(/^#+\s+/gm, '')                  // headings
+            .replace(/!\[[^\]]*\]\([^)]*\)/g, '')  // images
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1') // links -> keep link text
+            .replace(/^[>\-*+\s]+/gm, '')            // blockquotes/lists markers
+            .replace(/\[!\w+\]/gi, '')               // callout labels like [!INFO], [!WARNING], etc.
+            .replace(/[*_~#]/g, '')                    // emphasis markers
+            .replace(/\s+/g, ' ')                     // collapse whitespace
+            .trim();
+          if (!text) return '';
+          // Limit to ~160-180 chars, avoid cutting words
+          const limit = 180;
+          if (text.length > limit) {
+            let slice = text.slice(0, limit);
+            const lastSpace = slice.lastIndexOf(' ');
+            slice = (lastSpace > 120 ? slice.slice(0, lastSpace) : slice).trim();
+            text = slice + '…';
+          }
+          return text;
+        } catch (e) {
+          return '';
+        }
+      })();
+
+      if (description) {
+        updateMetaDescriptions(description);
+      }
     }
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -207,7 +263,32 @@ onUnmounted(() => {
       document.head.insertAdjacentHTML('beforeend', defaultCanonical.value);
     }
   }
-
+  // Restore original meta descriptions
+  try {
+    const ensureTag = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        Object.entries(attrs).forEach(([k, v]) => (el.setAttribute(k, v)));
+        document.head.appendChild(el);
+      }
+      return el;
+    };
+    if (defaultMetaDescriptions.value.description !== null) {
+      const el = ensureTag('meta[name="description"]', { name: 'description' });
+      el.setAttribute('content', defaultMetaDescriptions.value.description);
+    }
+    if (defaultMetaDescriptions.value.og !== null) {
+      const el = ensureTag('meta[property="og:description"]', { property: 'og:description' });
+      el.setAttribute('content', defaultMetaDescriptions.value.og);
+    }
+    if (defaultMetaDescriptions.value.twitter !== null) {
+      const el = ensureTag('meta[property="twitter:description"]', { property: 'twitter:description' });
+      el.setAttribute('content', defaultMetaDescriptions.value.twitter);
+    }
+  } catch (e) {
+    // noop
+  }
 });
 
 function deslugify(slug) {
