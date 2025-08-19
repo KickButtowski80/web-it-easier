@@ -23,28 +23,43 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" class="mb-8 toc-bedazzled" v-if="toc.length > 0" role="navigation"
+        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled']" v-if="toc.length > 0" role="navigation"
           aria-labelledby="toc-heading">
-          <h3 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">Table of Contents
+          <h3 id="toc-heading" 
+              class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200 cursor-pointer select-none"
+              tabindex="0"
+              :aria-expanded="tocOpen"
+              aria-controls="toc-body"
+              @click="toggleToc"
+              @keydown.enter.prevent="toggleToc"
+              @keydown.space.prevent="toggleToc"
+          >
+            Table of Contents
+            <span class="ml-2 text-sm transition-transform duration-200 inline-block" 
+                  :class="{ 'transform rotate-180': tocOpen }">
+              ▼
+            </span>
           </h3>
-          <ul class="space-y-1">
-            <li v-for="(item, index) in toc" :key="index" :class="{
+          <transition name="toc-slide" mode="out-in">
+            <ul id="toc-body" class="space-y-1 toc-body" v-show="showTocBody" v-if="tocOpen">
+              <li v-for="(item, index) in toc" :key="index" :class="{
               'ml-4': item.level === 'h3',
               'ml-8': item.level === 'h4'
             }">
-              <a :href="`#${item.id}`"
-                class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-                :class="{
-                  'font-semibold': item.level === 'h2',
-                  'text-[1rem]': item.level === 'h3',
-                  'text-sm': item.level === 'h4'
-                }">
-                <span v-if="item.level === 'h3'">→ </span>
-                <span v-if="item.level === 'h4'">⟶ </span>
-                {{ item.text }}
-              </a>
-            </li>
-          </ul>
+                <a :href="`#${item.id}`" @click="handleTocLinkClick"
+                  class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                  :class="{
+                    'font-semibold': item.level === 'h2',
+                    'text-[1rem]': item.level === 'h3',
+                    'text-sm': item.level === 'h4'
+                  }">
+                  <span v-if="item.level === 'h3'">→ </span>
+                  <span v-if="item.level === 'h4'">⟶ </span>
+                  {{ item.text }}
+                </a>
+              </li>
+            </ul>
+          </transition>
         </nav>
 
         <!-- 
@@ -115,6 +130,20 @@ const defaultMetaDescriptions = ref({
   og: null,
   twitter: null,
 });
+
+// Mobile TOC drawer state (no visual change)
+const tocOpen = ref(false);
+const toggleToc = () => { tocOpen.value = !tocOpen.value; };
+const handleTocLinkClick = () => {
+  // Auto-close only on small screens
+  if (window.matchMedia('(max-width: 639px)').matches) {
+    tocOpen.value = false;
+  }
+};
+
+// Mobile detection and TOC body visibility (desktop always visible)
+const isMobile = ref(typeof window !== 'undefined' ? window.matchMedia('(max-width: 639px)').matches : false);
+const showTocBody = computed(() => !isMobile.value || tocOpen.value);
 
 // Set up canonical URL management
 const canonicalUrl = ref('');
