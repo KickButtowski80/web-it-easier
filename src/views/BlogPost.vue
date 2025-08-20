@@ -23,8 +23,7 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" 
-        :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
+        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
           role="navigation" aria-labelledby="toc-heading">
           <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">
             <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2"
@@ -44,11 +43,16 @@
               }">
                 <a :href="`#${item.id}`" @click="handleTocLinkClick"
                   class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
-                  :class="{
-                    'font-semibold': item.level === 'h2',
-                    'text-[1rem]': item.level === 'h3',
-                    'text-sm': item.level === 'h4'
-                  }">
+                  :class="[
+                    {
+                      'font-semibold': item.level === 'h2',
+                      'text-[1rem]': item.level === 'h3',
+                      'text-sm': item.level === 'h4'
+                    },
+                    { active: activeId === item.id }
+                  ]" 
+                  :aria-current="activeId === item.id ? 'true' : undefined"
+                 >
                   <span v-if="item.level === 'h3'">→ </span>
                   <span v-if="item.level === 'h4'">⟶ </span>
                   {{ item.text }}
@@ -92,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { getPost } from '@/config/firebase';
 import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
@@ -101,6 +105,7 @@ import Notification from '@/components/UI/Notification.vue';
 import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
 import { updateMetaDescriptions } from '@/utils/seo-update-description';
+import useScrollSpy from '@/composables/useScrollSpy';
 
 // Props
 const props = defineProps({
@@ -131,13 +136,9 @@ const defaultMetaDescriptions = ref({
 const tocOpen = ref(false);
 const toggleToc = () => {
   tocOpen.value = !tocOpen.value;
-  console.debug('[TOC] toggleToc ->', tocOpen.value);
 };
-const handleTocLinkClick = () => {
-  // Auto-close only on small screens
-  if (window.matchMedia('(max-width: 639px)').matches) {
-    tocOpen.value = false;
-  }
+const handleTocLinkClick = () => {   
+  tocOpen.value = false;
 };
 
 // TOC body visibility (collapsible on all screen sizes)
@@ -253,6 +254,10 @@ onMounted(async () => {
       if (description) {
         updateMetaDescriptions(description);
       }
+
+      // Ensure markdown is rendered, then start scrollspy so it can observe headings
+      await nextTick();
+      startScrollSpy();
     }
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -351,6 +356,15 @@ const toc = computed(() => {
   })
 
   return headings
+})
+
+
+// Scrollspy: track the currently visible heading and sync with TOC
+const { activeId, start: startScrollSpy } = useScrollSpy({
+  contentRoot: '#post-content',
+  headingSelector: 'h2, h3, h4',
+  offset: 0, // adjust if you introduce a fixed header
+  autoStart: false,
 })
 
 
@@ -1444,11 +1458,22 @@ h3 {
   margin-bottom: 1rem;
 }
 
+/* Navbar height variable for consistent offsets across TOC sticky and anchor landing */
+:root {
+  --navbar-height: 3rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --navbar-height: 6rem;
+  }
+}
+
 /* Ensure proper scroll margin for anchor links */
 .prose h2,
 .prose h3,
 .prose h4 {
-  scroll-margin-top: 6rem;
+  scroll-margin-top: var(--navbar-height);
 }
 </style>
 
