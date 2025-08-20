@@ -204,3 +204,36 @@
     color: #ffffff;
   }
 }
+
+
+
+  /* Keep the whole TOC panel stuck under the navbar */
+  #table-of-contents {
+    position: sticky;
+    top: var(--navbar-height, 64px);
+    z-index: 20; /* above content backgrounds, below nav */
+  }
+
+  /* Ensure NON-transparent solid background when sticky */
+  #table-of-contents.toc-bedazzled {
+    background: #ffffff; /* solid */
+    background-image: none; /* remove decorative overlay */
+    backdrop-filter: none; /* remove glass blur */
+  }
+
+  /* Dark mode solid background */
+  .dark #table-of-contents.toc-bedazzled {
+    background: #0f172a; /* slate-900-ish */
+  }
+
+  /* Hide decorative after-overlay for a clean solid panel */
+  #table-of-contents.toc-bedazzled::after {
+    display: none;
+  }
+
+  /* Make the list scrollable within viewport */
+  #table-of-contents .toc-body {
+    max-height: calc(100vh - var(--navbar-height, 64px) - 3rem);
+    overflow: auto;
+  }
+
