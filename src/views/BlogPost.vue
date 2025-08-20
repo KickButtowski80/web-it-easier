@@ -23,7 +23,8 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
+        <nav id="table-of-contents" 
+        :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
           role="navigation" aria-labelledby="toc-heading">
           <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">
             <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2"
