@@ -42,6 +42,7 @@
                 'ml-8': item.level === 'h4'
               }">
                 <a :href="`#${item.id}`"
+                  @click="tocOpen = false"
                   class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
                   :class="[
                     {
@@ -137,9 +138,7 @@ const tocOpen = ref(false);
 const toggleToc = () => {
   tocOpen.value = !tocOpen.value;
 };
-const handleTocLinkClick = () => {   
-  tocOpen.value = false;
-};
+
 
 // TOC body visibility (collapsible on all screen sizes)
 const showTocBody = computed(() => tocOpen.value);
