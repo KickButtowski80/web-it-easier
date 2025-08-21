@@ -41,7 +41,7 @@
                 'ml-4': item.level === 'h3',
                 'ml-8': item.level === 'h4'
               }">
-                <a :href="`#${item.id}`" @click="handleTocLinkClick"
+                <a :href="`#${item.id}`"
                   class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
                   :class="[
                     {
@@ -358,7 +358,6 @@ const toc = computed(() => {
   return headings
 })
 
-
 // Scrollspy: track the currently visible heading and sync with TOC
 const { activeId, start: startScrollSpy } = useScrollSpy({
   contentRoot: '#post-content',
@@ -366,9 +365,6 @@ const { activeId, start: startScrollSpy } = useScrollSpy({
   offset: 0, // adjust if you introduce a fixed header
   autoStart: false,
 })
-
-
-
 
 </script>
 
