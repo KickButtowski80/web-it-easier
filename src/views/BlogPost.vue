@@ -11,6 +11,7 @@
                          group-hover:opacity-90 transition-opacity duration-200">
                 {{ post.title }}
               </span>
+              <a href="#search-engine-rankings" class="ml-2">go search engine rankings</a>
             </span>
           </h1>
           <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
@@ -42,7 +43,7 @@
                 'ml-8': item.level === 'h4'
               }">
                 <a :href="`#${item.id}`"
-                  @click="tocOpen = false"
+                  @click="handleTocClick"
                   class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
                   :class="[
                     {
@@ -124,6 +125,7 @@ const {
   showNotify
 } = useNotification();
 const isMounted = ref(true);
+const hasScrolledToHash = ref(false);
 const post = ref(null);
 const defaultCanonical = ref(null);
 // Store default meta descriptions to restore on unmount
@@ -139,6 +141,45 @@ const toggleToc = () => {
   tocOpen.value = !tocOpen.value;
 };
 
+const handleTocClick = (e) => {
+  // Close the TOC drawer immediately to avoid overlaying the target
+  tocOpen.value = false;
+  
+  // Get the target ID from the href attribute
+  const href = e.currentTarget.getAttribute('href');
+  if (!href || !href.startsWith('#')) return;
+  
+  const id = href.slice(1);
+  e.preventDefault();
+  
+  // Update the URL hash without pushing a new history entry
+  window.history.replaceState({}, '', `#${id}`);
+  
+  // Use requestAnimationFrame to ensure smooth scrolling after the next repaint
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    // Calculate the exact position
+    const navbar = document.querySelector('nav, header');
+    const toc = document.getElementById('table-of-contents');
+    const navbarHeight = navbar ? navbar.offsetHeight : 0;
+    const tocHeight = toc ? toc.offsetHeight : 0;
+    const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+    const offsetPosition = elementPosition - navbarHeight - tocHeight - 20;
+    
+    // Use scrollIntoView with a polyfill for smooth behavior
+    if ('scrollBehavior' in document.documentElement.style) {
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    } else {
+      // Fallback for browsers that don't support smooth scrolling
+      window.scrollTo(0, offsetPosition);
+    }
+  });
+};
 
 // TOC body visibility (collapsible on all screen sizes)
 const showTocBody = computed(() => tocOpen.value);
@@ -184,6 +225,36 @@ const updateCanonicalTag = async () => {
     return null;
   }
 };
+// Function to handle smooth scrolling to hash
+const scrollToHash = () => {
+  // Wait for the next tick to ensure all content is rendered
+  nextTick(() => {
+    if (window.location.hash) {      
+      const id = window.location.hash.substring(1);
+      const el = document.getElementById(id);
+      if (!el) return;
+      // Calculate the exact position
+      const navbar = document.querySelector('nav, header');
+      const toc = document.getElementById('table-of-contents');
+      const navbarHeight = navbar ? navbar.offsetHeight : 0;
+      const tocHeight = toc ? toc.offsetHeight : 0;
+      const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - navbarHeight - tocHeight - 20;
+      
+      // Use the same scrolling behavior as handleTocClick
+      if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      } else {
+        // Fallback for browsers that don't support smooth scrolling
+        window.scrollTo(0, offsetPosition);
+      }
+    }
+  });
+};
+
 onMounted(async () => {
   // Initialize default canonical URL
   const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
@@ -257,6 +328,13 @@ onMounted(async () => {
       // Ensure markdown is rendered, then start scrollspy so it can observe headings
       await nextTick();
       startScrollSpy();
+
+      // After content is rendered, handle initial hash scroll once
+      if (window.location.hash && !hasScrolledToHash.value) {
+        await nextTick();
+        scrollToHash();
+        hasScrolledToHash.value = true;
+      }
     }
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -366,7 +444,9 @@ const { activeId, start: startScrollSpy } = useScrollSpy({
 })
 
 </script>
-
+<!-- Externalized styles -->
+<style src="@/styles/toc.css"></style>
+<style src="@/styles/callouts.css"></style>
 <style>
 /* All of your existing styles are here, adapted for a standalone HTML file. */
 body {
@@ -1464,14 +1544,40 @@ h3 {
   }
 }
 
+ 
+
+/* Make TOC sticky */
+#table-of-contents {
+  position: sticky;
+  top: 6rem; /* Space from top when stuck */
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto 2rem;
+  z-index: 10;
+  align-self: flex-start; /* For flex/grid containers */
+  max-height: calc(100vh - 2rem); /* Prevent it from being taller than viewport */
+  overflow-y: auto; /* Make it scrollable if content is too long */
+}
+
+
+
+
+/* Make sure the TOC content doesn't cause horizontal scroll */
+.toc-body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Ensure TOC links don't break layout */
+#table-of-contents a {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
 /* Ensure proper scroll margin for anchor links */
-.prose h2,
-.prose h3,
-.prose h4 {
-  scroll-margin-top: var(--navbar-height);
+#post-content.prose h2,
+#post-content.prose h3,
+#post-content.prose h4 {
+  scroll-margin-top:calc(var(--navbar-height) + 0rem);
 }
 </style>
-
-<!-- Externalized styles -->
-<style src="@/styles/toc.css"></style>
-<style src="@/styles/callouts.css"></style>

@@ -11,16 +11,7 @@
     'Helvetica Neue', Arial, sans-serif;
   }
   
-  /* Specific rule for blog post headings */
-  #post-content :is(h2, h3, h4)[id] {
-    scroll-margin-top: 9rem; /* Extra space for sticky header and TOC */
-  }
-  
-  @media (min-width: 768px) {
-    #post-content :is(h2, h3, h4)[id] {
-      scroll-margin-top: 11rem; /* More space on larger screens */
-    }
-  }
+
   img, svg, video, canvas, audio, iframe, embed, object {
     max-width: 100%;
     height: auto;
