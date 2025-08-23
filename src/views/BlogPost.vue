@@ -160,13 +160,7 @@ const handleTocClick = (e) => {
     const el = document.getElementById(id);
     if (!el) return;
     
-    // Calculate the exact position
-    const navbar = document.querySelector('nav, header');
-    const toc = document.getElementById('table-of-contents');
-    const navbarHeight = navbar ? navbar.offsetHeight : 0;
-    const tocHeight = toc ? toc.offsetHeight : 0;
-    const elementPosition = el.getBoundingClientRect().top + window.scrollY;
-    const offsetPosition = elementPosition - navbarHeight - tocHeight - 20;
+    const offsetPosition = calculateScrollOffset(el);
     
     // Use scrollIntoView with a polyfill for smooth behavior
     if ('scrollBehavior' in document.documentElement.style) {
@@ -225,34 +219,56 @@ const updateCanonicalTag = async () => {
     return null;
   }
 };
+/**
+ * Calculates the vertical scroll position needed to properly align an element
+ * below fixed navigation elements (header and table of contents).
+ * 
+ * @param {HTMLElement} element - The target DOM element to scroll into view
+ * @returns {number} The vertical scroll position (in pixels) that will position the element
+ *                   below fixed headers with appropriate spacing
+ * 
+ * @example
+ * // Scroll to a section when clicking a TOC item
+ * const section = document.getElementById('section-1');
+ * const offset = calculateScrollOffset(section);
+ * window.scrollTo({ top: offset, behavior: 'smooth' });
+ * 
+ * @note This function accounts for:
+ * - Fixed header/navbar height
+ * - Table of contents height (if present)
+ * - Additional 20px padding for visual spacing
+ */
+const calculateScrollOffset = (element) => {
+  const navbar = document.querySelector('nav, header');
+  const toc = document.getElementById('table-of-contents');
+  const navbarHeight = navbar?.offsetHeight || 0;
+  const tocHeight = toc?.offsetHeight || 0;
+  const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+  return elementPosition - navbarHeight - tocHeight - 20; // 20px padding
+};
+
 // Function to handle smooth scrolling to hash
 const scrollToHash = () => {
-  // Wait for the next tick to ensure all content is rendered
-  nextTick(() => {
-    if (window.location.hash) {      
-      const id = window.location.hash.substring(1);
-      const el = document.getElementById(id);
-      if (!el) return;
-      // Calculate the exact position
-      const navbar = document.querySelector('nav, header');
-      const toc = document.getElementById('table-of-contents');
-      const navbarHeight = navbar ? navbar.offsetHeight : 0;
-      const tocHeight = toc ? toc.offsetHeight : 0;
-      const elementPosition = el.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - navbarHeight - tocHeight - 20;
-      
-      // Use the same scrolling behavior as handleTocClick
-      if ('scrollBehavior' in document.documentElement.style) {
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      } else {
-        // Fallback for browsers that don't support smooth scrolling
-        window.scrollTo(0, offsetPosition);
-      }
+  if (window.location.hash) {      
+    const id = window.location.hash.substring(1);
+    const el = document.getElementById(id);
+    if (!el) return;
+    console.log('scrolling to hash');
+    
+    const offsetPosition = calculateScrollOffset(el);
+    
+    // Use the same scrolling behavior as handleTocClick
+    if ('scrollBehavior' in document.documentElement.style) {
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    } else {
+      // Fallback for browsers that don't support smooth scrolling
+      window.scrollTo(0, offsetPosition);
     }
-  });
+  }
+ 
 };
 
 onMounted(async () => {
@@ -331,9 +347,9 @@ onMounted(async () => {
 
       // After content is rendered, handle initial hash scroll once
       if (window.location.hash && !hasScrolledToHash.value) {
-        await nextTick();
+        // await nextTick();
         scrollToHash();
-        hasScrolledToHash.value = true;
+        // hasScrolledToHash.value = true;
       }
     }
   } catch (error) {
