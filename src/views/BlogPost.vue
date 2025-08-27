@@ -1,7 +1,9 @@
 <template>
+  
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
+      <article v-if="post" :aria-labelledby="'post-title-' + post.id" 
+      :aria-describedby="'post-meta-' + post.id" aria-live="polite">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
             class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
@@ -11,12 +13,11 @@
                          group-hover:opacity-90 transition-opacity duration-200">
                 {{ post.title }}
               </span>
-              <a href="#search-engine-rankings" class="ml-2">go search engine rankings</a>
             </span>
           </h1>
           <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
         </header>
-        <div :id="'post-meta-' + post.id" class="text-gray-600 dark:text-gray-500 mb-8 text-base">
+        <div :id="'post-meta-' + post.id" class="text-gray-700 dark:text-gray-400 mb-8 text-base">
           <time :datetime="post.date" class="mr-4">
             {{ formatDate(post.date) }}
           </time>
@@ -24,19 +25,31 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
-          role="navigation" aria-labelledby="toc-heading">
+        <nav id="table-of-contents" 
+          :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" 
+          v-if="toc.length > 0"
+          role="navigation" 
+          aria-label="Table of Contents"
+          @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
+          @keydown.arrow-down.prevent="handleTocNav($event, 'down')"
+          @keydown.home.prevent="handleTocNav($event, 'home')"
+          @keydown.end.prevent="handleTocNav($event, 'end')"
+          @keydown.esc="toggleToc">
+          
           <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200 flex justify-center sm:justify-start">
             <button
               type="button"
               class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                     bg-indigo-600 text-white shadow-sm transition-colors duration-200
+                     bg-indigo-600 text-white shadow-sm transition-all duration-200
                      hover:bg-indigo-700 hover:shadow-md
-                     focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2
+                     focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+                     focus-visible:ring-indigo-500 focus-visible:ring-offset-white
                      dark:focus-visible:ring-offset-slate-900"
               :aria-expanded="tocOpen"
               aria-controls="toc-body"
               @click="toggleToc"
+              @keydown.space.enter.prevent="toggleToc"
+              :aria-label="tocOpen ? 'Collapse table of contents' : 'Expand table of contents'"
             >
               Table of Contents
               <span
@@ -48,40 +61,53 @@
               </span>
             </button>
           </h2>
+          
           <transition name="toc-slide">
-            <ul id="toc-body" class="space-y-1 toc-body" v-show="showTocBody">
-              <li v-for="(item, index) in toc" :key="index" :class="{
-                'ml-4': item.level === 'h3',
-                'ml-8': item.level === 'h4'
-              }">
-                <a :href="`#${item.id}`"
+            <ul 
+              id="toc-body" 
+              class="space-y-1 toc-body"
+              v-show="showTocBody"
+              aria-label="Sections">
+              
+              <li 
+                v-for="(item, index) in toc" 
+                :key="index"
+                :class="{
+                  'ml-4': item.level === 'h3',
+                  'ml-8': item.level === 'h4'
+                }">
+                
+                <a 
+                  :id="'toc-item-' + item.id"
+                  :href="'#' + item.id"
                   @click="handleTocClick"
-                  class="block py-1 px-2 -mx-2 rounded-md text-gray-600 hover:text-gray-900
-                   dark:text-gray-300 dark:hover:text-white transition-colors focus:outline-none 
-                   focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2
-                   focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-900"
-                  :class="[
-                    {
-                      'font-semibold': item.level === 'h2',
-                      'text-[1rem]': item.level === 'h3',
-                      'text-sm': item.level === 'h4',
-                      'bg-indigo-50 dark:bg-indigo-900/30': activeId === item.id
-                    }
-                  ]" 
-                  :aria-label="`Jump to ${item.text} section`"
+                  class="block py-1 px-2 -mx-2 rounded-md text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                  :class="{
+                    'font-semibold': item.level === 'h2',
+                    'text-base': item.level === 'h3',
+                    'text-sm': item.level === 'h4',
+                    'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-200': activeId === item.id,
+                    'pl-3': item.level === 'h2',
+                    'pl-2': item.level === 'h3',
+                    'pl-1': item.level === 'h4'
+                  }" 
+                  :aria-label="'Jump to ' + item.text + ' section'"
                   :aria-current="activeId === item.id ? 'location' : undefined"
-                  :tabindex="0">
-                  <span v-if="item.level === 'h3'">→ </span>
-                  <span v-if="item.level === 'h4'">⟶ </span>
+                  :tabindex="tocOpen ? 0 : -1"
+                  @focus="activeId = item.id">
+                  
+                  <span v-if="item.level === 'h3'" aria-hidden="true">→ </span>
+                  <span v-else-if="item.level === 'h4'" aria-hidden="true">⟶ </span>
                   {{ item.text }}
+                  
+                  <span v-if="activeId === item.id" class="sr-only">(current section)</span>
                 </a>
               </li>
             </ul>
           </transition>
         </nav>
 
-        <!-- 
-          Main content container with prose styling
+        <!-- Main content container with prose styling
           - Uses direct CSS selectors (no :deep) because:
             1. v-html content renders as direct children
             2. No component boundaries to cross
@@ -91,10 +117,11 @@
           - 'whitespace-pre-wrap' preserves formatting
         -->
         <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
-          role="article" aria-label="Blog post content" v-html="renderedContent">
+          role="article" aria-label="Blog post content" v-html="renderedContent"
+          aria-live="polite" aria-atomic="false">
         </div>
       </article>
-      <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true">
+      <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
         <div class="animate-pulse" role="presentation">
           <div class="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4" aria-hidden="true"></div>
           <div class="h-4 bg-gray-200 rounded w-1/4 mx-auto mb-8" aria-hidden="true"></div>
@@ -114,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { getPost } from '@/config/firebase';
 import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
@@ -154,7 +181,20 @@ const defaultMetaDescriptions = ref({
 // Mobile TOC drawer state (no visual change)
 const tocOpen = ref(false);
 const toggleToc = () => {
-  tocOpen.value = !tocOpen.value;
+  const wasOpen = tocOpen.value;
+  tocOpen.value = !wasOpen;
+  
+  nextTick(() => {
+    if (tocOpen.value) {
+      // Focus first item when opening
+      const firstItem = document.querySelector('#toc-body a[tabindex="0"]');
+      if (firstItem) firstItem.focus();
+    } else if (wasOpen) {
+      // Focus toggle button when closing
+      const toggleButton = document.querySelector('#toc-heading button');
+      if (toggleButton) toggleButton.focus();
+    }
+  });
 };
 
 const handleTocClick = (e) => {
@@ -193,6 +233,45 @@ const handleTocClick = (e) => {
 
 // TOC body visibility (collapsible on all screen sizes)
 const showTocBody = computed(() => tocOpen.value);
+
+// Generate structured data for TOC as ItemList
+// NOTE: moved below `toc` definition to avoid TDZ issues
+// The actual computed is defined after `toc` now.
+
+// Handle keyboard navigation in TOC
+const handleTocNav = (event, direction) => {
+  if (!tocOpen.value) return;
+  
+  const items = Array.from(document.querySelectorAll('#toc-body a[tabindex="0"]'));
+  if (!items.length) return;
+  
+  const currentIndex = items.findIndex(el => el === document.activeElement);
+  let nextIndex = currentIndex;
+  
+  switch (direction) {
+    case 'up':
+      nextIndex = currentIndex <= 0 ? items.length - 1 : currentIndex - 1;
+      break;
+    case 'down':
+      nextIndex = currentIndex === -1 || currentIndex === items.length - 1 ? 0 : currentIndex + 1;
+      break;
+    case 'home':
+      nextIndex = 0;
+      break;
+    case 'end':
+      nextIndex = items.length - 1;
+      break;
+  }
+  
+  const isValidIndex = nextIndex >= 0 && nextIndex < items.length;
+  const hasChangedPosition = nextIndex !== currentIndex;
+  
+  if (hasChangedPosition && isValidIndex) {
+    items[nextIndex].focus();
+    const id = items[nextIndex].getAttribute('href')?.substring(1);
+    if (id) activeId.value = id;
+  }
+};
 
 // Set up canonical URL management
 const canonicalUrl = ref('');
@@ -374,6 +453,100 @@ onMounted(async () => {
   }
 });
 
+const renderedContent = computed(() => {
+  if (!post.value || !post.value.content) return "";
+  const html = renderMarkdown(post.value.content);
+  return html;
+});
+
+const toc = computed(() => {
+  const headings = []
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(renderedContent.value, 'text/html')
+
+  // Get all h2, h3 and h4 elements
+  const headingElements = [...doc.querySelectorAll('h2, h3, h4')]
+
+  headingElements.forEach(heading => {
+    const id = heading.id
+    const text = heading.textContent
+    const level = heading.tagName.toLowerCase()
+
+    if (id && text) {
+      headings.push({
+        id,
+        text,
+        level
+      })
+    }
+  })
+
+  return headings
+})
+
+// Now that `toc` is defined, create the structured data computed
+const tocStructuredData = computed(() => {
+  try {
+    if (!post.value || !Array.isArray(toc.value) || toc.value.length === 0) return '';
+
+    const base = typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}`
+      : '';
+
+    const itemListElement = toc.value.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Thing',
+        '@id': base ? `${base}#${item.id}` : `#${item.id}`,
+        name: item.text
+      }
+    }));
+
+    const data = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement
+    };
+
+    return JSON.stringify(data);
+  } catch (e) {
+    return '';
+  }
+});
+
+const updateStructuredData = () => {
+  // Remove existing JSON-LD for TOC if any (target by id to avoid removing others)
+  const existing = document.getElementById('toc-jsonld');
+  if (existing) existing.remove();
+  
+  if (toc.value?.length) {
+    const script = document.createElement('script')
+    script.id = 'toc-jsonld'
+    script.type = 'application/ld+json'
+    script.text = tocStructuredData.value
+    document.head.appendChild(script)
+  }
+}
+
+// Watch toc changes and update structured data
+watch(toc, updateStructuredData, { deep: true })
+
+// Initial setup and cleanup
+onMounted(updateStructuredData)
+onUnmounted(() => {
+  const existing = document.getElementById('toc-jsonld');
+  if (existing) existing.remove();
+})
+
+// Scrollspy: track the currently visible heading and sync with TOC
+const { activeId, start: startScrollSpy } = useScrollSpy({
+  contentRoot: '#post-content',
+  headingSelector: 'h2, h3, h4',
+  offset: 0, // adjust if you introduce a fixed header
+  autoStart: false,
+})
+
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
   isMounted.value = false;
@@ -435,45 +608,6 @@ onUnmounted(() => {
 function deslugify(slug) {
   return slug.replace(/-/g, ' ');
 }
-
-const renderedContent = computed(() => {
-  if (!post.value || !post.value.content) return "";
-  const html = renderMarkdown(post.value.content);
-  return html;
-});
-
-const toc = computed(() => {
-  const headings = []
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(renderedContent.value, 'text/html')
-
-  // Get all h2, h3 and h4 elements
-  const headingElements = [...doc.querySelectorAll('h2, h3, h4')]
-
-  headingElements.forEach(heading => {
-    const id = heading.id
-    const text = heading.textContent
-    const level = heading.tagName.toLowerCase()
-
-    if (id && text) {
-      headings.push({
-        id,
-        text,
-        level
-      })
-    }
-  })
-
-  return headings
-})
-
-// Scrollspy: track the currently visible heading and sync with TOC
-const { activeId, start: startScrollSpy } = useScrollSpy({
-  contentRoot: '#post-content',
-  headingSelector: 'h2, h3, h4',
-  offset: 0, // adjust if you introduce a fixed header
-  autoStart: false,
-})
 
 </script>
 <!-- Externalized styles -->
