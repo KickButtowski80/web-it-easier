@@ -273,10 +273,11 @@
     color: #f9fafb;
   }
 
-  /* Container surface */
+  /* Container surface - dark mode */
   #table-of-contents.toc-bedazzled {
-    background: rgba(2, 6, 23, 0.82);
-    border-color: rgba(255, 255, 255, 0.08);
+    background: rgba(2, 6, 23, 0.88); /* Slightly more opaque for better contrast */
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Add subtle shadow for depth */
   }
   #table-of-contents.toc-bedazzled::before {
     opacity: 0.5; /* a bit more visible in dark */
@@ -294,28 +295,34 @@
     -webkit-backdrop-filter: blur(12px) saturate(120%);
   }
 
-  /* Link chips */
+  /* Link chips - dark mode */
   #table-of-contents.toc-bedazzled a {
     color: #f3f4f6;
-    background: rgba(17, 24, 39, 0.55);
+    background: rgba(17, 24, 39, 0.65); /* Slightly more opaque for better contrast */
+    border-left: 2px solid rgba(255, 255, 255, 0.08); /* Subtle left border */
   }
   #table-of-contents.toc-bedazzled a:hover {
-    background-color: #4338ca;
+    background-color: #4f46e5; /* Slightly brighter indigo */
     color: #ffffff;
+    transform: translateX(4px); /* Match light mode hover effect */
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3); /* Add subtle glow */
   }
   #table-of-contents.toc-open .toc-body a {
     color: #f3f4f6;
   }
   #table-of-contents.toc-bedazzled a.active {
-    background: #6366f1;
+    background: #4f46e5; /* Match hover state for consistency */
     color: #ffffff;
+    font-weight: 500;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4); /* Add subtle glow */
   }
 
-  /* Sticky not-open solid */
+  /* Sticky not-open solid - dark mode */
   #table-of-contents.toc-bedazzled:not(.toc-open) {
     background: #0f172a;
     background-image: none;
     backdrop-filter: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Subtle bottom border */
   }
 }
 
