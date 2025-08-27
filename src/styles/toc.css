@@ -273,6 +273,13 @@
     background-color: #4338ca;
     color: #ffffff;
   }
+
+  /* Solid sticky background when not open (dark override) */
+  #table-of-contents.toc-bedazzled:not(.toc-open) {
+    background: #0f172a; /* slate-900-ish */
+    background-image: none; /* remove decorative overlay */
+    backdrop-filter: none; /* remove glass blur */
+  }
 }
 
 
@@ -288,7 +295,14 @@
 
 }
 
-
+/* Re-assert dark not-open override after light rule so cascade in dark mode is correct */
+@media (prefers-color-scheme: dark) {
+  #table-of-contents.toc-bedazzled:not(.toc-open) {
+    background: #0f172a; /* slate-900-ish */
+    background-image: none; /* remove decorative overlay */
+    backdrop-filter: none; /* remove glass blur */
+  }
+}
 
 /* Make the list scrollable within viewport */
 #table-of-contents .toc-body {
@@ -352,5 +366,13 @@
   /* Also neutralize hover translation on mobile */
   #table-of-contents.toc-bedazzled a:hover {
     transform: none;
+  }
+}
+
+/* Dark + Mobile overrides: mirror light mobile container in dark mode */
+@media (prefers-color-scheme: dark) and (max-width: 640px) {
+  #table-of-contents.toc-bedazzled {
+    background: rgba(2, 6, 23, 0.85); /* slate-950-ish */
+    border-color: rgba(255, 255, 255, 0.08);
   }
 }
