@@ -3,7 +3,7 @@
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" 
-      :aria-describedby="'post-meta-' + post.id" aria-live="polite">
+      :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
             class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
@@ -18,7 +18,7 @@
           <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
         </header>
         <div :id="'post-meta-' + post.id" class="text-gray-700 dark:text-gray-400 mb-8 text-base">
-          <time :datetime="post.date" class="mr-4">
+          <time :datetime="new Date(post.date).toISOString()" class="mr-4">
             {{ formatDate(post.date) }}
           </time>
           <span>{{ post.readingTime }} min read</span>
@@ -28,7 +28,6 @@
         <nav id="table-of-contents" 
           :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" 
           v-if="toc.length > 0"
-          role="navigation" 
           aria-label="Table of Contents"
           @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
           @keydown.arrow-down.prevent="handleTocNav($event, 'down')"
@@ -117,8 +116,7 @@
           - 'whitespace-pre-wrap' preserves formatting
         -->
         <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
-          role="article" aria-label="Blog post content" v-html="renderedContent"
-          aria-live="polite" aria-atomic="false">
+          v-html="renderedContent">
         </div>
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
@@ -145,11 +143,11 @@ import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { getPost } from '@/config/firebase';
 import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
-import { updateCanonicalUrl } from '@/utils/seo-update-canonical-url';
+import { updateCanonicalUrl, restoreCanonical } from '@/utils/seo-update-canonical-url';
 import Notification from '@/components/UI/Notification.vue';
 import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
-import { updateMetaDescriptions } from '@/utils/seo-update-description';
+import { updateMetaDescriptions, updateMetaSocialTags } from '@/utils/seo-update-description';
 import useScrollSpy from '@/composables/useScrollSpy';
 
 // Props
@@ -295,9 +293,9 @@ const updateCanonicalTag = async () => {
     canonicalUrl.value = `${baseUrl}/blog/${slug}`;
     console.log('Generated canonical URL:', canonicalUrl.value);
 
-    // Update the canonical URL using the shared utility
-    console.log('Calling updateCanonicalUrl()...');
-    const result = updateCanonicalUrl();
+    // Update the canonical URL using the shared utility with our generated URL
+    console.log('Calling updateCanonicalUrl() with URL:', canonicalUrl.value);
+    const result = updateCanonicalUrl(canonicalUrl.value);
 
     if (result) {
       console.log('✅ Successfully updated canonical URL');
@@ -362,6 +360,7 @@ const scrollToHash = () => {
       // Fallback for browsers that don't support smooth scrolling
       window.scrollTo(0, offsetPosition);
     }
+    hasScrolledToHash.value = true;
   }
  
 };
@@ -389,11 +388,20 @@ onMounted(async () => {
       post.value = postData;
       // Set dynamic page title based on post content (SEO)
       if (post.value?.title) {
-        document.title = `${post.value.title} | Web It Easier`;
+        const pageTitle = `${post.value.title} | Web It Easier`;
+        document.title = pageTitle;
       } else {
         document.title = "Blog Post | Web It Easier";
       }
       await updateCanonicalTag();
+
+      // Update OG/Twitter meta title and URL to match the page
+      updateMetaSocialTags(
+        post.value?.title ? `${post.value.title} | Web It Easier` : document.title,
+        canonicalUrl.value || window.location.href,
+        'article' // Use 'article' type for blog posts
+      );
+
       // Generate and apply per-post meta description (no UI summary)
       const description = (() => {
         // Prefer explicit description if provided
@@ -436,6 +444,30 @@ onMounted(async () => {
         updateMetaDescriptions(description);
       }
 
+      // Inject Article JSON-LD structured data for the blog post
+      try {
+        const existing = document.getElementById('article-jsonld');
+        if (existing) existing.remove();
+
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const url = canonicalUrl.value || (baseUrl ? `${baseUrl}${window.location.pathname}` : '');
+        const data = {
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: post.value?.title || 'Blog Post',
+          description: description,
+          datePublished: new Date(post.value?.date || Date.now()).toISOString(),
+          dateModified: new Date(post.value?.date || Date.now()).toISOString(),
+          url,
+        };
+        const script = document.createElement('script');
+        script.id = 'article-jsonld';
+        script.type = 'application/ld+json';
+        script.text = JSON.stringify(data);
+        document.head.appendChild(script);
+      } catch (e) {
+        // noop
+      }
       // Ensure markdown is rendered, then start scrollspy so it can observe headings
       await nextTick();
       startScrollSpy();
@@ -444,7 +476,7 @@ onMounted(async () => {
       if (window.location.hash && !hasScrolledToHash.value) {
         // await nextTick();
         scrollToHash();
-        // hasScrolledToHash.value = true;
+        hasScrolledToHash.value = true;
       }
     }
   } catch (error) {
@@ -530,7 +562,7 @@ const updateStructuredData = () => {
 }
 
 // Watch toc changes and update structured data
-watch(toc, updateStructuredData, { deep: true })
+watch(toc, updateStructuredData)
 
 // Initial setup and cleanup
 onMounted(updateStructuredData)
@@ -551,32 +583,13 @@ const { activeId, start: startScrollSpy } = useScrollSpy({
 onUnmounted(() => {
   isMounted.value = false;
 
-  // Remove any existing canonical tag
-  const existingCanonical = document.querySelector('link[rel="canonical"]');
-  if (existingCanonical) {
-    existingCanonical.remove();
-  }
+  // Remove article JSON-LD if present
+  const articleJson = document.getElementById('article-jsonld');
+  if (articleJson) articleJson.remove();
 
-  // Restore the default canonical tag after the comment if it exists
-  if (defaultCanonical.value) {
-    const canonicalComment = Array.from(document.head.childNodes).find(
-      node => node.nodeType === Node.COMMENT_NODE &&
-        node.textContent.trim() === 'Canonical URL'
-    );
+  // Restore canonical URL using utility function
+  restoreCanonical(defaultCanonical.value);
 
-    if (canonicalComment) {
-      // Create a temporary div to parse the HTML string
-      const temp = document.createElement('div');
-      temp.innerHTML = defaultCanonical.value;
-      const defaultCanonicalEl = temp.firstChild;
-
-      // Insert after the comment
-      document.head.insertBefore(defaultCanonicalEl, canonicalComment.nextSibling);
-    } else {
-      // Fallback to appending if comment not found
-      document.head.insertAdjacentHTML('beforeend', defaultCanonical.value);
-    }
-  }
   // Restore original meta descriptions
   try {
     const ensureTag = (selector, attrs) => {
@@ -768,7 +781,7 @@ pre {
   margin-top: clamp(0.5em, 1.2vw, 1em);
   font-size: clamp(1rem, 2vw, 1.2rem);
   line-height: 1.9;
-  color: #1a202c;
+  color: #1f2937;
   background: rgba(236, 242, 253, 0.7);
   border-left-color: #2563eb;
   padding: 1rem;
@@ -965,7 +978,6 @@ a:focus-visible {
     background-color 0.2s ease,
     border-color 0.2s ease,
     box-shadow 0.2s ease;
-  overflow: hidden;
   cursor: default;
   width: 100%;
   box-sizing: border-box;
@@ -1203,7 +1215,7 @@ a:focus-visible {
     text-align: left;
   }
 
-  #post-content td:before {
+  #post-content td::before {
     content: attr(data-label);
     position: absolute;
     left: 0.5rem;

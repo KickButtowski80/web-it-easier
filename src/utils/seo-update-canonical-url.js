@@ -63,3 +63,52 @@ export function updateCanonicalUrl(customUrl = null) {
         return null;
     }
 }
+
+/**
+ * Restores the canonical URL to its original state
+ * @param {string} [originalCanonical] - Original canonical HTML to restore
+ * @param {string} [commentText] - Optional comment text to look for when restoring
+ */
+export function restoreCanonical(originalCanonical, commentText = 'Canonical URL') {
+    console.group('[Canonical] Restoring canonical URL');
+    try {
+        if (typeof window === 'undefined' || !document || !document.head) {
+            console.warn('Not in a browser environment');
+            console.groupEnd();
+            return;
+        }
+
+        // Remove any existing canonical tag
+        const existingCanonical = document.querySelector('link[rel="canonical"]');
+        if (existingCanonical) {
+            existingCanonical.remove();
+        }
+
+        if (originalCanonical) {
+            // Find comment if specified
+            const comment = commentText 
+                ? Array.from(document.head.childNodes).find(
+                    node => node.nodeType === Node.COMMENT_NODE &&
+                      node.textContent.trim() === commentText
+                  )
+                : null;
+
+            if (comment) {
+                // Create a temporary div to parse the HTML string
+                const temp = document.createElement('div');
+                temp.innerHTML = originalCanonical;
+                const defaultCanonicalEl = temp.firstChild;
+
+                // Insert after the comment
+                document.head.insertBefore(defaultCanonicalEl, comment.nextSibling);
+            } else {
+                // Fallback to appending
+                document.head.insertAdjacentHTML('beforeend', originalCanonical);
+            }
+        }
+        console.groupEnd();
+    } catch (error) {
+        console.error('Error in restoreCanonical:', error);
+        console.groupEnd();
+    }
+}

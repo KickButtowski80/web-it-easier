@@ -45,3 +45,41 @@ export function updateMetaDescriptions(description) {
     return null;
   }
 }
+
+/**
+ * Updates Open Graph and Twitter meta tags for title and URL
+ * @param {string} title - Page title
+ * @param {string} [url] - Optional URL (defaults to current URL)
+ * @param {string} [type] - Optional OG type (defaults to 'website')
+ */
+export function updateMetaSocialTags(title, url, type = 'website') {
+  try {
+    if (typeof window === 'undefined' || !document || !document.head) {
+      return;
+    }
+
+    const pageUrl = url || window.location.href;
+    const pageTitle = (title || '').trim();
+
+    const ensureTag = (selector, attrs) => {
+      let el = document.head.querySelector(selector);
+      if (!el) {
+        el = document.createElement('meta');
+        Object.entries(attrs).forEach(([k, v]) => (el.setAttribute(k, v)));
+        document.head.appendChild(el);
+      }
+      return el;
+    };
+
+    // Open Graph tags
+    ensureTag('meta[property="og:title"]', { property: 'og:title' }).setAttribute('content', pageTitle);
+    ensureTag('meta[property="og:url"]', { property: 'og:url' }).setAttribute('content', pageUrl);
+    ensureTag('meta[property="og:type"]', { property: 'og:type' }).setAttribute('content', type);
+
+    // Twitter tags
+    ensureTag('meta[name="twitter:title"]', { name: 'twitter:title' }).setAttribute('content', pageTitle);
+    ensureTag('meta[name="twitter:url"]', { name: 'twitter:url' }).setAttribute('content', pageUrl);
+  } catch (e) {
+    console.error('Error updating social meta tags:', e);
+  }
+}
