@@ -27,11 +27,23 @@
         <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
           role="navigation" aria-labelledby="toc-heading">
           <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200">
-            <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2"
-              :aria-expanded="tocOpen" aria-controls="toc-body" @click="toggleToc">
+            <button
+              type="button"
+              class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
+                     bg-indigo-600 text-white shadow-sm transition-colors duration-200
+                     hover:bg-indigo-700 hover:shadow-md
+                     focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2
+                     dark:focus-visible:ring-offset-slate-900"
+              :aria-expanded="tocOpen"
+              aria-controls="toc-body"
+              @click="toggleToc"
+            >
               Table of Contents
-              <span class="ml-2 text-sm transition-transform duration-200 inline-block"
-                :class="{ 'transform rotate-180': tocOpen }" aria-hidden="true">
+              <span
+                class="ml-1 text-sm transition-transform duration-200 inline-block"
+                :class="{ 'transform rotate-180': tocOpen }"
+                aria-hidden="true"
+              >
                 ▼
               </span>
             </button>
@@ -1570,9 +1582,8 @@ h3 {
   max-width: 100%;
   margin: 0 auto 2rem;
   z-index: 10;
-  align-self: flex-start; /* For flex/grid containers */
   max-height: calc(100vh - 2rem); /* Prevent it from being taller than viewport */
-  overflow-y: auto; /* Make it scrollable if content is too long */
+  overflow-y: auto; /* Make it scrollable if content is too long */ 
 }
 
 
