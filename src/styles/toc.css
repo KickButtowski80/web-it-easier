@@ -224,9 +224,23 @@
 
 }
 
-/* Dark mode overrides (kept together at the end for clear structure) */
-@media (prefers-color-scheme: dark) {
+/* Dark mode overrides consolidated later (after light not-open rule) */
 
+
+/* Ensure NON-transparent solid background when sticky ONLY when not open */
+#table-of-contents.toc-bedazzled:not(.toc-open) {
+  background: #ffffff;
+  /* solid */
+  background-image: none;
+  /* remove decorative overlay */
+  backdrop-filter: none;
+  /* remove glass blur */
+  width: 100%;
+
+}
+
+/* Consolidated Dark Mode: all dark overrides in one place */
+@media (prefers-color-scheme: dark) {
   /* Heading pill base (closed or open) */
   #table-of-contents #toc-heading {
     background: rgba(17, 24, 39, 0.35);
@@ -243,7 +257,7 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 16px rgba(0, 0, 0, 0.45);
   }
 
-  /* Open-state heading pill in dark mode overrides general open-state */
+  /* Open-state heading pill in dark mode */
   #table-of-contents.toc-open #toc-heading {
     background: rgba(30, 41, 59, 0.45);
     border-color: rgba(255, 255, 255, 0.18);
@@ -252,55 +266,56 @@
     -webkit-backdrop-filter: blur(8px) saturate(140%);
   }
 
+  /* Focus-visible on links */
   #table-of-contents a:focus-visible {
     outline-color: #60a5fa;
     background-color: rgba(96, 165, 250, 0.15);
     color: #f9fafb;
   }
 
+  /* Container surface */
   #table-of-contents.toc-bedazzled {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.68) 0%, rgba(30, 41, 59, 0.56) 100%);
-    border-color: rgba(99, 102, 241, 0.3);
-
+    background: rgba(2, 6, 23, 0.82);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  #table-of-contents.toc-bedazzled::before {
+    opacity: 0.5; /* a bit more visible in dark */
+    filter: saturate(70%) brightness(1.05) contrast(0.95); /* tone down intensity for a11y */
   }
 
+  /* Open-state container */
+  #table-of-contents.toc-open {
+    background: rgba(2, 6, 23, 0.75);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 14px 36px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+  }
+
+  /* Link chips */
   #table-of-contents.toc-bedazzled a {
-    color: #e5e7eb;
-    background: rgba(17, 24, 39, 0.4);
+    color: #f3f4f6;
+    background: rgba(17, 24, 39, 0.55);
   }
-
   #table-of-contents.toc-bedazzled a:hover {
     background-color: #4338ca;
     color: #ffffff;
   }
-
-  /* Solid sticky background when not open (dark override) */
-  #table-of-contents.toc-bedazzled:not(.toc-open) {
-    background: #0f172a; /* slate-900-ish */
-    background-image: none; /* remove decorative overlay */
-    backdrop-filter: none; /* remove glass blur */
+  #table-of-contents.toc-open .toc-body a {
+    color: #f3f4f6;
   }
-}
+  #table-of-contents.toc-bedazzled a.active {
+    background: #6366f1;
+    color: #ffffff;
+  }
 
-
-/* Ensure NON-transparent solid background when sticky ONLY when not open */
-#table-of-contents.toc-bedazzled:not(.toc-open) {
-  background: #ffffff;
-  /* solid */
-  background-image: none;
-  /* remove decorative overlay */
-  backdrop-filter: none;
-  /* remove glass blur */
-  width: 100%;
-
-}
-
-/* Re-assert dark not-open override after light rule so cascade in dark mode is correct */
-@media (prefers-color-scheme: dark) {
+  /* Sticky not-open solid */
   #table-of-contents.toc-bedazzled:not(.toc-open) {
-    background: #0f172a; /* slate-900-ish */
-    background-image: none; /* remove decorative overlay */
-    backdrop-filter: none; /* remove glass blur */
+    background: #0f172a;
+    background-image: none;
+    backdrop-filter: none;
   }
 }
 
@@ -325,9 +340,7 @@
   #table-of-contents.toc-bedazzled {
     padding: 0.75rem 0.75rem;
     border-radius: 0.75rem;
-    background: rgba(255, 255, 255, 0.92);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    /* background/border handled by color-scheme specific sections */
     overflow-x: hidden;
     /* prevent any horizontal scroll from transforms/padding */
   }
@@ -348,6 +361,12 @@
     background: inherit;
     backdrop-filter: inherit;
     -webkit-backdrop-filter: inherit;
+    /* Center the pill on small screens while preserving its intrinsic width */
+    display: block;            /* override base inline-block */
+    width: fit-content;        /* keep pill width to content */
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
 
@@ -366,13 +385,5 @@
   /* Also neutralize hover translation on mobile */
   #table-of-contents.toc-bedazzled a:hover {
     transform: none;
-  }
-}
-
-/* Dark + Mobile overrides: mirror light mobile container in dark mode */
-@media (prefers-color-scheme: dark) and (max-width: 640px) {
-  #table-of-contents.toc-bedazzled {
-    background: rgba(2, 6, 23, 0.85); /* slate-950-ish */
-    border-color: rgba(255, 255, 255, 0.08);
   }
 }
