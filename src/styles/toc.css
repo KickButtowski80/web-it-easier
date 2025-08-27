@@ -82,14 +82,15 @@
   border: 2px solid #a5b4fc;
   box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.09);
   padding: 2rem 1.5rem;
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 }
 
-/* 
-#table-of-contents.toc-bedazzled:hover {
-  transform: translateY(0rem);
-} */
+
+
 #table-of-contents.toc-bedazzled::before {
   content: "";
   position: absolute;
@@ -143,30 +144,35 @@
 /* TOC transition styles (all screen sizes) */
 #table-of-contents .toc-body {
   overflow: hidden;
-  will-change: max-height, opacity, transform;
+  will-change: transform, opacity;
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.toc-slide-enter-active,
+.toc-slide-enter-active {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
+              opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+}
+
 .toc-slide-leave-active {
-  transition:
-    max-height 0.55s ease-in-out,
-    opacity 0.5s ease-in-out,
-    transform 0.5s ease-in-out;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .toc-slide-enter-from,
 .toc-slide-leave-to {
-  max-height: 0;
   opacity: 0;
-  transform: translateY(-6px);
+  transform: scaleY(0.95);
+  transform-origin: top;
 }
 
 .toc-slide-enter-to,
 .toc-slide-leave-from {
-  max-height: 1000px;
-  /* large enough to cover typical TOC content */
   opacity: 1;
-  transform: translateY(0);
+  /* scaleY is unitless 1 means 100%*/
+  transform: scaleY(1);
+  transform-origin: top;
 }
 
 /* Ensure headings are not hidden when jumping to hashes without JS assist */
