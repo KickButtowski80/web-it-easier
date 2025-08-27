@@ -56,17 +56,21 @@
               }">
                 <a :href="`#${item.id}`"
                   @click="handleTocClick"
-                  class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors"
+                  class="block py-1 px-2 -mx-2 rounded-md text-gray-600 hover:text-gray-900
+                   dark:text-gray-300 dark:hover:text-white transition-colors focus:outline-none 
+                   focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2
+                   focus-visible:ring-offset-gray-50 dark:focus-visible:ring-offset-gray-900"
                   :class="[
                     {
                       'font-semibold': item.level === 'h2',
                       'text-[1rem]': item.level === 'h3',
-                      'text-sm': item.level === 'h4'
-                    },
-                    { active: activeId === item.id }
+                      'text-sm': item.level === 'h4',
+                      'bg-indigo-50 dark:bg-indigo-900/30': activeId === item.id
+                    }
                   ]" 
-                  :aria-current="activeId === item.id ? 'true' : undefined"
-                 >
+                  :aria-label="`Jump to ${item.text} section`"
+                  :aria-current="activeId === item.id ? 'location' : undefined"
+                  :tabindex="0">
                   <span v-if="item.level === 'h3'">→ </span>
                   <span v-if="item.level === 'h4'">⟶ </span>
                   {{ item.text }}
