@@ -1,8 +1,9 @@
 /**
  * Updates the canonical URL for the current page
+ * @param {string} [customUrl] - Optional custom URL to use instead of generating one
  * @returns {string} The updated canonical URL or null if there was an error
  */
-export function updateCanonicalUrl() {
+export function updateCanonicalUrl(customUrl = null) {
     console.group('[Canonical] Updating canonical URL');
     try {
         if (typeof window === 'undefined' || !document || !document.head) {
@@ -11,13 +12,15 @@ export function updateCanonicalUrl() {
             return null;
         }
 
-        // Always use the production domain for canonical URLs
-        const baseUrl = 'https://web-it-easier.vercel.app';
-        const path = window.location.pathname.replace(/\/+$/, ''); // Remove trailing slashes if present
-        const canonicalUrl = baseUrl + (path || '/');
+        let canonicalUrl = customUrl;
         
-        console.log('Base URL:', baseUrl);
-        console.log('Current path:', window.location.pathname);
+        // If no custom URL provided, generate one based on current path
+        if (!canonicalUrl) {
+            const baseUrl = 'https://web-it-easier.vercel.app';
+            const path = window.location.pathname.replace(/\/+$/, ''); // Remove trailing slashes if present
+            canonicalUrl = baseUrl + (path || '/');
+        }
+        
         console.log('Generated canonical URL:', canonicalUrl);
         
         if (!canonicalUrl) {
