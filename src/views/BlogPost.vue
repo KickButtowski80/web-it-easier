@@ -399,7 +399,8 @@ onMounted(async () => {
       updateMetaSocialTags(
         post.value?.title ? `${post.value.title} | Web It Easier` : document.title,
         canonicalUrl.value || window.location.href,
-        'article' // Use 'article' type for blog posts
+        'article', // Use 'article' type for blog posts
+        post.value?.description || '' // Pass description or empty string
       );
 
       // Generate and apply per-post meta description (no UI summary)
