@@ -75,10 +75,18 @@ export function updateMetaSocialTags(title, url, type = 'website') {
     ensureTag('meta[property="og:title"]', { property: 'og:title' }).setAttribute('content', pageTitle);
     ensureTag('meta[property="og:url"]', { property: 'og:url' }).setAttribute('content', pageUrl);
     ensureTag('meta[property="og:type"]', { property: 'og:type' }).setAttribute('content', type);
-
-    // Twitter tags
+    
+    // Twitter Card tags
+    ensureTag('meta[name="twitter:card"]', { name: 'twitter:card' }).setAttribute('content', 'summary_large_image');
     ensureTag('meta[name="twitter:title"]', { name: 'twitter:title' }).setAttribute('content', pageTitle);
     ensureTag('meta[name="twitter:url"]', { name: 'twitter:url' }).setAttribute('content', pageUrl);
+    
+    // Add description if provided (truncate to 200 chars for Twitter)
+    if (description) {
+      const twitterDescription = description.length > 200 ? description.substring(0, 197) + '...' : description;
+      ensureTag('meta[name="twitter:description"]', { name: 'twitter:description' })
+        .setAttribute('content', twitterDescription);
+    }
   } catch (e) {
     console.error('Error updating social meta tags:', e);
   }
