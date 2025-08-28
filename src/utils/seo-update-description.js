@@ -52,7 +52,7 @@ export function updateMetaDescriptions(description) {
  * @param {string} [url] - Optional URL (defaults to current URL)
  * @param {string} [type] - Optional OG type (defaults to 'website')
  */
-export function updateMetaSocialTags(title, url, type = 'website') {
+export function updateMetaSocialTags(title, url, type = 'website', description = '') {
   try {
     if (typeof window === 'undefined' || !document || !document.head) {
       return;
