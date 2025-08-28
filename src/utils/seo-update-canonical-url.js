@@ -1,8 +1,9 @@
 /**
  * Updates the canonical URL for the current page
+ * @param {string} [customUrl] - Optional custom URL to use instead of generating one
  * @returns {string} The updated canonical URL or null if there was an error
  */
-export function updateCanonicalUrl() {
+export function updateCanonicalUrl(customUrl = null) {
     console.group('[Canonical] Updating canonical URL');
     try {
         if (typeof window === 'undefined' || !document || !document.head) {
@@ -11,13 +12,15 @@ export function updateCanonicalUrl() {
             return null;
         }
 
-        // Always use the production domain for canonical URLs
-        const baseUrl = 'https://web-it-easier.vercel.app';
-        const path = window.location.pathname.replace(/\/+$/, ''); // Remove trailing slashes if present
-        const canonicalUrl = baseUrl + (path || '/');
+        let canonicalUrl = customUrl;
         
-        console.log('Base URL:', baseUrl);
-        console.log('Current path:', window.location.pathname);
+        // If no custom URL provided, generate one based on current path
+        if (!canonicalUrl) {
+            const baseUrl = 'https://web-it-easier.vercel.app';
+            const path = window.location.pathname.replace(/\/+$/, ''); // Remove trailing slashes if present
+            canonicalUrl = baseUrl + (path || '/');
+        }
+        
         console.log('Generated canonical URL:', canonicalUrl);
         
         if (!canonicalUrl) {
@@ -58,5 +61,54 @@ export function updateCanonicalUrl() {
         console.error('Error in updateCanonicalUrl:', error);
         console.groupEnd();
         return null;
+    }
+}
+
+/**
+ * Restores the canonical URL to its original state
+ * @param {string} [originalCanonical] - Original canonical HTML to restore
+ * @param {string} [commentText] - Optional comment text to look for when restoring
+ */
+export function restoreCanonical(originalCanonical, commentText = 'Canonical URL') {
+    console.group('[Canonical] Restoring canonical URL');
+    try {
+        if (typeof window === 'undefined' || !document || !document.head) {
+            console.warn('Not in a browser environment');
+            console.groupEnd();
+            return;
+        }
+
+        // Remove any existing canonical tag
+        const existingCanonical = document.querySelector('link[rel="canonical"]');
+        if (existingCanonical) {
+            existingCanonical.remove();
+        }
+
+        if (originalCanonical) {
+            // Find comment if specified
+            const comment = commentText 
+                ? Array.from(document.head.childNodes).find(
+                    node => node.nodeType === Node.COMMENT_NODE &&
+                      node.textContent.trim() === commentText
+                  )
+                : null;
+
+            if (comment) {
+                // Create a temporary div to parse the HTML string
+                const temp = document.createElement('div');
+                temp.innerHTML = originalCanonical;
+                const defaultCanonicalEl = temp.firstChild;
+
+                // Insert after the comment
+                document.head.insertBefore(defaultCanonicalEl, comment.nextSibling);
+            } else {
+                // Fallback to appending
+                document.head.insertAdjacentHTML('beforeend', originalCanonical);
+            }
+        }
+        console.groupEnd();
+    } catch (error) {
+        console.error('Error in restoreCanonical:', error);
+        console.groupEnd();
     }
 }

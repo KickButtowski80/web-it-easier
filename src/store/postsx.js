@@ -19,7 +19,7 @@ Today's online visitors are impatient. Research shows that:
 
 Think of your website speed as the digital equivalent of a store's front door:
 
-\`\`\`
+\`\`\`text
 Faster Websites → Better Visitor Experience
               → Visitors Stay Longer
               → More People Buy
@@ -31,7 +31,7 @@ Real-world example: When Walmart made their website faster by just 1 second, the
 
 Google and other search engines prefer faster websites. When two websites have similar content, the faster one typically appears higher in search results:
 
-\`\`\`
+\`\`\`text
 Faster Website = Higher in Search Results = More Visitors
 \`\`\`
 
@@ -46,7 +46,7 @@ Most people now browse on phones rather than computers, and mobile users are eve
 
 Let's look at a simple example:
 
-\`\`\`
+\`\`\`text
 If your website gets 10,000 visitors per day
 And 2% of them make a purchase (200 people)
 With an average purchase of $50

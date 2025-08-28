@@ -6,13 +6,20 @@
   html {
     scroll-behavior: smooth;
     /* font-family: system-ui; */
-   /* Fallback to system fonts while Alata loads */
-   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
-   'Helvetica Neue', Arial, sans-serif;
-    @apply scroll-p-navbar-height  md:scroll-p-md-navbar-height;
+    /* Fallback to system fonts while Alata loads */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+    'Helvetica Neue', Arial, sans-serif;
   }
+  
 
-
+  img, svg, video, canvas, audio, iframe, embed, object {
+    max-width: 100%;
+    height: auto;
+  }
+  /* Respect intrinsic ratio when explicit width/height attributes exist */
+  img[width][height] {
+    height: auto;
+  }
   body {
     /* Global light/dark surfaces and text */
     @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100;
@@ -45,5 +52,13 @@
   .gray-bg-card {
     @apply px-6 py-4 bg-gray-200  mx-2 rounded-md shadow-sm;
   }
+  /* Optional utility: center block images where needed */
+  .img-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
+
+
 

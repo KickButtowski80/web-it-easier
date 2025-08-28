@@ -1,0 +1,402 @@
+#table-of-contents #toc-heading {
+  /* base glass effect even when closed (slightly subtler) */
+  display: inline-block;
+  padding: 0.3rem 0.65rem;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 4px 12px rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(6px) saturate(130%);
+  -webkit-backdrop-filter: blur(6px) saturate(130%);
+  transition: background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Dark mode is handled exclusively via media queries below */
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+  #table-of-contents #toc-heading,
+  #table-of-contents #toc-heading:hover,
+  #table-of-contents .toc-body,
+  #table-of-contents.toc-bedazzled a,
+  #table-of-contents.toc-open .toc-body a {
+    transition: none;
+  }
+
+  #table-of-contents #toc-heading:hover,
+  #table-of-contents.toc-bedazzled a:hover,
+  #table-of-contents.toc-open .toc-body a:hover {
+    transform: none;
+  }
+}
+
+#table-of-contents #toc-heading:hover {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 4px 20px rgba(79, 70, 229, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* Focus state for better keyboard navigation */
+#table-of-contents #toc-heading:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+  border-color: transparent;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Table of Contents Styles */
+#table-of-contents a {
+  display: inline-block;
+  /* padding: 0.125rem 0.25rem; */
+  border-radius: 0.375rem;
+  outline: none;
+  /* Prevent horizontal scrolling by wrapping long text */
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+#table-of-contents a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  background-color: rgba(37, 99, 235, 0.08);
+  color: #1f2937;
+}
+
+#table-of-contents.toc-bedazzled {
+  overflow: clip;
+  position: sticky;
+  top: var(--navbar-height, 96px);
+  width: 100%;
+  z-index: 20;
+  /* above content backgrounds, below nav */
+  background: url("data:image/svg+xml;utf8,<svg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='20' cy='20' r='1.5' fill='%23a5b4fc' opacity='0.4'/><circle cx='10' cy='30' r='1' fill='%23f472b6' opacity='0.3'/><circle cx='30' cy='10' r='1' fill='%23fbbf24' opacity='0.3'/></svg>"),
+    linear-gradient(135deg, rgba(228, 219, 219, 0.95) 65%, rgba(154, 164, 170, 0.85) 100%);
+  background-blend-mode: overlay;
+  border-radius: 1rem;
+  border: 2px solid #a5b4fc;
+  box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.09);
+  padding: 2rem 1.5rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+}
+
+
+
+#table-of-contents.toc-bedazzled::before {
+  content: "";
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  width: min(20rem, 40%);
+  aspect-ratio: 1 / 1;
+  box-sizing: border-box;
+  background: url("data:image/svg+xml;utf8,<svg width='320' height='320' viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'><rect x='0' y='0' width='32' height='32' fill='%236366f1' fill-opacity='0.6'/><rect x='32' y='32' width='32' height='32' fill='%23fbbf24' fill-opacity='0.5'/><circle cx='48' cy='16' r='10' fill='%23f472b6' fill-opacity='0.3'/><rect x='16' y='48' width='16' height='8' fill='%233b82f6' fill-opacity='0.4'/></svg>") no-repeat right bottom / contain;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+
+#table-of-contents.toc-bedazzled ul {
+  background: transparent;
+  list-style: none;
+  padding-left: 1rem;
+}
+
+#table-of-contents.toc-bedazzled a {
+  background: rgba(152, 64, 240, 0.4);
+  border-radius: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  transform: translateX(-4px);
+  font-size: clamp(0.85rem, 3.5vw + 0.1rem, 1rem);
+  font-weight: 500;
+  transition: color 0.2s, transform 0.2s, background-color 0.2s;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+#table-of-contents.toc-bedazzled a:hover {
+  transform: translateX(4px);
+  background-color: #4f46e5;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#table-of-contents.toc-bedazzled a.active {
+  background: #717ec3;
+  color: #1A202C;
+  font-weight: bold;
+}
+
+#table-of-contents.toc-bedazzled h2 {
+  color: #6366f1;
+  letter-spacing: 0.03em;
+}
+
+/* TOC transition styles (all screen sizes) */
+#table-of-contents .toc-body {
+  overflow: hidden;
+  will-change: transform, opacity;
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-slide-enter-active {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0.05s,
+              opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1) 0.05s;
+}
+
+.toc-slide-leave-active {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toc-slide-enter-from,
+.toc-slide-leave-to {
+  opacity: 0;
+  transform: scaleY(0.95);
+  transform-origin: top;
+}
+
+.toc-slide-enter-to,
+.toc-slide-leave-from {
+  opacity: 1;
+  /* scaleY is unitless 1 means 100%*/
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+/* Ensure headings are not hidden when jumping to hashes without JS assist */
+#post-content h2,
+#post-content h3,
+#post-content h4 {
+  scroll-margin-top: calc(var(--navbar-height, 96px) + 20px);
+}
+
+/* Emphasize heading and items when TOC is expanded */
+#table-of-contents.toc-open #toc-heading {
+  /* Glassmorphic pill for the title when open */
+  display: inline-block;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 6px 16px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(8px) saturate(140%);
+  -webkit-backdrop-filter: blur(8px) saturate(140%);
+  color: #0f172a;
+  /* readable text */
+  letter-spacing: 0.01em;
+  font-weight: 750;
+  font-size: 1.125rem;
+  /* ~text-xl */
+  transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+#table-of-contents.toc-open .toc-body a {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  color: #0f172a;
+  /* slate-950-ish for readability */
+  font-weight: 650;
+}
+
+#table-of-contents.toc-open .toc-body a:hover {
+  background-color: rgba(37, 99, 235, 0.95);
+  color: #ffffff;
+  transform: translateX(6px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+}
+
+/* Emphasize container when open (single definitive rule) */
+#table-of-contents.toc-open {
+  background: rgba(255, 255, 255, 0.35);
+  /* glassmorphic surface */
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(14px) saturate(100%);
+  -webkit-backdrop-filter: blur(14px) saturate(100%);
+
+}
+
+/* Dark mode overrides consolidated later (after light not-open rule) */
+
+
+/* Ensure NON-transparent solid background when sticky ONLY when not open */
+#table-of-contents.toc-bedazzled:not(.toc-open) {
+  background: #ffffff;
+  /* solid */
+  background-image: none;
+  /* remove decorative overlay */
+  backdrop-filter: none;
+  /* remove glass blur */
+  width: 100%;
+
+}
+
+/* Consolidated Dark Mode: all dark overrides in one place */
+@media (prefers-color-scheme: dark) {
+  /* Heading pill base (closed or open) */
+  #table-of-contents #toc-heading {
+    background: rgba(17, 24, 39, 0.35);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.35);
+    color: #e5e7eb;
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+  }
+
+  /* Hover on heading pill */
+  #table-of-contents #toc-heading:hover {
+    background: rgba(17, 24, 39, 0.42);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 6px 16px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Open-state heading pill in dark mode */
+  #table-of-contents.toc-open #toc-heading {
+    background: rgba(30, 41, 59, 0.45);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #f3f4f6;
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+  }
+
+  /* Focus-visible on links */
+  #table-of-contents a:focus-visible {
+    outline-color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.15);
+    color: #f9fafb;
+  }
+
+  /* Container surface - dark mode */
+  #table-of-contents.toc-bedazzled {
+    background: rgba(2, 6, 23, 0.88); /* Slightly more opaque for better contrast */
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); /* Add subtle shadow for depth */
+  }
+  #table-of-contents.toc-bedazzled::before {
+    opacity: 0.5; /* a bit more visible in dark */
+    filter: saturate(70%) brightness(1.05) contrast(0.95); /* tone down intensity for a11y */
+  }
+
+  /* Open-state container */
+  #table-of-contents.toc-open {
+    background: rgba(2, 6, 23, 0.75);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 14px 36px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+  }
+
+  /* Link chips - dark mode */
+  #table-of-contents.toc-bedazzled a {
+    color: #f3f4f6;
+    background: rgba(17, 24, 39, 0.65); /* Slightly more opaque for better contrast */
+    border-left: 2px solid rgba(255, 255, 255, 0.08); /* Subtle left border */
+  }
+  #table-of-contents.toc-bedazzled a:hover {
+    background-color: #4f46e5; /* Slightly brighter indigo */
+    color: #ffffff;
+    transform: translateX(4px); /* Match light mode hover effect */
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3); /* Add subtle glow */
+  }
+  #table-of-contents.toc-open .toc-body a {
+    color: #f3f4f6;
+  }
+  #table-of-contents.toc-bedazzled a.active {
+    background: #4f46e5; /* Match hover state for consistency */
+    color: #ffffff;
+    font-weight: 500;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4); /* Add subtle glow */
+  }
+
+  /* Sticky not-open solid - dark mode */
+  #table-of-contents.toc-bedazzled:not(.toc-open) {
+    background: #0f172a;
+    background-image: none;
+    backdrop-filter: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Subtle bottom border */
+  }
+}
+
+/* Make the list scrollable within viewport */
+#table-of-contents .toc-body {
+  /* Account for navbar height + safe areas so last items are reachable */
+  max-height: min(60vh, calc(100dvh - var(--navbar-height, 96px) - 3rem));
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Isolate TOC scroll so page scroll doesn't feel rubbery */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  /* iOS momentum scrolling */
+  padding-bottom: 1rem;
+  /* ensure last item can be scrolled fully into view */
+}
+
+/* Mobile: compact sticky band */
+@media (max-width: 640px) {
+
+  /* Trim visuals and padding for the container */
+  #table-of-contents.toc-bedazzled {
+    padding: 0.75rem 0.75rem;
+    border-radius: 0.75rem;
+    /* background/border handled by color-scheme specific sections */
+    overflow-x: hidden;
+    /* prevent any horizontal scroll from transforms/padding */
+  }
+
+
+  /* Show decorative overlay art on small screens (per mobile design) */
+  #table-of-contents.toc-bedazzled::before {
+    display: block;
+  }
+
+
+  #table-of-contents #toc-heading {
+    font-size: 1rem;
+    padding: 0.25rem 0.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: inherit;
+    backdrop-filter: inherit;
+    -webkit-backdrop-filter: inherit;
+    /* Center the pill on small screens while preserving its intrinsic width */
+    display: block;            /* override base inline-block */
+    width: fit-content;        /* keep pill width to content */
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+
+  #table-of-contents .toc-body {
+    max-height: 35vh;
+
+  }
+
+
+  #table-of-contents.toc-bedazzled a {
+    font-size: 0.95rem;
+    padding: 0.2rem 0.5rem;
+    transform: none;
+  }
+
+  /* Also neutralize hover translation on mobile */
+  #table-of-contents.toc-bedazzled a:hover {
+    transform: none;
+  }
+}
