@@ -67,7 +67,7 @@ export function injectBlogPostStructuredData({
 
     // Get base URL
     const baseUrl = window.location.origin;
-    const canonicalUrl = url || `${baseUrl}${window.location.pathname}`;
+    const url = canonicalUrl || `${baseUrl}${window.location.pathname}`;
 
     // Format dates to ISO string
     const formatDate = (date) => new Date(date || Date.now()).toISOString();
@@ -79,8 +79,11 @@ export function injectBlogPostStructuredData({
       headline: title || 'Blog Post',
       description: excerpt || '',
       datePublished: formatDate(publishedAt),
-      dateModified: formatDate(updatedAt || publishedAt),
-      url: canonicalUrl,
+      dateModified: formatDate(updatedAt),
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': url
+      },
       ...blogPost,
       ...additionalSchema
     };
@@ -89,7 +92,10 @@ export function injectBlogPostStructuredData({
     const script = document.createElement('script');
     script.id = 'article-jsonld';
     script.type = 'application/ld+json';
-    script.text = JSON.stringify(blogPostData);
+    script.text = JSON.stringify({
+      ...blogPostData,
+      url: url  // Ensure URL is included in the final output
+    }, null, 2);
     document.head.appendChild(script);
   } catch (error) {
     console.error('Error injecting structured data:', error);
