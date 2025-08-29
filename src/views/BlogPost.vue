@@ -80,15 +80,27 @@
                   :id="'toc-item-' + item.id"
                   :href="'#' + item.id"
                   @click="handleTocClick"
-                  class="block py-1 px-2 -mx-2 rounded-md text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                  :style="{
+                    border: '2px solid',
+                    borderColor: activeId === item.id ? 'red' : 'transparent',
+                    backgroundColor: activeId === item.id ? 'rgba(239, 68, 68, 0.2)' : 'transparent',
+                    color: activeId === item.id ? 'red' : 'inherit',
+                    fontWeight: activeId === item.id ? 'bold' : 'inherit',
+                    borderRadius: '0.25rem',
+                    padding: '0.25rem 0.5rem',
+                    margin: '0.125rem 0',
+                    display: 'block',
+                    transition: 'all 0.2s ease'
+                  }"
+                  class="block py-1 px-2 -mx-2 rounded-md transition-all hover:bg-gray-100 dark:hover:bg-gray-800"
                   :class="{
                     'font-semibold': item.level === 'h2',
                     'text-base': item.level === 'h3',
                     'text-sm': item.level === 'h4',
-                    'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-200': activeId === item.id,
                     'pl-3': item.level === 'h2',
                     'pl-2': item.level === 'h3',
-                    'pl-1': item.level === 'h4'
+                    'pl-1': item.level === 'h4',
+                    'active-toc-item': activeId === item.id
                   }" 
                   :aria-label="'Jump to ' + item.text + ' section'"
                   :aria-current="activeId === item.id ? 'location' : undefined"
@@ -100,6 +112,7 @@
                   {{ item.text }}
                   
                   <span v-if="activeId === item.id" class="sr-only">(current section)</span>
+       
                 </a>
               </li>
             </ul>
@@ -141,6 +154,11 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { getPost } from '@/config/firebase';
+import { 
+  injectBlogPostStructuredData, 
+  removeStructuredData,
+  injectTocJsonLd 
+} from '@/utils/json-ld-structured-data';
 import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
 import { updateCanonicalUrl, restoreCanonical } from '@/utils/seo-update-canonical-url';
@@ -196,8 +214,8 @@ const toggleToc = () => {
 };
 
 const handleTocClick = (e) => {
-  // Close the TOC drawer immediately to avoid overlaying the target
-  tocOpen.value = false;
+  // Don't close the TOC drawer - keep it open
+  // tocOpen.value = false;
   
   // Get the target ID from the href attribute
   const href = e.currentTarget.getAttribute('href');
@@ -205,6 +223,10 @@ const handleTocClick = (e) => {
   
   const id = href.slice(1);
   e.preventDefault();
+  
+  // Update the activeId immediately for instant feedback
+  activeId.value = id;
+  console.log('TOC clicked, setting activeId to:', id);
   
   // Update the URL hash without pushing a new history entry
   window.history.replaceState({}, '', `#${id}`);
@@ -402,6 +424,9 @@ onMounted(async () => {
         'article', // Use 'article' type for blog posts
         post.value?.description || '' // Pass description or empty string
       );
+      
+      // Initialize structured data after content is loaded
+      updateStructuredData();
 
       // Generate and apply per-post meta description (no UI summary)
       const description = (() => {
@@ -446,39 +471,23 @@ onMounted(async () => {
       }
 
       // Inject Article JSON-LD structured data for the blog post
-      try {
-        const existing = document.getElementById('article-jsonld');
-        if (existing) existing.remove();
-
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        const url = canonicalUrl.value || (baseUrl ? `${baseUrl}${window.location.pathname}` : '');
-        const data = {
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          headline: post.value?.title || 'Blog Post',
-          description: description,
-          datePublished: new Date(post.value?.date || Date.now()).toISOString(),
-          dateModified: new Date(post.value?.date || Date.now()).toISOString(),
-          url,
-        };
-        const script = document.createElement('script');
-        script.id = 'article-jsonld';
-        script.type = 'application/ld+json';
-        script.text = JSON.stringify(data);
-        document.head.appendChild(script);
-      } catch (e) {
-        // noop
-      }
-      // Ensure markdown is rendered, then start scrollspy so it can observe headings
-      await nextTick();
+      injectBlogPostStructuredData(
+        {
+          title: post.value?.title,
+          excerpt: description,
+          publishedAt: post.value?.date,
+          dateModified: post.value?.date,
+        },
+        canonicalUrl.value
+      );
+      // 
       startScrollSpy();
-
       // After content is rendered, handle initial hash scroll once
       if (window.location.hash && !hasScrolledToHash.value) {
-        // await nextTick();
         scrollToHash();
         hasScrolledToHash.value = true;
       }
+  
     }
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -517,76 +526,45 @@ const toc = computed(() => {
   return headings
 })
 
-// Now that `toc` is defined, create the structured data computed
-const tocStructuredData = computed(() => {
-  try {
-    if (!post.value || !Array.isArray(toc.value) || toc.value.length === 0) return '';
-
-    const base = typeof window !== 'undefined'
-      ? `${window.location.origin}${window.location.pathname}`
-      : '';
-
-    const itemListElement = toc.value.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Thing',
-        '@id': base ? `${base}#${item.id}` : `#${item.id}`,
-        name: item.text
-      }
-    }));
-
-    const data = {
-      '@context': 'https://schema.org',
-      '@type': 'ItemList',
-      itemListElement
-    };
-
-    return JSON.stringify(data);
-  } catch (e) {
-    return '';
-  }
-});
 
 const updateStructuredData = () => {
-  // Remove existing JSON-LD for TOC if any (target by id to avoid removing others)
-  const existing = document.getElementById('toc-jsonld');
-  if (existing) existing.remove();
-  
   if (toc.value?.length) {
-    const script = document.createElement('script')
-    script.id = 'toc-jsonld'
-    script.type = 'application/ld+json'
-    script.text = tocStructuredData.value
-    document.head.appendChild(script)
+    injectTocJsonLd(toc.value);
   }
 }
 
 // Watch toc changes and update structured data
-watch(toc, updateStructuredData)
-
-// Initial setup and cleanup
-onMounted(updateStructuredData)
-onUnmounted(() => {
-  const existing = document.getElementById('toc-jsonld');
-  if (existing) existing.remove();
+watch(toc, (newToc) => {
+  console.log('TOC items:', newToc.map(item => ({
+    id: item.id,
+    text: item.text,
+    level: item.level
+  })))
+  if (newToc?.length) {
+    injectTocJsonLd(newToc);
+  }
 })
 
-// Scrollspy: track the currently visible heading and sync with TOC
+
+
+
+// Track active heading for TOC highlighting using the composable
 const { activeId, start: startScrollSpy } = useScrollSpy({
   contentRoot: '#post-content',
   headingSelector: 'h2, h3, h4',
-  offset: 0, // adjust if you introduce a fixed header
-  autoStart: false,
-})
+  offset: 80, // Adjust based on your header height
+  autoStart: false // We'll start it manually after content loads
+});
+ 
+
+ 
 
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
   isMounted.value = false;
 
-  // Remove article JSON-LD if present
-  const articleJson = document.getElementById('article-jsonld');
-  if (articleJson) articleJson.remove();
+  // Remove all JSON-LD structured data
+  removeStructuredData('all');
 
   // Restore canonical URL using utility function
   restoreCanonical(defaultCanonical.value);
@@ -748,190 +726,22 @@ body {
   font-style: italic;
 }
 
-/* Base code block styling */
-pre {
-  background-color: #f6f8fa;
-  border-radius: 6px;
-  padding: 0.5rem;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  hyphens: auto;
-  text-align: justify;
-  text-justify: inter-word;
-  position: relative;
-  padding: 1.5rem 1.75rem;
-  background: rgba(249, 250, 251, 0.7);
-  border-radius: 12px;
-  border-left: 4px solid #3b82f6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+/* Prevent cascading resets to child elements */
+#post-content.prose blockquote p * {
+  all: revert;
 }
 
-/* Hover effect */
-#post-content p:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
-  background: rgba(249, 250, 251, 0.9);
+#post-content.prose blockquote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.9em;
+  color: #6b7280;
+  font-style: normal;
+  font-weight: 500;
 }
 
-/* First paragraph after headings */
-#post-content h2+p,
-#post-content h3+p,
-#post-content h4+p {
-  margin-top: clamp(0.5em, 1.2vw, 1em);
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  line-height: 1.9;
-  color: #1f2937;
-  background: rgba(236, 242, 253, 0.7);
-  border-left-color: #2563eb;
-  padding: 1rem;
-}
-
-/* Dark mode support */
-.dark #post-content p {
-  color: #e2e8f0;
-  background: rgba(30, 41, 59, 0.4);
-  border-left-color: #60a5fa;
-}
-
-.dark #post-content p:hover {
-  background: rgba(30, 41, 59, 0.6);
-}
-
-.dark #post-content h2+p,
-.dark #post-content h3+p,
-.dark #post-content h4+p {
-  background: rgba(30, 58, 138, 0.3);
-  color: #f8fafc;
-}
-
-/* Blockquote-like styling for important paragraphs */
-#post-content p.important {
-  background: rgba(121, 127, 133, 0.7);
-  border: 1px solid rgba(37, 99, 235, 0.2);
-  border-left: 4px solid #2563eb;
-  font-style: italic;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-#post-content p.important:hover {
-  transform: translateY(-2px);
-  border-color: #3b82f6;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-#post-content p.important::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, rgba(59, 130, 246, 0.05), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-#post-content p.important:hover::before {
-
-  opacity: 1;
-}
-
-.dark #post-content p.important {
-  background: rgba(30, 58, 138, 0.2);
-  border-color: rgba(96, 165, 250, 0.3);
-  border-left-color: #60a5fa;
-}
-
-.dark #post-content p.important:hover {
-  border-color: #60a5fa;
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);
-}
-
-/* Last paragraph in a section */
-#post-content p:last-child {
-  margin-bottom: 2.5em;
-}
-
-
-
-.title-wrapper {
-  padding: 1rem 0;
-  margin: 2rem 0;
-  position: relative;
-}
-
-#post-title {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 0.5rem;
-  transition: color 0.3s ease;
-}
-
-#post-title:hover {
-  color: #1e40af;
-}
-
-#post-title span {
-  transition: transform 0.3s ease;
-}
-
-#post-title:hover span {
-  transform: scaleX(1);
-}
-
-a {
-  color: #3b82f6;
-  text-decoration: none;
-  transition: color 0.2s ease, outline 0.2s ease;
-  border-radius: 0.25rem;
-  outline: none;
-}
-
-a:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-a:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-#post-content ul,
-#post-content ol {
-  padding-left: 1.5rem;
-  margin: 1rem 0;
-}
-
-#post-content li {
-  position: relative;
-  margin-bottom: 0.75rem;
-  padding: 0.75rem 1rem 0.75rem 2rem;
-  background: rgba(249, 250, 251, 0.7);
-  border-radius: 0.5rem;
-  border-left: 0.1875rem solid #3b82f6;
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.05);
-  outline: none;
-}
-
-#post-content li:hover {
-  transform: translateX(0.25rem);
-  background: rgba(59, 130, 246, 0.05);
-  box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.06);
-}
-
-#post-content li:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+#post-content.prose blockquote cite::before {
+  content: '\2014\00A0';
 }
 
 /* Custom bullet point */
@@ -994,7 +804,7 @@ a:focus-visible {
 #post-content blockquote:hover {
   background: #e5e7eb;
   border-left-color: #2563eb;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transform: translateY(-2px);
 }
 
@@ -1029,8 +839,8 @@ a:focus-visible {
 
 /* Dark mode support */
 .dark #post-content blockquote {
-  background: #1f2937;
-  color: #e5e7eb;
+  background: #1e293b;
+  color: #e2e8f0;
   border-left-color: #60a5fa;
 }
 
