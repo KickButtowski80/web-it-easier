@@ -1,123 +1,126 @@
-// src/composables/useScrollSpy.js
-// Vue 3 composable for TOC scrollspy using IntersectionObserver with sensible fallbacks
-// Usage (in a component):
-// const { activeId } = useScrollSpy({
-//   contentRoot: '#post-content',
-//   headingSelector: 'h2, h3',
-//   offset: 80, // height of fixed header if any
-//   getId: (el) => el.id, // customize if IDs are generated differently
-// });
-// Then bind in template:
-// <a :class="{ active: activeId === item.id }" :aria-current="activeId === item.id ? 'true' : undefined" ...>
-
-import { onMounted, onBeforeUnmount, ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
 /**
- * Create a performant scrollspy that marks the heading currently in view as active.
- *
- * Options:
- * - contentRoot: Element | string (selector). Root that contains headings. Required.
- * - headingSelector: string. Defaults to 'h2, h3'.
- * - offset: number. Pixels to offset from top (e.g., fixed header). Used in fallback and IO rootMargin.
- * - getId: (el: Element) => string. How to read an ID from a heading. Defaults to el.id.
- * - autoStart: boolean. Start automatically on mount. Defaults to true.
- *
- * Returns:
- * - activeId: Ref<string | null>
- * - start: () => void
- * - stop: () => void
+ * Simple scrollspy composable that tracks the currently visible heading
+ * 
+ * @param {Object} options - Configuration options
+ * @param {string} options.contentRoot - CSS selector for the container with scrollable content
+ * @param {string} [options.headingSelector='h2, h3, h4'] - CSS selector for headings to observe
+ * @param {number} [options.offset=0] - Offset in pixels (useful for fixed headers)
+ * @param {boolean} [options.autoStart=true] - Whether to start observing automatically on mount
+ * @returns {Object} - Returns activeId ref and start/stop functions
  */
 export default function useScrollSpy(options = {}) {
-  const {
-    contentRoot,
-    headingSelector = 'h2, h3',
+  const { 
+    contentRoot, 
+    headingSelector = 'h2, h3, h4',
     offset = 0,
-    getId = (el) => el.id,
-    autoStart = true,
-  } = options
+    autoStart = true
+  } = options;
+ 
+  const activeId = ref(null);
+  let observer = null;
+  let isStarted = false;
+  // Keep a stable reference to the headings we observe, in DOM order
+  let observedHeadings = [];
 
-  const activeId = ref(null)
-  let observer = null
-  let headings = []
-  let rootEl = null
+  const start = () => {
+    if (isStarted) return;
+    if (typeof window === 'undefined') return;
+    
+    stop(); // Clean up any existing observer
 
-  const isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined'
-
-  function resolveRoot(elOrSelector) {
-    if (!isBrowser || !elOrSelector) return null
-    if (typeof elOrSelector === 'string') return document.querySelector(elOrSelector)
-    return elOrSelector
-  }
-
-  function computeFallbackActiveId() {
-    // Pick the last heading whose top is above the viewport top (with offset)
-    const scrollTop = window.scrollY + offset + 1
-    let current = null
-    for (const h of headings) {
-      if (h.offsetTop <= scrollTop) current = h
-      else break
+    const rootEl = typeof contentRoot === 'string' 
+      ? document.querySelector(contentRoot) 
+      : contentRoot;
+      
+    if (!rootEl) {
+      console.warn('ScrollSpy: contentRoot element not found');
+      return;
     }
-    return current ? getId(current) : headings[0] ? getId(headings[0]) : null
-  }
 
-  function onIntersect(entries) {
-    // Choose the visible heading closest to the top
-    const visible = entries.filter((e) => e.isIntersecting)
-    let nextId = null
-    if (visible.length) {
-      const topmost = visible
-        .map((e) => ({ id: getId(e.target), top: e.target.getBoundingClientRect().top }))
-        .sort((a, b) => Math.abs(a.top) - Math.abs(b.top))[0]
-      nextId = topmost?.id || null
+    // Set up intersection observer
+    observer = new IntersectionObserver((entries) => {
+      // Guard against programmatic scrolling - check global flag
+      if (globalThis.isProgrammaticScroll) return;
+      
+      // Compute the active heading as the one closest to the top offset,
+      // preferring the last heading whose top is at or above the offset line.
+      if (!observedHeadings.length) return;
+
+      let candidate = null;
+      for (const h of observedHeadings) {
+        const rect = h.getBoundingClientRect();
+        // If the heading top is above or at the activation line, consider it.
+        if (rect.top - offset <= 1) {
+          candidate = h; // keep moving forward to get the last one above the line
+        } else {
+          // As soon as we find one below the line, stop (DOM order)
+          break;
+        }
+      }
+
+      // Fallback: if none are above the line (e.g., at very top), pick the first visible one
+      if (!candidate) {
+        candidate = observedHeadings.find(h => h.getBoundingClientRect().top >= 0) || observedHeadings[0];
+      }
+
+      if (candidate && candidate.id && activeId.value !== candidate.id) {
+        activeId.value = candidate.id;
+      }
+    }, {
+      // Activate based on a band near the top; reduce bottom margin to avoid early next-heading activation
+      rootMargin: `-${offset}px 0px -70% 0px`,
+      threshold: [0, 0.25, 0.5, 0.75, 1]
+    });
+
+    // Find and observe all headings with IDs
+    const headings = rootEl.querySelectorAll(headingSelector);
+    if (headings.length === 0) {
+      console.warn('ScrollSpy: No headings found with selector:', headingSelector);
+      return;
+    }
+
+    let hasValidHeadings = false;
+    observedHeadings = [];
+    headings.forEach(heading => {
+      if (heading.id) {
+        observer.observe(heading);
+        hasValidHeadings = true;
+        observedHeadings.push(heading);
+      }
+    });
+
+    if (hasValidHeadings) {
+      isStarted = true;
     } else {
-      nextId = computeFallbackActiveId()
+      console.warn('ScrollSpy: No headings with IDs found');
     }
-    if (nextId && nextId !== activeId.value) {
-      activeId.value = nextId
-    }
-  }
+  };
 
-  function start() {
-    if (!isBrowser) return
-    stop()
-
-    rootEl = resolveRoot(contentRoot)
-    if (!rootEl) return
-
-    headings = Array.from(rootEl.querySelectorAll(headingSelector)).filter((el) => getId(el))
-  
-    if (!headings.length) return
-
-    // IntersectionObserver setup
-    const rootMarginTop = -(offset || 0)
-    observer = new IntersectionObserver(onIntersect, {
-      // viewport root
-      root: null,
-      // Trigger when heading crosses near the top; keep bottom margin large to avoid flicker
-      rootMargin: `${rootMarginTop}px 0px -70% 0px`,
-      threshold: 0.1,
-    })
-
-    headings.forEach((h) => observer.observe(h))
-    // Initial selection without rAF
-    const initialId = computeFallbackActiveId()
-    if (initialId) activeId.value = initialId
-  }
-
-  function stop() {
+  const stop = () => {
     if (observer) {
-      observer.disconnect()
-      observer = null
+      observer.disconnect();
+      observer = null;
+      isStarted = false;
     }
-  }
+  };
 
-  onMounted(() => {
-    if (autoStart) start()
-  })
+  // Auto-start on mount if enabled
+  onMounted(async () => {
+    if (autoStart) {
+      await nextTick(); // Wait for the next tick to ensure DOM is ready
+      start();
+    }
+  });
 
-  onBeforeUnmount(() => {
-    stop()
-  })
+  // Clean up on unmount
+  onBeforeUnmount(stop);
 
-  return { activeId, start, stop }
+  return { 
+    activeId, 
+    start, 
+    stop,
+    isStarted: () => isStarted
+  };
 }

@@ -216,7 +216,7 @@ const toggleToc = () => {
 const handleTocClick = (e) => {
   // Don't close the TOC drawer - keep it open
   // tocOpen.value = false;
-  
+ 
   // Get the target ID from the href attribute
   const href = e.currentTarget.getAttribute('href');
   if (!href || !href.startsWith('#')) return;
@@ -224,29 +224,39 @@ const handleTocClick = (e) => {
   const id = href.slice(1);
   e.preventDefault();
   
-  // Update the activeId immediately for instant feedback
-  activeId.value = id;
-  console.log('TOC clicked, setting activeId to:', id);
+  console.log('TOC clicked, scrolling to:', id);
   
-  // Update the URL hash without pushing a new history entry
-  window.history.replaceState({}, '', `#${id}`);
+  // Set flag before programmatic scroll
+  globalThis.isProgrammaticScroll = true;
   
-  // Use requestAnimationFrame to ensure smooth scrolling after the next repaint
   requestAnimationFrame(() => {
     const el = document.getElementById(id);
-    if (!el) return;
+    if (!el) {
+      // Reset flag if element not found
+      globalThis.isProgrammaticScroll = false;
+      return;
+    }
     
     const offsetPosition = calculateScrollOffset(el);
     
-    // Use scrollIntoView with a polyfill for smooth behavior
+    // Update URL hash without pushing to history
+    window.history.replaceState({}, '', `#${id}`);
+    
+    // Scroll to the position
     if ('scrollBehavior' in document.documentElement.style) {
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
       });
+      
+      // Reset flag after smooth scroll completes (typical duration is ~500ms)
+      setTimeout(() => {
+        globalThis.isProgrammaticScroll = false;
+      }, 800);
     } else {
-      // Fallback for browsers that don't support smooth scrolling
+      // For non-smooth scrolling, reset flag immediately
       window.scrollTo(0, offsetPosition);
+      globalThis.isProgrammaticScroll = false;
     }
   });
 };
@@ -364,27 +374,35 @@ const calculateScrollOffset = (element) => {
 
 // Function to handle smooth scrolling to hash
 const scrollToHash = () => {
-  if (window.location.hash) {      
-    const id = window.location.hash.substring(1);
-    const el = document.getElementById(id);
-    if (!el) return;
-    console.log('scrolling to hash');
+  if (!window.location.hash) return;
+  
+  const id = window.location.hash.substring(1);
+  const el = document.getElementById(id);
+  if (!el) return;
+  
+  // Set flag before programmatic scroll
+  globalThis.isProgrammaticScroll = true;
+  
+  const offsetPosition = calculateScrollOffset(el);
+  
+  // Scroll to the position
+  if ('scrollBehavior' in document.documentElement.style) {
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
     
-    const offsetPosition = calculateScrollOffset(el);
-    
-    // Use the same scrolling behavior as handleTocClick
-    if ('scrollBehavior' in document.documentElement.style) {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    } else {
-      // Fallback for browsers that don't support smooth scrolling
-      window.scrollTo(0, offsetPosition);
-    }
-    hasScrolledToHash.value = true;
+    // Reset flag after smooth scroll completes
+    setTimeout(() => {
+      globalThis.isProgrammaticScroll = false;
+    }, 800);
+  } else {
+    // For non-smooth scrolling, reset flag immediately
+    window.scrollTo(0, offsetPosition);
+    globalThis.isProgrammaticScroll = false;
   }
- 
+  
+  hasScrolledToHash.value = true;
 };
 
 onMounted(async () => {
@@ -545,19 +563,18 @@ watch(toc, (newToc) => {
   }
 })
 
+// Global flag to prevent scroll spy updates during programmatic scrolling
+let isProgrammaticScroll = false;
 
-
-
-// Track active heading for TOC highlighting using the composable
-const { activeId, start: startScrollSpy } = useScrollSpy({
+// Initialize scroll spy for TOC
+const scrollSpy = useScrollSpy({
   contentRoot: '#post-content',
   headingSelector: 'h2, h3, h4',
-  offset: 80, // Adjust based on your header height
-  autoStart: false // We'll start it manually after content loads
+  offset: 80,
+  autoStart: false
 });
- 
 
- 
+const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
 
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
