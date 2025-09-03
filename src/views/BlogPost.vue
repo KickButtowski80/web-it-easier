@@ -239,10 +239,13 @@ const handleTocNav = (event, direction) => {
       nextIndex = items.length - 1;
       break;
   }
-
+ 
   if (nextIndex >= 0 && nextIndex < items.length) {
     const id = items[nextIndex].getAttribute('href')?.substring(1);
     if (id) activeId.value = id;
+  
+      items[nextIndex].focus();
+ 
   }
 };
 // Set up canonical URL management

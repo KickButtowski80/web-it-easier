@@ -61,6 +61,20 @@
   outline: none;
 }
 
+/* Add focus styles */
+.toc-link:focus-visible {
+  outline: 2px solid #055be6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  transition: outline-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Active state focus */
+.toc-link.toc-link--active:focus-visible {
+  outline-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.4);
+}
+
 /* Light mode */
 #table-of-contents .toc-link.toc-link--active {
   border-color: #db2777;
