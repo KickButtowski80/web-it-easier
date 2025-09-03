@@ -39,35 +39,45 @@ export default function useScrollSpy(options = {}) {
       return;
     }
 
-    // Set up intersection observer
+    const visibleHeadings = new Set();
+    let lastActiveId = null;
+
     observer = new IntersectionObserver((entries) => {
-      // Guard against programmatic scrolling - check global flag
-      if (globalThis.isProgrammaticScroll) return;
-      
-      // Compute the active heading as the one closest to the top offset,
-      // preferring the last heading whose top is at or above the offset line.
-      if (!observedHeadings.length) return;
+ 
 
-      let candidate = null;
-      for (const h of observedHeadings) {
-        const rect = h.getBoundingClientRect();
-        // If the heading top is above or at the activation line, consider it.
-        if (rect.top - offset <= 1) {
-          candidate = h; // keep moving forward to get the last one above the line
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          visibleHeadings.add(entry.target);
         } else {
-          // As soon as we find one below the line, stop (DOM order)
-          break;
+          visibleHeadings.delete(entry.target);
         }
+      });
+
+      let newActiveId = null;
+
+      if (visibleHeadings.size > 0) {
+        // If there are visible headings, find the last one in DOM order.
+        for (let i = observedHeadings.length - 1; i >= 0; i--) {
+          const heading = observedHeadings[i];
+          if (visibleHeadings.has(heading)) {
+            newActiveId = heading.id;
+            break;
+          }
+        }
+      } else {
+        // If no headings are visible, we are in a gap. We use the last known
+        // active heading to maintain state, which is more robust.
+        newActiveId = lastActiveId;
       }
 
-      // Fallback: if none are above the line (e.g., at very top), pick the first visible one
-      if (!candidate) {
-        candidate = observedHeadings.find(h => h.getBoundingClientRect().top >= 0) || observedHeadings[0];
+      if (newActiveId !== null && activeId.value !== newActiveId) {
+        activeId.value = newActiveId;
+      }
+      // Keep track of the last active ID for gap handling.
+      if (newActiveId) {
+        lastActiveId = newActiveId;
       }
 
-      if (candidate && candidate.id && activeId.value !== candidate.id) {
-        activeId.value = candidate.id;
-      }
     }, {
       // Activate based on a band near the top; reduce bottom margin to avoid early next-heading activation
       rootMargin: `-${offset}px 0px -70% 0px`,
