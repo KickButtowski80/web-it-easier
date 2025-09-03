@@ -75,24 +75,12 @@
                   'ml-4': item.level === 'h3',
                   'ml-8': item.level === 'h4'
                 }">
-                
+           
                 <a 
                   :id="'toc-item-' + item.id"
                   :href="'#' + item.id"
                   @click="handleTocClick"
-                  :style="{
-                    border: '2px solid',
-                    borderColor: activeId === item.id ? 'red' : 'transparent',
-                    backgroundColor: activeId === item.id ? 'rgba(239, 68, 68, 0.2)' : 'transparent',
-                    color: activeId === item.id ? 'red' : 'inherit',
-                    fontWeight: activeId === item.id ? 'bold' : 'inherit',
-                    borderRadius: '0.25rem',
-                    padding: '0.25rem 0.5rem',
-                    margin: '0.125rem 0',
-                    display: 'block',
-                    transition: 'all 0.2s ease'
-                  }"
-                  class="block py-1 px-2 -mx-2 rounded-md transition-all hover:bg-gray-100 dark:hover:bg-gray-800"
+                  class="toc-link block py-1 px-2 -mx-2 rounded-md"
                   :class="{
                     'font-semibold': item.level === 'h2',
                     'text-base': item.level === 'h3',
@@ -100,12 +88,11 @@
                     'pl-3': item.level === 'h2',
                     'pl-2': item.level === 'h3',
                     'pl-1': item.level === 'h4',
-                    'active-toc-item': activeId === item.id
+                    'toc-link--active': activeId === item.id
                   }" 
                   :aria-label="'Jump to ' + item.text + ' section'"
                   :aria-current="activeId === item.id ? 'location' : undefined"
-                  :tabindex="tocOpen ? 0 : -1"
-                  @focus="activeId = item.id">
+                  :tabindex="tocOpen ? 0 : -1">
                   
                   <span v-if="item.level === 'h3'" aria-hidden="true">→ </span>
                   <span v-else-if="item.level === 'h4'" aria-hidden="true">⟶ </span>
@@ -213,53 +200,6 @@ const toggleToc = () => {
   });
 };
 
-const handleTocClick = (e) => {
-  // Don't close the TOC drawer - keep it open
-  // tocOpen.value = false;
- 
-  // Get the target ID from the href attribute
-  const href = e.currentTarget.getAttribute('href');
-  if (!href || !href.startsWith('#')) return;
-  
-  const id = href.slice(1);
-  e.preventDefault();
-  
-  console.log('TOC clicked, scrolling to:', id);
-  
-  // Set flag before programmatic scroll
-  globalThis.isProgrammaticScroll = true;
-  
-  requestAnimationFrame(() => {
-    const el = document.getElementById(id);
-    if (!el) {
-      // Reset flag if element not found
-      globalThis.isProgrammaticScroll = false;
-      return;
-    }
-    
-    const offsetPosition = calculateScrollOffset(el);
-    
-    // Update URL hash without pushing to history
-    window.history.replaceState({}, '', `#${id}`);
-    
-    // Scroll to the position
-    if ('scrollBehavior' in document.documentElement.style) {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-      
-      // Reset flag after smooth scroll completes (typical duration is ~500ms)
-      setTimeout(() => {
-        globalThis.isProgrammaticScroll = false;
-      }, 800);
-    } else {
-      // For non-smooth scrolling, reset flag immediately
-      window.scrollTo(0, offsetPosition);
-      globalThis.isProgrammaticScroll = false;
-    }
-  });
-};
 
 // TOC body visibility (collapsible on all screen sizes)
 const showTocBody = computed(() => tocOpen.value);
@@ -372,38 +312,6 @@ const calculateScrollOffset = (element) => {
   return elementPosition - navbarHeight - tocHeight - 20; // 20px padding
 };
 
-// Function to handle smooth scrolling to hash
-const scrollToHash = () => {
-  if (!window.location.hash) return;
-  
-  const id = window.location.hash.substring(1);
-  const el = document.getElementById(id);
-  if (!el) return;
-  
-  // Set flag before programmatic scroll
-  globalThis.isProgrammaticScroll = true;
-  
-  const offsetPosition = calculateScrollOffset(el);
-  
-  // Scroll to the position
-  if ('scrollBehavior' in document.documentElement.style) {
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
-    
-    // Reset flag after smooth scroll completes
-    setTimeout(() => {
-      globalThis.isProgrammaticScroll = false;
-    }, 800);
-  } else {
-    // For non-smooth scrolling, reset flag immediately
-    window.scrollTo(0, offsetPosition);
-    globalThis.isProgrammaticScroll = false;
-  }
-  
-  hasScrolledToHash.value = true;
-};
 
 onMounted(async () => {
   // Initialize default canonical URL
@@ -544,12 +452,67 @@ const toc = computed(() => {
   return headings
 })
 
-
 const updateStructuredData = () => {
   if (toc.value?.length) {
     injectTocJsonLd(toc.value);
   }
 }
+
+const programmaticScrollTo = (id) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+
+  activeId.value = id;
+
+  window.history.replaceState({}, '', `#${id}`);
+
+  const offsetPosition = calculateScrollOffset(el);
+
+  // const onScrollEnd = () => {
+  //   activeId.value = id;
+  //   window.removeEventListener('scrollend', onScrollEnd);
+  // };
+
+  // if ('onscrollend' in window) {
+  //   window.addEventListener('scrollend', onScrollEnd, { once: true });
+  // } else {
+  //   setTimeout(onScrollEnd, 500);
+  // }
+
+
+
+  window.scrollTo({
+    top: offsetPosition,
+    behavior: 'smooth',
+  });
+};
+
+const handleTocClick = async (e) => {
+  e.preventDefault();
+  const href = e.currentTarget.getAttribute('href');
+  if (!href) return;
+  const id = href.slice(1);
+  
+  // Manually set the active ID immediately
+  activeId.value = id;
+  
+  // Scroll to the section
+  programmaticScrollTo(id);
+  
+  // Wait for any pending UI updates
+  await nextTick();
+  
+  // Close the TOC drawer on mobile after a selection
+  tocOpen.value = false;
+};
+
+const scrollToHash = () => {
+  const hash = window.location.hash.slice(1);
+  if (hash) {
+    programmaticScrollTo(hash);
+  }
+};
+
 
 // Watch toc changes and update structured data
 watch(toc, (newToc) => {
@@ -563,19 +526,21 @@ watch(toc, (newToc) => {
   }
 })
 
-// Global flag to prevent scroll spy updates during programmatic scrolling
-let isProgrammaticScroll = false;
+// // Global flag to prevent scroll spy updates during programmatic scrolling
+// let isProgrammaticScroll = false;
 
 // Initialize scroll spy for TOC
 const scrollSpy = useScrollSpy({
   contentRoot: '#post-content',
   headingSelector: 'h2, h3, h4',
-  offset: 80,
+  offset: 96,
   autoStart: false
 });
 
 const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
 
+//test
+watch(activeId, v => console.debug('[scrollspy] activeId ->', v));
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
   isMounted.value = false;
