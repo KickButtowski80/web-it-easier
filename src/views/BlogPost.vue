@@ -214,16 +214,23 @@ const handleTocNav = (event, direction) => {
   
   const items = Array.from(document.querySelectorAll('#toc-body a[tabindex="0"]'));
   if (!items.length) return;
-  
-  const currentIndex = items.findIndex(el => el === document.activeElement);
+ 
+  // Only proceed if we have an activeId that exists in the TOC
+  if (!activeId.value) return;
+  // Find current active element by activeId
+  const currentItem = 
+     items.find(item => item.getAttribute('href') === `#${activeId.value}`)
+
+
+  const currentIndex = currentItem ? items.indexOf(currentItem) : 0;
   let nextIndex = currentIndex;
-  
+
   switch (direction) {
     case 'up':
-      nextIndex = currentIndex <= 0 ? items.length - 1 : currentIndex - 1;
+      nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
       break;
     case 'down':
-      nextIndex = currentIndex === -1 || currentIndex === items.length - 1 ? 0 : currentIndex + 1;
+      nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
       break;
     case 'home':
       nextIndex = 0;
@@ -232,17 +239,12 @@ const handleTocNav = (event, direction) => {
       nextIndex = items.length - 1;
       break;
   }
-  
-  const isValidIndex = nextIndex >= 0 && nextIndex < items.length;
-  const hasChangedPosition = nextIndex !== currentIndex;
-  
-  if (hasChangedPosition && isValidIndex) {
-    items[nextIndex].focus();
+
+  if (nextIndex >= 0 && nextIndex < items.length) {
     const id = items[nextIndex].getAttribute('href')?.substring(1);
     if (id) activeId.value = id;
   }
 };
-
 // Set up canonical URL management
 const canonicalUrl = ref('');
 
