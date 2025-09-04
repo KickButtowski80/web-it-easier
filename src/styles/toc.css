@@ -221,12 +221,6 @@
   transform-origin: top;
 }
 
-/* Ensure headings are not hidden when jumping to hashes without JS assist */
-#post-content h2,
-#post-content h3,
-#post-content h4 {
-  scroll-margin-top: calc(var(--navbar-height, 96px) + 20px);
-}
 
 /* Emphasize heading and items when TOC is expanded */
 #table-of-contents.toc-open #toc-heading {
