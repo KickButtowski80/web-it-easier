@@ -308,12 +308,36 @@ const updateCanonicalTag = async () => {
  * - Additional 20px padding for visual spacing
  */
 const calculateScrollOffset = (element) => {
-  const navbar = document.querySelector('nav, header');
+  // Get viewport width for responsive handling
+  const isMobile = window.innerWidth < 768; // Tailwind's md breakpoint
+  
+  // Select all relevant fixed/sticky elements
+  const elements = [];
+  
+  // Target the fixed header instead of just the nav
+  const header = document.querySelector('header.fixed.top-0');
+  if (header) {
+    const style = window.getComputedStyle(header);
+    if (style.position === 'fixed' || style.position === 'sticky') {
+      elements.push(header);
+    }
+  }
+  
+  // Include TOC only if it's fixed/sticky
   const toc = document.getElementById('table-of-contents');
-  const navbarHeight = navbar?.offsetHeight || 0;
-  const tocHeight = toc?.offsetHeight || 0;
+  if (toc) {
+    const tocStyle = window.getComputedStyle(toc);
+    if (tocStyle.position === 'fixed' || tocStyle.position === 'sticky') {
+      elements.push(toc);
+    }
+  }
+  
+  // Calculate total offset
+  const totalOffset = elements.reduce((sum, el) => sum + el.offsetHeight, 0);
   const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-  return elementPosition - navbarHeight - tocHeight - 20; // 20px padding
+  
+  // Use different padding for mobile vs desktop
+  return elementPosition - totalOffset - (isMobile ? 10 : 20);
 };
 
 
