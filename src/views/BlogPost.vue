@@ -35,11 +35,12 @@
           @keydown.end.prevent="handleTocNav($event, 'end')"
           @keydown.esc="toggleToc">
           
-          <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200 flex justify-center sm:justify-start">
+          <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900
+           dark:text-gray-200 flex justify-center sm:justify-start">
             <button
               type="button"
               class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                     bg-indigo-800 text-white shadow-sm transition-all duration-200
+                     bg-indigo-800 text-white shadow-sm transition-colors transition-shadow duration-200
                      hover:bg-indigo-900 hover:shadow-md
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
                      focus-visible:ring-indigo-600 focus-visible:ring-offset-white
