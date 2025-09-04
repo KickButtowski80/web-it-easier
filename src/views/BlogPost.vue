@@ -39,10 +39,10 @@
             <button
               type="button"
               class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                     bg-indigo-600 text-white shadow-sm transition-all duration-200
-                     hover:bg-indigo-700 hover:shadow-md
+                     bg-indigo-800 text-white shadow-sm transition-all duration-200
+                     hover:bg-indigo-900 hover:shadow-md
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
-                     focus-visible:ring-indigo-500 focus-visible:ring-offset-white
+                     focus-visible:ring-indigo-600 focus-visible:ring-offset-white
                      dark:focus-visible:ring-offset-slate-900"
               :aria-expanded="tocOpen"
               aria-controls="toc-body"
@@ -242,9 +242,8 @@ const handleTocNav = (event, direction) => {
  
   if (nextIndex >= 0 && nextIndex < items.length) {
     const id = items[nextIndex].getAttribute('href')?.substring(1);
-    if (id) activeId.value = id;
-  
-      items[nextIndex].focus();
+    if (id) activeId.value = id;  
+    items[nextIndex].focus();
  
   }
 };
