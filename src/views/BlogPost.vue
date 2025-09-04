@@ -1521,17 +1521,6 @@ h3 {
 
  
 
-/* Make TOC sticky */
-#table-of-contents {
-  position: sticky;
-  top: 6rem; /* Space from top when stuck */
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto 2rem;
-  z-index: 10;
-  max-height: calc(100vh - 2rem); /* Prevent it from being taller than viewport */
-  overflow-y: auto; /* Make it scrollable if content is too long */ 
-}
 
 
 
