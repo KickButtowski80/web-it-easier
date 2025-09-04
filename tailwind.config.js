@@ -6,7 +6,7 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
-      spacing: {
+      height: {
         'navbar-height': '3rem',
         'md-navbar-height': '6rem',
       },
