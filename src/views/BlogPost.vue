@@ -171,7 +171,6 @@ const {
   notificationIcon,
   showNotify
 } = useNotification();
-const isMounted = ref(true);
 const hasScrolledToHash = ref(false);
 const post = ref(null);
 const defaultCanonical = ref(null);
@@ -357,11 +356,10 @@ onMounted(async () => {
   defaultMetaDescriptions.value.og = ogDescTag?.getAttribute('content') || null;
   defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
 
-  isMounted.value = true;
   const title = deslugify(props.slug);
   try {
     const postData = await getPost(title);
-    if (isMounted.value && postData) {
+    if (postData) {
       post.value = postData;
       // Set dynamic page title based on post content (SEO)
       if (post.value?.title) {
@@ -435,7 +433,7 @@ onMounted(async () => {
         },
         canonicalUrl.value
       );
-      // 
+      // Start scroll spy after content is loaded
       startScrollSpy();
       // After content is rendered, handle initial hash scroll once
       if (window.location.hash && !hasScrolledToHash.value) {
@@ -491,24 +489,20 @@ const programmaticScrollTo = (id) => {
   const el = document.getElementById(id);
   if (!el) return;
 
-  activeId.value = id;
-
   window.history.replaceState({}, '', `#${id}`);
 
   const offsetPosition = calculateScrollOffset(el);
 
-  // const onScrollEnd = () => {
-  //   activeId.value = id;
-  //   window.removeEventListener('scrollend', onScrollEnd);
-  // };
+  const onScrollEnd = () => {
+    activeId.value = id;
+    window.removeEventListener('scroll', onScrollEnd);
+  };
 
-  // if ('onscrollend' in window) {
-  //   window.addEventListener('scrollend', onScrollEnd, { once: true });
-  // } else {
-  //   setTimeout(onScrollEnd, 500);
-  // }
-
-
+  if ('onscrollend' in window) {
+    window.addEventListener('scrollend', onScrollEnd, { once: true });
+  } else {
+    setTimeout(onScrollEnd, 400); // Fallback for browsers without scrollend
+  }
 
   window.scrollTo({
     top: offsetPosition,
@@ -521,9 +515,6 @@ const handleTocClick = async (e) => {
   const href = e.currentTarget.getAttribute('href');
   if (!href) return;
   const id = href.slice(1);
-  
-  // Manually set the active ID immediately
-  activeId.value = id;
   
   // Scroll to the section
   programmaticScrollTo(id);
@@ -572,8 +563,6 @@ const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
 watch(activeId, v => console.debug('[scrollspy] activeId ->', v));
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
-  isMounted.value = false;
-
   // Remove all JSON-LD structured data
   removeStructuredData('all');
 
