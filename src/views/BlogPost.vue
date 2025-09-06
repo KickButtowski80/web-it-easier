@@ -308,36 +308,56 @@ const updateCanonicalTag = async () => {
  * - Additional 20px padding for visual spacing
  */
 const calculateScrollOffset = (element) => {
-  // Get viewport width for responsive handling
-  const isMobile = window.innerWidth < 768; // Tailwind's md breakpoint
-  
-  // Select all relevant fixed/sticky elements
+  console.groupCollapsed(`[Debug] calculateScrollOffset for #${element.id}`);
+
+  const isMobile = window.innerWidth < 768;
+  console.log(`isMobile: ${isMobile}`);
+
   const elements = [];
-  
-  // Target the fixed header instead of just the nav
-  const header = document.querySelector('header.fixed.top-0');
+  let totalOffset = 0;
+
+  // 1. Check for the main header (matching TopMenu.vue)
+  const header = document.querySelector('section.fixed.top-0');
   if (header) {
     const style = window.getComputedStyle(header);
-    if (style.position === 'fixed' || style.position === 'sticky') {
-      elements.push(header);
+    const position = style.position;
+    const height = header.offsetHeight;
+    console.log('Header found:', { element: header, position, height });
+    if ((position === 'fixed' || position === 'sticky') && height > 0) {
+      elements.push({ name: 'header', height });
+      totalOffset += height;
     }
+  } else {
+    console.log('Header not found with selector "header.fixed.top-0"');
   }
-  
-  // Include TOC only if it's fixed/sticky
+
+  // 2. Check for the Table of Contents
   const toc = document.getElementById('table-of-contents');
   if (toc) {
     const tocStyle = window.getComputedStyle(toc);
-    if (tocStyle.position === 'fixed' || tocStyle.position === 'sticky') {
-      elements.push(toc);
+    const position = tocStyle.position;
+    const height = toc.offsetHeight;
+    console.log('TOC found:', { element: toc, position, height });
+    if ((position === 'fixed' || position === 'sticky') && height > 0) {
+      elements.push({ name: 'toc', height });
+      totalOffset += height;
     }
+  } else {
+    console.log('TOC not found with ID "table-of-contents"');
   }
-  
-  // Calculate total offset
-  const totalOffset = elements.reduce((sum, el) => sum + el.offsetHeight, 0);
+
+  // 3. Calculate positions
   const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+  const padding = isMobile ? 10 : 20;
+  const finalPosition = elementPosition - totalOffset - padding;
+
+  console.log('Total Offset calculated:', totalOffset, { contributingElements: elements });
+  console.log(`Element Position: ${elementPosition}`);
+  console.log(`Final Calculated Scroll Position: ${finalPosition} (elementPosition - totalOffset - padding)`);
   
-  // Use different padding for mobile vs desktop
-  return elementPosition - totalOffset - (isMobile ? 10 : 20);
+  console.groupEnd();
+
+  return finalPosition;
 };
 
 
@@ -486,44 +506,99 @@ const updateStructuredData = () => {
 }
 
 const programmaticScrollTo = (id) => {
+  console.log('programmaticScrollTo called with id:', id);
   const el = document.getElementById(id);
-  if (!el) return;
-
-  window.history.replaceState({}, '', `#${id}`);
-
-  const offsetPosition = calculateScrollOffset(el);
-
-  const onScrollEnd = () => {
-    activeId.value = id;
-    window.removeEventListener('scroll', onScrollEnd);
-  };
-
-  if ('onscrollend' in window) {
-    window.addEventListener('scrollend', onScrollEnd, { once: true });
-  } else {
-    setTimeout(onScrollEnd, 400); // Fallback for browsers without scrollend
+  if (!el) {
+    console.error('Element not found with id:', id);
+    return;
   }
 
-  window.scrollTo({
-    top: offsetPosition,
-    behavior: 'smooth',
+  // Update URL hash without scrolling
+  window.history.replaceState({}, '', `#${id}`);
+
+  // Calculate the offset position
+  const offsetPosition = calculateScrollOffset(el);
+  
+  // Set a flag to prevent scrollspy from interfering
+  const scrollId = `scroll-${Date.now()}`;
+  window.__isProgrammaticScroll = scrollId;
+
+  // Set up the scroll end handler
+  const onScrollEnd = () => {
+    // Only update activeId if this is still the most recent scroll operation
+    if (window.__isProgrammaticScroll === scrollId) {
+      activeId.value = id;
+      window.__isProgrammaticScroll = null;
+    }
+  };
+
+  // Use requestAnimationFrame to ensure the DOM is ready
+  requestAnimationFrame(() => {
+    // Scroll to the calculated position
+    window.scrollTo({
+      top: Math.max(0, offsetPosition), // Ensure we don't get negative values
+      behavior: 'smooth'
+    });
+
+    // Set up scroll end detection
+    if ('onscrollend' in window) {
+      window.addEventListener('scrollend', onScrollEnd, { once: true });
+    } else {
+      // Fallback for browsers without scrollend
+      let lastScrollTop = window.pageYOffset;
+      let scrollEndTimer;
+      
+      const checkScrollEnd = () => {
+        const scrollTop = window.pageYOffset;
+        
+        if (Math.abs(scrollTop - lastScrollTop) < 5) {
+          // Scrolling has stopped
+          onScrollEnd();
+          window.removeEventListener('scroll', checkScrollEnd);
+          clearTimeout(scrollEndTimer);
+        } else {
+          // Still scrolling
+          lastScrollTop = scrollTop;
+          scrollEndTimer = setTimeout(checkScrollEnd, 100);
+        }
+      };
+      
+      window.addEventListener('scroll', checkScrollEnd);
+      scrollEndTimer = setTimeout(checkScrollEnd, 100);
+    }
   });
 };
 
 const handleTocClick = async (e) => {
+  // Prevent default immediately to avoid any native behavior
   e.preventDefault();
+  e.stopPropagation();
+  
+  // Get the href and extract the ID
   const href = e.currentTarget.getAttribute('href');
-  if (!href) return;
+  if (!href || !href.startsWith('#')) {
+    console.error('Invalid href on TOC link:', href);
+    return;
+  }
+  
   const id = href.slice(1);
   
-  // Scroll to the section
+  // Close the TOC drawer first (for mobile)
+  if (tocOpen.value) {
+    tocOpen.value = false;
+    // Small delay to allow the TOC to start closing
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+  
+  // Then scroll to the section
   programmaticScrollTo(id);
   
-  // Wait for any pending UI updates
-  await nextTick();
-  
-  // Close the TOC drawer on mobile after a selection
-  tocOpen.value = false;
+  // Ensure focus is set to the target element for accessibility
+  const targetElement = document.getElementById(id);
+  if (targetElement) {
+    targetElement.setAttribute('tabindex', '-1');
+    targetElement.focus({ preventScroll: true });
+  }
 };
 
 const scrollToHash = () => {
