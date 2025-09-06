@@ -268,7 +268,7 @@ const updateCanonicalTag = async () => {
     // Generate the canonical URL
     canonicalUrl.value = `${baseUrl}/blog/${slug}`;
     console.log('Generated canonical URL:', canonicalUrl.value);
-
+    
     // Update the canonical URL using the shared utility with our generated URL
     console.log('Calling updateCanonicalUrl() with URL:', canonicalUrl.value);
     const result = updateCanonicalUrl(canonicalUrl.value);
@@ -308,11 +308,7 @@ const updateCanonicalTag = async () => {
  * - Additional 20px padding for visual spacing
  */
 const calculateScrollOffset = (element) => {
-  console.groupCollapsed(`[Debug] calculateScrollOffset for #${element.id}`);
-
   const isMobile = window.innerWidth < 768;
-  console.log(`isMobile: ${isMobile}`);
-
   const elements = [];
   let totalOffset = 0;
 
@@ -322,13 +318,10 @@ const calculateScrollOffset = (element) => {
     const style = window.getComputedStyle(header);
     const position = style.position;
     const height = header.offsetHeight;
-    console.log('Header found:', { element: header, position, height });
     if ((position === 'fixed' || position === 'sticky') && height > 0) {
       elements.push({ name: 'header', height });
       totalOffset += height;
     }
-  } else {
-    console.log('Header not found with selector "header.fixed.top-0"');
   }
 
   // 2. Check for the Table of Contents
@@ -337,27 +330,17 @@ const calculateScrollOffset = (element) => {
     const tocStyle = window.getComputedStyle(toc);
     const position = tocStyle.position;
     const height = toc.offsetHeight;
-    console.log('TOC found:', { element: toc, position, height });
     if ((position === 'fixed' || position === 'sticky') && height > 0) {
       elements.push({ name: 'toc', height });
       totalOffset += height;
     }
-  } else {
-    console.log('TOC not found with ID "table-of-contents"');
   }
 
   // 3. Calculate positions
   const elementPosition = element.getBoundingClientRect().top + window.scrollY;
   const padding = isMobile ? 10 : 20;
-  const finalPosition = elementPosition - totalOffset - padding;
+  return elementPosition - totalOffset - padding;
 
-  console.log('Total Offset calculated:', totalOffset, { contributingElements: elements });
-  console.log(`Element Position: ${elementPosition}`);
-  console.log(`Final Calculated Scroll Position: ${finalPosition} (elementPosition - totalOffset - padding)`);
-  
-  console.groupEnd();
-
-  return finalPosition;
 };
 
 
@@ -506,66 +489,22 @@ const updateStructuredData = () => {
 }
 
 const programmaticScrollTo = (id) => {
-  console.log('programmaticScrollTo called with id:', id);
   const el = document.getElementById(id);
-  if (!el) {
-    console.error('Element not found with id:', id);
-    return;
-  }
+  if (!el) return;
 
   // Update URL hash without scrolling
   window.history.replaceState({}, '', `#${id}`);
+  
+  // Update active ID immediately
+  activeId.value = id;
 
   // Calculate the offset position
   const offsetPosition = calculateScrollOffset(el);
-  
-  // Set a flag to prevent scrollspy from interfering
-  const scrollId = `scroll-${Date.now()}`;
-  window.__isProgrammaticScroll = scrollId;
 
-  // Set up the scroll end handler
-  const onScrollEnd = () => {
-    // Only update activeId if this is still the most recent scroll operation
-    if (window.__isProgrammaticScroll === scrollId) {
-      activeId.value = id;
-      window.__isProgrammaticScroll = null;
-    }
-  };
-
-  // Use requestAnimationFrame to ensure the DOM is ready
-  requestAnimationFrame(() => {
-    // Scroll to the calculated position
-    window.scrollTo({
-      top: Math.max(0, offsetPosition), // Ensure we don't get negative values
-      behavior: 'smooth'
-    });
-
-    // Set up scroll end detection
-    if ('onscrollend' in window) {
-      window.addEventListener('scrollend', onScrollEnd, { once: true });
-    } else {
-      // Fallback for browsers without scrollend
-      let lastScrollTop = window.pageYOffset;
-      let scrollEndTimer;
-      
-      const checkScrollEnd = () => {
-        const scrollTop = window.pageYOffset;
-        
-        if (Math.abs(scrollTop - lastScrollTop) < 5) {
-          // Scrolling has stopped
-          onScrollEnd();
-          window.removeEventListener('scroll', checkScrollEnd);
-          clearTimeout(scrollEndTimer);
-        } else {
-          // Still scrolling
-          lastScrollTop = scrollTop;
-          scrollEndTimer = setTimeout(checkScrollEnd, 100);
-        }
-      };
-      
-      window.addEventListener('scroll', checkScrollEnd);
-      scrollEndTimer = setTimeout(checkScrollEnd, 100);
-    }
+  // Scroll to the calculated position
+  window.scrollTo({
+    top: Math.max(0, offsetPosition), // Ensure we don't get negative values
+    behavior: 'smooth'
   });
 };
 
