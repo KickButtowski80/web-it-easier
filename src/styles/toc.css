@@ -113,9 +113,10 @@
   top: var(--navbar-height, 96px);
   width: 100%;
   max-width: 100%;
-  margin: 0 auto 2rem;
+  /* margin: 0 auto 2rem; */
   z-index: 20;
-  max-height: calc(100vh - 2rem);
+  /* max-height: calc(100vh - 2rem); */
+  max-height: calc(100% - var(--navbar-height));
   overflow-y: auto;
   /* above content backgrounds, below nav */
   background: url("data:image/svg+xml;utf8,<svg width='40' height='40' viewBox='0 0 40 40' fill='none' xmlns='http://www.w3.org/2000/svg'><circle cx='20' cy='20' r='1.5' fill='%23a5b4fc' opacity='0.4'/><circle cx='10' cy='30' r='1' fill='%23f472b6' opacity='0.3'/><circle cx='30' cy='10' r='1' fill='%23fbbf24' opacity='0.3'/></svg>"),
@@ -124,7 +125,7 @@
   border-radius: 1rem;
   border: 2px solid #a5b4fc;
   box-shadow: 0 8px 24px 0 rgba(59, 130, 246, 0.09);
-  padding: 2rem 1.5rem;
+  padding: 0rem 1.5rem;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -135,6 +136,7 @@
   background: rgba(192, 132, 252, 1);
   border: 1px solid rgba(192, 132, 252, 0.5);
   backdrop-filter: none;
+
 }
 
 #table-of-contents.toc-bedazzled::before {
@@ -282,13 +284,7 @@
 
 }
 
-/* Dark mode overrides consolidated later (after light not-open rule) */
 
-
-/* Ensure NON-transparent solid background when sticky ONLY when not open */
-/* Removed duplicate conflicting rule in favor of the earlier RGBA variant */
-
-/* Consolidated Dark Mode: all dark overrides in one place */
 @media (prefers-color-scheme: dark) {
   /* Adjust TOC color variables in dark mode */
   :root {
@@ -394,15 +390,10 @@
     display: block;
   }
 
+ 
 
   #table-of-contents #toc-heading {
     font-size: 1rem;
-    padding: 0.25rem 0.5rem;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    background: inherit;
-    backdrop-filter: inherit;
     /* Center the pill on small screens while preserving its intrinsic width */
     display: block;            /* override base inline-block */
     width: fit-content;        /* keep pill width to content */
