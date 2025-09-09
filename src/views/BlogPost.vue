@@ -66,7 +66,7 @@
             <ul 
               id="toc-body" 
               class="space-y-1 toc-body"
-              v-show="showTocBody"
+              v-show="tocOpen"
               aria-label="Sections">
               
               <li 
@@ -199,6 +199,7 @@ const toggleToc = () => {
     }
   });
 };
+
 
 // Generate structured data for TOC as ItemList
 // NOTE: moved below `toc` definition to avoid TDZ issues
