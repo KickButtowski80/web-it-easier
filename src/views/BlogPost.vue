@@ -1547,12 +1547,6 @@ h3 {
   }
 }
 
- 
-
-
-
-
-
 /* Make sure the TOC content doesn't cause horizontal scroll */
 .toc-body {
   max-width: 100%;
@@ -1565,10 +1559,4 @@ h3 {
   overflow-wrap: break-word;
 }
 
-/* Ensure proper scroll margin for anchor links */
-#post-content.prose h2,
-#post-content.prose h3,
-#post-content.prose h4 {
-  scroll-margin-top:calc(var(--navbar-height) + 0rem);
-}
 </style>
