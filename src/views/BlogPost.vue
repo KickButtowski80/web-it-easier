@@ -200,10 +200,6 @@ const toggleToc = () => {
   });
 };
 
-
-// TOC body visibility (collapsible on all screen sizes)
-const showTocBody = computed(() => tocOpen.value);
-
 // Generate structured data for TOC as ItemList
 // NOTE: moved below `toc` definition to avoid TDZ issues
 // The actual computed is defined after `toc` now.
