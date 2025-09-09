@@ -573,8 +573,7 @@ const scrollSpy = useScrollSpy({
 
 const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
 
-//test
-watch(activeId, v => console.debug('[scrollspy] activeId ->', v));
+
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
   // Remove all JSON-LD structured data
