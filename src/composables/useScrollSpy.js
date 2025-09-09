@@ -81,7 +81,7 @@ export default function useScrollSpy(options = {}) {
     }, {
       // Activate based on a band near the top; reduce bottom margin to avoid early next-heading activation
       rootMargin: `-${offset}px 0px -70% 0px`,
-      threshold: [0, 0.25, 0.5, 0.75, 1]
+      threshold: [0, 0.5, 1]
     });
 
     // Find and observe all headings with IDs
