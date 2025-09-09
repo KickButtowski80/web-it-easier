@@ -201,10 +201,6 @@ const toggleToc = () => {
 };
 
 
-// Generate structured data for TOC as ItemList
-// NOTE: moved below `toc` definition to avoid TDZ issues
-// The actual computed is defined after `toc` now.
-
 // Handle keyboard navigation in TOC
 const handleTocNav = (event, direction) => {
   if (!tocOpen.value) return;
