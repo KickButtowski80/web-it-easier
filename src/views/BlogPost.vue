@@ -538,9 +538,9 @@ const scrollSpy = useScrollSpy({
   autoStart: false
 });
 
-const { activeId, start: startScrollSpy, stop: stopScrollSpy, setupManualTocNav } = scrollSpy;
+const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
 
-let cleanupManualNav = null;
+ 
 
 
 // Clean up canonical tag when component is unmounted
@@ -613,7 +613,7 @@ body {
   font-size: clamp(2rem, 6vw, 2rem);
   font-weight: 800;
   margin: 2rem 0 1rem;
-  padding: 0.5rem 1.5rem;
+  padding: 1.5rem 1.5rem 3rem;
   line-height: 1.3;
   display: inline-block;
   position: relative;
@@ -653,7 +653,7 @@ body {
   font-weight: 700;
   color: #1e40af;
   margin: 1.75rem 0 0.9rem;
-  padding: 0.75rem 1rem;
+  padding: 1.5rem 1rem 2rem;
   display: inline-block;
   box-sizing: border-box;
   position: relative;
@@ -1299,7 +1299,7 @@ body {
   margin-bottom: 1rem;
   font-weight: 500;
   color: #6b7280;
-  padding-left: 1.5rem;
+  padding: 1rem 0 1.5rem 1.5rem;
   position: relative;
 }
 
