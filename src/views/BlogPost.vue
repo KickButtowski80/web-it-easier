@@ -1,9 +1,8 @@
 <template>
-  
+
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <article v-if="post" :aria-labelledby="'post-title-' + post.id" 
-      :aria-describedby="'post-meta-' + post.id">
+      <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
             class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
@@ -25,64 +24,40 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" 
-          :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" 
-          v-if="toc.length > 0"
-          aria-label="Table of Contents"
-          @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
+        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
+          aria-label="Table of Contents" @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
           @keydown.arrow-down.prevent="handleTocNav($event, 'down')"
-          @keydown.home.prevent="handleTocNav($event, 'home')"
-          @keydown.end.prevent="handleTocNav($event, 'end')"
+          @keydown.home.prevent="handleTocNav($event, 'home')" @keydown.end.prevent="handleTocNav($event, 'end')"
           @keydown.esc="toggleToc">
-          
+
           <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900
            dark:text-gray-200 flex justify-center sm:justify-start">
-            <button
-              type="button"
-              class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
+            <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
                      bg-indigo-800 text-white shadow-sm transition-colors transition-shadow duration-200
                      hover:bg-indigo-900 hover:shadow-md
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
                      focus-visible:ring-indigo-600 focus-visible:ring-offset-white
-                     dark:focus-visible:ring-offset-slate-900"
-              :aria-expanded="tocOpen"
-              aria-controls="toc-body"
-              @click="toggleToc"
-              @keydown.space.enter.prevent="toggleToc"
-              :aria-label="tocOpen ? 'Collapse table of contents' : 'Expand table of contents'"
-            >
+                     dark:focus-visible:ring-offset-slate-900" :aria-expanded="tocOpen" aria-controls="toc-body"
+              @click="toggleToc" @keydown.space.enter.prevent="toggleToc"
+              :aria-label="tocOpen ? 'Collapse table of contents' : 'Expand table of contents'">
               Table of Contents
-              <span
-                class="ml-1 text-sm transition-transform duration-200 inline-block"
-                :class="{ 'transform rotate-180': tocOpen }"
-                aria-hidden="true"
-              >
+              <span class="ml-1 text-sm transition-transform duration-200 inline-block"
+                :class="{ 'transform rotate-180': tocOpen }" aria-hidden="true">
                 ▼
               </span>
             </button>
           </h2>
-          
+
           <transition name="toc-slide">
-            <ul 
-              id="toc-body" 
-              class="space-y-1 toc-body"
-              v-show="tocOpen"
-              aria-label="Sections">
-              
-              <li 
-                v-for="(item, index) in toc" 
-                :key="index"
-                :class="{
-                  'ml-4': item.level === 'h3',
-                  'ml-8': item.level === 'h4'
-                }">
-           
-                <a 
-                  :id="'toc-item-' + item.id"
-                  :href="'#' + item.id"
-                  @click="handleTocClick"
-                  class="toc-link block py-1 px-2 -mx-2 rounded-md"
-                  :class="{
+            <ul id="toc-body" class="space-y-1 toc-body" v-show="tocOpen" aria-label="Sections">
+
+              <li v-for="(item, index) in toc" :key="index" :class="{
+                'ml-4': item.level === 'h3',
+                'ml-8': item.level === 'h4'
+              }">
+
+                <a :id="'toc-item-' + item.id" :href="'#' + item.id" @click="handleTocClick"
+                  class="toc-link block py-1 px-2 -mx-2 rounded-md" :class="{
                     'font-semibold': item.level === 'h2',
                     'text-base': item.level === 'h3',
                     'text-sm': item.level === 'h4',
@@ -90,17 +65,15 @@
                     'pl-2': item.level === 'h3',
                     'pl-1': item.level === 'h4',
                     'toc-link--active': activeId === item.id
-                  }" 
-                  :aria-label="'Jump to ' + item.text + ' section'"
-                  :aria-current="activeId === item.id ? 'location' : undefined"
-                  :tabindex="tocOpen ? 0 : -1">
-                  
+                  }" :aria-label="'Jump to ' + item.text + ' section'"
+                  :aria-current="activeId === item.id ? 'location' : undefined" :tabindex="tocOpen ? 0 : -1">
+
                   <span v-if="item.level === 'h3'" aria-hidden="true">→ </span>
                   <span v-else-if="item.level === 'h4'" aria-hidden="true">⟶ </span>
                   {{ item.text }}
-                  
+
                   <span v-if="activeId === item.id" class="sr-only">(current section)</span>
-       
+
                 </a>
               </li>
             </ul>
@@ -142,10 +115,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import { getPost } from '@/config/firebase';
-import { 
-  injectBlogPostStructuredData, 
+import {
+  injectBlogPostStructuredData,
   removeStructuredData,
-  injectTocJsonLd 
+  injectTocJsonLd
 } from '@/utils/json-ld-structured-data';
 import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
@@ -186,7 +159,7 @@ const tocOpen = ref(false);
 const toggleToc = () => {
   const wasOpen = tocOpen.value;
   tocOpen.value = !wasOpen;
-  
+
   nextTick(() => {
     if (tocOpen.value) {
       // Focus first item when opening
@@ -204,15 +177,15 @@ const toggleToc = () => {
 // Handle keyboard navigation in TOC
 const handleTocNav = (event, direction) => {
   if (!tocOpen.value) return;
-  
+
   const items = Array.from(document.querySelectorAll('#toc-body a[tabindex="0"]'));
   if (!items.length) return;
- 
+
   // Only proceed if we have an activeId that exists in the TOC
   if (!activeId.value) return;
   // Find current active element by activeId
-  const currentItem = 
-     items.find(item => item.getAttribute('href') === `#${activeId.value}`)
+  const currentItem =
+    items.find(item => item.getAttribute('href') === `#${activeId.value}`)
 
 
   const currentIndex = currentItem ? items.indexOf(currentItem) : 0;
@@ -232,12 +205,12 @@ const handleTocNav = (event, direction) => {
       nextIndex = items.length - 1;
       break;
   }
- 
+
   if (nextIndex >= 0 && nextIndex < items.length) {
     const id = items[nextIndex].getAttribute('href')?.substring(1);
-    if (id) activeId.value = id;  
+    if (id) activeId.value = id;
     items[nextIndex].focus();
- 
+
   }
 };
 // Set up canonical URL management
@@ -261,7 +234,7 @@ const updateCanonicalTag = async () => {
     // Generate the canonical URL
     canonicalUrl.value = `${baseUrl}/blog/${slug}`;
     console.log('Generated canonical URL:', canonicalUrl.value);
-    
+
     // Update the canonical URL using the shared utility with our generated URL
     console.log('Calling updateCanonicalUrl() with URL:', canonicalUrl.value);
     const result = updateCanonicalUrl(canonicalUrl.value);
@@ -373,7 +346,7 @@ onMounted(async () => {
         'article', // Use 'article' type for blog posts
         post.value?.description || '' // Pass description or empty string
       );
-      
+
       // Initialize structured data after content is loaded
       updateStructuredData();
 
@@ -429,18 +402,15 @@ onMounted(async () => {
         },
         canonicalUrl.value
       );
-      // Start scroll spy after content is loaded
+
+      // Start scroll spy with hash navigation enabled
       startScrollSpy();
-      // Enable manual TOC navigation after scroll spy is started
-      if (!cleanupManualNav) {
-        cleanupManualNav = setupManualTocNav();
-      }
-      // After content is rendered, handle initial hash scroll once
+      
+      // Handle initial hash scroll after content is rendered
       if (window.location.hash && !hasScrolledToHash.value) {
         scrollToHash();
         hasScrolledToHash.value = true;
       }
-  
     }
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -491,7 +461,7 @@ const programmaticScrollTo = (id) => {
 
   // Update URL hash without scrolling
   window.history.replaceState({}, '', `#${id}`);
-  
+
   // Update active ID immediately
   activeId.value = id;
 
@@ -509,26 +479,26 @@ const handleTocClick = async (e) => {
   // Prevent default immediately to avoid any native behavior
   e.preventDefault();
   e.stopPropagation();
-  
+
   // Get the href and extract the ID
   const href = e.currentTarget.getAttribute('href');
   if (!href || !href.startsWith('#')) {
     console.error('Invalid href on TOC link:', href);
     return;
   }
-  
+
   const id = href.slice(1);
-  
+
   // Close the TOC drawer first (for mobile)
   if (tocOpen.value) {
     tocOpen.value = false;
     // Small delay to allow the TOC to start closing
     await new Promise(resolve => setTimeout(resolve, 50));
   }
-  
+
   // Then scroll to the section
   programmaticScrollTo(id);
-  
+
   // Ensure focus is set to the target element for accessibility
   const targetElement = document.getElementById(id);
   if (targetElement) {
@@ -1556,5 +1526,4 @@ h3 {
   word-break: break-word;
   overflow-wrap: break-word;
 }
-
 </style>

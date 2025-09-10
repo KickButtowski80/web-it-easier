@@ -20,6 +20,8 @@ export default function useScrollSpy(options = {}) {
   const activeId = ref(null)
   let observer = null
   let isStarted = false
+  // Adjust rootMargin to be more precise with intersection detection
+  const rootMargin = `-${Math.min(offset, 100)}px 0px -30% 0px`
 
   const start = () => {
     if (isStarted || typeof window === 'undefined') return
@@ -40,24 +42,55 @@ export default function useScrollSpy(options = {}) {
       return
     }
 
-    observer = new IntersectionObserver(entries => {
-      // Find the last intersecting heading (closest to top)
-      const visible = entries
-        .filter(e => e.isIntersecting)
-        .map(e => e.target)
-
-      if (visible.length) {
-        const lastVisible = visible[visible.length - 1]
-        if (lastVisible.id !== activeId.value) {
-          activeId.value = lastVisible.id
-        }
+   
+    
+    const updateObserver = () => {
+      if (observer) {
+        // Disconnect old observer
+        observer.disconnect()
       }
-    }, {
-      rootMargin: `-${offset}px 0px -30% 0px`,
-      threshold: [0, 0.5, 1]
-    })
 
-    headings.forEach(h => observer.observe(h))
+      // Create new observer with updated rootMargin
+      observer = new IntersectionObserver(entries => {
+        // Track all visible headings with their intersection ratio
+        const visibleEntries = entries
+          .filter(entry => entry.isIntersecting || entry.intersectionRatio > 0)
+          .map(entry => ({
+            id: entry.target.id,
+            element: entry.target,
+            ratio: entry.intersectionRatio,
+            // Calculate distance from viewport top (lower is higher on screen)
+            distance: entry.boundingClientRect.top
+          }));
+          console.log("visibleEntries", visibleEntries);
+        if (visibleEntries.length) {
+          // Find the most visible heading (highest ratio, or if equal, the one higher on screen)
+          const mostVisible = visibleEntries.reduce((prev, current) => {
+            // If ratios are close (within 0.1), prefer the one higher on the page
+            if (Math.abs(current.ratio - prev.ratio) < 0.1) {
+              return current.distance < prev.distance ? current : prev;
+            }
+            return current.ratio > prev.ratio ? current : prev;
+          });
+
+          if (mostVisible.id && mostVisible.id !== activeId.value) {
+            activeId.value = mostVisible.id;
+          }
+          console.log("mostVisible", mostVisible);
+        }
+      }, {
+        rootMargin: `-${offset}px 0px -30% 0px`,
+        // Use multiple thresholds for more precise intersection detection
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+      })
+      
+      // Re-observe all headings
+      headings.forEach(h => observer.observe(h))
+    }
+    
+    // Initial observer setup
+    updateObserver()
+
     isStarted = true
   }
 
@@ -75,6 +108,37 @@ export default function useScrollSpy(options = {}) {
   })
 
   onBeforeUnmount(stop)
-
-  return { activeId, start, stop, isStarted: () => isStarted }
+  // Opt-in utility for manual TOC navigation (call from component if needed)
+  function setupManualTocNav(navSelector = '#table-of-contents:has(ul#toc-body li a)') {
+    let currentSection = null;
+    function updateActiveNav() {
+      document.querySelectorAll(navSelector).forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === `#${currentSection}`) {
+          a.classList.add('active');
+        }
+      });
+    }
+    function clickHandler(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      currentSection = targetId;
+      updateActiveNav();
+      const el = document.getElementById(targetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    // Attach listeners
+    document.querySelectorAll(navSelector).forEach(link => {
+      link.addEventListener('click', clickHandler);
+    });
+    // Return cleanup function
+    return () => {
+      document.querySelectorAll(navSelector).forEach(link => {
+        link.removeEventListener('click', clickHandler);
+      });
+    };
+  }
+  return { activeId, start, stop, isStarted: () => isStarted, setupManualTocNav }
 }
