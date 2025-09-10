@@ -3,7 +3,7 @@ import "./style.css";
 import App from "./App.vue";
 import router from "./router";
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { onMounted } from "vue";
+ 
 // Create Vue app
 const app = createApp(App);
 

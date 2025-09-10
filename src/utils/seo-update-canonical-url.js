@@ -4,11 +4,8 @@
  * @returns {string} The updated canonical URL or null if there was an error
  */
 export function updateCanonicalUrl(customUrl = null) {
-    console.group('[Canonical] Updating canonical URL');
     try {
         if (typeof window === 'undefined' || !document || !document.head) {
-            console.warn('Not in a browser environment');
-            console.groupEnd();
             return null;
         }
 
@@ -21,11 +18,7 @@ export function updateCanonicalUrl(customUrl = null) {
             canonicalUrl = baseUrl + (path || '/');
         }
         
-        console.log('Generated canonical URL:', canonicalUrl);
-        
         if (!canonicalUrl) {
-            console.error('Failed to generate canonical URL');
-            console.groupEnd();
             return null;
         }
         
@@ -33,29 +26,17 @@ export function updateCanonicalUrl(customUrl = null) {
         let canonicalTag = document.querySelector('link[rel="canonical"]');
         
         if (!canonicalTag) {
-            console.log('No existing canonical tag found, creating a new one');
             // Create the tag if it doesn't exist
             canonicalTag = document.createElement('link');
             canonicalTag.rel = 'canonical';
             document.head.appendChild(canonicalTag);
-            console.log('Created new canonical tag');
         } else if (canonicalTag.href === canonicalUrl) {
             // No need to update if the URL hasn't changed
-            console.log(`URL already set to: ${canonicalUrl}`);
-            console.groupEnd();
             return canonicalUrl;
         }
         
         // Update the href
-        const previousUrl = canonicalTag.href || 'none';
         canonicalTag.href = canonicalUrl;
-        
-        if (import.meta.env.DEV) {
-            console.log(`Updated canonical URL from "${previousUrl}" to:`, canonicalUrl);
-            console.log('Document head:', document.head.innerHTML);
-        }
-        
-        console.groupEnd();
         return canonicalUrl;
     } catch (error) {
         console.error('Error in updateCanonicalUrl:', error);
@@ -70,11 +51,8 @@ export function updateCanonicalUrl(customUrl = null) {
  * @param {string} [commentText] - Optional comment text to look for when restoring
  */
 export function restoreCanonical(originalCanonical, commentText = 'Canonical URL') {
-    console.group('[Canonical] Restoring canonical URL');
     try {
         if (typeof window === 'undefined' || !document || !document.head) {
-            console.warn('Not in a browser environment');
-            console.groupEnd();
             return;
         }
 
@@ -106,9 +84,10 @@ export function restoreCanonical(originalCanonical, commentText = 'Canonical URL
                 document.head.insertAdjacentHTML('beforeend', originalCanonical);
             }
         }
-        console.groupEnd();
     } catch (error) {
-        console.error('Error in restoreCanonical:', error);
-        console.groupEnd();
+        // Silently fail in production
+        if (import.meta.env.DEV) {
+            console.error('Error in restoreCanonical:', error);
+        }
     }
 }

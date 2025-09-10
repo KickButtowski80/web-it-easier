@@ -1,9 +1,8 @@
 <template>
-  
+
   <section class="container mx-auto px-4 py-24">
     <div class="max-w-4xl mx-auto">
-      <article v-if="post" :aria-labelledby="'post-title-' + post.id" 
-      :aria-describedby="'post-meta-' + post.id">
+      <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
             class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
@@ -25,81 +24,56 @@
         </div>
 
         <!-- Table of Contents -->
-        <nav id="table-of-contents" 
-          :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" 
-          v-if="toc.length > 0"
-          aria-label="Table of Contents"
-          @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
+        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
+          aria-label="Table of Contents" @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
           @keydown.arrow-down.prevent="handleTocNav($event, 'down')"
-          @keydown.home.prevent="handleTocNav($event, 'home')"
-          @keydown.end.prevent="handleTocNav($event, 'end')"
+          @keydown.home.prevent="handleTocNav($event, 'home')" @keydown.end.prevent="handleTocNav($event, 'end')"
           @keydown.esc="toggleToc">
-          
-          <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-200 flex justify-center sm:justify-start">
-            <button
-              type="button"
-              class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
-                     bg-indigo-600 text-white shadow-sm transition-all duration-200
-                     hover:bg-indigo-700 hover:shadow-md
+
+          <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900
+           dark:text-gray-200 flex justify-center sm:justify-start">
+            <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
+                     bg-indigo-800 text-white shadow-sm transition-colors transition-shadow duration-200
+                     hover:bg-indigo-900 hover:shadow-md
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
-                     focus-visible:ring-indigo-500 focus-visible:ring-offset-white
-                     dark:focus-visible:ring-offset-slate-900"
-              :aria-expanded="tocOpen"
-              aria-controls="toc-body"
-              @click="toggleToc"
-              @keydown.space.enter.prevent="toggleToc"
-              :aria-label="tocOpen ? 'Collapse table of contents' : 'Expand table of contents'"
-            >
+                     focus-visible:ring-indigo-600 focus-visible:ring-offset-white
+                     dark:focus-visible:ring-offset-slate-900" :aria-expanded="tocOpen" aria-controls="toc-body"
+              @click="toggleToc" @keydown.space.enter.prevent="toggleToc"
+              :aria-label="tocOpen ? 'Collapse table of contents' : 'Expand table of contents'">
               Table of Contents
-              <span
-                class="ml-1 text-sm transition-transform duration-200 inline-block"
-                :class="{ 'transform rotate-180': tocOpen }"
-                aria-hidden="true"
-              >
+              <span class="ml-1 text-sm transition-transform duration-200 inline-block"
+                :class="{ 'transform rotate-180': tocOpen }" aria-hidden="true">
                 ▼
               </span>
             </button>
           </h2>
-          
+
           <transition name="toc-slide">
-            <ul 
-              id="toc-body" 
-              class="space-y-1 toc-body"
-              v-show="showTocBody"
-              aria-label="Sections">
-              
-              <li 
-                v-for="(item, index) in toc" 
-                :key="index"
-                :class="{
-                  'ml-4': item.level === 'h3',
-                  'ml-8': item.level === 'h4'
-                }">
-                
-                <a 
-                  :id="'toc-item-' + item.id"
-                  :href="'#' + item.id"
-                  @click="handleTocClick"
-                  class="block py-1 px-2 -mx-2 rounded-md text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                  :class="{
+            <ul id="toc-body" class="space-y-1 toc-body" v-show="tocOpen" aria-label="Sections">
+
+              <li v-for="(item, index) in toc" :key="index" :class="{
+                'ml-4': item.level === 'h3',
+                'ml-8': item.level === 'h4'
+              }">
+
+                <a :id="'toc-item-' + item.id" :href="'#' + item.id" @click="handleTocClick"
+                  class="toc-link block py-1 px-2 -mx-2 rounded-md" :class="{
                     'font-semibold': item.level === 'h2',
                     'text-base': item.level === 'h3',
                     'text-sm': item.level === 'h4',
-                    'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-200': activeId === item.id,
                     'pl-3': item.level === 'h2',
                     'pl-2': item.level === 'h3',
-                    'pl-1': item.level === 'h4'
-                  }" 
-                  :aria-label="'Jump to ' + item.text + ' section'"
-                  :aria-current="activeId === item.id ? 'location' : undefined"
-                  :tabindex="tocOpen ? 0 : -1"
-                  @focus="activeId = item.id">
-                  
+                    'pl-1': item.level === 'h4',
+                    'toc-link--active': activeId === item.id
+                  }" :aria-label="'Jump to ' + item.text + ' section'"
+                  :aria-current="activeId === item.id ? 'location' : undefined" :tabindex="tocOpen ? 0 : -1">
+
                   <span v-if="item.level === 'h3'" aria-hidden="true">→ </span>
                   <span v-else-if="item.level === 'h4'" aria-hidden="true">⟶ </span>
                   {{ item.text }}
-                  
+
                   <span v-if="activeId === item.id" class="sr-only">(current section)</span>
+
                 </a>
               </li>
             </ul>
@@ -139,8 +113,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import { getPost } from '@/config/firebase';
+import {
+  injectBlogPostStructuredData,
+  removeStructuredData,
+  injectTocJsonLd
+} from '@/utils/json-ld-structured-data';
 import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
 import { updateCanonicalUrl, restoreCanonical } from '@/utils/seo-update-canonical-url';
@@ -165,7 +144,6 @@ const {
   notificationIcon,
   showNotify
 } = useNotification();
-const isMounted = ref(true);
 const hasScrolledToHash = ref(false);
 const post = ref(null);
 const defaultCanonical = ref(null);
@@ -181,7 +159,7 @@ const tocOpen = ref(false);
 const toggleToc = () => {
   const wasOpen = tocOpen.value;
   tocOpen.value = !wasOpen;
-  
+
   nextTick(() => {
     if (tocOpen.value) {
       // Focus first item when opening
@@ -195,63 +173,30 @@ const toggleToc = () => {
   });
 };
 
-const handleTocClick = (e) => {
-  // Close the TOC drawer immediately to avoid overlaying the target
-  tocOpen.value = false;
-  
-  // Get the target ID from the href attribute
-  const href = e.currentTarget.getAttribute('href');
-  if (!href || !href.startsWith('#')) return;
-  
-  const id = href.slice(1);
-  e.preventDefault();
-  
-  // Update the URL hash without pushing a new history entry
-  window.history.replaceState({}, '', `#${id}`);
-  
-  // Use requestAnimationFrame to ensure smooth scrolling after the next repaint
-  requestAnimationFrame(() => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    
-    const offsetPosition = calculateScrollOffset(el);
-    
-    // Use scrollIntoView with a polyfill for smooth behavior
-    if ('scrollBehavior' in document.documentElement.style) {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    } else {
-      // Fallback for browsers that don't support smooth scrolling
-      window.scrollTo(0, offsetPosition);
-    }
-  });
-};
-
-// TOC body visibility (collapsible on all screen sizes)
-const showTocBody = computed(() => tocOpen.value);
-
-// Generate structured data for TOC as ItemList
-// NOTE: moved below `toc` definition to avoid TDZ issues
-// The actual computed is defined after `toc` now.
 
 // Handle keyboard navigation in TOC
 const handleTocNav = (event, direction) => {
   if (!tocOpen.value) return;
-  
+
   const items = Array.from(document.querySelectorAll('#toc-body a[tabindex="0"]'));
   if (!items.length) return;
-  
-  const currentIndex = items.findIndex(el => el === document.activeElement);
+
+  // Only proceed if we have an activeId that exists in the TOC
+  if (!activeId.value) return;
+  // Find current active element by activeId
+  const currentItem =
+    items.find(item => item.getAttribute('href') === `#${activeId.value}`)
+
+
+  const currentIndex = currentItem ? items.indexOf(currentItem) : 0;
   let nextIndex = currentIndex;
-  
+
   switch (direction) {
     case 'up':
-      nextIndex = currentIndex <= 0 ? items.length - 1 : currentIndex - 1;
+      nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
       break;
     case 'down':
-      nextIndex = currentIndex === -1 || currentIndex === items.length - 1 ? 0 : currentIndex + 1;
+      nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
       break;
     case 'home':
       nextIndex = 0;
@@ -260,17 +205,14 @@ const handleTocNav = (event, direction) => {
       nextIndex = items.length - 1;
       break;
   }
-  
-  const isValidIndex = nextIndex >= 0 && nextIndex < items.length;
-  const hasChangedPosition = nextIndex !== currentIndex;
-  
-  if (hasChangedPosition && isValidIndex) {
-    items[nextIndex].focus();
+
+  if (nextIndex >= 0 && nextIndex < items.length) {
     const id = items[nextIndex].getAttribute('href')?.substring(1);
     if (id) activeId.value = id;
+    items[nextIndex].focus();
+
   }
 };
-
 // Set up canonical URL management
 const canonicalUrl = ref('');
 
@@ -332,38 +274,41 @@ const updateCanonicalTag = async () => {
  * - Additional 20px padding for visual spacing
  */
 const calculateScrollOffset = (element) => {
-  const navbar = document.querySelector('nav, header');
+  const isMobile = window.innerWidth < 768;
+  const elements = [];
+  let totalOffset = 0;
+
+  // 1. Check for the main header (matching TopMenu.vue)
+  const header = document.querySelector('section.fixed.top-0');
+  if (header) {
+    const style = window.getComputedStyle(header);
+    const position = style.position;
+    const height = header.offsetHeight;
+    if ((position === 'fixed' || position === 'sticky') && height > 0) {
+      elements.push({ name: 'header', height });
+      totalOffset += height;
+    }
+  }
+
+  // 2. Check for the Table of Contents
   const toc = document.getElementById('table-of-contents');
-  const navbarHeight = navbar?.offsetHeight || 0;
-  const tocHeight = toc?.offsetHeight || 0;
+  if (toc) {
+    const tocStyle = window.getComputedStyle(toc);
+    const position = tocStyle.position;
+    const height = toc.offsetHeight;
+    if ((position === 'fixed' || position === 'sticky') && height > 0) {
+      elements.push({ name: 'toc', height });
+      totalOffset += height;
+    }
+  }
+
+  // 3. Calculate positions
   const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-  return elementPosition - navbarHeight - tocHeight - 20; // 20px padding
+  const padding = isMobile ? 10 : 20;
+  return elementPosition - totalOffset - padding;
+
 };
 
-// Function to handle smooth scrolling to hash
-const scrollToHash = () => {
-  if (window.location.hash) {      
-    const id = window.location.hash.substring(1);
-    const el = document.getElementById(id);
-    if (!el) return;
-    console.log('scrolling to hash');
-    
-    const offsetPosition = calculateScrollOffset(el);
-    
-    // Use the same scrolling behavior as handleTocClick
-    if ('scrollBehavior' in document.documentElement.style) {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    } else {
-      // Fallback for browsers that don't support smooth scrolling
-      window.scrollTo(0, offsetPosition);
-    }
-    hasScrolledToHash.value = true;
-  }
- 
-};
 
 onMounted(async () => {
   // Initialize default canonical URL
@@ -380,11 +325,10 @@ onMounted(async () => {
   defaultMetaDescriptions.value.og = ogDescTag?.getAttribute('content') || null;
   defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
 
-  isMounted.value = true;
   const title = deslugify(props.slug);
   try {
     const postData = await getPost(title);
-    if (isMounted.value && postData) {
+    if (postData) {
       post.value = postData;
       // Set dynamic page title based on post content (SEO)
       if (post.value?.title) {
@@ -402,6 +346,9 @@ onMounted(async () => {
         'article', // Use 'article' type for blog posts
         post.value?.description || '' // Pass description or empty string
       );
+
+      // Initialize structured data after content is loaded
+      updateStructuredData();
 
       // Generate and apply per-post meta description (no UI summary)
       const description = (() => {
@@ -446,36 +393,21 @@ onMounted(async () => {
       }
 
       // Inject Article JSON-LD structured data for the blog post
-      try {
-        const existing = document.getElementById('article-jsonld');
-        if (existing) existing.remove();
+      injectBlogPostStructuredData(
+        {
+          title: post.value?.title,
+          excerpt: description,
+          publishedAt: post.value?.date,
+          dateModified: post.value?.date,
+        },
+        canonicalUrl.value
+      );
 
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-        const url = canonicalUrl.value || (baseUrl ? `${baseUrl}${window.location.pathname}` : '');
-        const data = {
-          '@context': 'https://schema.org',
-          '@type': 'BlogPosting',
-          headline: post.value?.title || 'Blog Post',
-          description: description,
-          datePublished: new Date(post.value?.date || Date.now()).toISOString(),
-          dateModified: new Date(post.value?.date || Date.now()).toISOString(),
-          url,
-        };
-        const script = document.createElement('script');
-        script.id = 'article-jsonld';
-        script.type = 'application/ld+json';
-        script.text = JSON.stringify(data);
-        document.head.appendChild(script);
-      } catch (e) {
-        // noop
-      }
-      // Ensure markdown is rendered, then start scrollspy so it can observe headings
-      await nextTick();
+      // Start scroll spy with hash navigation enabled
       startScrollSpy();
-
-      // After content is rendered, handle initial hash scroll once
+      
+      // Handle initial hash scroll after content is rendered
       if (window.location.hash && !hasScrolledToHash.value) {
-        // await nextTick();
         scrollToHash();
         hasScrolledToHash.value = true;
       }
@@ -517,76 +449,104 @@ const toc = computed(() => {
   return headings
 })
 
-// Now that `toc` is defined, create the structured data computed
-const tocStructuredData = computed(() => {
-  try {
-    if (!post.value || !Array.isArray(toc.value) || toc.value.length === 0) return '';
-
-    const base = typeof window !== 'undefined'
-      ? `${window.location.origin}${window.location.pathname}`
-      : '';
-
-    const itemListElement = toc.value.map((item, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Thing',
-        '@id': base ? `${base}#${item.id}` : `#${item.id}`,
-        name: item.text
-      }
-    }));
-
-    const data = {
-      '@context': 'https://schema.org',
-      '@type': 'ItemList',
-      itemListElement
-    };
-
-    return JSON.stringify(data);
-  } catch (e) {
-    return '';
-  }
-});
-
 const updateStructuredData = () => {
-  // Remove existing JSON-LD for TOC if any (target by id to avoid removing others)
-  const existing = document.getElementById('toc-jsonld');
-  if (existing) existing.remove();
-  
   if (toc.value?.length) {
-    const script = document.createElement('script')
-    script.id = 'toc-jsonld'
-    script.type = 'application/ld+json'
-    script.text = tocStructuredData.value
-    document.head.appendChild(script)
+    injectTocJsonLd(toc.value);
   }
 }
 
-// Watch toc changes and update structured data
-watch(toc, updateStructuredData)
+const programmaticScrollTo = (id) => {
+  const el = document.getElementById(id);
+  if (!el) return;
 
-// Initial setup and cleanup
-onMounted(updateStructuredData)
-onUnmounted(() => {
-  const existing = document.getElementById('toc-jsonld');
-  if (existing) existing.remove();
+  // Update URL hash without scrolling
+  window.history.replaceState({}, '', `#${id}`);
+
+  // Update active ID immediately
+  activeId.value = id;
+
+  // Calculate the offset position
+  const offsetPosition = calculateScrollOffset(el);
+
+  // Scroll to the calculated position
+  window.scrollTo({
+    top: Math.max(0, offsetPosition), // Ensure we don't get negative values
+    behavior: 'smooth'
+  });
+};
+
+const handleTocClick = async (e) => {
+  // Prevent default immediately to avoid any native behavior
+  e.preventDefault();
+  e.stopPropagation();
+
+  // Get the href and extract the ID
+  const href = e.currentTarget.getAttribute('href');
+  if (!href || !href.startsWith('#')) {
+    console.error('Invalid href on TOC link:', href);
+    return;
+  }
+
+  const id = href.slice(1);
+
+  // Close the TOC drawer first (for mobile)
+  if (tocOpen.value) {
+    tocOpen.value = false;
+    // Small delay to allow the TOC to start closing
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+
+  // Then scroll to the section
+  programmaticScrollTo(id);
+
+  // Ensure focus is set to the target element for accessibility
+  const targetElement = document.getElementById(id);
+  if (targetElement) {
+    targetElement.setAttribute('tabindex', '-1');
+    targetElement.focus({ preventScroll: true });
+  }
+};
+
+const scrollToHash = () => {
+  const hash = window.location.hash.slice(1);
+  if (hash) {
+    programmaticScrollTo(hash);
+  }
+};
+
+
+// Watch toc changes and update structured data
+watch(toc, (newToc) => {
+  console.log('TOC items:', newToc.map(item => ({
+    id: item.id,
+    text: item.text,
+    level: item.level
+  })))
+  if (newToc?.length) {
+    injectTocJsonLd(newToc);
+  }
 })
 
-// Scrollspy: track the currently visible heading and sync with TOC
-const { activeId, start: startScrollSpy } = useScrollSpy({
+// // Global flag to prevent scroll spy updates during programmatic scrolling
+// let isProgrammaticScroll = false;
+
+// Initialize scroll spy for TOC
+const scrollSpy = useScrollSpy({
   contentRoot: '#post-content',
   headingSelector: 'h2, h3, h4',
-  offset: 0, // adjust if you introduce a fixed header
-  autoStart: false,
-})
+  offset: 96,
+  autoStart: false
+});
+
+const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
+
+ 
+
 
 // Clean up canonical tag when component is unmounted
 onUnmounted(() => {
-  isMounted.value = false;
-
-  // Remove article JSON-LD if present
-  const articleJson = document.getElementById('article-jsonld');
-  if (articleJson) articleJson.remove();
+  // Remove all JSON-LD structured data
+  removeStructuredData('all');
 
   // Restore canonical URL using utility function
   restoreCanonical(defaultCanonical.value);
@@ -653,7 +613,7 @@ body {
   font-size: clamp(2rem, 6vw, 2rem);
   font-weight: 800;
   margin: 2rem 0 1rem;
-  padding: 0.5rem 1.5rem;
+  padding: 1.5rem 1.5rem 3rem;
   line-height: 1.3;
   display: inline-block;
   position: relative;
@@ -693,7 +653,7 @@ body {
   font-weight: 700;
   color: #1e40af;
   margin: 1.75rem 0 0.9rem;
-  padding: 0.75rem 1rem;
+  padding: 1.5rem 1rem 2rem;
   display: inline-block;
   box-sizing: border-box;
   position: relative;
@@ -748,190 +708,22 @@ body {
   font-style: italic;
 }
 
-/* Base code block styling */
-pre {
-  background-color: #f6f8fa;
-  border-radius: 6px;
-  padding: 0.5rem;
-  overflow-x: auto;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  hyphens: auto;
-  text-align: justify;
-  text-justify: inter-word;
-  position: relative;
-  padding: 1.5rem 1.75rem;
-  background: rgba(249, 250, 251, 0.7);
-  border-radius: 12px;
-  border-left: 4px solid #3b82f6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+/* Prevent cascading resets to child elements */
+#post-content.prose blockquote p * {
+  all: revert;
 }
 
-/* Hover effect */
-#post-content p:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
-  background: rgba(249, 250, 251, 0.9);
+#post-content.prose blockquote cite {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.9em;
+  color: #6b7280;
+  font-style: normal;
+  font-weight: 500;
 }
 
-/* First paragraph after headings */
-#post-content h2+p,
-#post-content h3+p,
-#post-content h4+p {
-  margin-top: clamp(0.5em, 1.2vw, 1em);
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  line-height: 1.9;
-  color: #1f2937;
-  background: rgba(236, 242, 253, 0.7);
-  border-left-color: #2563eb;
-  padding: 1rem;
-}
-
-/* Dark mode support */
-.dark #post-content p {
-  color: #e2e8f0;
-  background: rgba(30, 41, 59, 0.4);
-  border-left-color: #60a5fa;
-}
-
-.dark #post-content p:hover {
-  background: rgba(30, 41, 59, 0.6);
-}
-
-.dark #post-content h2+p,
-.dark #post-content h3+p,
-.dark #post-content h4+p {
-  background: rgba(30, 58, 138, 0.3);
-  color: #f8fafc;
-}
-
-/* Blockquote-like styling for important paragraphs */
-#post-content p.important {
-  background: rgba(121, 127, 133, 0.7);
-  border: 1px solid rgba(37, 99, 235, 0.2);
-  border-left: 4px solid #2563eb;
-  font-style: italic;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-#post-content p.important:hover {
-  transform: translateY(-2px);
-  border-color: #3b82f6;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-}
-
-#post-content p.important::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, rgba(59, 130, 246, 0.05), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-#post-content p.important:hover::before {
-
-  opacity: 1;
-}
-
-.dark #post-content p.important {
-  background: rgba(30, 58, 138, 0.2);
-  border-color: rgba(96, 165, 250, 0.3);
-  border-left-color: #60a5fa;
-}
-
-.dark #post-content p.important:hover {
-  border-color: #60a5fa;
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.15);
-}
-
-/* Last paragraph in a section */
-#post-content p:last-child {
-  margin-bottom: 2.5em;
-}
-
-
-
-.title-wrapper {
-  padding: 1rem 0;
-  margin: 2rem 0;
-  position: relative;
-}
-
-#post-title {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 0.5rem;
-  transition: color 0.3s ease;
-}
-
-#post-title:hover {
-  color: #1e40af;
-}
-
-#post-title span {
-  transition: transform 0.3s ease;
-}
-
-#post-title:hover span {
-  transform: scaleX(1);
-}
-
-a {
-  color: #3b82f6;
-  text-decoration: none;
-  transition: color 0.2s ease, outline 0.2s ease;
-  border-radius: 0.25rem;
-  outline: none;
-}
-
-a:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-a:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-  color: #2563eb;
-  text-decoration: underline;
-}
-
-#post-content ul,
-#post-content ol {
-  padding-left: 1.5rem;
-  margin: 1rem 0;
-}
-
-#post-content li {
-  position: relative;
-  margin-bottom: 0.75rem;
-  padding: 0.75rem 1rem 0.75rem 2rem;
-  background: rgba(249, 250, 251, 0.7);
-  border-radius: 0.5rem;
-  border-left: 0.1875rem solid #3b82f6;
-  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 0.0625rem 0.125rem 0 rgba(0, 0, 0, 0.05);
-  outline: none;
-}
-
-#post-content li:hover {
-  transform: translateX(0.25rem);
-  background: rgba(59, 130, 246, 0.05);
-  box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1), 0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.06);
-}
-
-#post-content li:focus-visible {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
+#post-content.prose blockquote cite::before {
+  content: '\2014\00A0';
 }
 
 /* Custom bullet point */
@@ -994,7 +786,7 @@ a:focus-visible {
 #post-content blockquote:hover {
   background: #e5e7eb;
   border-left-color: #2563eb;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transform: translateY(-2px);
 }
 
@@ -1029,8 +821,8 @@ a:focus-visible {
 
 /* Dark mode support */
 .dark #post-content blockquote {
-  background: #1f2937;
-  color: #e5e7eb;
+  background: #1e293b;
+  color: #e2e8f0;
   border-left-color: #60a5fa;
 }
 
@@ -1507,7 +1299,7 @@ a:focus-visible {
   margin-bottom: 1rem;
   font-weight: 500;
   color: #6b7280;
-  padding-left: 1.5rem;
+  padding: 1rem 0 1.5rem 1.5rem;
   position: relative;
 }
 
@@ -1723,23 +1515,6 @@ h3 {
   }
 }
 
- 
-
-/* Make TOC sticky */
-#table-of-contents {
-  position: sticky;
-  top: 6rem; /* Space from top when stuck */
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto 2rem;
-  z-index: 10;
-  max-height: calc(100vh - 2rem); /* Prevent it from being taller than viewport */
-  overflow-y: auto; /* Make it scrollable if content is too long */ 
-}
-
-
-
-
 /* Make sure the TOC content doesn't cause horizontal scroll */
 .toc-body {
   max-width: 100%;
@@ -1750,12 +1525,5 @@ h3 {
 #table-of-contents a {
   word-break: break-word;
   overflow-wrap: break-word;
-}
-
-/* Ensure proper scroll margin for anchor links */
-#post-content.prose h2,
-#post-content.prose h3,
-#post-content.prose h4 {
-  scroll-margin-top:calc(var(--navbar-height) + 0rem);
 }
 </style>
