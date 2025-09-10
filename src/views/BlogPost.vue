@@ -140,7 +140,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch } from 'vue';
 import { getPost } from '@/config/firebase';
 import { 
   injectBlogPostStructuredData, 
@@ -431,6 +431,10 @@ onMounted(async () => {
       );
       // Start scroll spy after content is loaded
       startScrollSpy();
+      // Enable manual TOC navigation after scroll spy is started
+      if (!cleanupManualNav) {
+        cleanupManualNav = setupManualTocNav();
+      }
       // After content is rendered, handle initial hash scroll once
       if (window.location.hash && !hasScrolledToHash.value) {
         scrollToHash();
@@ -564,7 +568,9 @@ const scrollSpy = useScrollSpy({
   autoStart: false
 });
 
-const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
+const { activeId, start: startScrollSpy, stop: stopScrollSpy, setupManualTocNav } = scrollSpy;
+
+let cleanupManualNav = null;
 
 
 // Clean up canonical tag when component is unmounted
