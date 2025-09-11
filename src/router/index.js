@@ -88,24 +88,28 @@ const setStatus = (to, from, next) => {
   if (to.name === 'NotFound') {
     // Update page title
     document.title = 'Page Not Found | Your Site Name';
+    
     // Set meta tag for status code
     document.documentElement.setAttribute('data-status', '404');
     
-    // Set HTTP status code for crawlers that execute JS
+    // For client-side navigation, update URL without reloading
     if (typeof window !== 'undefined') {
-      // Update URL without reloading
-      window.history.replaceState({}, '', window.location.pathname);
+      // Only update state if this is a client-side navigation
+      if (from.name) {
+        window.history.replaceState({}, '', window.location.pathname);
+      }
       
       // Add meta tag for prerender services
-      let meta = document.createElement('meta');
-      meta.name = 'prerender-status-code';
-      meta.content = '404';
-      document.head.appendChild(meta);
-      
-      // For Vercel, set a custom header that will be read by the edge function
-      if (window.fetch) {
-        fetch('/api/not-found', { method: 'HEAD' }).catch(() => {});
+      let meta = document.querySelector('meta[name="prerender-status-code"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'prerender-status-code';
+        document.head.appendChild(meta);
       }
+      meta.content = '404';
+      
+      // For initial page load, the server will handle the 404 status
+      // For client-side navigation, we rely on meta tags for SEO
     }
   }
   next();

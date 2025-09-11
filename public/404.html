@@ -7,43 +7,82 @@
   <meta name="prerender-status-code" content="404">
   <link rel="stylesheet" href="/index.css">
   <style>
-    /* Fallback styles in case main CSS doesn't load */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #3b0764;
+      color: white;
+      padding: 8px;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
     .not-found {
+      min-height: 80vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      text-align: center;
-      padding: 2rem;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(192,132,252,0.8) 0%, rgba(224,242,254,0.8) 50%, rgba(237,233,254,0.8) 100%);
     }
-    .error-code {
-      font-size: 8rem;
-      font-weight: bold;
-      color: #e53e3e;
-      margin-bottom: 1rem;
-    }
-    .skip-link {
+    
+    .not-found::before {
+      content: "";
       position: absolute;
-      left: -9999px;
-      top: 1rem;
-      background: #fff;
-      padding: 0.5rem 1rem;
-      z-index: 100;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        rgba(215, 50, 198, 0.2) 0 2px,
+        transparent 2px 20px
+      );
+      z-index: 1;
     }
-    .skip-link:focus {
-      left: 1rem;
+    
+    .not-found-content {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #1e293b;
+      outline: none;
+      max-width: 90%;
+      margin: 0 auto;
     }
+
+    .error-code {
+      font-size: 6rem;
+      font-weight: bold;
+      line-height: 1;
+      margin-bottom: 1rem;
+      color: #3b0764;
+    }
+
     .home-link {
       display: inline-block;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       padding: 0.75rem 1.5rem;
-      background-color: #3182ce;
+      background-color: rgb(59,7,100);
       color: white;
+      border-radius: 6px;
       text-decoration: none;
-      border-radius: 0.25rem;
-      font-weight: 500;
+      font-weight: bold;
+      transition: background-color 0.2s, transform 0.2s;
     }
+
+    .home-link:hover {
+      background-color: #4c1d95;
+      transform: translateY(-2px);
+    }
+
     .sr-only {
       position: absolute;
       width: 1px;
@@ -56,8 +95,6 @@
       border-width: 0;
     }
   </style>
-  <!-- Load the app's CSS -->
-  <!-- No automatic redirect - let the static 404 page be shown -->
 </head>
 <body>
   <div class="not-found" role="main" aria-labelledby="notfound-title">
@@ -68,12 +105,12 @@
       <div role="status" aria-live="polite" class="sr-only">Page not found</div>
       <p>Oops! The page you're looking for doesn't exist.</p>
       <p>It might have been moved or deleted, or you might have mistyped the URL.</p>
-      <a href="https://izak-portfolio-nhdz46ko5-kickbuttowski80s-projects.vercel.app/" class="home-link" aria-label="Return to home page">Return Home</a>
+      <a href="/" class="home-link" aria-label="Return to home page">Return Home</a>
     </div>
   </div>
   
   <script>
-    // Focus the main content for screen readers without redirecting
+    // Focus the main content for screen readers when the page loads
     document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('main-content').focus();
     });

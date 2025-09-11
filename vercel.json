@@ -7,15 +7,16 @@
       "destination": "/index.html",
       "has": [
         {
-          "type": "host",
-          "value": "(?<host>.*)"
-        },
-        {
           "type": "header",
-          "key": "x-prerender-status-code",
-          "value": "404"
+          "key": "x-vercel-404",
+          "value": "false"
         }
       ]
+    },
+    { 
+      "source": "/(.*)", 
+      "destination": "/404.html",
+      "statusCode": 404
     }
   ],
   "headers": [
