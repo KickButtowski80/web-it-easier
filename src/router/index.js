@@ -85,11 +85,15 @@ const routes = [
 // Navigation guard to handle status codes
 const setStatus = (to, from, next) => {
   // Set status code for 404 pages
-  if (to.meta.status === 404) {
-    // This will be handled by the server-side rendering or a server config
-    document.title = 'Page Not Found';
-    // Set meta tag for status code (useful for static site generators)
+  if (to.name === 'NotFound') {
+    // Update page title
+    document.title = 'Page Not Found | Your Site Name';
+    // Set meta tag for status code
     document.documentElement.setAttribute('data-status', '404');
+    // Set HTTP status code for crawlers that execute JS
+    if (typeof window !== 'undefined') {
+      window.status = '404';
+    }
   }
   next();
 };
