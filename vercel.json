@@ -1,42 +1,35 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { 
-      "source": "/(.*\\.(?:css|js|jpg|jpeg|gif|png|ico|svg|woff|woff2|ttf|eot|webmanifest|txt|xml))",
-      "destination": "/$1"
+  "builds": [
+    {
+      "src": "dist/index.html",
+      "use": "@vercel/static"
     },
-    { 
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-vercel-404",
-          "value": "false"
-        }
-      ],
-      "destination": "/index.html"
-    },
-    { 
-      "source": "/(.*)", 
-      "destination": "/404.html",
-      "statusCode": 404
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
     }
   ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/index.js" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
   "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
     {
       "source": "/(.*)",
       "headers": [
         { "key": "X-Robots-Tag", "value": "index, follow" },
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-XSS-Protection", "value": "1; mode=block" }
-      ]
-    },
-    {
-      "source": "/(.*\\.(?:ico|txt|xml|webmanifest|json|js|css|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
       ]
     }
   ]
