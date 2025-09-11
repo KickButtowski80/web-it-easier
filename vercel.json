@@ -2,7 +2,21 @@
   "version": 2,
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { 
+      "source": "/(.*)", 
+      "destination": "/index.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "(?<host>.*)"
+        },
+        {
+          "type": "header",
+          "key": "x-prerender-status-code",
+          "value": "404"
+        }
+      ]
+    }
   ],
   "headers": [
     {

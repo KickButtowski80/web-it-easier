@@ -90,15 +90,22 @@ const setStatus = (to, from, next) => {
     document.title = 'Page Not Found | Your Site Name';
     // Set meta tag for status code
     document.documentElement.setAttribute('data-status', '404');
+    
     // Set HTTP status code for crawlers that execute JS
     if (typeof window !== 'undefined') {
-      // Use history.replaceState to update the URL without reloading
+      // Update URL without reloading
       window.history.replaceState({}, '', window.location.pathname);
-      // Add a meta tag for crawlers that support it
+      
+      // Add meta tag for prerender services
       let meta = document.createElement('meta');
       meta.name = 'prerender-status-code';
       meta.content = '404';
       document.head.appendChild(meta);
+      
+      // For Vercel, set a custom header that will be read by the edge function
+      if (window.fetch) {
+        fetch('/api/not-found', { method: 'HEAD' }).catch(() => {});
+      }
     }
   }
   next();
