@@ -66,20 +66,36 @@
       color: #3b0764;
     }
 
-    .home-link {
-      display: inline-block;
+    .actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
       margin-top: 1.5rem;
+    }
+
+    .home-link,
+    .blog-link {
+      display: inline-block;
       padding: 0.75rem 1.5rem;
-      background-color: rgb(59,7,100);
+      background-color: rgb(59, 7, 100);
       color: white;
       border-radius: 6px;
       text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.2s, transform 0.2s;
+      transition: all 0.2s ease;
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      min-width: 160px;
+      box-sizing: border-box;
     }
 
-    .home-link:hover {
-      background-color: #4c1d95;
+    .home-link:hover,
+    .home-link:focus,
+    .blog-link:hover,
+    .blog-link:focus {
+      background-color: rgb(45, 5, 80);
+      outline: 3px solid #ffe4a1;
       transform: translateY(-2px);
     }
 
@@ -103,16 +119,34 @@
       <h1 id="notfound-title" class="sr-only">Page Not Found</h1>
       <div class="error-code" aria-hidden="true">404</div>
       <div role="status" aria-live="polite" class="sr-only">Page not found</div>
-      <p>Oops! The page you're looking for doesn't exist.</p>
-      <p>It might have been moved or deleted, or you might have mistyped the URL.</p>
-      <a href="/" class="home-link" aria-label="Return to home page">Return Home</a>
+      <p id="error-message">Oops! The page you're looking for doesn't exist.</p>
+      <p id="suggestion">It might have been moved or deleted, or you might have mistyped the URL.</p>
+      <div class="actions">
+        <a href="/" class="home-link" aria-label="Return to home page">Return Home</a>
+        <a href="/blog" class="blog-link" aria-label="View all blog posts">View All Blog Posts</a>
+      </div>
     </div>
   </div>
   
   <script>
-    // Focus the main content for screen readers when the page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Focus the main content for screen readers
       document.getElementById('main-content').focus();
+      
+      // Check if this is a blog post URL
+      const path = window.location.pathname;
+      const blogPostMatch = path.match(/^\/blog\/([^/]+)/i);
+      
+      if (blogPostMatch) {
+        const postSlug = blogPostMatch[1];
+        const errorMessage = document.getElementById('error-message');
+        const suggestion = document.getElementById('suggestion');
+        
+        if (errorMessage && suggestion) {
+          errorMessage.textContent = `Blog post not found: "${decodeURIComponent(postSlug).replace(/-/g, ' ')}"`;
+          suggestion.textContent = 'This blog post might have been removed or the URL might be incorrect.';
+        }
+      }
     });
   </script>
 </body>
