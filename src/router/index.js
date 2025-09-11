@@ -92,7 +92,13 @@ const setStatus = (to, from, next) => {
     document.documentElement.setAttribute('data-status', '404');
     // Set HTTP status code for crawlers that execute JS
     if (typeof window !== 'undefined') {
-      window.status = '404';
+      // Use history.replaceState to update the URL without reloading
+      window.history.replaceState({}, '', window.location.pathname);
+      // Add a meta tag for crawlers that support it
+      let meta = document.createElement('meta');
+      meta.name = 'prerender-status-code';
+      meta.content = '404';
+      document.head.appendChild(meta);
     }
   }
   next();
