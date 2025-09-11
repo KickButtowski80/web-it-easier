@@ -2,47 +2,22 @@
   "version": 2,
   "routes": [
     {
-      "src": "/404",
-      "dest": "/index.html",
-      "status": 404
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html",
-      "status": 200
-    }
-  ],
-  "headers": [
-    {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
+        { "key": "X-Robots-Tag", "value": "index, follow" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.js"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/((?!_next/|static/|images/|favicon.ico|sw.js|robots.txt|sitemap.xml|google-search-console-verification.html|api/).*)",
+      "dest": "/index.html",
+      "status": 404
     }
   ]
 }
