@@ -12,12 +12,12 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/index.js" },
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/(.*\\.(?:svg|png|jpg|jpeg|gif|ico|webp|txt|xml))", "dest": "/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
   "headers": [
     {
-      "source": "/assets/(.*)",
+      "source": "/(.*\\.(?:svg|png|jpg|jpeg|gif|ico|webp|css|js|woff|woff2|ttf|eot))",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
