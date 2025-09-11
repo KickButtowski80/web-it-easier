@@ -15,7 +15,21 @@
       "dest": "/api/index.js"
     },
     {
-      "src": "/((?!_next/|static/|images/|favicon.ico|sw.js|robots.txt|sitemap.xml|google-search-console-verification.html|api/).*)",
+      "src": "/(.*\\.(?:ico|txt|xml|webmanifest|json|js|css|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot))",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "^/(|home|about|blog|contact)$",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/blog/[a-zA-Z0-9-]+$",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
       "dest": "/index.html",
       "status": 404
     }
