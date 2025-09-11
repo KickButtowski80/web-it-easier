@@ -3,15 +3,19 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { 
-      "source": "/(.*)", 
-      "destination": "/index.html",
+      "source": "/(.*\\.(?:css|js|jpg|jpeg|gif|png|ico|svg|woff|woff2|ttf|eot|webmanifest|txt|xml))",
+      "destination": "/$1"
+    },
+    { 
+      "source": "/(.*)",
       "has": [
         {
           "type": "header",
           "key": "x-vercel-404",
           "value": "false"
         }
-      ]
+      ],
+      "destination": "/index.html"
     },
     { 
       "source": "/(.*)", 
