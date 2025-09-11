@@ -57,16 +57,7 @@
     }
   </style>
   <!-- Load the app's CSS -->
-  <script>
-    // Redirect to SPA with 404 route if JavaScript is enabled
-    window.onload = function() {
-      // Only redirect if we're not already in the SPA
-      if (!window.isInSPA) {
-        const path = window.location.pathname;
-        window.location.href = '/#' + path;
-      }
-    }
-  </script>
+  <!-- No automatic redirect - let the static 404 page be shown -->
 </head>
 <body>
   <div class="not-found" role="main" aria-labelledby="notfound-title">
@@ -77,14 +68,15 @@
       <div role="status" aria-live="polite" class="sr-only">Page not found</div>
       <p>Oops! The page you're looking for doesn't exist.</p>
       <p>It might have been moved or deleted, or you might have mistyped the URL.</p>
-      <a href="/" class="home-link" aria-label="Return to home page">Return Home</a>
+      <a href="https://izak-portfolio-nhdz46ko5-kickbuttowski80s-projects.vercel.app/" class="home-link" aria-label="Return to home page">Return Home</a>
     </div>
   </div>
   
-  <!-- Load the app if possible -->
   <script>
-    // Focus the main content for screen readers
-    document.getElementById('main-content').focus();
+    // Focus the main content for screen readers without redirecting
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('main-content').focus();
+    });
   </script>
 </body>
 </html>
