@@ -176,20 +176,33 @@
       <div role="status" aria-live="polite" class="sr-only">Page not found</div>
       <p id="error-message">Oops! The page you're looking for doesn't exist.</p>
       <p id="suggestion">It might have been moved or deleted, or you might have mistyped the URL.</p>
-      <div class="actions">
+      <div class="actions" id="action-buttons">
         <a href="/" class="home-link" aria-label="Return to home page">Return Home</a>
-        <a href="/blog" class="blog-link" aria-label="View all blog posts">View All Blog Posts</a>
+        <!-- Blog link will be added dynamically by JavaScript -->
       </div>
     </div>
   </div>
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Get DOM elements and path
+      const actionButtons = document.getElementById('action-buttons');
+      const path = window.location.pathname;
+      
+      // Add blog link if this is a blog-related 404
+      if (path.includes('/blog/')) {
+        const blogLink = document.createElement('a');
+        blogLink.href = '/blog';
+        blogLink.className = 'blog-link';
+        blogLink.textContent = 'View All Blog Posts';
+        blogLink.setAttribute('aria-label', 'View all blog posts');
+        actionButtons.appendChild(blogLink);
+      }
+      
       // Focus the main content for screen readers
       document.getElementById('main-content').focus();
       
       // Check if this is a blog post URL
-      const path = window.location.pathname;
       const blogPostMatch = path.match(/^\/blog\/([^/]+)/i);
       
       if (blogPostMatch) {
