@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Page Not Found | Your Site Name</title>
   <meta name="prerender-status-code" content="404">
+  <meta name="description" content="404 - Page not found. The requested page does not exist.">
   <link rel="icon" type="image/png" href="/open-door.png" />
   <style>
     .skip-link {
@@ -62,6 +63,13 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    
+    /* Add prefers-reduced-motion support */
+    @media (prefers-reduced-motion: reduce) {
+      .not-found-content {
+        animation: none;
+      }
+    }
 
     .error-code {
       font-size: 8rem;
@@ -71,6 +79,10 @@
       color: #3b0764;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
       animation: float 5s ease-in-out infinite;
+      /* Add prefers-reduced-motion support */
+      @media (prefers-reduced-motion: reduce) {
+        animation: none;
+      }
     }
     
     @keyframes float {
@@ -78,6 +90,14 @@
       50% { transform: translateY(-10px); }
     }
 
+    #visible-title {
+      font-size: 2rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: #1f2937;
+      font-weight: 700;
+    }
+    
     #error-message {
       font-size: 1.75rem;
       margin-bottom: 1rem;
@@ -152,6 +172,7 @@
     <div class="not-found-content" tabindex="-1" id="main-content">
       <h1 id="notfound-title" class="sr-only">Page Not Found</h1>
       <div class="error-code" aria-hidden="true">404</div>
+      <h2 id="visible-title">Page Not Found</h2>
       <div role="status" aria-live="polite" class="sr-only">Page not found</div>
       <p id="error-message">Oops! The page you're looking for doesn't exist.</p>
       <p id="suggestion">It might have been moved or deleted, or you might have mistyped the URL.</p>
@@ -175,12 +196,37 @@
         const postSlug = blogPostMatch[1];
         const errorMessage = document.getElementById('error-message');
         const suggestion = document.getElementById('suggestion');
+        const notFoundTitle = document.getElementById('notfound-title');
+        const statusText = document.querySelector('[role="status"]');
         
-        if (errorMessage && suggestion) {
-          errorMessage.textContent = `Blog post not found: "${decodeURIComponent(postSlug).replace(/-/g, ' ')}"`;
-          suggestion.textContent = 'This blog post might have been removed or the URL might be incorrect.';
+        try {
+          const decodedSlug = decodeURIComponent(postSlug).replace(/-/g, ' ');
+          
+          if (errorMessage && suggestion) {
+            errorMessage.textContent = `Blog post not found: "${decodedSlug}"`;
+            suggestion.textContent = 'This blog post might have been removed or the URL might be incorrect.';
+            
+            // Update the title and status text for screen readers
+            if (notFoundTitle) {
+              notFoundTitle.textContent = `Blog Post Not Found: ${decodedSlug}`;
+              document.title = `Blog Post Not Found: ${decodedSlug} | Your Site Name`;
+            }
+            
+            if (statusText) {
+              statusText.textContent = `Blog post not found: ${decodedSlug}`;
+            }
+          }
+        } catch (e) {
+          console.error('Error processing URL slug:', e);
         }
       }
+      
+      // Add escape key handler to return home
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          window.location.href = '/';
+        }
+      });
     });
   </script>
 </body>
