@@ -85,11 +85,32 @@ const routes = [
 // Navigation guard to handle status codes
 const setStatus = (to, from, next) => {
   // Set status code for 404 pages
-  if (to.meta.status === 404) {
-    // This will be handled by the server-side rendering or a server config
-    document.title = 'Page Not Found';
-    // Set meta tag for status code (useful for static site generators)
+  if (to.name === 'NotFound') {
+    // Update page title
+    document.title = 'Page Not Found | Your Site Name';
+    
+    // Set meta tag for status code
     document.documentElement.setAttribute('data-status', '404');
+    
+    // For client-side navigation, update URL without reloading
+    if (typeof window !== 'undefined') {
+      // Only update state if this is a client-side navigation
+      if (from.name) {
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      
+      // Add meta tag for prerender services
+      let meta = document.querySelector('meta[name="prerender-status-code"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'prerender-status-code';
+        document.head.appendChild(meta);
+      }
+      meta.content = '404';
+      
+      // For initial page load, the server will handle the 404 status
+      // For client-side navigation, we rely on meta tags for SEO
+    }
   }
   next();
 };
