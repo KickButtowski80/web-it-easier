@@ -38,13 +38,14 @@
         </button>
       </section>
 
-      <Transition name="slide-fade" ref="cardInfo" class="cardInfo">
+      <Transition name="slide-fade">
         <div 
           v-show="readMoreStatus" 
           :id="`card-${projectId}`"
           role="region"
           aria-live="polite"
           class="cardInfo"
+          ref="cardInfo"
         >
           <ActionButtons 
             :liveView="liveView"
