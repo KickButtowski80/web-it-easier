@@ -1,7 +1,7 @@
 <template>
 
-  <section class="container mx-auto px-4 py-24">
-    <div class="max-w-4xl mx-auto">
+  <section class="container blog-container mx-auto px-4 py-24">
+    <div class="blog-layout">
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
@@ -92,6 +92,9 @@
         <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
           v-html="renderedContent">
         </div>
+        
+        <!-- Category Tags Section -->
+        <CategoryTags v-if="post?.content" :content="post.content" />
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
         <div class="animate-pulse" role="presentation">
@@ -106,15 +109,34 @@
           Loading post...
         </p>
       </div>
+      
+      <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+        :icon="notificationIcon" />
+        
+      <!-- Related Posts Section -->
+      <RelatedPosts 
+        v-if="post && allPosts.length > 0" 
+        :current-post-id="post.id" 
+        :current-post-title="post.title" 
+        :current-post-content="post.content" 
+        :all-posts="allPosts" 
+      />
     </div>
-    <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
-      :icon="notificationIcon" />
+    
+    <!-- Sidebar with Popular Posts -->
+    <aside class="blog-sidebar">
+      <PopularPosts 
+        v-if="post && allPosts.length > 0" 
+        :current-post-id="post.id" 
+        :all-posts="allPosts" 
+      />
+    </aside>
   </section>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch } from 'vue';
-import { getPost } from '@/config/firebase';
+import { getPost, getPosts } from '@/config/firebase';
 import {
   injectBlogPostStructuredData,
   removeStructuredData,
@@ -124,6 +146,9 @@ import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
 import { updateCanonicalUrl, restoreCanonical } from '@/utils/seo-update-canonical-url';
 import Notification from '@/components/UI/Notification.vue';
+import RelatedPosts from '@/components/Blog/RelatedPosts.vue';
+import PopularPosts from '@/components/Blog/PopularPosts.vue';
+import CategoryTags from '@/components/Blog/CategoryTags.vue';
 import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
 import { updateMetaDescriptions, updateMetaSocialTags } from '@/utils/seo-update-description';
@@ -146,6 +171,7 @@ const {
 } = useNotification();
 const hasScrolledToHash = ref(false);
 const post = ref(null);
+const allPosts = ref([]);
 const defaultCanonical = ref(null);
 // Store default meta descriptions to restore on unmount
 const defaultMetaDescriptions = ref({
@@ -315,6 +341,13 @@ onMounted(async () => {
   const defaultCanonicalEl = document.querySelector('link[rel="canonical"]');
   if (defaultCanonicalEl) {
     defaultCanonical.value = defaultCanonicalEl.outerHTML;
+  }
+  
+  // Fetch all posts for related posts functionality
+  try {
+    allPosts.value = await getPosts();
+  } catch (error) {
+    console.error('Error fetching all posts:', error);
   }
 
   // Capture current meta descriptions to restore later
@@ -587,6 +620,7 @@ function deslugify(slug) {
 <!-- Externalized styles -->
 <style src="@/styles/toc.css"></style>
 <style src="@/styles/callouts.css"></style>
+<style src="@/styles/blog-layout.css"></style>
 <style>
 /* All of your existing styles are here, adapted for a standalone HTML file. */
 body {

@@ -54,7 +54,6 @@
             :projectTitle="projectTitle"
           />
           <div 
-            ref="descriptionSection"
             class="gray-bg-card flex-grow transition-opacity duration-200"
             :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
             :aria-labelledby="`project-title-${projectId}`"
@@ -69,7 +68,6 @@
             </p>
           </div>
           <div 
-            ref="techSection"
             class="px-3 pt-4 pb-2 transition-opacity duration-200"
             :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
             :aria-hidden="!readMoreStatus"
@@ -92,7 +90,6 @@
             </p>
           </div>
           <div 
-            ref="highlightsSection"
             class="gray-bg-card mt-5 transition-opacity duration-200"
             :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
             :aria-hidden="!readMoreStatus"
@@ -125,7 +122,7 @@
 </template>
 
 <script>
-import { toRefs, toRef, ref, computed, nextTick } from "vue";
+import { toRefs, ref, computed, nextTick } from "vue";
 import ActionButtons from "./UI/ActionButtons.vue";
 export default {
   props: {
@@ -157,10 +154,6 @@ export default {
       const readMoreText = computed(() => {
         return !readMoreStatus.value ? "Read More" : "Read Less";
       });
-      const descriptionSection = ref(null);
-      const techSection = ref(null);
-      const highlightsSection = ref(null);
-      
       const toggleReadMoreStatus = (event) => {
         // Prevent default only for keyboard events to avoid double-triggering with click
         if (event.type === 'keydown') {
@@ -212,11 +205,8 @@ export default {
       image: '',
       imageAlt: '',
       projectTitle: '',
-      clientName: '',
       description: '',
       technologiesUsed: [],
-      startDate: '',
-      endDate: '',
       highlights: [],
       liveView: '',
       codeView: '',
@@ -224,10 +214,7 @@ export default {
       readMoreText: 'Read More',
       readMoreStatus: false,
       toggleReadMoreStatus: () => {},
-      cardInfo: null,
-      descriptionSection: null,
-      techSection: null,
-      highlightsSection: null
+      cardInfo: null
     };
   },
 };
@@ -235,12 +222,12 @@ export default {
 
 <style scoped>
 .cardInfo {
-  scroll-margin-top: 110px;
+  scroll-margin-top: 6.875rem; /* 110px */
   margin-bottom: 3rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 48rem) { /* 768px */
   .cardInfo {
-    scroll-margin-top: 40px; /* Adjust margin for medium screens */
+    scroll-margin-top: 5.5rem; /* 88px - space for sticky header + padding on mobile */
   }
 }
 summary {

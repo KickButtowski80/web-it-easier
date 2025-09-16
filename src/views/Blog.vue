@@ -25,6 +25,16 @@
       
       <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-indigo-300 dark:via-indigo-600 to-transparent group-hover:w-48 transition-all duration-500"></div>
     </div>
+    
+    <!-- Blog Navigation Links -->
+    <div class="blog-navigation mb-10 flex flex-wrap justify-center gap-4">
+      <RouterLink to="/blog/archive" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+        </svg>
+        Browse Archive
+      </RouterLink>
+    </div>
 
     <section aria-label="Blog posts" class="isolate">
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 list-none p-0">
@@ -393,5 +403,47 @@ export default {
 .dark .prose :where(a:hover):not(:where([class~="not-prose"] *)) {
   color: #a5b4fc;
   text-decoration: underline;
+}
+
+/* Blog Navigation Links */
+.blog-navigation {
+  margin-top: 1rem;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  background-color: rgba(99, 102, 241, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.dark .nav-link {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border-color: rgba(129, 140, 248, 0.3);
+}
+
+.dark .nav-link:hover,
+.dark .nav-link:focus {
+  background-color: rgba(99, 102, 241, 0.25);
 }
 </style>
