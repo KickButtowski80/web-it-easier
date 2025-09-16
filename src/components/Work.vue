@@ -3,7 +3,6 @@
     :aria-label="'Project: ' + projectTitle"
     class="grid place-items-center shadow-md"
     :data-expanded="readMoreStatus"
-    :class="{ 'pointer-events-none': !readMoreStatus }"
   >
     <div class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col">
       <img
