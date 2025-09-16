@@ -222,12 +222,12 @@ export default {
 
 <style scoped>
 .cardInfo {
-  scroll-margin-top: 110px;
+  scroll-margin-top: 6.875rem; /* 110px */
   margin-bottom: 3rem;
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 48rem) { /* 768px */
   .cardInfo {
-    scroll-margin-top: 40px; /* Adjust margin for medium screens */
+    scroll-margin-top: 5.5rem; /* 88px - space for sticky header + padding on mobile */
   }
 }
 summary {
