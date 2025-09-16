@@ -64,6 +64,11 @@ const routes = [
     component: () => import('../views/Blog.vue'),
   },
   {
+    path: '/blog/archive',
+    name: 'BlogArchive',
+    component: () => import('../views/BlogArchive.vue'),
+  },
+  {
     path: '/blog/:slug',
     name: 'BlogPost',
     component: () => import('../views/BlogPost.vue'),
