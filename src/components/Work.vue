@@ -172,20 +172,11 @@ export default {
         
         nextTick(() => {
           if (!wasExpanded) {
-            // When expanding, focus the first focusable element in the expanded content
-            const firstFocusable = descriptionSection.value?.querySelector('[tabindex]') || 
-                                 techSection.value?.querySelector('[tabindex]') || 
-                                 highlightsSection.value?.querySelector('[tabindex]');
-            
-            if (firstFocusable) {
-              firstFocusable.focus({ preventScroll: true });
-            }
-            
-            // Smooth scroll to the card
+            // Smoothly scroll the top of the card content into view.
+            // The browser's natural tab order will handle focusing the first interactive element.
             cardInfo.value?.scrollIntoView({
               behavior: "smooth",
-              block: "nearest",
-              inline: "center"
+              block: "start"
             });
           } else {
             // When collapsing, return focus to the toggle button
