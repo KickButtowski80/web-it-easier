@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Posts: anyone can read, only the admin email can write
+    match /posts/{postId} {
+      allow read: if true;
+      allow create, update, delete:
+        if request.auth != null
+        && request.auth.token.email == "pazpaz22@yahoo.com"
+        // Add tags validation
+        && (!request.resource.data.keys().hasAny(['tags']) ||
+            (request.resource.data.tags is list
+             && request.resource.data.tags.size() <= 5
+             && request.resource.data.tags.size() >= 0));
+    }
+
+    // Tags collection for future tag management
+    match /tags/{tagId} {
+      allow read: if true;
+      allow write:
+        if request.auth != null
+        && request.auth.token.email == "pazpaz22@yahoo.com";
+    }
+
+    // Everything else: read-only (keep secure!)
+    match /{document=**} {
+      allow read: if true;
+      allow write: if false; // Don't add write permissions here for security
+    }
+  }
+}

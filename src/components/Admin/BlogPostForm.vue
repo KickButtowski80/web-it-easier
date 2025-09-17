@@ -42,6 +42,32 @@
                 </div>
             </div>
 
+            <!-- Tags Input Field -->
+            <div class="form-group">
+                <label for="tags-input">Tags <span class="tag-counter">({{ formData.tags.length }}/5)</span></label>
+                <div class="tags-input-container">
+                    <!-- Display existing tags -->
+                    <div class="tags-display" v-if="formData.tags.length > 0">
+                        <span v-for="(tag, index) in formData.tags" :key="tag" class="tag-chip">
+                            {{ tag }}
+                            <button type="button" @click="removeTag(index)" class="tag-remove" aria-label="Remove tag">&times;</button>
+                        </span>
+                    </div>
+
+                    <!-- Tag input -->
+                    <div class="tag-input-wrapper">
+                        <input id="tags-input" ref="tagInput" v-model="newTag" @keydown.enter.prevent="addTag"
+                            @keydown.tab.prevent="addTag" @blur="addTag" type="text"
+                            placeholder="Add a tag and press Enter or Tab" autocomplete="off"
+                            :disabled="formData.tags.length >= 5" aria-describedby="tagHelp">
+                        <div id="tagHelp" class="hint">
+                            Press Enter or Tab to add. Maximum 5 tags, 20 characters each. Only alphanumeric, hyphens, and underscores allowed.
+                        </div>
+                        <div v-if="tagError" class="error-message" role="alert">{{ tagError }}</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="content">Content (Markdown)</label>
                 <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
@@ -113,7 +139,7 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { addPost, updatePost, getPostById, signOut, auth } from '@/config/firebase'
+import { addPost, updatePost, getPostById, signOut, auth, validateTags } from '@/config/firebase'
 import LoadingOverlay from '@/components/UI/LoadingOverlay.vue'
 import { renderMarkdown } from '@/utils/markdown';
 import Notification from '@/components/UI/Notification.vue'
@@ -149,7 +175,8 @@ const formData = ref({
     date: new Date().toISOString().split('T')[0],
     readingTime: 5,
     featureImage: '',
-    content: ''
+    content: '',
+    tags: [] // Add tags field
 });
 
 // Load post data if in edit mode
@@ -168,7 +195,8 @@ onMounted(async () => {
                     date: post.date ? new Date(post.date.seconds * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
                     readingTime: post.readingTime || 5,
                     featureImage: post.featureImage || '',
-                    content: post.content || ''
+                    content: post.content || '',
+                    tags: post.tags || [] // Load existing tags
                 };
             }
         } catch (error) {
@@ -578,7 +606,7 @@ const navigateToManagePosts = () => {
     router.push('/admin/manage-posts');
 };
 const cancelEdit = () => {
-    const { title, content, featureImage, date, readingTime } = formData.value;
+    const { title, content, featureImage, date, readingTime, tags } = formData.value;
     const defaultDate = new Date().toISOString().split('T')[0];
 
     // Check if any field has been modified from its default/empty state
@@ -586,7 +614,8 @@ const cancelEdit = () => {
         content ||
         featureImage ||
         date !== defaultDate ||
-        readingTime !== 5;
+        readingTime !== 5 ||
+        (tags && tags.length > 0); // Check for tags changes
 
     if (!hasChanges) {
         navigateToManagePosts();
@@ -664,7 +693,8 @@ const handleSubmit = async () => {
                 date: new Date().toISOString().split('T')[0],
                 readingTime: 5,
                 featureImage: '',
-                content: ''
+                content: '',
+                tags: [] // Reset tags
             };
         }
     } catch (error) {
