@@ -22,11 +22,11 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Connect to emulator in development
-if (import.meta.env.DEV) {
-  const { connectFirestoreEmulator } = await import('firebase/firestore/lite');
-  connectFirestoreEmulator(db, '127.0.0.1', 8080);
-  console.log('Connected to Firestore emulator');
-}
+// if (import.meta.env.DEV) {
+//   const { connectFirestoreEmulator } = await import('firebase/firestore/lite');
+//   connectFirestoreEmulator(db, '127.0.0.1', 8080);
+//   console.log('Connected to Firestore emulator');
+// }
 
 // Initialize Firebase Auth
 const auth = getAuth(app);
