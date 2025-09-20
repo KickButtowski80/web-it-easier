@@ -57,11 +57,23 @@
                     <!-- Tag input -->
                     <div class="tag-input-wrapper">
                         <input id="tags-input" ref="tagInput" v-model="newTag" @keydown.enter.prevent="addTag"
-                            @keydown.tab.prevent="addTag" @blur="addTag" type="text"
-                            placeholder="Add a tag and press Enter or Tab" autocomplete="off"
+                            @blur="addTag" type="text"
+                            placeholder="Type a tag and press Enter to add" autocomplete="off"
                             :disabled="formData.tags.length >= 5" aria-describedby="tagHelp">
-                        <div id="tagHelp" class="hint">
-                            Press Enter or Tab to add. Maximum 5 tags, 20 characters each. Only alphanumeric, hyphens, and underscores allowed.
+                        <div id="tagHelp" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
+                            <div class="tag-help-header">
+                                <h4 id="tag-help-heading" class="tag-help-title">
+                                    <span class="tag-help-title-icon" aria-hidden="true">💡</span>
+                                    Quick Help
+                                </h4>
+                            </div>
+
+                            <div class="tag-help-content">
+                                <p class="tag-help-summary">
+                                    Type a tag and press <kbd aria-label="Enter key">Enter</kbd> to add it.
+                                    Maximum 5 tags, 20 characters each.
+                                </p>
+                            </div>
                         </div>
                         <div v-if="tagError" class="error-message" role="alert">{{ tagError }}</div>
                     </div>
@@ -210,6 +222,11 @@ onMounted(async () => {
 
 const contentTextarea = ref(null);
 const orderListCounters = ref({});
+
+// Tag-related reactive variables
+const tagInput = ref(null);
+const newTag = ref('');
+const tagError = ref('');
 
 
 const formErrors = ref({
@@ -647,6 +664,45 @@ const validateForm = () => {
     }
 
     return isValid;
+};
+
+const addTag = () => {
+    if (!newTag.value.trim()) return;
+
+    try {
+        // Validate the tag using our backend validation
+        const validatedTag = [newTag.value.trim()];
+
+        // Use validateTags to check the new tag
+        validateTags([...formData.value.tags, ...validatedTag]);
+
+        // If validation passes, add the tag
+        formData.value.tags.push(newTag.value.trim().toLowerCase());
+        newTag.value = '';
+        tagError.value = '';
+
+        // Focus back to input for next tag
+        nextTick(() => {
+            tagInput.value?.focus();
+        });
+
+    } catch (error) {
+        tagError.value = error.message;
+        // Keep focus on input for correction
+        nextTick(() => {
+            tagInput.value?.focus();
+        });
+    }
+};
+
+const removeTag = (index) => {
+    formData.value.tags.splice(index, 1);
+    tagError.value = '';
+
+    // Focus back to input
+    nextTick(() => {
+        tagInput.value?.focus();
+    });
 };
 
 const handleSubmit = async () => {
@@ -1169,6 +1225,257 @@ textarea {
 @media (max-width: 768px) {
     .markdown-editor {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Tag Input Styles */
+.tags-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    background: #5b28a7;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: none;
+    gap: 0.5rem;
+}
+
+.tag-remove {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0;
+    margin-left: 0.25rem;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.tag-remove:hover {
+    opacity: 1;
+}
+
+.tag-input-wrapper {
+    position: relative;
+}
+
+.tag-input-wrapper input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.tag-input-wrapper input:focus {
+    outline: none;
+    border-color: #4299e1;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+}
+
+.tag-input-wrapper input:disabled {
+    background-color: #f7fafc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.tag-counter {
+    color: #4c1d95;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.tag-counter.warning {
+    color: #dd6b20;
+}
+
+.tag-counter.error {
+    color: #e53e3e;
+}
+
+/* Enhanced Tag Help Styles */
+.tag-help-container {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-top: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.tag-help-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4c1d95 0%, #7c3aed 50%, #a855f7 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.tag-help-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tag-help-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4c1d95;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tag-help-title-icon {
+    font-size: 1rem;
+}
+
+.tag-help-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.tag-help-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.tag-help-term {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+}
+
+.tag-help-description {
+    font-size: 0.85rem;
+    color: #4a5568;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0 0 0 2rem;
+    padding-left: 0.5rem;
+    border-left: 2px solid #e2e8f0;
+}
+
+/* Simplified tag help content */
+.tag-help-content {
+    padding: 0.5rem 0;
+}
+
+.tag-help-summary {
+    font-size: 0.875rem;
+    color: #4a5568;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.tag-help-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    background: rgba(76, 29, 149, 0.1);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tag-help-text kbd {
+    background: #e2e8f0;
+    border: 1px solid #cbd5e0;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.2);
+    color: #374151;
+    display: inline-block;
+    font-family: 'Fira Code', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0.125rem 0.375rem;
+    margin: 0 0.125rem;
+}
+
+/* Responsive adjustments for tags */
+@media (max-width: 768px) {
+    .tags-display {
+        gap: 0.375rem;
+    }
+
+    .tag-chip {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .tag-input-wrapper input {
+        padding: 0.625rem;
+    }
+
+    .tag-help-container {
+        padding: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .tag-help-header {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .tag-help-title {
+        font-size: 0.8rem;
+    }
+
+    .tag-help-list {
+        gap: 0.5rem;
+    }
+
+    .tag-help-term {
+        font-size: 0.8rem;
+    }
+
+    .tag-help-description {
+        font-size: 0.8rem;
+        margin-left: 1.5rem;
+        padding-left: 0.375rem;
+    }
+
+    .tag-help-icon {
+        font-size: 1rem;
+        width: 24px;
+        height: 24px;
     }
 }
 </style>
