@@ -56,10 +56,19 @@
 
                     <!-- Tag input -->
                     <div class="tag-input-wrapper">
-                        <input id="tags-input" ref="tagInput" v-model="newTag" @keydown.enter.prevent="addTag"
-                            @blur="addTag" type="text"
-                            placeholder="Type a tag and press Enter to add" autocomplete="off"
-                            :disabled="formData.tags.length >= 5" aria-describedby="tagHelp">
+                        <input 
+                            v-if="formData.tags.length < 5"
+                            id="tags-input" 
+                            ref="tagInput" 
+                            v-model="newTag" 
+                            @keydown.enter.prevent="addTag"
+                            @blur="addTag" 
+                            type="text"
+                            placeholder="Type a tag and press Enter to add" 
+                            autocomplete="off"
+                            aria-describedby="tagHelp"
+                        >
+                        
                         <div id="tagHelp" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
                             <div class="tag-help-header">
                                 <h4 id="tag-help-heading" class="tag-help-title">
@@ -70,12 +79,18 @@
 
                             <div class="tag-help-content">
                                 <p class="tag-help-summary">
-                                    Type a tag and press <kbd aria-label="Enter key">Enter</kbd> to add it.
-                                    Maximum 5 tags, 20 characters each.
+                                    <strong>How to add tags:</strong> 
+                                    <span v-if="formData.tags.length < 5">
+                                        Type a tag name and press <kbd aria-label="Enter key">Enter</kbd>, or click outside the input field.
+                                    </span>
+                                    <span v-else>
+                                        <mark class="limit-highlight">Tag limit reached (5/5).</mark> <strong>Remove any tag above</strong> to show the input field again.
+                                    </span>
+                                    <br>
+                                    <strong>Rules:</strong> Maximum 5 tags, each up to 20 characters. Use only letters, numbers, and hyphens.
                                 </p>
                             </div>
                         </div>
-                        <div v-if="tagError" class="error-message" role="alert">{{ tagError }}</div>
                     </div>
                 </div>
             </div>
@@ -226,7 +241,7 @@ const orderListCounters = ref({});
 // Tag-related reactive variables
 const tagInput = ref(null);
 const newTag = ref('');
-const tagError = ref('');
+const showTagLimitMessage = ref(false);
 
 
 const formErrors = ref({
@@ -669,6 +684,12 @@ const validateForm = () => {
 const addTag = () => {
     if (!newTag.value.trim()) return;
 
+    // Check tag limit BEFORE any processing
+    if (formData.value.tags.length >= 5) {
+        showNotify('Maximum 5 tags reached. Remove a tag to add a new one.', 'error');
+        return; // Stop here - don't process the tag
+    }
+
     try {
         // Validate the tag using our backend validation
         const validatedTag = [newTag.value.trim()];
@@ -679,7 +700,14 @@ const addTag = () => {
         // If validation passes, add the tag
         formData.value.tags.push(newTag.value.trim().toLowerCase());
         newTag.value = '';
-        tagError.value = '';
+
+        // Show limit message when reaching 5 tags, auto-hide after 5 seconds
+        if (formData.value.tags.length === 5) {
+            showTagLimitMessage.value = true;
+            setTimeout(() => {
+                showTagLimitMessage.value = false;
+            }, 5000); // 5 seconds
+        }
 
         // Focus back to input for next tag
         nextTick(() => {
@@ -687,7 +715,7 @@ const addTag = () => {
         });
 
     } catch (error) {
-        tagError.value = error.message;
+        showNotify(error.message, 'error');
         // Keep focus on input for correction
         nextTick(() => {
             tagInput.value?.focus();
@@ -697,7 +725,6 @@ const addTag = () => {
 
 const removeTag = (index) => {
     formData.value.tags.splice(index, 1);
-    tagError.value = '';
 
     // Focus back to input
     nextTick(() => {
@@ -1385,8 +1412,8 @@ textarea {
     font-weight: 500;
     line-height: 1.5;
     margin: 0 0 0 2rem;
-    padding-left: 0.5rem;
-    border-left: 2px solid #e2e8f0;
+    padding: 0.125rem 0.375rem;
+    margin: 0 0.125rem;
 }
 
 /* Simplified tag help content */
@@ -1394,24 +1421,47 @@ textarea {
     padding: 0.5rem 0;
 }
 
-.tag-help-summary {
+.tag-limit-message {
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background-color: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 4px;
+    color: #92400e;
     font-size: 0.875rem;
-    color: #4a5568;
-    font-weight: 500;
-    line-height: 1.5;
-    margin: 0;
-}
-
-.tag-help-icon {
-    font-size: 1.1rem;
-    flex-shrink: 0;
-    background: rgba(76, 29, 149, 0.1);
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: 0.5rem;
+}
+
+.dark .tag-limit-message {
+    background-color: #451a03;
+    border-color: #d97706;
+    color: #fbbf24;
+}
+
+.tag-limit-icon {
+    font-size: 1rem;
+}
+
+/* Disabled input message styling */
+.tag-input-disabled-message {
+    padding: 0.75rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    color: #64748b;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.dark .tag-input-disabled-message {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
 }
 
 .tag-help-text kbd {
@@ -1427,6 +1477,12 @@ textarea {
     line-height: 1;
     padding: 0.125rem 0.375rem;
     margin: 0 0.125rem;
+}
+
+.dark .tag-limit-message {
+    background-color: #451a03;
+    border-color: #d97706;
+    color: #fbbf24;
 }
 
 /* Responsive adjustments for tags */
@@ -1477,5 +1533,19 @@ textarea {
         width: 24px;
         height: 24px;
     }
+}
+
+/* Highlighted text for limit reached */
+.limit-highlight {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.dark .limit-highlight {
+    background-color: #451a03;
+    color: #fbbf24;
 }
 </style>

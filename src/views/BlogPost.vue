@@ -92,9 +92,7 @@
         <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
           v-html="renderedContent">
         </div>
-        
-        <!-- Category Tags Section -->
-        <CategoryTags v-if="post?.content" :content="post.content" />
+        <CategoryTags v-if="post?.tags?.length" :tags="post.tags" />
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
         <div class="animate-pulse" role="presentation">
