@@ -171,7 +171,7 @@
 #post-content.prose blockquote.callout.quote .callout-icon {
   --badge-bg: #4b5563;
   --badge-border: #1f2937;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23ffffff' d='M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z'/><path fill='none' d='M0 0h24v24H0z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'><path d='M6 17h3l2-4V7H5v6h3l-2 4zm8 0h3l2-4V7h-6v6h3l-2 4z'/><path fill='none' d='M0 0h24v24H0z'/></svg>");
 }
 
 #post-content.prose blockquote.callout.quote:hover .callout-icon {
@@ -182,7 +182,7 @@
 .dark #post-content.prose blockquote.callout.quote .callout-icon {
   --badge-bg: #1f2937; /* slate-800 */
   --badge-border: #9ca3af; /* slate-400 for visible ring on dark */
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='%23f9fafb' d='M6 17h3l2-4V7H5v6h3l-2 4z'/><path fill='none' d='M0 0h24v24H0z'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f9fafb'><path d='M6 17h3l2-4V7H5v6h3l-2 4z'/><path fill='none' d='M0 0h24v24H0z'/></svg>");
   background-size: 58% 58%;
 }
 
