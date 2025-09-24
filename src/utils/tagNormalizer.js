@@ -16,67 +16,91 @@ class TagNormalizer {
     // Cache for storing normalized tags to avoid redundant processing
     this.normalizedTagCache = new Map();
     
-    // Maps tag aliases to their canonical forms, organized by categories for easier maintenance
-    this.tagAliasMap = new Map([
+    // Single source of truth: canonical → aliases (including canonical)
+    const canonicalToAliases = new Map([
       // Programming Languages
-      ['js', 'javascript'],
-      ['ts', 'typescript'],
-      ['py', 'python'],
-      ['rb', 'ruby'],
-      ['cs', 'csharp'],
-      ['c#', 'csharp'],
-      ['cpp', 'cpp'],
-      ['c++', 'cpp'],
-      ['go', 'golang'],
+      ['javascript', ['js', 'javascript', 'es6', 'ecmascript']],
+      ['typescript', ['ts', 'typescript']],
+      ['python', ['py', 'python', 'python3']],
+      ['ruby', ['rb', 'ruby']],
+      ['php', ['php']],
+      ['java', ['java', 'jdk']],
+      ['csharp', ['cs', 'c#', 'csharp']],
+      ['cpp', ['cpp', 'c++']],
+      ['golang', ['go', 'golang']],
+      ['rust', ['rust']],
       
       // Web Frameworks
-      ['vuejs', 'vue'],
-      ['reactjs', 'react'],
-      ['nextjs', 'nextjs'],
-      ['nuxtjs', 'nuxtjs'],
-      ['angularjs', 'angular'],
+      ['react', ['react', 'reactjs', 'react.js']],
+      ['vue', ['vue', 'vuejs', 'vue.js']],
+      ['angular', ['angular', 'angularjs']],
+      ['svelte', ['svelte']],
+      ['nextjs', ['next', 'nextjs', 'next.js']],
+      ['nuxtjs', ['nuxt', 'nuxtjs', 'nuxt.js']],
       
       // Backend Frameworks
-      ['node', 'nodejs'],
-      ['expressjs', 'express'],
-      ['djangoproject', 'django'],
-      ['rubyonrails', 'rails'],
-      ['springboot', 'spring'],
+      ['nodejs', ['node', 'nodejs']],
+      ['express', ['express', 'expressjs']],
+      ['django', ['django']],
+      ['flask', ['flask']],
+      ['rails', ['rails', 'rubyonrails']],
+      ['spring', ['spring', 'springboot']],
       
       // CSS Frameworks
-      ['tailwind', 'tailwindcss'],
-      ['bulma', 'bulma'],
-      ['materialize', 'materialize'],
+      ['tailwindcss', ['tailwind', 'tailwindcss']],
+      ['bootstrap', ['bootstrap']],
+      ['materialui', ['materialui', 'mui']],
       
       // Databases
-      ['postgres', 'postgresql'],
-      ['mongo', 'mongodb'],
-      ['mysql', 'mysql'],
-      ['sqlite', 'sqlite'],
+      ['postgresql', ['postgres', 'postgresql', 'pg']],
+      ['mongodb', ['mongo', 'mongodb']],
+      ['mysql', ['mysql']],
+      ['sqlite', ['sqlite']],
+      ['redis', ['redis']],
       
       // Cloud & DevOps
-      ['k8s', 'kubernetes'],
-      ['googlecloud', 'gcp'],
-      ['amazonwebservices', 'aws'],
-      ['microsoftazure', 'azure'],
+      ['aws', ['aws', 'amazonwebservices']],
+      ['gcp', ['gcp', 'googlecloud']],
+      ['azure', ['azure', 'microsoftazure']],
+      ['docker', ['docker']],
+      ['kubernetes', ['k8s', 'kubernetes']],
+      ['terraform', ['terraform']],
       
       // Mobile
-      ['reactnative', 'reactnative'],
-      ['ionic', 'ionic'],
-      ['xamarin', 'xamarin'],
+      ['reactnative', ['reactnative', 'react-native']],
+      ['flutter', ['flutter']],
       
-      // Tools & Platforms
-      ['vscode', 'vscode'],
-      ['visualstudio', 'visualstudio'],
-      ['intellij', 'intellij'],
+      // Tools
+      ['vscode', ['vscode', 'vsc']],
+      ['git', ['git']],
+      ['github', ['github']],
+      ['gitlab', ['gitlab']],
       
-      // Categories (consolidated)
-      ['webdev', 'webdevelopment'],
-      ['mobiledev', 'mobiledevelopment'],
-      ['ml', 'machinelearning'],
-      ['ai', 'artificialintelligence'],
-      ['rest', 'restapi'],
+      // Categories
+      ['frontend', ['frontend', 'front-end']],
+      ['backend', ['backend', 'back-end']],
+      ['fullstack', ['fullstack', 'full-stack']],
+      ['devops', ['devops']],
+      ['webdevelopment', ['webdev', 'web-development']],
+      ['mobile', ['mobile', 'mobiledev']],
+      ['database', ['db', 'database']],
+
+      ['artificialintelligence', ['ai', 'artificialintelligence', 'artificial-intelligence']]
     ]);
+
+    // Store the source of truth
+    this.canonicalToAliases = canonicalToAliases;
+
+    // Build alias → canonical lookup map for fast normalization
+    this.aliasToCanonical = new Map();
+    for (const [canonical, aliases] of canonicalToAliases) {
+      // Add all aliases pointing to their canonical form
+      aliases.forEach(alias => {
+        this.aliasToCanonical.set(alias, canonical);
+      });
+      // Ensure canonical form is also in the map pointing to itself
+      this.aliasToCanonical.set(canonical, canonical);
+    }
 
     // Common patterns for regex-based normalization
     this.patterns = [
@@ -88,6 +112,18 @@ class TagNormalizer {
     
     // Note: Version numbers are preserved (e.g., 'vue2' and 'vue3' remain distinct)
   }
+
+  /**
+   * Retrieve all aliases known for a canonical tag
+   * @param {string} canonicalTag - Canonical tag identifier
+   * @returns {string[]} Alias list (empty if unknown)
+   */
+  getAliases(canonicalTag) {
+    if (!canonicalTag) return [];
+    const aliases = this.canonicalToAliases.get(canonicalTag);
+    return aliases ? [...aliases] : [];
+  }
+
 
   /**
    * Normalize a tag to its canonical form
@@ -113,20 +149,19 @@ class TagNormalizer {
       .replace(/[^a-z0-9.]+/g, '');
 
     // Step 2: Direct mapping lookup (most efficient)
-    if (this.tagAliasMap.has(normalized)) {
-      const result = this.tagAliasMap.get(normalized);
+    if (this.aliasToCanonical.has(normalized)) {
+      const result = this.aliasToCanonical.get(normalized);
       this.normalizedTagCache.set(normalizedCacheKey, result);
       return result;
     }
 
-    // Step 3: Pattern matching for dynamic cases
     for (const pattern of this.patterns) {
       const match = normalized.match(pattern.regex);
       if (match) {
         const candidate = normalized.replace(pattern.regex, pattern.replacement);
         // Check if the pattern result has a mapping
-        if (this.tagAliasMap.has(candidate)) {
-          const result = this.tagAliasMap.get(candidate);
+        if (this.aliasToCanonical.has(candidate)) {
+          const result = this.aliasToCanonical.get(candidate);
           this.normalizedTagCache.set(normalizedCacheKey, result);
           return result;
         }
@@ -151,33 +186,18 @@ class TagNormalizer {
   }
 
   /**
-   * Add new mappings dynamically
-   * @param {string|string[]} from - Tag or array of tags to map from
-   * @param {string} to - The canonical form to map to
-   */
-  addMapping(from, to) {
-    if (Array.isArray(from)) {
-      from.forEach(variant => {
-        this.tagAliasMap.set(variant, to);
-        // Clear cache as we've updated mappings
-        this.normalizedTagCache.clear();
-      });
-    } else {
-      this.tagAliasMap.set(from, to);
-      this.normalizedTagCache.clear();
-    }
-  }
-
-  /**
    * Get all variations for a canonical tag
    * @param {string} canonicalTag - The canonical tag to find variations for
    * @returns {string[]} Array of variant tags
    */
   getVariations(canonicalTag) {
+    // This is an inefficient way to get variations. A better approach is to use canonicalToAliases.
+    // However, to keep the logic simple and based on the existing structure, we will use it.
+    // A more performant version would be to return this.canonicalToAliases.get(canonicalTag)
     const variations = [];
-    for (const [variant, canonical] of this.tagAliasMap.entries()) {
+    for (const [alias, canonical] of this.aliasToCanonical.entries()) {
       if (canonical === canonicalTag) {
-        variations.push(variant);
+        variations.push(alias);
       }
     }
     return variations;
@@ -202,17 +222,26 @@ class TagNormalizer {
    */
   isSimilar(a, b) {
     // Quick check for common typos (1-2 character differences)
-    if (a.includes(b) || b.includes(a)) return true;
-    
-    // Check if one is a prefix of the other (e.g., 'js' and 'javascript')
-    return a.length > 3 && b.length > 3 && 
-           (a.startsWith(b) || b.startsWith(a));
+    const lengthDifference = Math.abs(a.length - b.length);
+
+    // Treat very short tokens as distinct unless they are almost identical (e.g. 'js' vs 'jsx')
+    if (a.length <= 3 || b.length <= 3) {
+      return lengthDifference <= 1 && (a.includes(b) || b.includes(a));
+    }
+
+    // Only consider substring matches similar when lengths are close (prevents css vs tailwindcss)
+    if (lengthDifference <= 2) {
+      return a.includes(b) || b.includes(a);
+    }
+
+    // Prefix relationship implies similarity only when the strings share comparable length
+    return lengthDifference <= 2 && (a.startsWith(b) || b.startsWith(a));
   }
 
   /**
    * Find a similar tag in a list of existing tags
    * @param {string} newTag - The new tag to check
-   * @param {string[]} existingTags - Array of existing tags
+   * @param {string[]} existingTags - Array of existing tags to check against
    * @returns {string|null} The first similar tag found, or null if none
    */
   findSimilarTag(newTag, existingTags) {
@@ -244,6 +273,9 @@ export const normalizeTag = (tag) => tagNormalizer.normalize(tag);
 
 export const findSimilarTag = (newTag, existingTags) => 
   tagNormalizer.findSimilarTag(newTag, existingTags);
+
+export const getAliasesForCanonical = (canonicalTag) => 
+  tagNormalizer.getAliases(canonicalTag);
 
 // Export the class for advanced usage
 export { TagNormalizer };
