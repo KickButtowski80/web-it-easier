@@ -1435,7 +1435,7 @@ textarea {
 .tags-display {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: clamp(0.375rem, 1.2vw + 0.1rem, 0.75rem);
     margin-bottom: 0.5rem;
 }
 
@@ -1444,12 +1444,12 @@ textarea {
     align-items: center;
     background: #5b28a7;
     color: white;
-    padding: 0.25rem 0.5rem;
+    padding: clamp(0.2rem, 1vw + 0.05rem, 0.3rem) clamp(0.4rem, 1.6vw + 0.1rem, 0.6rem);
     border-radius: 16px;
-    font-size: 0.875rem;
+    font-size: clamp(0.8rem, 0.8vw + 0.6rem, 0.9rem);
     font-weight: 500;
     border: none;
-    gap: 0.5rem;
+    gap: clamp(0.375rem, 0.9vw + 0.15rem, 0.5rem);
 }
 
 .tag-remove {
@@ -1477,7 +1477,7 @@ textarea {
 
 .tag-input-wrapper input {
     width: 100%;
-    padding: 0.75rem;
+    padding: clamp(0.625rem, 0.9vw + 0.45rem, 0.85rem);
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     font-size: 1rem;
@@ -1717,8 +1717,8 @@ textarea {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    padding: 1.25rem;
-    margin-top: 0.75rem;
+    padding: clamp(1rem, 1vw + 0.8rem, 1.25rem);
+    margin-top: clamp(0.5rem, 0.8vw + 0.3rem, 0.75rem);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     position: relative;
     overflow: hidden;
@@ -1736,8 +1736,8 @@ textarea {
 }
 
 .tag-help-header {
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: clamp(0.75rem, 0.9vw + 0.5rem, 1rem);
+    padding-bottom: clamp(0.5rem, 0.8vw + 0.3rem, 0.75rem);
     border-bottom: 1px solid #f1f5f9;
 }
 
@@ -1745,7 +1745,7 @@ textarea {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 0.8vw + 0.6rem, 0.9rem);
     font-weight: 600;
     color: #4c1d95;
     margin: 0;
@@ -1760,7 +1760,7 @@ textarea {
 .tag-help-list {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: clamp(0.5rem, 1vw + 0.25rem, 0.75rem);
     margin: 0;
 }
 
@@ -1773,21 +1773,20 @@ textarea {
 .tag-help-term {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
+    gap: clamp(0.4rem, 0.7vw + 0.2rem, 0.5rem);
+    font-size: clamp(0.8rem, 0.7vw + 0.55rem, 0.85rem);
     font-weight: 600;
     color: #2d3748;
     margin: 0;
 }
 
 .tag-help-description {
-    font-size: 0.85rem;
+    font-size: clamp(0.8rem, 0.7vw + 0.55rem, 0.85rem);
     color: #4a5568;
     font-weight: 500;
     line-height: 1.5;
-    margin: 0 0 0 2rem;
-    padding: 0.125rem 0.375rem;
-    margin: 0 0.125rem;
+    margin: 0 clamp(0.1rem, 0.4vw, 0.25rem) 0 clamp(1.5rem, 1.8vw + 0.8rem, 2rem);
+    padding: 0.125rem clamp(0.25rem, 0.7vw, 0.5rem);
 }
 
 /* Simplified tag help content */
@@ -1814,14 +1813,15 @@ textarea {
     color: #fbbf24;
 }
 
-.tag-limit-icon {
-    font-size: 1rem;
+.tag-help-icon {
+    font-size: clamp(1rem, 0.6vw + 0.85rem, 1.25rem);
+    width: clamp(1.25rem, 1vw + 0.9rem, 1.5rem);
+    height: clamp(1.25rem, 1vw + 0.9rem, 1.5rem);
 }
 
 /* Disabled input message styling */
 .tag-input-disabled-message {
-    padding: 0.75rem;
-    background-color: #f8fafc;
+    padding: clamp(0.5rem, 0.8vw + 0.3rem, 0.75rem);
     border: 1px solid #e2e8f0;
     border-radius: 4px;
     color: #64748b;
@@ -1859,55 +1859,6 @@ textarea {
     color: #fbbf24;
 }
 
-/* Responsive adjustments for tags */
-@media (max-width: 768px) {
-    .tags-display {
-        gap: 0.375rem;
-    }
-
-    .tag-chip {
-        font-size: 0.8rem;
-        padding: 0.2rem 0.4rem;
-    }
-
-    .tag-input-wrapper input {
-        padding: 0.625rem;
-    }
-
-    .tag-help-container {
-        padding: 1rem;
-        margin-top: 0.5rem;
-    }
-
-    .tag-help-header {
-        margin-bottom: 0.75rem;
-        padding-bottom: 0.5rem;
-    }
-
-    .tag-help-title {
-        font-size: 0.8rem;
-    }
-
-    .tag-help-list {
-        gap: 0.5rem;
-    }
-
-    .tag-help-term {
-        font-size: 0.8rem;
-    }
-
-    .tag-help-description {
-        font-size: 0.8rem;
-        margin-left: 1.5rem;
-        padding-left: 0.375rem;
-    }
-
-    .tag-help-icon {
-        font-size: 1rem;
-        width: 24px;
-        height: 24px;
-    }
-}
 
 /* Highlighted text for limit reached */
 .limit-highlight {
