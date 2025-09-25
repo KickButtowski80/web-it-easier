@@ -61,40 +61,89 @@
                             id="tags-input" 
                             ref="tagInput" 
                             v-model="newTag" 
-                            @keydown.enter.prevent="addTag"
-                            @blur="addTag" 
+                            @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
+                            @focus="showSuggestions = true"
+                            @blur="handleBlur"
+                            @keydown.down.prevent="focusNextSuggestion(1)"
+                            @keydown.up.prevent="focusPreviousSuggestion()"
                             type="text"
                             placeholder="Type a tag and press Enter to add" 
                             autocomplete="off"
                             aria-describedby="tagHelp"
+                            aria-autocomplete="list"
+                            :aria-expanded="showSuggestions && filteredTags.length > 0"
+                            aria-haspopup="listbox"
+                            aria-controls="tag-suggestions"
+                            aria-activedescendant=""
                         >
                         
-                        <div id="tagHelp" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
-                            <div class="tag-help-header">
-                                <h4 id="tag-help-heading" class="tag-help-title">
-                                    <span class="tag-help-title-icon" aria-hidden="true">💡</span>
-                                    Quick Help
-                                </h4>
+                        <Transition name="tag-suggestions-fade">
+                            <div 
+                                v-if="showSuggestions && filteredTags.length > 0" 
+                                class="tag-suggestions-container"
+                            >
+                                <ul 
+                                    id="tag-suggestions"
+                                    class="tag-suggestions"
+                                    role="listbox"
+                                    :aria-label="`${filteredTags.length} suggestions available`"
+                                >
+                                    <li 
+                                        v-for="(tag, index) in filteredTags" 
+                                        :key="tag"
+                                        :id="`suggestion-${index}`"
+                                        @mousedown.prevent="selectTag(tag)"
+                                        @mouseenter="focusedSuggestionIndex = index"
+                                        role="option"
+                                        :aria-selected="focusedSuggestionIndex === index"
+                                        :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]"
+                                    >
+                                        <div class="tag-suggestion-left">
+                                            <span class="tag-suggestion-icon" aria-hidden="true">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 7H17M7 12H17M7 17H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </span>
+                                            <span class="tag-suggestion-label" v-html="highlightMatch(tag)"></span>
+                                        </div>
+                                        <span class="tag-suggestion-action">
+                                            <kbd class="kbd">Enter</kbd>
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="tag-suggestions-footer">
+                                    <span class="tag-suggestions-count">{{ filteredTags.length }} suggestions</span>
+                                    <span class="tag-suggestions-hint">
+                                        <kbd class="kbd">↑</kbd>
+                                    </span>
+                                </div>
                             </div>
+                        </Transition>
+                    </div>
+                    
+                    <div id="tagHelp" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
+                        <div class="tag-help-header">
+                            <h4 id="tag-help-heading" class="tag-help-title">
+                                <span class="tag-help-title-icon" aria-hidden="true">💡</span>
+                                Quick Help
+                            </h4>
+                        </div>
 
-                            <div class="tag-help-content">
-                                <p class="tag-help-summary">
-                                    <strong>How to add tags:</strong> 
-                                    <span v-if="formData.tags.length < 5">
-                                        Type a tag name and press <kbd aria-label="Enter key">Enter</kbd>, or click outside the input field.
-                                    </span>
-                                    <span v-else>
-                                        <mark class="limit-highlight">Tag limit reached (5/5).</mark> <strong>Remove any tag above</strong> to show the input field again.
-                                    </span>
-                                    <br>
-                                    <strong>Rules:</strong> Maximum 5 tags, each up to 20 characters. Use only letters, numbers, and hyphens.
-                                </p>
-                            </div>
+                        <div class="tag-help-content">
+                            <p class="tag-help-summary">
+                                <strong>How to add tags:</strong> 
+                                <span v-if="formData.tags.length < 5">
+                                    Type a tag name and press <kbd aria-label="Enter key">Enter</kbd>, or click outside the input field.
+                                </span>
+                                <span v-else>
+                                    <mark class="limit-highlight">Tag limit reached (5/5).</mark> <strong>Remove any tag above</strong> to show the input field again.
+                                </span>
+                                <strong>Rules:</strong> Maximum 5 tags, each up to 20 characters. Use only letters, numbers, and hyphens.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="form-group">
                 <label for="content">Content (Markdown)</label>
                 <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
@@ -164,7 +213,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, watch, computed, onMounted, nextTick } from 'vue'
+import { normalizeTag, findSimilarTag, TagNormalizer } from '@/utils/tagNormalizer';
 import { useRouter, useRoute } from 'vue-router'
 import { addPost, updatePost, getPostById, signOut, auth, validateTags } from '@/config/firebase'
 import LoadingOverlay from '@/components/UI/LoadingOverlay.vue'
@@ -238,10 +288,100 @@ onMounted(async () => {
 const contentTextarea = ref(null);
 const orderListCounters = ref({});
 
+// Blur handler with delay for better UX
+const handleBlur = () => {
+    setTimeout(() => {
+        showSuggestions.value = false;
+    }, 200);
+};
+
 // Tag-related reactive variables
+const allTags = ref([]);
 const tagInput = ref(null);
 const newTag = ref('');
 const showTagLimitMessage = ref(false);
+const showSuggestions = ref(false);
+const focusedSuggestionIndex = ref(-1);
+
+// Initialize tags
+onMounted(() => {
+    // Get all unique tags from the aliasToCanonical map
+    const normalizer = new TagNormalizer();
+    const allUniqueTags = Array.from(normalizer.aliasToCanonical.keys());
+    allTags.value = [...new Set(allUniqueTags)].sort();
+});
+
+// Filter tags based on input
+const filteredTags = computed(() => {
+    if (!newTag.value) return [];
+    const searchTerm = newTag.value.toLowerCase();
+    return allTags.value.filter(tag => 
+        tag.toLowerCase().includes(searchTerm) && 
+        !formData.value.tags.includes(tag)
+    ).slice(0, 5); // Show max 5 suggestions
+});
+
+const escapeHtml = (unsafe) => {
+    return unsafe.replace(/[&<>"]+/g, (char) => {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;'
+        };
+        return map[char] || char;
+    });
+};
+
+const highlightMatch = (tag) => {
+    if (!newTag.value) return escapeHtml(tag);
+    const escapedTag = escapeHtml(tag);
+    const escapedQuery = escapeHtml(newTag.value.trim());
+    if (!escapedQuery) return escapedTag;
+
+    const regex = new RegExp(`(${escapedQuery.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})`, 'ig');
+    return escapedTag.replace(regex, '<mark>$1</mark>');
+};
+
+// Add a tag from suggestions
+const selectTag = (tag) => {
+    if (formData.value.tags.length >= 5) return;
+    if (!formData.value.tags.includes(tag)) {
+        formData.value.tags.push(tag);
+    }
+    newTag.value = '';
+    showSuggestions.value = false;
+    focusedSuggestionIndex.value = -1;
+};
+
+// Focus management for keyboard navigation
+const focusNextSuggestion = (increment = 1) => {
+    if (!showSuggestions.value || filteredTags.value.length === 0) return;
+    
+    const newIndex = focusedSuggestionIndex.value + increment;
+    if (newIndex >= 0 && newIndex < filteredTags.value.length) {
+        focusedSuggestionIndex.value = newIndex;
+      
+    } else if (newIndex >= filteredTags.value.length) {
+        // Wrap to first item if at the end
+        focusedSuggestionIndex.value = 0;
+        
+    }
+};
+
+const focusPreviousSuggestion = () => {
+    if (!showSuggestions.value || filteredTags.value.length === 0) return;
+    
+    const newIndex = focusedSuggestionIndex.value - 1;
+    if (newIndex >= 0) {
+        focusedSuggestionIndex.value = newIndex;
+    
+    } else {
+        // Wrap to last item if at the beginning
+        focusedSuggestionIndex.value = filteredTags.value.length - 1;
+       
+    }
+};
 
 
 const formErrors = ref({
@@ -681,6 +821,8 @@ const validateForm = () => {
     return isValid;
 };
 
+// Tag management is now handled by the tagNormalizer utility
+
 const addTag = () => {
     if (!newTag.value.trim()) return;
 
@@ -691,14 +833,31 @@ const addTag = () => {
     }
 
     try {
+        const inputTag = newTag.value.trim();
+        const normalizedInputTag = normalizeTag(inputTag);
+
+        // Check for exact duplicates first
+        const existingNormalizedTags = formData.value.tags.map(tag => normalizeTag(tag));
+        if (existingNormalizedTags.includes(normalizedInputTag)) {
+            showNotify(`Tag '${inputTag}' already exists (case-insensitive)`, 'error');
+            return;
+        }
+
+        // Check for similar tags
+        const similarTag = findSimilarTag(inputTag, formData.value.tags);
+        if (similarTag) {
+            showNotify(`Tag '${inputTag}' is too similar to existing tag '${similarTag}'. Please use a more specific tag.`, 'error');
+            return;
+        }
+
         // Validate the tag using our backend validation
-        const validatedTag = [newTag.value.trim()];
+        const validatedTag = [inputTag];
 
         // Use validateTags to check the new tag
         validateTags([...formData.value.tags, ...validatedTag]);
 
         // If validation passes, add the tag
-        formData.value.tags.push(newTag.value.trim().toLowerCase());
+        formData.value.tags.push(inputTag.toLowerCase());
         newTag.value = '';
 
         // Show limit message when reaching 5 tags, auto-hide after 5 seconds
@@ -1083,32 +1242,6 @@ textarea {
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
     border-radius: 6px 6px 0 0;
-    margin-bottom: -1px;
-}
-
-.toolbar-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.4rem 0.6rem;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    color: #4a5568;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.toolbar-btn:hover {
-    background: #f8fafc;
-    border-color: #cbd5e0;
-    color: #4c1d95;
-}
-
-.toolbar-btn:active {
-    background: #edf2f7;
     transform: translateY(1px);
 }
 
@@ -1301,6 +1434,8 @@ textarea {
 
 .tag-input-wrapper {
     position: relative;
+    margin-bottom: 4px;
+    z-index: 1;
 }
 
 .tag-input-wrapper input {
@@ -1314,8 +1449,8 @@ textarea {
 
 .tag-input-wrapper input:focus {
     outline: none;
-    border-color: #4299e1;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3);
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
 .tag-input-wrapper input:disabled {
@@ -1328,6 +1463,208 @@ textarea {
     color: #4c1d95;
     font-weight: 600;
     font-size: 0.875rem;
+}
+
+/* Tag Suggestions Container */
+.tag-suggestions-container {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    overflow: hidden;
+    transform-origin: top;
+    transition: all 0.2s ease-out;
+}
+
+/* Tag Suggestions List */
+.tag-suggestions {
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* Individual Suggestion Item */
+.tag-suggestion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: #1e293b;
+}
+
+.tag-suggestion:hover,
+.tag-suggestion.focused {
+    background-color: #f8fafc;
+    color: #4f46e5;
+}
+
+.tag-suggestion:active {
+    background-color: #f1f5f9;
+    transform: translateY(1px);
+}
+
+/* Suggestion Content */
+.tag-suggestion-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.tag-suggestion-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.tag-suggestion-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag-suggestion-label mark {
+    background-color: #e0e7ff;
+    color: #4f46e5;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+
+.tag-suggestion-action {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-left: 12px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Suggestions Footer */
+.tag-suggestions-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    border-top: 1px solid #f1f5f9;
+    background-color: #f8fafc;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.tag-suggestions-count {
+    font-weight: 500;
+}
+
+.tag-suggestions-hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Keyboard Key Styling */
+.kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #334155;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+.tag-suggestions-fade-enter-active,
+.tag-suggestions-fade-leave-active {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.tag-suggestions-fade-enter-from,
+.tag-suggestions-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-5px);
+}
+
+/* Scrollbar Styling */
+.tag-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tag-suggestions::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.tag-suggestions::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}
+
+.tag-suggestions::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}
+
+/* Dark Mode Support */
+.dark .tag-suggestions-container {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+.dark .tag-suggestion {
+    color: #e2e8f0;
+}
+
+.dark .tag-suggestion:hover,
+.dark .tag-suggestion.focused {
+    background-color: #334155;
+    color: #818cf8;
+}
+
+.dark .tag-suggestion:active {
+    background-color: #475569;
+}
+
+.dark .tag-suggestion-icon {
+    color: #64748b;
+}
+
+.dark .tag-suggestion-label mark {
+    background-color: #3730a3;
+    color: #a5b4fc;
+}
+
+.dark .tag-suggestions-footer {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+.dark .kbd {
+    background-color: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
 }
 
 .tag-counter.warning {
