@@ -78,7 +78,7 @@
                                         :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]">
                                         <div class="tag-suggestion-left">
                                             <span class="tag-suggestion-icon" aria-hidden="true">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M7 7H17M7 12H17M7 17H14" stroke="currentColor"
                                                         stroke-width="2" stroke-linecap="round"
