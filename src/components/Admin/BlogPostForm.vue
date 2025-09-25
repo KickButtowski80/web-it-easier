@@ -50,58 +50,36 @@
                     <div class="tags-display" v-if="formData.tags.length > 0">
                         <span v-for="(tag, index) in formData.tags" :key="tag" class="tag-chip">
                             {{ tag }}
-                            <button type="button" @click="removeTag(index)" class="tag-remove" aria-label="Remove tag">&times;</button>
+                            <button type="button" @click="removeTag(index)" class="tag-remove"
+                                aria-label="Remove tag">&times;</button>
                         </span>
                     </div>
 
                     <!-- Tag input -->
                     <div class="tag-input-wrapper">
-                        <input 
-                            v-if="formData.tags.length < 5"
-                            id="tags-input" 
-                            ref="tagInput" 
-                            v-model="newTag" 
+                        <input v-if="formData.tags.length < 5" id="tags-input" ref="tagInput" v-model="newTag"
                             @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
-                            @focus="showSuggestions = true"
-                            @blur="handleBlur"
-                            @keydown.down.prevent="focusNextSuggestion(1)"
-                            @keydown.up.prevent="focusPreviousSuggestion()"
-                            type="text"
-                            placeholder="Type a tag and press Enter to add" 
-                            autocomplete="off"
-                            aria-describedby="tagHelp"
-                            aria-autocomplete="list"
-                            :aria-expanded="showSuggestions && filteredTags.length > 0"
-                            aria-haspopup="listbox"
-                            aria-controls="tag-suggestions"
-                            aria-activedescendant=""
-                        >
-                        
+                            @focus="handleFocus" @blur="handleBlur" @keydown.down.prevent="focusNextSuggestion(1)"
+                            @keydown.up.prevent="focusPreviousSuggestion()" type="text"
+                            placeholder="Type a tag and press Enter to add" autocomplete="off"
+                            aria-describedby="tagHelp" aria-autocomplete="list"
+                            :aria-expanded="showSuggestions && filteredTags.length > 0" aria-haspopup="listbox"
+                            aria-controls="tag-suggestions" aria-activedescendant="">
                         <Transition name="tag-suggestions-fade">
-                            <div 
-                                v-if="showSuggestions && filteredTags.length > 0" 
-                                class="tag-suggestions-container"
-                            >
-                                <ul 
-                                    id="tag-suggestions"
-                                    class="tag-suggestions"
-                                    role="listbox"
-                                    :aria-label="`${filteredTags.length} suggestions available`"
-                                >
-                                    <li 
-                                        v-for="(tag, index) in filteredTags" 
-                                        :key="tag"
-                                        :id="`suggestion-${index}`"
-                                        @mousedown.prevent="selectTag(tag)"
-                                        @mouseenter="focusedSuggestionIndex = index"
-                                        role="option"
-                                        :aria-selected="focusedSuggestionIndex === index"
-                                        :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]"
-                                    >
+                            <div v-if="showSuggestions && filteredTags.length > 0" class="tag-suggestions-container">
+                                <ul id="tag-suggestions" class="tag-suggestions" role="listbox"
+                                    :aria-label="`${filteredTags.length} suggestions available`">
+                                    <li v-for="(tag, index) in filteredTags" :key="tag" :id="`suggestion-${index}`"
+                                        @mousedown.prevent="selectTag(tag)" @mouseenter="focusedSuggestionIndex = index"
+                                        role="option" :aria-selected="focusedSuggestionIndex === index"
+                                        :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]">
                                         <div class="tag-suggestion-left">
                                             <span class="tag-suggestion-icon" aria-hidden="true">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M7 7H17M7 12H17M7 17H14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 7H17M7 12H17M7 17H14" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
                                                 </svg>
                                             </span>
                                             <span class="tag-suggestion-label" v-html="highlightMatch(tag)"></span>
@@ -120,7 +98,7 @@
                             </div>
                         </Transition>
                     </div>
-                    
+
                     <div id="tagHelp" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
                         <div class="tag-help-header">
                             <h4 id="tag-help-heading" class="tag-help-title">
@@ -131,14 +109,19 @@
 
                         <div class="tag-help-content">
                             <p class="tag-help-summary">
-                                <strong>How to add tags:</strong> 
+                                <strong>How to add tags:</strong>
                                 <span v-if="formData.tags.length < 5">
-                                    Type a tag name and press <kbd aria-label="Enter key">Enter</kbd>, or click outside the input field.
+                                    Type a tag name and press <kbd aria-label="Enter key">Enter</kbd>, or click outside
+                                    the
+                                    input field.
                                 </span>
                                 <span v-else>
-                                    <mark class="limit-highlight">Tag limit reached (5/5).</mark> <strong>Remove any tag above</strong> to show the input field again.
+                                    <mark class="limit-highlight">Tag limit reached (5/5).</mark> <strong>Remove any tag
+                                        above</strong> to show the input field again.
                                 </span>
-                                <strong>Rules:</strong> Maximum 5 tags, each up to 20 characters. Use only letters, numbers, and hyphens.
+                                <strong>Rules:</strong> Maximum 5 tags, each up to 20 characters. Use only letters,
+                                numbers, and
+                                hyphens.
                             </p>
                         </div>
                     </div>
@@ -256,9 +239,29 @@ const formData = ref({
     tags: [] // Add tags field
 });
 
+
+// Tag-related reactive variables
+const allTags = ref([]);
+const tagInput = ref(null);
+const newTag = ref('');
+const showTagLimitMessage = ref(false);
+const showSuggestions = ref(false);
+const isTagInputFocused = ref(false);
+const focusedSuggestionIndex = ref(-1);
+let blurTimeoutId = null;
+
+
+const contentTextarea = ref(null);
+const orderListCounters = ref({});
 // Load post data if in edit mode
 onMounted(async () => {
+
+    const normalizer = new TagNormalizer();
+    const allUniqueTags = Array.from(normalizer.aliasToCanonical.keys());
     const currentPostId = props.id || route.params.id;
+
+    allTags.value = [...new Set(allUniqueTags)].sort();
+
     if (currentPostId) {
         isEditMode.value = true;
         postId.value = currentPostId;
@@ -285,41 +288,43 @@ onMounted(async () => {
     }
 });
 
-const contentTextarea = ref(null);
-const orderListCounters = ref({});
 
-// Blur handler with delay for better UX
-const handleBlur = () => {
-    setTimeout(() => {
-        showSuggestions.value = false;
-    }, 200);
-};
-
-// Tag-related reactive variables
-const allTags = ref([]);
-const tagInput = ref(null);
-const newTag = ref('');
-const showTagLimitMessage = ref(false);
-const showSuggestions = ref(false);
-const focusedSuggestionIndex = ref(-1);
-
-// Initialize tags
-onMounted(() => {
-    // Get all unique tags from the aliasToCanonical map
-    const normalizer = new TagNormalizer();
-    const allUniqueTags = Array.from(normalizer.aliasToCanonical.keys());
-    allTags.value = [...new Set(allUniqueTags)].sort();
-});
 
 // Filter tags based on input
 const filteredTags = computed(() => {
     if (!newTag.value) return [];
     const searchTerm = newTag.value.toLowerCase();
-    return allTags.value.filter(tag => 
-        tag.toLowerCase().includes(searchTerm) && 
-        !formData.value.tags.includes(tag)
-    ).slice(0, 5); // Show max 5 suggestions
+    const normalizedExistingTags = new Set(formData.value.tags.map(tag => normalizeTag(tag)));
+    return allTags.value
+        .filter(tag => {
+            const lowerTag = tag.toLowerCase();
+            const normalizedTag = normalizeTag(tag);
+            return lowerTag.includes(searchTerm) &&
+                !formData.value.tags.includes(tag) &&
+                !normalizedExistingTags.has(normalizedTag);
+        })
+        .slice(0, 5); // Show max 5 suggestions
 });
+
+watch([
+    () => newTag.value,
+    () => filteredTags.value.length,
+    () => isTagInputFocused.value,
+    () => formData.value.tags.length
+]
+    , ([input, suggestionsLength, isFocused, tagCount]) => {
+        if (tagCount >= 5) {
+            showSuggestions.value = false;
+            return;
+        }
+        const hasInput = input && input.trim().length > 0;
+
+        if (isFocused && hasInput && suggestionsLength > 0) {
+            showSuggestions.value = true;
+        } else if (!isFocused || !hasInput || suggestionsLength === 0) {
+            showSuggestions.value = false;
+        }
+    });
 
 const escapeHtml = (unsafe) => {
     return unsafe.replace(/[&<>"]+/g, (char) => {
@@ -345,41 +350,48 @@ const highlightMatch = (tag) => {
 
 // Add a tag from suggestions
 const selectTag = (tag) => {
+
     if (formData.value.tags.length >= 5) return;
-    if (!formData.value.tags.includes(tag)) {
-        formData.value.tags.push(tag);
+
+    const normalizedSelectedTag = normalizeTag(tag);
+    const existingNormalizedTags = formData.value.tags.map(existingTag => normalizeTag(existingTag));
+
+    if (existingNormalizedTags.includes(normalizedSelectedTag)) {
+        showNotify(`Tag '${tag}' is too similar to an existing tag.`, 'error');
+        return;
     }
+
+    formData.value.tags.push(tag.toLowerCase());
     newTag.value = '';
     showSuggestions.value = false;
     focusedSuggestionIndex.value = -1;
 };
-
 // Focus management for keyboard navigation
 const focusNextSuggestion = (increment = 1) => {
     if (!showSuggestions.value || filteredTags.value.length === 0) return;
-    
+
     const newIndex = focusedSuggestionIndex.value + increment;
     if (newIndex >= 0 && newIndex < filteredTags.value.length) {
         focusedSuggestionIndex.value = newIndex;
-      
+
     } else if (newIndex >= filteredTags.value.length) {
         // Wrap to first item if at the end
         focusedSuggestionIndex.value = 0;
-        
+
     }
 };
 
 const focusPreviousSuggestion = () => {
     if (!showSuggestions.value || filteredTags.value.length === 0) return;
-    
+
     const newIndex = focusedSuggestionIndex.value - 1;
     if (newIndex >= 0) {
         focusedSuggestionIndex.value = newIndex;
-    
+
     } else {
         // Wrap to last item if at the beginning
         focusedSuggestionIndex.value = filteredTags.value.length - 1;
-       
+
     }
 };
 
@@ -406,6 +418,31 @@ const buttonText = computed(() => {
     return isEditMode.value ? 'Update Post' : 'Publish Post';
 });
 
+const handleFocus = () => {
+    if (blurTimeoutId) {
+        clearTimeout(blurTimeoutId);
+        blurTimeoutId = null;
+    }
+
+    isTagInputFocused.value = true;
+
+    if (newTag.value && newTag.value.trim().length > 0 && filteredTags.value.length > 0) {
+        showSuggestions.value = true;
+    }
+};
+
+// Blur handler with delay for better UX
+const handleBlur = () => {
+    if (blurTimeoutId) {
+        clearTimeout(blurTimeoutId);
+    }
+
+    blurTimeoutId = setTimeout(() => {
+        isTagInputFocused.value = false;
+        showSuggestions.value = false;
+        blurTimeoutId = null;
+    }, 200);
+};
 
 /**
  * Wrapper for handleTab utility function that passes the reactive formData object
@@ -1805,7 +1842,7 @@ textarea {
     background: #e2e8f0;
     border: 1px solid #cbd5e0;
     border-radius: 3px;
-    box-shadow: 0 1px 0 rgba(0,0,0,.2);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .2);
     color: #374151;
     display: inline-block;
     font-family: 'Fira Code', Monaco, 'Cascadia Code', monospace;
