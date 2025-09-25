@@ -114,7 +114,7 @@
                             <p class="tag-help-summary">
                                 <strong>How to add tags:</strong>
                                 <span v-if="formData.tags.length < 5">
-                                    Type a tag name and press <kbd aria-label="Enter key">Enter</kbd>, or click outside
+                                    Type a tag name and press <kbd>Enter</kbd>, or click outside
                                     the
                                     input field.
                                 </span>
