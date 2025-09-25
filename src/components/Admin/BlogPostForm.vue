@@ -61,12 +61,15 @@
                             @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
                             @focus="handleFocus" @blur="handleBlur" @keydown.down.prevent="focusNextSuggestion(1)"
                             @keydown.up.prevent="focusPreviousSuggestion()" type="text"
-                            placeholder="Type a tag and press Enter to add" autocomplete="off"
+                            placeholder="Type a tag and press Enter to add"
+                            autocomplete="off"
+                            role="combobox"
                             aria-describedby="tagHelp" aria-autocomplete="list"
-                            :aria-expanded="showSuggestions && filteredTags.length > 0" aria-haspopup="listbox"
-                            aria-controls="tag-suggestions" aria-activedescendant="">
+                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" aria-haspopup="listbox"
+                            aria-controls="tag-suggestions"
+                            :aria-activedescendant="activeSuggestionId || undefined">
                         <Transition name="tag-suggestions-fade">
-                            <div v-if="showSuggestions && filteredTags.length > 0" class="tag-suggestions-container">
+                            <div v-if="isSuggestionsOpen" class="tag-suggestions-container">
                                 <ul id="tag-suggestions" class="tag-suggestions" role="listbox"
                                     :aria-label="`${filteredTags.length} suggestions available`">
                                     <li v-for="(tag, index) in filteredTags" :key="tag" :id="`suggestion-${index}`"
@@ -133,15 +136,17 @@
                     <span id="markdown-editor-label" class="sr-only">Markdown editor with preview</span>
 
                     <!-- Tab Navigation -->
-                    <div class="markdown-tabs">
-                        <button type="button" @click="activeTab = 'edit'"
+                    <div class="markdown-tabs" role="tablist" aria-label="Markdown editor modes">
+                        <button id="edit-tab" type="button" role="tab" @click="activeTab = 'edit'"
                             :class="['tab-button', { active: activeTab === 'edit' }]" aria-controls="editor-panel"
-                            :aria-selected="activeTab === 'edit'">
+                            :aria-selected="activeTab === 'edit'"
+                            :tabindex="activeTab === 'edit' ? 0 : -1">
                             <span class="icon">✏️</span> Edit
                         </button>
-                        <button type="button" @click="activeTab = 'preview'"
+                        <button id="preview-tab" type="button" role="tab" @click="activeTab = 'preview'"
                             :class="['tab-button', { active: activeTab === 'preview' }]" aria-controls="preview-panel"
-                            :aria-selected="activeTab === 'preview'">
+                            :aria-selected="activeTab === 'preview'"
+                            :tabindex="activeTab === 'preview' ? 0 : -1">
                             <span class="icon">👁️</span> Preview
                         </button>
                     </div>
@@ -383,17 +388,30 @@ const focusNextSuggestion = (increment = 1) => {
 
 const focusPreviousSuggestion = () => {
     if (!showSuggestions.value || filteredTags.value.length === 0) return;
-
+    
     const newIndex = focusedSuggestionIndex.value - 1;
     if (newIndex >= 0) {
         focusedSuggestionIndex.value = newIndex;
-
     } else {
         // Wrap to last item if at the beginning
         focusedSuggestionIndex.value = filteredTags.value.length - 1;
 
     }
 };
+
+
+const isSuggestionsOpen = computed(() => {
+    return showSuggestions.value && filteredTags.value.length > 0 && isTagInputFocused.value;
+});
+
+const activeSuggestionId = computed(() => {
+    if (!isSuggestionsOpen.value) return '';
+    const index = focusedSuggestionIndex.value;
+    if (index >= 0 && index < filteredTags.value.length) {
+        return `suggestion-${index}`;
+    }
+    return '';
+});
 
 
 const formErrors = ref({
@@ -1199,7 +1217,6 @@ textarea {
 
 .cancel-btn {
     padding: 0.8rem 1.5rem;
-
     height: 46px;
     display: flex;
     align-items: center;
