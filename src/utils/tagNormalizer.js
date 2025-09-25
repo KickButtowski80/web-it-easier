@@ -15,9 +15,14 @@ class TagNormalizer {
   constructor() {
     // Cache for storing normalized tags to avoid redundant processing
     this.normalizedTagCache = new Map();
-    
+
     // Single source of truth: canonical → aliases (including canonical)
     const canonicalToAliases = new Map([
+
+      // Core Web Technologies
+      ['html', ['html', 'html5']],
+      ['css', ['css', 'css3']],
+
       // Programming Languages
       ['javascript', ['js', 'javascript', 'es6', 'ecmascript']],
       ['typescript', ['ts', 'typescript']],
@@ -29,7 +34,7 @@ class TagNormalizer {
       ['cpp', ['cpp', 'c++']],
       ['golang', ['go', 'golang']],
       ['rust', ['rust']],
-      
+
       // Web Frameworks
       ['react', ['react', 'reactjs', 'react.js']],
       ['vue', ['vue', 'vuejs', 'vue.js']],
@@ -37,7 +42,7 @@ class TagNormalizer {
       ['svelte', ['svelte']],
       ['nextjs', ['next', 'nextjs', 'next.js']],
       ['nuxtjs', ['nuxt', 'nuxtjs', 'nuxt.js']],
-      
+
       // Backend Frameworks
       ['nodejs', ['node', 'nodejs']],
       ['express', ['express', 'expressjs']],
@@ -45,19 +50,19 @@ class TagNormalizer {
       ['flask', ['flask']],
       ['rails', ['rails', 'rubyonrails']],
       ['spring', ['spring', 'springboot']],
-      
+
       // CSS Frameworks
       ['tailwindcss', ['tailwind', 'tailwindcss']],
       ['bootstrap', ['bootstrap']],
       ['materialui', ['materialui', 'mui']],
-      
+
       // Databases
       ['postgresql', ['postgres', 'postgresql', 'pg']],
       ['mongodb', ['mongo', 'mongodb']],
       ['mysql', ['mysql']],
       ['sqlite', ['sqlite']],
       ['redis', ['redis']],
-      
+
       // Cloud & DevOps
       ['aws', ['aws', 'amazonwebservices']],
       ['gcp', ['gcp', 'googlecloud']],
@@ -65,17 +70,17 @@ class TagNormalizer {
       ['docker', ['docker']],
       ['kubernetes', ['k8s', 'kubernetes']],
       ['terraform', ['terraform']],
-      
+
       // Mobile
       ['reactnative', ['reactnative', 'react-native']],
       ['flutter', ['flutter']],
-      
+
       // Tools
       ['vscode', ['vscode', 'vsc']],
       ['git', ['git']],
       ['github', ['github']],
       ['gitlab', ['gitlab']],
-      
+
       // Categories
       ['frontend', ['frontend', 'front-end']],
       ['backend', ['backend', 'back-end']],
@@ -109,7 +114,7 @@ class TagNormalizer {
       // Handle common suffixes
       { regex: /^(\w+)(?:lang|language)$/, replacement: '$1' },
     ];
-    
+
     // Note: Version numbers are preserved (e.g., 'vue2' and 'vue3' remain distinct)
   }
 
@@ -134,7 +139,7 @@ class TagNormalizer {
     if (!tag || typeof tag !== 'string') {
       return '';
     }
-
+ 
     // Check normalizedTagCache first
     const normalizedCacheKey = tag.toLowerCase();
     if (this.normalizedTagCache.has(normalizedCacheKey)) {
@@ -172,13 +177,13 @@ class TagNormalizer {
 
     // Step 4: Final cleanup - keep only alphanumeric and dots in version numbers
     normalized = normalized.replace(/[^a-z0-9.]/g, '');
-    
+
     // Step 5: Handle multiple consecutive dots
     normalized = normalized.replace(/\.+/g, '.');
-    
+
     // Remove leading/trailing dots
     normalized = normalized.replace(/^\.|\.$/g, '');
-    
+
     // Step 6: Return normalized or original if cleanup failed
     const result = normalized || tag.toLowerCase().replace(/[^a-z0-9]/g, '');
     this.normalizedTagCache.set(normalizedCacheKey, result);
@@ -246,9 +251,9 @@ class TagNormalizer {
    */
   findSimilarTag(newTag, existingTags) {
     if (!newTag || !existingTags?.length) return null;
-    
+
     const normalizedNewTag = this.normalize(newTag);
-    
+
     for (const tag of existingTags) {
       const normalizedExisting = this.normalize(tag);
 
@@ -260,7 +265,7 @@ class TagNormalizer {
         return tag; // Return the original tag for better UX
       }
     }
-    
+
     return null; // No similar tag found
   }
 }
@@ -271,21 +276,21 @@ const tagNormalizer = new TagNormalizer();
 // Simple function export that matches the previous API
 export const normalizeTag = (tag) => tagNormalizer.normalize(tag);
 
-export const findSimilarTag = (newTag, existingTags) => 
+export const findSimilarTag = (newTag, existingTags) =>
   tagNormalizer.findSimilarTag(newTag, existingTags);
 
-export const getAliasesForCanonical = (canonicalTag) => 
+export const getAliasesForCanonical = (canonicalTag) =>
   tagNormalizer.getAliases(canonicalTag);
 
 // Export the class for advanced usage
 export { TagNormalizer };
 
 // For testing and debugging
-if (import.meta.hot) {
-  // Example usage in development
-  console.log('Tag Normalizer Examples:');
-  console.log("normalizeTag('Vue.js')", "→", normalizeTag('Vue.js'));
-  console.log("normalizeTag('Python3.9')", "→", normalizeTag('Python3.9'));
-  console.log("normalizeTag('k8s')", "→", normalizeTag('k8s'));
-  console.log("normalizeTag('React Native')", "→", normalizeTag('React Native'));
-}
+// if (import.meta.hot) {
+//   // Example usage in development
+//   console.log('Tag Normalizer Examples:');
+//   console.log("normalizeTag('Vue.js')", "→", normalizeTag('Vue.js'));
+//   console.log("normalizeTag('Python3.9')", "→", normalizeTag('Python3.9'));
+//   console.log("normalizeTag('k8s')", "→", normalizeTag('k8s'));
+//   console.log("normalizeTag('React Native')", "→", normalizeTag('React Native'));
+// }
