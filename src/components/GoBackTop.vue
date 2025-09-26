@@ -1,15 +1,15 @@
 <template>
-  <div class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
+  <button class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
     <div class="doorway" ref="doorWay">
       <div id="openDoor" class="door" ref="door">
-        <div ref="openDoor" aria-label="Open Door" class="mx-auto text-center mt-2 w-full h-full text-xl">
-          <span class="text-2xl" role="img" aria-label="Up Arrow">⬆️</span>
-          <span class="flex justify-end items-center mt-3 text-sm" aria-label="door knob">
+        <div ref="openDoor" class="mx-auto text-center mt-2 w-full h-full text-xl">
+          <span class="text-2xl" aria-hidden="true">⬆️</span>
+          <span class="flex justify-end items-center mt-3 text-sm" aria-hidden="true">
             🟣</span>
         </div>
       </div>
     </div>
-  </div>
+  </button>
 </template>
 <script>
 import { ref, onMounted } from "vue";
