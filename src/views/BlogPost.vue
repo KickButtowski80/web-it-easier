@@ -404,9 +404,7 @@ onMounted(async () => {
   defaultMetaDescriptions.value.og = ogDescTag?.getAttribute('content') || null;
   defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
 
-  const title = deslugify(props.slug);
-
-  
+   
   try {
     const postData = await fetchPost();
     if (postData) {
