@@ -1,5 +1,5 @@
 <template>
-  <header role="banner" class="relative">
+  <header role="banner" class="relative" aria-label="Site header">
     <a href="#main-content"
       class="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:bg-white focus-visible:text-blue-500 focus-visible:py-2 focus-visible:px-4 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-opacity-50 focus-visible:z-[9999]">
       Skip to main content

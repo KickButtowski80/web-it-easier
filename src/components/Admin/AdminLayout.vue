@@ -1,6 +1,6 @@
 <template>
   <div class="admin-container">
-    <header class="admin-header" role="banner">
+    <header class="admin-header" role="banner" aria-label="Admin header">
       <div class="admin-logo">
         <h1>Admin Dashboard</h1>
       </div>
