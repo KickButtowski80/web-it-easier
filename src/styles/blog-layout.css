@@ -20,7 +20,7 @@
   
   .blog-sidebar {
     position: sticky;
-    top: 100px;
+    top: 7.5rem;
     align-self: start;
   }
 }
