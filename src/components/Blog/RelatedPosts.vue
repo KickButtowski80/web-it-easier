@@ -9,16 +9,14 @@
     </h2>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <article 
-        v-for="post in relatedPosts" 
-        :key="post.id" 
-        class="related-post-card"
-        @click="navigateToPost(post.title)"
-        @keydown.enter="navigateToPost(post.title)"
-        @keydown.space.prevent="navigateToPost(post.title)"
-        tabindex="0"
-        :aria-labelledby="`related-post-title-${post.id}`"
-      >
+      <router-link 
+  v-for="post in relatedPosts" 
+  :key="post.id" 
+  :to="`/blog/${titleToSlug(post.title)}`"
+  class="block related-post-card"
+  :aria-labelledby="`related-post-title-${post.id}`"
+>
+      <article>
         <div class="card-content">
           <h3 :id="`related-post-title-${post.id}`" class="card-title">
             {{ post.title }}
@@ -31,6 +29,7 @@
           </div>
         </div>
       </article>
+    </router-link> 
     </div>
   </section>
 </template>
@@ -80,7 +79,7 @@ const relatedPosts = computed(() => {
   
   // Extract keywords from current post (simple implementation)
   const currentPostKeywords = extractKeywords(props.currentPostTitle, props.currentPostContent);
-  
+ 
   // Score other posts based on keyword matches
   const scoredPosts = otherPosts.map(post => {
     const postKeywords = extractKeywords(post.title, post.content);
