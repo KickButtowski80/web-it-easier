@@ -1,5 +1,5 @@
 <template>
-    <section class="admin-form relative">
+    <section id="main-content" class="admin-form relative" role="region" aria-labelledby="form-heading">
         <!-- Loading Overlay Component with custom screen reader text -->
         <LoadingOverlay :isLoading="isLoading" :fullPage="false" :message="'Loading post data...'"
             :subMessage="'Please wait while we retrieve your content'">
@@ -66,7 +66,7 @@
                             role="combobox"
                             aria-describedby="tagHelp" aria-autocomplete="list"
                             :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" aria-haspopup="listbox"
-                            aria-controls="tag-suggestions"
+                            :aria-controls="isSuggestionsOpen ? 'tag-suggestions' : undefined"
                             :aria-activedescendant="activeSuggestionId || undefined">
                         <Transition name="tag-suggestions-fade">
                             <div v-if="isSuggestionsOpen" class="tag-suggestions-container">
