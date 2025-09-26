@@ -122,13 +122,13 @@
     </div>
     
     <!-- Sidebar with Popular Posts -->
-    <aside class="blog-sidebar">
+    <!-- <aside class="blog-sidebar">
       <PopularPosts 
         v-if="post && allPosts.length > 0" 
         :current-post-id="post.id" 
         :all-posts="allPosts" 
       />
-    </aside>
+    </aside> -->
   </section>
 </template>
 
