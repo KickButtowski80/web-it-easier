@@ -151,7 +151,11 @@ import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
 import { updateMetaDescriptions, updateMetaSocialTags } from '@/utils/seo-update-description';
 import useScrollSpy from '@/composables/useScrollSpy';
+ 
+import { useRoute } from 'vue-router';
 
+ 
+const route = useRoute();
 // Props
 const props = defineProps({
   slug: {
@@ -196,6 +200,50 @@ const toggleToc = () => {
     }
   });
 };
+const fetchPost = async (slugArg = null) => {
+  try {
+    const title = slugArg 
+      ? slugArg.replace(/-/g, ' ')
+      : deslugify(route.params.title || props.slug);
+      
+  
+    const postData = await getPost(title);
+    post.value = postData;
+    
+    // Update page title and meta tags
+    if (post.value?.title) {
+      const pageTitle = `${post.value.title} | Web It Easier`;
+      document.title = pageTitle;
+      await updateCanonicalTag();
+      updateMetaSocialTags(
+        pageTitle,
+        canonicalUrl.value || window.location.href,
+        // Add other necessary parameters
+      );
+    }
+    
+    return postData;
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    // Handle error appropriately
+    return null;
+  }
+};
+watch(
+  () => route.params.slug || route.params.title, // covers both cases
+  async (newParam, oldParam) => {
+    console.log('param changed:', newParam, oldParam);
+    if (newParam && newParam !== oldParam) {
+      post.value = null;
+      await fetchPost(newParam); // your fetchPost already handles deslugifying
+    }
+  },
+  { immediate: true }
+);
+
+
+
+
 
 
 // Handle keyboard navigation in TOC
@@ -357,8 +405,10 @@ onMounted(async () => {
   defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
 
   const title = deslugify(props.slug);
+
+  
   try {
-    const postData = await getPost(title);
+    const postData = await fetchPost();
     if (postData) {
       post.value = postData;
       // Set dynamic page title based on post content (SEO)
