@@ -6,12 +6,12 @@
     </a>
     <Menu />
   </header>
-  <GoBackTop />
+ 
   <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
     :icon="notificationIcon" :duration="3000" />
   <main class="md:overflow-visible mt-[4rem] mb-1 pb-[50px]
      md:pb-0" id="main-content" tabindex="-1" role="main">
-
+     <GoBackTop />
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <!-- if render key is not used,
