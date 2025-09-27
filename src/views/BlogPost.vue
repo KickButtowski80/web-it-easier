@@ -117,6 +117,7 @@
         :current-post-id="post.id" 
         :current-post-title="post.title" 
         :current-post-content="post.content" 
+        :current-post-tags="post.tags"
         :all-posts="allPosts" 
       />
     </div>
