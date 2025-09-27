@@ -1,138 +1,171 @@
 <template>
   <section v-if="relatedPosts.length > 0" class="related-posts mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
     <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100 flex items-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-       aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        class="h-6 w-6 text-indigo-600 dark:text-indigo-400" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor"
+        aria-hidden="true"
+      >
+        <path 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          stroke-width="2" 
+          d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" 
+        />
       </svg>
       Related Articles
     </h2>
-    
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <router-link 
-  v-for="post in relatedPosts" 
-  :key="post.id" 
-  :to="`/blog/${titleToSlug(post.title)}`"
-  class="block related-post-card"
-  :aria-labelledby="`related-post-title-${post.id}`"
->
-      <article>
-        <div class="card-content">
-          <h3 :id="`related-post-title-${post.id}`" class="card-title">
-            {{ post.title }}
-          </h3>
-          <div class="card-footer">
+        v-for="post in relatedPosts" 
+        :key="post.id" 
+        :to="`/blog/${titleToSlug(post.title)}`"
+        class="related-post-card"
+        :aria-labelledby="`related-post-title-${post.id}`"
+      >
+        <article class="h-full">
+          <div class="card-content">
+            <h3 :id="`related-post-title-${post.id}`" class="card-title">
+              {{ post.title }}
+            </h3>
+            <p v-if="post.excerpt" class="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+              {{ post.excerpt }}
+            </p>
+            <div class="card-footer">
             <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
             <span aria-hidden="true">•</span>
             <span class="sr-only">Reading time: </span>
             <span>{{ post.readingTime }} min read</span>
+            </div>
           </div>
-        </div>
-      </article>
-    </router-link> 
+        </article>
+      </router-link>
     </div>
   </section>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { formatDate, titleToSlug } from '@/utils/helpers';
+import { TagNormalizer } from '@/utils/tagNormalizer';
+import { titleToSlug } from '@/utils/helpers';
 
 const props = defineProps({
+  allPosts: {
+    type: Array,
+    required: true,
+    default: () => []
+  },
   currentPostId: {
     type: String,
     required: true
   },
   currentPostTitle: {
     type: String,
-    required: true
+    default: ''
   },
   currentPostContent: {
     type: String,
-    required: true
+    default: ''
   },
-  allPosts: {
+  currentPostTags: {
     type: Array,
     required: true
   }
 });
 
-const router = useRouter();
+// Initialize tag normalizer
+const tagNormalizer = new TagNormalizer();
 
-// Format date for machine-readable datetime attribute
-const formatDateISO = (date) => {
-  return new Date(date).toISOString().split('T')[0];
-};
-
-// Navigate to a post when clicked
-const navigateToPost = (title) => {
-  router.push('/blog/' + titleToSlug(title));
-};
-
-// Find related posts based on content similarity
+// Find related posts based on tag similarity
 const relatedPosts = computed(() => {
-  if (!props.allPosts || props.allPosts.length === 0) return [];
-  
+  if (!props.allPosts?.length || !props.currentPostTags?.length) {
+    return [];
+  }
+
   // Filter out the current post
   const otherPosts = props.allPosts.filter(post => post.id !== props.currentPostId);
   
-  // Extract keywords from current post (simple implementation)
-  const currentPostKeywords = extractKeywords(props.currentPostTitle, props.currentPostContent);
- 
-  // Score other posts based on keyword matches
+  // Normalize current post tags
+  const normalizedCurrentTags = props.currentPostTags
+    .map(tag => tagNormalizer.normalize(String(tag).toLowerCase()))
+    .filter(Boolean);
+
+  if (normalizedCurrentTags.length === 0) {
+    return [];
+  }
+
+  // Score other posts based on tag matches
   const scoredPosts = otherPosts.map(post => {
-    const postKeywords = extractKeywords(post.title, post.content);
-    const score = calculateSimilarityScore(currentPostKeywords, postKeywords);
-    return { ...post, score };
-  });
-  
-  // Sort by score (highest first) and take top 3
-  return scoredPosts
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
-});
-
-// Extract keywords from title and content
-function extractKeywords(title, content) {
-  // Combine title and content, giving title more weight
-  const text = `${title} ${title} ${content}`.toLowerCase();
-  
-  // Remove common stop words and punctuation
-  const stopWords = ['the', 'and', 'a', 'an', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'of', 'is', 'are', 'was', 'were'];
-  
-  const words = text
-    .replace(/[^\w\s]/g, '') // Remove punctuation
-    .split(/\s+/) // Split by whitespace
-    .filter(word => word.length > 2 && !stopWords.includes(word)); // Filter out stop words and short words
-  
-  // Count word frequencies
-  const wordCounts = {};
-  words.forEach(word => {
-    wordCounts[word] = (wordCounts[word] || 0) + 1;
-  });
-  
-  return wordCounts;
-}
-
-// Calculate similarity score between two keyword sets
-function calculateSimilarityScore(keywords1, keywords2) {
-  let score = 0;
-  
-  // For each keyword in the current post
-  Object.keys(keywords1).forEach(keyword => {
-    // If the other post also has this keyword
-    if (keywords2[keyword]) {
-      // Add to score based on frequency in both posts
-      score += keywords1[keyword] * keywords2[keyword];
+    if (!post.tags?.length) {
+      return { ...post, score: 0, matchingTags: [] };
     }
+
+    // Normalize post tags
+    const normalizedPostTags = post.tags
+      .map(tag => tagNormalizer.normalize(String(tag).toLowerCase()))
+      .filter(Boolean);
+
+    // Count matching tags
+    const matchingTags = normalizedPostTags.filter(tag => 
+      normalizedCurrentTags.some(currentTag => 
+        currentTag === tag || 
+        currentTag.includes(tag) || 
+        tag.includes(currentTag)
+      )
+    );
+
+    return { 
+      ...post, 
+      score: matchingTags.length,
+      matchingTags,
+      date: post.date || new Date().toISOString() // Ensure date exists
+    };
   });
-  
-  return score;
-}
+
+  // Sort by score (highest first) and date (newest first)
+  const sortedPosts = [...scoredPosts].sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  // Take top 3 posts with matching tags, or most recent if no matches
+  const topPosts = sortedPosts
+    .filter(post => post.score > 0)
+    .slice(0, 3);
+
+  // Fallback to most recent posts if no matches
+  if (topPosts.length === 0) {
+    return otherPosts
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 3);
+  }
+
+  return topPosts;
+});
+// Format date helpers
+const formatDate = (dateString) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  });
+};
+
+const formatDateISO = (dateString) => {
+  return new Date(dateString).toISOString().split('T')[0];
+};
 </script>
 
 <style scoped>
+.related-posts {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
 .related-post-card {
   background: linear-gradient(145deg, #ffffff, #f8fafc);
   border-radius: 12px;
@@ -191,6 +224,19 @@ function calculateSimilarityScore(keywords1, keywords2) {
   margin-bottom: 0.5rem;
   color: #1e40af;
   line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+.dark .card-title {
+  color: #93c5fd;
+}
+
+.related-post-card:hover .card-title {
+  color: #1e40af;
+}
+
+.dark .related-post-card:hover .card-title {
+  color: #3b82f6;
 }
 
 .card-footer {
@@ -215,7 +261,30 @@ function calculateSimilarityScore(keywords1, keywords2) {
 }
 
 .dark .card-footer {
-  color: #94a3b8;
-  border-color: #334155;
+  border-top-color: #334155;
+  color: #9ca3af;
+}
+
+.related-post-card:hover .card-footer {
+  color: #3b82f6;
+}
+
+.dark .related-post-card:hover .card-footer {
+  color: #60a5fa;
+}
+
+/* Focus styles for keyboard navigation */
+.related-post-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6;
+  border-radius: 0.5rem;
+}
+
+/* Line clamp for excerpt */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
