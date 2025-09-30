@@ -27,20 +27,20 @@
     </div>
     
     <!-- Blog Navigation Links -->
-    <div class="blog-navigation mb-10 flex justify-center content-center  gap-4">
+    <nav aria-label="Blog navigation" class="blog-navigation mb-10 flex justify-center content-center  gap-4">
       <RouterLink v-if="currentTag" to="/blog" class="nav-link">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
         Show All
       </RouterLink>
       <RouterLink to="/blog/archive" class="nav-link">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
         </svg>
         Browse Archive
       </RouterLink>
-    </div>
+    </nav>
     
     <section aria-label="Blog posts" class="isolate">
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 list-none p-0">
