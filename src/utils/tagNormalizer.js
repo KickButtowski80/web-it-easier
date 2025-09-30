@@ -89,6 +89,7 @@ class TagNormalizer {
       ['webdevelopment', ['webdev', 'web-development']],
       ['mobile', ['mobile', 'mobiledev']],
       ['database', ['db', 'database']],
+      ['roi', ['roi', 'returnoninvestment', 'return-on-investment']],
 
       ['artificialintelligence', ['ai', 'artificialintelligence', 'artificial-intelligence']],
 
