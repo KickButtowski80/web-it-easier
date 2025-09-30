@@ -238,10 +238,24 @@
   color: #1f2937; /* gray-800 for light theme */
 }
 
+/* Inline code inside callouts - high contrast */
+#post-content.prose blockquote.callout code {
+  background-color: rgba(30, 58, 138, 0.15); /* indigo-900 with opacity */
+  color: #1e3a8a; /* indigo-900 */
+  padding: 0.15em 0.4em;
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
 .dark #post-content.prose blockquote.callout,
 .dark #post-content.prose blockquote.callout p,
 .dark #post-content.prose blockquote.callout li,
-.dark #post-content.prose blockquote.callout a,
-.dark #post-content.prose blockquote.callout code {
+.dark #post-content.prose blockquote.callout a {
   color: #e5e7eb; /* gray-200 for dark theme */
+}
+
+.dark #post-content.prose blockquote.callout code {
+  background-color: rgba(147, 197, 253, 0.2); /* blue-300 with opacity */
+  color: #bfdbfe; /* blue-200 */
+  font-weight: 500;
 }
