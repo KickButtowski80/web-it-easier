@@ -47,14 +47,13 @@
         <li v-for="(post, i) in filteredPosts" :key="titleToSlug(post.title) + '-' + i" class="blog-card-container">
           <article 
             class="blog-card"
-            role="article"
             :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`"
-            tabindex="0"
-            @click="navigateToPost(post.title)"
-            @keydown.enter="navigateToPost(post.title)"
-            @keydown.space.prevent="navigateToPost(post.title)"
           >
+            <RouterLink 
+              :to="'/blog/' + titleToSlug(post.title)"
+              class="card-link"
+            >
             <div class="card-content">
               <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="card-title">
                 {{ post.title }}
@@ -85,6 +84,7 @@
                 </div>
               </div>
             </div>
+            </RouterLink>
           </article>
         </li>
       </ul>
