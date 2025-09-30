@@ -27,23 +27,19 @@
     </div>
     
     <!-- Blog Navigation Links -->
-    <div class="blog-navigation mb-10 flex flex-wrap justify-center gap-4">
+    <div class="blog-navigation mb-10 flex justify-center content-center  gap-4">
       <RouterLink v-if="currentTag" to="/blog" class="nav-link">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
         Show All
       </RouterLink>
-    <div class="flex justify-between items-center mb-8">
-      <div class="flex items-center gap-4">
-        <RouterLink to="/blog/archive" class="nav-link">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
-          </svg>
-          Browse Archive
-        </RouterLink>
-      </div>
-    </div>
+      <RouterLink to="/blog/archive" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+        </svg>
+        Browse Archive
+      </RouterLink>
     </div>
     
     <section aria-label="Blog posts" class="isolate">
