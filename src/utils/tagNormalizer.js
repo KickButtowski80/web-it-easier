@@ -90,7 +90,40 @@ class TagNormalizer {
       ['mobile', ['mobile', 'mobiledev']],
       ['database', ['db', 'database']],
 
-      ['artificialintelligence', ['ai', 'artificialintelligence', 'artificial-intelligence']]
+      ['artificialintelligence', ['ai', 'artificialintelligence', 'artificial-intelligence']],
+
+      // Computer Science
+      ['computerscience', ['cs', 'computerscience', 'computer-science', 'compsci']],
+      ['algorithm', ['algorithm', 'algorithms', 'algo']],
+      ['datastructure', ['datastructure', 'datastructures', 'data-structure', 'ds']],
+      ['computability', ['computability', 'computation', 'computable']],
+      ['complexity', ['complexity', 'computationalcomplexity', 'complexitytheory']],
+      ['turingmachine', ['turingmachine', 'turing-machine', 'turing']],
+      ['functional', ['functional', 'functionalprogramming', 'fp']],
+      ['objectoriented', ['oop', 'objectoriented', 'object-oriented']],
+      ['imperative', ['imperative', 'procedural']],
+      ['declarative', ['declarative']],
+      ['cryptography', ['crypto', 'cryptography', 'encryption']],
+      ['networking', ['networking', 'networks', 'network']],
+      ['operatingsystem', ['os', 'operatingsystem', 'operating-system']],
+      ['compiler', ['compiler', 'compilers', 'compilation']],
+      ['parallelcomputing', ['parallel', 'parallelcomputing', 'concurrency']],
+      ['alanturing', ['alanturing', 'alan-turing', 'turing']],
+      ['turingtest', ['turingtest', 'turing-test']],
+      ['churchturing', ['churchturing', 'church-turing']],
+
+      // Data Structures & Algorithms
+      ['array', ['array', 'arrays']],
+      ['hash', ['hash', 'hashtable', 'hashmap', 'hash-table', 'hash-map']],
+      ['linkedlist', ['linkedlist', 'linked-list', 'llist']],
+      ['queue', ['queue', 'queues']],
+      ['stack', ['stack', 'stacks']],
+      ['tree', ['tree', 'trees', 'binarytree']],
+      ['graph', ['graph', 'graphs']],
+      ['sorting', ['sorting', 'sort', 'sorts']],
+      ['searching', ['searching', 'search', 'searches']],
+      ['recursion', ['recursion', 'recursive']],
+      ['dynamicprogramming', ['dp', 'dynamicprogramming', 'dynamic-programming']]
     ]);
 
     // Store the source of truth
