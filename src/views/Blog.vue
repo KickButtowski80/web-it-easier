@@ -515,22 +515,29 @@ export default {
 .nav-link {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  background-color: rgba(99, 102, 241, 0.1);
+  padding: 0.875rem 1.5rem;
+  min-width: 140px;
+  height: 48px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
   color: #4f46e5;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .nav-link:hover,
 .nav-link:focus {
-  background-color: rgba(99, 102, 241, 0.2);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.25), 0 4px 8px -2px rgba(99, 102, 241, 0.15);
+  color: #3730a3;
 }
 
 .nav-link:focus-visible {
@@ -539,13 +546,16 @@ export default {
 }
 
 .dark .nav-link {
-  background-color: rgba(99, 102, 241, 0.15);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
   color: #818cf8;
   border-color: rgba(129, 140, 248, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .dark .nav-link:hover,
 .dark .nav-link:focus {
-  background-color: rgba(99, 102, 241, 0.25);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.25));
+  border-color: rgba(129, 140, 248, 0.4);
+  color: #6366f1;
 }
 </style>
