@@ -18,7 +18,7 @@
     </section>
 
     <!-- Use the shared NotFound component -->
-    <NotFound v-else-if="!loading && !post" />
+    <NotFound v-else-if="!loading && (notFound || !post)" />
 
     <!-- Success State -->
     <section v-else class="container blog-container mx-auto px-4 py-24">
@@ -202,6 +202,8 @@ const fetchPost = async (slugArg = null) => {
     const incomingSlug = (slugArg || route.params.slug || route.params.title || props.slug || '').toString();
     if (!incomingSlug) {
       notFound.value = true;
+      loading.value = false;
+      document.title = 'Post Not Found | Web It Easier';
       return null;
     }
 
@@ -216,6 +218,7 @@ const fetchPost = async (slugArg = null) => {
 
     if (!postData) {
       notFound.value = true;
+      loading.value = false;
       document.title = 'Post Not Found | Web It Easier';
       return null;
     }
@@ -240,19 +243,27 @@ const fetchPost = async (slugArg = null) => {
   } catch (error) {
     console.error('Error fetching post:', error);
     notFound.value = true;
+    loading.value = false;
     document.title = 'Error Loading Post | Web It Easier';
     return null;
   } finally {
-    loading.value = false;
+    if (!notFound.value) loading.value = false;
   }
 };
+// Watch for route changes to load new posts
 watch(
   () => route.params.slug || route.params.title, // covers both cases
   async (newParam, oldParam) => {
-    console.log('param changed:', newParam, oldParam);
-    if (newParam && newParam !== oldParam) {
-      post.value = null;
-      await fetchPost(newParam); // fetchPost now handles slug lookup with fallback
+    try {
+      console.log('param changed:', newParam, oldParam);
+      if (newParam && newParam !== oldParam) {
+        post.value = null;
+        await fetchPost(newParam);
+      }
+    } catch (error) {
+      console.error('Error watching route:', error);
+      notFound.value = true;
+      loading.value = false;
     }
   },
   { immediate: true }
