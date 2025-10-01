@@ -135,7 +135,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch } from 'vue';
-import { getPost, getPosts } from '@/config/firebase';
+import { getPost, getPosts, getPostBySlug } from '@/config/firebase';
 import {
   injectBlogPostStructuredData,
   removeStructuredData,
@@ -203,12 +203,19 @@ const toggleToc = () => {
 };
 const fetchPost = async (slugArg = null) => {
   try {
-    const title = slugArg 
-      ? slugArg.replace(/-/g, ' ')
-      : deslugify(route.params.title || props.slug);
-      
-  
-    const postData = await getPost(title);
+    const incomingSlug = (slugArg || route.params.slug || route.params.title || props.slug || '').toString();
+
+    let postData = null;
+
+    if (incomingSlug) {
+      postData = await getPostBySlug(incomingSlug);
+    }
+
+    if (!postData && incomingSlug) {
+      const fallbackTitle = incomingSlug.replace(/-/g, ' ');
+      postData = await getPost(fallbackTitle);
+    }
+
     post.value = postData;
     
     // Update page title and meta tags
@@ -236,7 +243,7 @@ watch(
     console.log('param changed:', newParam, oldParam);
     if (newParam && newParam !== oldParam) {
       post.value = null;
-      await fetchPost(newParam); // your fetchPost already handles deslugifying
+      await fetchPost(newParam); // fetchPost now handles slug lookup with fallback
     }
   },
   { immediate: true }
