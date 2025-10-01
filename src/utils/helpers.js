@@ -7,32 +7,41 @@ import { ref } from 'vue';
  */
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
       month: 'long',
       day: 'numeric'
     });
   };
   
+  const generateSlugFallback = () => {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return `post-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  };
+
   /**
-   * Helper function to create consistent URL slugs from text
-   * Used for blog post URLs and other user-facing slugs
+   * Helper function to create consistent URL slugs from text.
+   * Removes whitespace/non-word characters and falls back to
+   * a UUID-derived slug if the sanitized value is empty
+   * (e.g., emoji-only titles). Used for blog post URLs and other
+   * user-facing slugs.
    * 
    * @param {string} text - Text to convert to a slug
-   * @returns {string} URL-friendly slug
+   * @returns {string} URL-friendly slug (or UUID fallback)
    */
   const titleToSlug = (text) => {
     if (!text) return '';
-    return text
+    const base = text
       .toString()
       .toLowerCase()
       .trim()
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/[\W_]+/g, '-') // Replace non-word characters with hyphens
-      .replace(/\-+/g, '-') // Replace multiple hyphens with a single hyphen
-      .replace(/^-+/, '') // Remove leading hyphens
-      .replace(/-+$/, ''); // Remove trailing hyphens
+      .replace(/\s+/g, '-')
+      .replace(/[\W_]+/g, '-')
+      .replace(/\-+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
+    return base || generateSlugFallback();
   };
-  
 // Add a notification composable
  function useNotification() {
   const showNotification = ref(false);
