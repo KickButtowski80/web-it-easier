@@ -11,34 +11,47 @@
 
         <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>
         <form @submit.prevent="handleSubmit" aria-labelledby="form-heading" :class="{ 'opacity-50': isLoading }"
-            :aria-busy="isLoading">
+            :aria-busy="isLoading" novalidate>
             <div class="form-group">
                 <label for="title">Title</label>
                 <input id="title" v-model="formData.title" type="text" placeholder="Enter post title" required
-                    :aria-invalid="formErrors.title ? 'true' : 'false'" autocomplete="off">
-                <div v-if="formErrors.title" class="error-message" role="alert">{{ formErrors.title }}</div>
+                    :aria-invalid="formErrors.title ? 'true' : 'false'"
+                    :aria-describedby="titleDescribedBy" autocomplete="off">
+
+                <div v-if="formErrors.title" id="title-error" class="error-message" role="alert" aria-live="polite">
+                    {{ formErrors.title }}
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="date">Date</label>
                 <input id="date" v-model="formData.date" type="date" required
-                    :aria-invalid="formErrors.date ? 'true' : 'false'">
-                <div v-if="formErrors.date" class="error-message" role="alert">{{ formErrors.date }}</div>
+                    :aria-invalid="formErrors.date ? 'true' : 'false'"
+                    :aria-describedby="dateDescribedBy">
+                <div v-if="formErrors.date" id="date-error" class="error-message" role="alert" aria-live="polite">
+                    {{ formErrors.date }}
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="readingTime">Reading Time (minutes)</label>
                 <input id="readingTime" v-model.number="formData.readingTime" type="number" min="1" required
-                    :aria-invalid="formErrors.readingTime ? 'true' : 'false'" aria-describedby="readingTimeHint">
+                    :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
+                    :aria-describedby="readingTimeDescribedBy">
                 <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
-                <div v-if="formErrors.readingTime" class="error-message" role="alert">{{ formErrors.readingTime }}</div>
+                <div v-if="formErrors.readingTime" id="readingTime-error" class="error-message" role="alert" aria-live="polite">
+                    {{ formErrors.readingTime }}
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="featureImage">Feature Image URL</label>
                 <input id="featureImage" v-model="formData.featureImage" type="url" placeholder="Enter image URL"
-                    :aria-invalid="formErrors.featureImage ? 'true' : 'false'">
-                <div v-if="formErrors.featureImage" class="error-message" role="alert">{{ formErrors.featureImage }}
+                    :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
+                    :aria-describedby="featureImageDescribedBy">
+                <div v-if="formErrors.featureImage" id="featureImage-error" class="error-message" role="alert"
+                    aria-live="polite">
+                    {{ formErrors.featureImage }}
                 </div>
             </div>
 
@@ -58,16 +71,19 @@
                     <!-- Tag input -->
                     <div class="tag-input-wrapper">
                         <input v-if="formData.tags.length < 5" id="tags-input" ref="tagInput" v-model="newTag"
+                        required
                             @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
                             @focus="handleFocus" @blur="handleBlur" @keydown.down.prevent="focusNextSuggestion(1)"
                             @keydown.up.prevent="focusPreviousSuggestion()" type="text"
                             placeholder="Type a tag and press Enter to add"
                             autocomplete="off"
                             role="combobox"
-                            aria-describedby="tagHelp" aria-autocomplete="list"
+                            :aria-describedby="tagsAriaDescribedBy" aria-autocomplete="list"
                             :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" aria-haspopup="listbox"
                             :aria-controls="isSuggestionsOpen ? 'tag-suggestions' : undefined"
-                            :aria-activedescendant="activeSuggestionId || undefined">
+                            :aria-activedescendant="activeSuggestionId || undefined"
+                            :aria-invalid="formErrors.tags ? 'true' : 'false'">
+                            <div v-if="formErrors.tags" id="tags-error" class="error-message" role="alert" aria-live="polite">{{ formErrors.tags }}</div>
                         <Transition name="tag-suggestions-fade">
                             <div v-if="isSuggestionsOpen" class="tag-suggestions-container">
                                 <ul id="tag-suggestions" class="tag-suggestions" role="listbox"
@@ -163,9 +179,13 @@
                             @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
                             @keydown.enter.exact.prevent="handleEnter1" @keydown.esc="handleEsc"
                             placeholder="Write your post content in markdown..." required
-                            :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
+                            :aria-invalid="formErrors.content ? 'true' : 'false'"
+                            :aria-describedby="contentDescribedBy" rows="15">
                 </textarea>
-                        <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
+                        <div v-if="formErrors.content" id="content-error" class="error-message" role="alert"
+                            aria-live="polite">
+                            {{ formErrors.content }}
+                        </div>
                     </div>
 
                     <!-- Preview Panel -->
@@ -419,8 +439,25 @@ const formErrors = ref({
     date: '',
     readingTime: '',
     featureImage: '',
-    content: ''
+    content: '',
+    tags: '',
 });
+
+const resetFormErrors = () => {
+    Object.keys(formErrors.value).forEach((key) => {
+        formErrors.value[key] = '';
+    });
+};
+
+const tagsAriaDescribedBy = computed(() => {
+    return formErrors.value.tags ? 'tagHelp tags-error' : 'tagHelp';
+});
+
+const titleDescribedBy = computed(() => formErrors.value.title ? 'title-error' : undefined);
+const dateDescribedBy = computed(() => formErrors.value.date ? 'date-error' : undefined);
+const readingTimeDescribedBy = computed(() => formErrors.value.readingTime ? 'readingTimeHint readingTime-error' : 'readingTimeHint');
+const featureImageDescribedBy = computed(() => formErrors.value.featureImage ? 'featureImage-error' : undefined);
+const contentDescribedBy = computed(() => formErrors.value.content ? 'content-error' : undefined);
 
 const isSubmitting = ref(false);
 const isLoading = ref(false);
@@ -853,11 +890,14 @@ const cancelEdit = () => {
 
 const validateForm = () => {
     let isValid = true;
-    formErrors.value = {}; // Reset errors
+    resetFormErrors();
 
     // Title validation
     if (!formData.value.title?.trim()) {
         formErrors.value.title = 'Title is required';
+        isValid = false;
+    } else if (!/[a-z0-9]/i.test(formData.value.title)) {
+        formErrors.value.title = 'Please include at least one letter or number in the title.';
         isValid = false;
     }
 
@@ -867,6 +907,12 @@ const validateForm = () => {
         isValid = false;
     }
 
+    console.log('tags on submit', formData.value.tags.length);
+    // Tags validation
+    if (!formData.value.tags?.length) {
+        formErrors.value.tags = 'At least one tag is required';
+        isValid = false;
+    }
     // Content validation
     if (!formData.value.content?.trim()) {
         formErrors.value.content = 'Content is required';
