@@ -1,20 +1,20 @@
 <template>
   <div>
     <section v-if="loading" class="container blog-container mx-auto px-4 py-24">
-    <div class="blog-layout">
-      <!-- Loading State -->
-      <div class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
-        <div class="animate-pulse space-y-4 max-w-3xl mx-auto">
-          <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-6"></div>
-          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mx-auto mb-8"></div>
-          <div class="space-y-3">
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
-            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+      <div class="blog-layout">
+        <!-- Loading State -->
+        <div class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
+          <div class="animate-pulse space-y-4 max-w-3xl mx-auto">
+            <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-6"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mx-auto mb-8"></div>
+            <div class="space-y-3">
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+              <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </section>
 
     <!-- Use the shared NotFound component -->
@@ -22,86 +22,86 @@
 
     <!-- Success State -->
     <section v-else class="container blog-container mx-auto px-4 py-24">
-    <div class="blog-layout">
-      <article :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
-        <header class="text-center my-8">
-          <h1 :id="'post-title-' + post.id"
-            class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
-            <span class="group inline-block w-full max-w-4xl px-8 py-4 rounded-2xl bg-gray-50/40 dark:bg-gray-800/20
+      <div class="blog-layout">
+        <article :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
+          <header class="text-center my-8">
+            <h1 :id="'post-title-' + post.id"
+              class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
+              <span class="group inline-block w-full max-w-4xl px-8 py-4 rounded-2xl bg-gray-50/40 dark:bg-gray-800/20
              backdrop-blur-sm hover:bg-gray-50/60 dark:hover:bg-gray-800/30 transition-colors duration-200">
-              <span class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 bg-clip-text text-transparent
+                <span class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 bg-clip-text text-transparent
                          group-hover:opacity-90 transition-opacity duration-200">
-                {{ post.title }}
+                  {{ post.title }}
+                </span>
               </span>
-            </span>
-          </h1>
-          <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
-        </header>
-        <div :id="'post-meta-' + post.id" class="text-gray-700 dark:text-gray-400 mb-8 text-base">
-          <time :datetime="new Date(post.date).toISOString()" class="mr-4">
-            {{ formatDate(post.date) }}
-          </time>
-          <span>{{ post.readingTime }} min read</span>
-        </div>
+            </h1>
+            <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
+          </header>
+          <div :id="'post-meta-' + post.id" class="text-gray-700 dark:text-gray-400 mb-8 text-base">
+            <time :datetime="new Date(post.date).toISOString()" class="mr-4">
+              {{ formatDate(post.date) }}
+            </time>
+            <span>{{ post.readingTime }} min read</span>
+          </div>
 
-        <!-- Table of Contents -->
-        <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
-          aria-label="Table of Contents" @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
-          @keydown.arrow-down.prevent="handleTocNav($event, 'down')"
-          @keydown.home.prevent="handleTocNav($event, 'home')" @keydown.end.prevent="handleTocNav($event, 'end')"
-          @keydown.esc="toggleToc">
+          <!-- Table of Contents -->
+          <nav id="table-of-contents" :class="['mb-8 toc-bedazzled', { 'toc-open': tocOpen }]" v-if="toc.length > 0"
+            aria-label="Table of Contents" @keydown.arrow-up.prevent="handleTocNav($event, 'up')"
+            @keydown.arrow-down.prevent="handleTocNav($event, 'down')"
+            @keydown.home.prevent="handleTocNav($event, 'home')" @keydown.end.prevent="handleTocNav($event, 'end')"
+            @keydown.esc="toggleToc">
 
-          <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900
+            <h2 id="toc-heading" class="text-lg font-semibold mb-2 text-gray-900
            dark:text-gray-200 flex justify-center sm:justify-start">
-            <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
+              <button type="button" class="cursor-pointer select-none inline-flex items-center gap-2 px-3 py-1.5 rounded-full
                      bg-indigo-800 text-white shadow-sm transition-colors transition-shadow duration-200
                      hover:bg-indigo-900 hover:shadow-md
                      focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
                      focus-visible:ring-indigo-600 focus-visible:ring-offset-white
                      dark:focus-visible:ring-offset-slate-900" :aria-expanded="tocOpen" aria-controls="toc-body"
-              @click="toggleToc" @keydown.space.enter.prevent="toggleToc"
-              :aria-label="tocOpen ? 'Collapse table of contents' : 'Expand table of contents'">
-              Table of Contents
-              <span class="ml-1 text-sm transition-transform duration-200 inline-block"
-                :class="{ 'transform rotate-180': tocOpen }" aria-hidden="true">
-                ▼
-              </span>
-            </button>
-          </h2>
+                @click="toggleToc" @keydown.space.enter.prevent="toggleToc"
+                :aria-label="tocOpen ? 'Collapse table of contents' : 'Expand table of contents'">
+                Table of Contents
+                <span class="ml-1 text-sm transition-transform duration-200 inline-block"
+                  :class="{ 'transform rotate-180': tocOpen }" aria-hidden="true">
+                  ▼
+                </span>
+              </button>
+            </h2>
 
-          <transition name="toc-slide">
-            <ul id="toc-body" class="space-y-1 toc-body" v-show="tocOpen" aria-label="Sections">
+            <transition name="toc-slide">
+              <ul id="toc-body" class="space-y-1 toc-body" v-show="tocOpen" aria-label="Sections">
 
-              <li v-for="(item, index) in toc" :key="index" :class="{
-                'ml-4': item.level === 'h3',
-                'ml-8': item.level === 'h4'
-              }">
+                <li v-for="(item, index) in toc" :key="index" :class="{
+                  'ml-4': item.level === 'h3',
+                  'ml-8': item.level === 'h4'
+                }">
 
-                <a :id="'toc-item-' + item.id" :href="'#' + item.id" @click="handleTocClick"
-                  class="toc-link block py-1 px-2 -mx-2 rounded-md" :class="{
-                    'font-semibold': item.level === 'h2',
-                    'text-base': item.level === 'h3',
-                    'text-sm': item.level === 'h4',
-                    'pl-3': item.level === 'h2',
-                    'pl-2': item.level === 'h3',
-                    'pl-1': item.level === 'h4',
-                    'toc-link--active': activeId === item.id
-                  }" :aria-label="'Jump to ' + item.text + ' section'"
-                  :aria-current="activeId === item.id ? 'location' : undefined" :tabindex="tocOpen ? 0 : -1">
+                  <a :id="'toc-item-' + item.id" :href="'#' + item.id" @click="handleTocClick"
+                    class="toc-link block py-1 px-2 -mx-2 rounded-md" :class="{
+                      'font-semibold': item.level === 'h2',
+                      'text-base': item.level === 'h3',
+                      'text-sm': item.level === 'h4',
+                      'pl-3': item.level === 'h2',
+                      'pl-2': item.level === 'h3',
+                      'pl-1': item.level === 'h4',
+                      'toc-link--active': activeId === item.id
+                    }" :aria-label="'Jump to ' + item.text + ' section'"
+                    :aria-current="activeId === item.id ? 'location' : undefined" :tabindex="tocOpen ? 0 : -1">
 
-                  <span v-if="item.level === 'h3'" aria-hidden="true">→ </span>
-                  <span v-else-if="item.level === 'h4'" aria-hidden="true">⟶ </span>
-                  {{ item.text }}
+                    <span v-if="item.level === 'h3'" aria-hidden="true">→ </span>
+                    <span v-else-if="item.level === 'h4'" aria-hidden="true">⟶ </span>
+                    {{ item.text }}
 
-                  <span v-if="activeId === item.id" class="sr-only">(current section)</span>
+                    <span v-if="activeId === item.id" class="sr-only">(current section)</span>
 
-                </a>
-              </li>
-            </ul>
-          </transition>
-        </nav>
+                  </a>
+                </li>
+              </ul>
+            </transition>
+          </nav>
 
-        <!-- Main content container with prose styling
+          <!-- Main content container with prose styling
           - Uses direct CSS selectors (no :deep) because:
             1. v-html content renders as direct children
             2. No component boundaries to cross
@@ -110,24 +110,20 @@
           - 'prose' class applies Tailwind typography
           - 'whitespace-pre-wrap' preserves formatting
         -->
-        <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
-          v-html="renderedContent">
-        </div>
-        <CategoryTags v-if="post?.tags?.length" :tags="post.tags" />
-      </article>
-      
-      <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
-        :icon="notificationIcon" />
-        
-      <!-- Related Posts Section -->
-      <RelatedPosts 
-        v-if="post && allPosts.length > 0" 
-        :current-post-id="post.id" 
-        :current-post-title="post.title" 
-        :current-post-content="post.content" 
-        :current-post-tags="post.tags"
-        :all-posts="allPosts" 
-      />
+          <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
+            v-html="renderedContent">
+          </div>
+          <CategoryTags v-if="post?.tags?.length" :tags="post.tags" />
+        </article>
+
+        <Notification v-model="showNotification"
+         :message="notificationMessage" 
+         :type="notificationType"
+         :icon="notificationIcon" />
+
+        <!-- Related Posts Section -->
+        <RelatedPosts v-if="post && allPosts.length > 0" :current-post-id="post.id" :current-post-title="post.title"
+          :current-post-content="post.content" :current-post-tags="post.tags" :all-posts="allPosts" />
       </div>
     </section>
   </div>
@@ -138,13 +134,14 @@ import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch
 import { useRoute } from 'vue-router';
 import { getPost, getPosts, getPostBySlug } from '@/config/firebase';
 import NotFound from './NotFound.vue';
+import { useNotification } from '@/utils/helpers';
 import {
   injectBlogPostStructuredData,
   removeStructuredData,
   injectTocJsonLd
 } from '@/utils/json-ld-structured-data';
 
- 
+
 // Props
 const props = defineProps({
   slug: {
@@ -153,7 +150,7 @@ const props = defineProps({
   }
 });
 
-const route = useRoute();
+
 const {
   showNotification,
   notificationMessage,
@@ -197,7 +194,7 @@ const route = useRoute();
 const fetchPost = async (slugArg = null) => {
   loading.value = true;
   notFound.value = false;
-  
+
   try {
     const incomingSlug = (slugArg || route.params.slug || route.params.title || props.slug || '').toString();
     if (!incomingSlug) {
@@ -209,7 +206,7 @@ const fetchPost = async (slugArg = null) => {
 
     // Try fetching by slug first
     let postData = await getPostBySlug(incomingSlug);
-    
+
     // If not found, try with title format (spaces instead of hyphens)
     if (!postData) {
       const fallbackTitle = incomingSlug.replace(/-/g, ' ');
@@ -225,7 +222,7 @@ const fetchPost = async (slugArg = null) => {
 
     post.value = postData;
     notFound.value = false;
-    
+
     // Update page title and meta tags
     if (post.value?.title) {
       const pageTitle = `${post.value.title} | Web It Easier`;
@@ -238,7 +235,7 @@ const fetchPost = async (slugArg = null) => {
         post.value.featuredImage || ''
       );
     }
-    
+
     return postData;
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -416,7 +413,7 @@ onMounted(async () => {
   if (defaultCanonicalEl) {
     defaultCanonical.value = defaultCanonicalEl.outerHTML;
   }
-  
+
   // Fetch all posts for related posts functionality
   try {
     allPosts.value = await getPosts();
@@ -432,7 +429,7 @@ onMounted(async () => {
   defaultMetaDescriptions.value.og = ogDescTag?.getAttribute('content') || null;
   defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
 
-   
+
   try {
     const postData = await fetchPost();
     if (postData) {
@@ -512,7 +509,7 @@ onMounted(async () => {
 
       // Start scroll spy with hash navigation enabled
       startScrollSpy();
-      
+
       // Handle initial hash scroll after content is rendered
       if (window.location.hash && !hasScrolledToHash.value) {
         scrollToHash();
@@ -647,7 +644,7 @@ const scrollSpy = useScrollSpy({
 
 const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
 
- 
+
 
 
 // Clean up canonical tag when component is unmounted
