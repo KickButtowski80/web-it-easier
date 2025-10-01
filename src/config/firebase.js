@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, doc, getDoc } from "firebase/firestore/lite"; // Lite SDK for reads
+import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "firebase/firestore/lite"; // Lite SDK for reads
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail, 
   onAuthStateChanged, reauthenticateWithCredential, EmailAuthProvider, updatePassword as firebaseUpdatePassword,
   browserLocalPersistence, browserSessionPersistence, setPersistence
@@ -137,6 +137,32 @@ const withRetry = async (operation, maxRetries = 3) => {
 };
 
 /**
+ * Public API function to get a post by its slug
+ *
+ * @param {string} slug - The slug of the post to retrieve
+ * @returns {Object|null} Formatted post object or null if not found/error
+ */
+export const getPostBySlug = async (slug) => {
+  if (!slug) return null;
+
+  try {
+    const post = await findPostBySlug(slug);
+    if (post != null) {
+      const data = post.data();
+      return {
+        id: post.id,
+        ...data,
+        date: data?.date ? formatDate(data.date.toDate()) : 'No date'
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error in getPostBySlug:', error);
+    return null;
+  }
+};
+
+/**
  * Validate tags array according to the requirements
  * - Max 5 tags per post
  * - Each tag max 20 characters
@@ -232,19 +258,29 @@ export const getPosts = async () => {
  * @param {string} title - The title to search for
  * @returns {Object|null} Raw Firestore document reference or null if not found
  */
-const findPostByTitle = async (title) => {
+const findPostByField = async (field, value) => {
+  if (!field || typeof field !== 'string' || !value) return null;
+
   return withRetry(async () => {
+    const normalized = value.toLowerCase().trim();
     const postsRef = collection(db, 'posts');
-    const snapshot = await getDocs(postsRef);
+    const postsQuery = query(postsRef, where(field, '==', normalized));
+    const snapshot = await getDocs(postsQuery);
     if (snapshot.empty) return null;
-    const lowerTitle = title.toLowerCase().trim();
-    const post = snapshot.docs.find(doc => {
-      const data = doc.data();
-      return data.title && data.title.toLowerCase().trim() === lowerTitle;
-    })
-    return post || null;
+
+    return snapshot.docs.find(Boolean) || null;
   });
 };
+
+const findPostByTitle = async (title) => findPostByField('title', title);
+
+/**
+ * Internal helper function to find a post by its slug (case-insensitive)
+ *
+ * @param {string} slug - The slug to search for
+ * @returns {Object|null} Raw Firestore document reference or null if not found
+ */
+const findPostBySlug = async (slug) => findPostByField('slug', slug);
 /**
  * Public API function to get a post by its title
  * 
@@ -253,20 +289,23 @@ const findPostByTitle = async (title) => {
  * 2. Data formatting (especially for dates)
  * 3. A clean interface for components to consume
  * 
- * Used primarily for public-facing blog pages where posts are accessed by title/slug
- * 
+ * Used primarily for public-facing blog pages where posts are accessed by title
+ * but the slug is also available to maintain backwards compatibility.
+ *
  * @param {string} title - The title of the post to retrieve
  * @returns {Object|null} Formatted post object or null if not found/error
  */
 export const getPost = async (title) => {
+  if (!title) return null;
+
   try {
     const post = await findPostByTitle(title);
-    // Safe guard against undefined as well
     if (post != null) {
+      const data = post.data();
       return {
         id: post.id,
-        ...post.data(),
-        date: post.data().date ? formatDate(post.data().date.toDate()) : 'No date'
+        ...data,
+        date: data?.date ? formatDate(data.date.toDate()) : 'No date'
       };
     }
     return null;
