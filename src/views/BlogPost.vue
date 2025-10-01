@@ -1,8 +1,29 @@
 <template>
-
-  <section class="container blog-container mx-auto px-4 py-24">
+  <div>
+    <section v-if="loading" class="container blog-container mx-auto px-4 py-24">
     <div class="blog-layout">
-      <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
+      <!-- Loading State -->
+      <div class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
+        <div class="animate-pulse space-y-4 max-w-3xl mx-auto">
+          <div class="h-12 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-6"></div>
+          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4 mx-auto mb-8"></div>
+          <div class="space-y-3">
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <!-- Use the shared NotFound component -->
+    <NotFound v-else-if="!loading && !post" />
+
+    <!-- Success State -->
+    <section v-else class="container blog-container mx-auto px-4 py-24">
+    <div class="blog-layout">
+      <article :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
             class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
@@ -94,19 +115,6 @@
         </div>
         <CategoryTags v-if="post?.tags?.length" :tags="post.tags" />
       </article>
-      <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
-        <div class="animate-pulse" role="presentation">
-          <div class="h-8 bg-gray-200 rounded w-3/4 mx-auto mb-4" aria-hidden="true"></div>
-          <div class="h-4 bg-gray-200 rounded w-1/4 mx-auto mb-8" aria-hidden="true"></div>
-          <div class="h-4 bg-gray-200 rounded w-full mb-2" aria-hidden="true"></div>
-          <div class="h-4 bg-gray-200 rounded w-full mb-2" aria-hidden="true"></div>
-          <div class="h-4 bg-gray-200 rounded w-3/4 mb-8" aria-hidden="true"></div>
-        </div>
-        <p class="text-gray-500 mt-4">
-          <span class="sr-only">Status: </span>
-          Loading post...
-        </p>
-      </div>
       
       <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
         :icon="notificationIcon" />
@@ -120,51 +128,32 @@
         :current-post-tags="post.tags"
         :all-posts="allPosts" 
       />
-    </div>
-    
-    <!-- Sidebar with Popular Posts -->
-    <!-- <aside class="blog-sidebar">
-      <PopularPosts 
-        v-if="post && allPosts.length > 0" 
-        :current-post-id="post.id" 
-        :all-posts="allPosts" 
-      />
-    </aside> -->
-  </section>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { getPost, getPosts, getPostBySlug } from '@/config/firebase';
+import NotFound from './NotFound.vue';
 import {
   injectBlogPostStructuredData,
   removeStructuredData,
   injectTocJsonLd
 } from '@/utils/json-ld-structured-data';
-import { titleToSlug, useNotification } from '@/utils/helpers';
-import { renderMarkdown } from '@/utils/markdown';
-import { updateCanonicalUrl, restoreCanonical } from '@/utils/seo-update-canonical-url';
-import Notification from '@/components/UI/Notification.vue';
-import RelatedPosts from '@/components/Blog/RelatedPosts.vue';
-import PopularPosts from '@/components/Blog/PopularPosts.vue';
-import CategoryTags from '@/components/Blog/CategoryTags.vue';
-import { formatDate } from '@/utils/helpers';
-import "highlight.js/styles/github.css";
-import { updateMetaDescriptions, updateMetaSocialTags } from '@/utils/seo-update-description';
-import useScrollSpy from '@/composables/useScrollSpy';
- 
-import { useRoute } from 'vue-router';
 
  
-const route = useRoute();
 // Props
 const props = defineProps({
   slug: {
     type: String,
-    required: false,
-  },
+    default: ''
+  }
 });
 
+const route = useRoute();
 const {
   showNotification,
   notificationMessage,
@@ -201,22 +190,38 @@ const toggleToc = () => {
     }
   });
 };
+const loading = ref(true);
+const notFound = ref(false);
+const route = useRoute();
+
 const fetchPost = async (slugArg = null) => {
+  loading.value = true;
+  notFound.value = false;
+  
   try {
     const incomingSlug = (slugArg || route.params.slug || route.params.title || props.slug || '').toString();
-
-    let postData = null;
-
-    if (incomingSlug) {
-      postData = await getPostBySlug(incomingSlug);
+    if (!incomingSlug) {
+      notFound.value = true;
+      return null;
     }
 
-    if (!postData && incomingSlug) {
+    // Try fetching by slug first
+    let postData = await getPostBySlug(incomingSlug);
+    
+    // If not found, try with title format (spaces instead of hyphens)
+    if (!postData) {
       const fallbackTitle = incomingSlug.replace(/-/g, ' ');
       postData = await getPost(fallbackTitle);
     }
 
+    if (!postData) {
+      notFound.value = true;
+      document.title = 'Post Not Found | Web It Easier';
+      return null;
+    }
+
     post.value = postData;
+    notFound.value = false;
     
     // Update page title and meta tags
     if (post.value?.title) {
@@ -226,15 +231,19 @@ const fetchPost = async (slugArg = null) => {
       updateMetaSocialTags(
         pageTitle,
         canonicalUrl.value || window.location.href,
-        // Add other necessary parameters
+        post.value.description || `Read ${post.value.title} on Web It Easier`,
+        post.value.featuredImage || ''
       );
     }
     
     return postData;
   } catch (error) {
     console.error('Error fetching post:', error);
-    // Handle error appropriately
+    notFound.value = true;
+    document.title = 'Error Loading Post | Web It Easier';
     return null;
+  } finally {
+    loading.value = false;
   }
 };
 watch(
