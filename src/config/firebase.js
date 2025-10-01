@@ -146,6 +146,7 @@ export const getPostBySlug = async (slug) => {
   if (!slug) return null;
 
   try {
+    // First try to find by slug
     const post = await findPostBySlug(slug);
     if (post != null) {
       const data = post.data();
@@ -155,6 +156,20 @@ export const getPostBySlug = async (slug) => {
         date: data?.date ? formatDate(data.date.toDate()) : 'No date'
       };
     }
+
+    // If not found by slug, try to find by title (for backwards compatibility)
+    // Convert slug back to title by replacing dashes with spaces
+    const titleFromSlug = slug.replace(/-/g, ' ');
+    const postByTitle = await findPostByTitle(titleFromSlug);
+    if (postByTitle != null) {
+      const data = postByTitle.data();
+      return {
+        id: postByTitle.id,
+        ...data,
+        date: data?.date ? formatDate(data.date.toDate()) : 'No date'
+      };
+    }
+
     return null;
   } catch (error) {
     console.error('Error in getPostBySlug:', error);
