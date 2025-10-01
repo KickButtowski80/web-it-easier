@@ -3,7 +3,7 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { 
-      "source": "/blog/(?<post>[^/]+)",
+      "source": "/blog/([^/]+)",
       "destination": "/blog/index.html"
     },
     { 
@@ -12,24 +12,20 @@
     },
     { 
       "source": "/(.*)", 
-      "destination": "/index.html",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-vercel-404",
-          "value": "false"
-        }
-      ]
+      "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "/(.*).(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$",
+      "source": "/_next/static/(.*)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     },
     {
