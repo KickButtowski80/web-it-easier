@@ -13,44 +13,88 @@
         <form @submit.prevent="handleSubmit" aria-labelledby="form-heading" :class="{ 'opacity-50': isLoading }"
             :aria-busy="isLoading" novalidate>
             <div class="form-group">
-                <label for="title">Title</label>
-                <input id="title" v-model="formData.title" type="text" placeholder="Enter post title" required
+                <label for="title">Title <span class="sr-only">(required)</span></label>
+                <input 
+                    id="title" 
+                    v-model="formData.title" 
+                    type="text" 
+                    placeholder="Enter post title" 
+                    required
                     :aria-invalid="formErrors.title ? 'true' : 'false'"
-                    :aria-describedby="titleDescribedBy" autocomplete="off">
+                    :aria-describedby="formErrors.title ? 'title-error' : undefined"
+                    autocomplete="off"
+                    aria-required="true">
 
-                <div v-if="formErrors.title" id="title-error" class="error-message" role="alert" aria-live="polite">
+                <div 
+                    v-if="formErrors.title" 
+                    id="title-error" 
+                    class="error-message" 
+                    role="alert" 
+                    aria-live="assertive">
                     {{ formErrors.title }}
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="date">Date</label>
-                <input id="date" v-model="formData.date" type="date" required
+                <label for="date">Publication Date <span class="sr-only">(required)</span></label>
+                <input 
+                    id="date" 
+                    v-model="formData.date" 
+                    type="date" 
+                    required
                     :aria-invalid="formErrors.date ? 'true' : 'false'"
-                    :aria-describedby="dateDescribedBy">
-                <div v-if="formErrors.date" id="date-error" class="error-message" role="alert" aria-live="polite">
+                    :aria-describedby="formErrors.date ? 'date-error' : undefined"
+                    aria-required="true">
+                <div 
+                    v-if="formErrors.date" 
+                    id="date-error" 
+                    class="error-message" 
+                    role="alert" 
+                    aria-live="assertive">
                     {{ formErrors.date }}
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="readingTime">Reading Time (minutes)</label>
-                <input id="readingTime" v-model.number="formData.readingTime" type="number" min="1" required
+                <label for="readingTime">Reading Time (minutes) <span class="sr-only">(required)</span></label>
+                <input 
+                    id="readingTime" 
+                    v-model.number="formData.readingTime" 
+                    type="number" 
+                    min="1" 
+                    required
                     :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
-                    :aria-describedby="readingTimeDescribedBy">
+                    :aria-describedby="`readingTimeHint ${formErrors.readingTime ? 'readingTime-error' : ''}`"
+                    aria-required="true">
                 <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
-                <div v-if="formErrors.readingTime" id="readingTime-error" class="error-message" role="alert" aria-live="polite">
+                <div 
+                    v-if="formErrors.readingTime" 
+                    id="readingTime-error" 
+                    class="error-message" 
+                    role="alert" 
+                    aria-live="assertive">
                     {{ formErrors.readingTime }}
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="featureImage">Feature Image URL</label>
-                <input id="featureImage" v-model="formData.featureImage" type="url" placeholder="Enter image URL"
+                <input 
+                    id="featureImage" 
+                    v-model="formData.featureImage" 
+                    type="url" 
+                    placeholder="https://example.com/image.jpg"
                     :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
-                    :aria-describedby="featureImageDescribedBy">
-                <div v-if="formErrors.featureImage" id="featureImage-error" class="error-message" role="alert"
-                    aria-live="polite">
+                    :aria-describedby="formErrors.featureImage ? 'featureImage-error' : undefined"
+                    aria-describedby="featureImageHint"
+                    inputmode="url">
+                <div id="featureImageHint" class="hint">Enter the full URL of the image (e.g., https://example.com/image.jpg)</div>
+                <div 
+                    v-if="formErrors.featureImage" 
+                    id="featureImage-error" 
+                    class="error-message" 
+                    role="alert"
+                    aria-live="assertive">
                     {{ formErrors.featureImage }}
                 </div>
             </div>
@@ -70,19 +114,30 @@
 
                     <!-- Tag input -->
                     <div class="tag-input-wrapper">
-                        <input v-if="formData.tags.length < 5" id="tags-input" ref="tagInput" v-model="newTag"
-                        required
+                        <input 
+                            v-if="formData.tags.length < 5" 
+                            id="tags-input" 
+                            ref="tagInput" 
+                            v-model="newTag"
+                            required
                             @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
-                            @focus="handleFocus" @blur="handleBlur" @keydown.down.prevent="focusNextSuggestion(1)"
-                            @keydown.up.prevent="focusPreviousSuggestion()" type="text"
+                            @focus="handleFocus" 
+                            @blur="handleBlur" 
+                            @keydown.down.prevent="focusNextSuggestion(1)"
+                            @keydown.up.prevent="focusPreviousSuggestion()" 
+                            @keydown.esc="isSuggestionsOpen = false"
+                            type="text"
                             placeholder="Type a tag and press Enter to add"
                             autocomplete="off"
                             role="combobox"
-                            :aria-describedby="tagsAriaDescribedBy" aria-autocomplete="list"
-                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" aria-haspopup="listbox"
+                            :aria-describedby="`tags-help ${formErrors.tags ? 'tags-error' : ''}`" 
+                            aria-autocomplete="list"
+                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" 
+                            aria-haspopup="listbox"
                             :aria-controls="isSuggestionsOpen ? 'tag-suggestions' : undefined"
-                            :aria-activedescendant="activeSuggestionId || undefined"
-                            :aria-invalid="formErrors.tags ? 'true' : 'false'">
+                            :aria-activedescendant="isSuggestionsOpen ? activeSuggestionId : undefined"
+                            :aria-invalid="formErrors.tags ? 'true' : 'false'"
+                            aria-required="true">
                             <div v-if="formErrors.tags" id="tags-error" class="error-message" role="alert" aria-live="polite">{{ formErrors.tags }}</div>
                         <Transition name="tag-suggestions-fade">
                             <div v-if="isSuggestionsOpen" class="tag-suggestions-container">
@@ -118,7 +173,7 @@
                         </Transition>
                     </div>
 
-                    <div id="tagHelp" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
+                    <div id="tags-help" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
                         <div class="tag-help-header">
                             <h4 id="tag-help-heading" class="tag-help-title">
                                 <span class="tag-help-title-icon" aria-hidden="true">💡</span>
@@ -148,8 +203,8 @@
             </div>
             <div class="form-group">
                 <label for="content">Content (Markdown)</label>
-                <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
-                    <span id="markdown-editor-label" class="sr-only">Markdown editor with preview</span>
+                    <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
+                    <span id="markdown-editor-label" class="sr-only">Markdown editor with preview. Use tab to switch between edit and preview modes.</span>
 
                     <!-- Tab Navigation -->
                     <div class="markdown-tabs" role="tablist" aria-label="Markdown editor modes">
@@ -190,7 +245,11 @@
 
                     <!-- Preview Panel -->
                     <div id="preview-panel" class="whitespace-pre-wrap tab-size-4" v-show="activeTab === 'preview'"
-                        role="tabpanel" aria-labelledby="preview-tab" aria-live="polite">
+                        role="tabpanel" 
+                        aria-labelledby="preview-tab" 
+                        :aria-hidden="activeTab !== 'preview'"
+                        tabindex="0"
+                        aria-live="polite">
                         <div class="preview-header">
                             <h2 id="preview-heading" class="text-xl font-semibold mb-2 sr-only">Preview</h2>
                             <article v-html="previewContent" class="preview-content prose lg:prose-lg max-w-none"
@@ -1420,9 +1479,10 @@ textarea {
 }
 
 .error-message {
-    color: #e53e3e;
+    color: #c53030; /* Darker red for better contrast (4.6:1 on white) */
     font-size: 0.875rem;
     margin-top: 0.25rem;
+    font-weight: 500; /* Slightly bolder for better readability */
     font-weight: 500;
 }
 
