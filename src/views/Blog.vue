@@ -7,7 +7,7 @@
       <div class="inline-block relative group">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 relative z-10 text-gray-900 dark:text-white">
           <span class="relative inline-block">
-            <span class="relative z-10">Blog</span>
+            <span class="relative z-10">{{ currentTag ? `#${currentTag}` : 'Blog' }}</span>
             <span class="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 -z-0 transform -rotate-1 translate-y-1 group-hover:translate-y-2 transition-all duration-300"></span>
           </span>
         </h1>
@@ -18,40 +18,73 @@
                 after:absolute after:right-0 after:top-1/2 after:w-8 after:h-px after:bg-gradient-to-l after:from-transparent after:to-gray-300 dark:after:to-gray-600">
         <p class="text-gray-500 dark:text-gray-400 font-medium px-10">
           <span class="inline-block transform group-hover:translate-y-1 transition-transform duration-300">
-            Explore my latest articles and insights
+            {{ currentTag ? `Posts tagged with "${currentTag}"` : 'Explore my latest articles and insights' }}
           </span>
         </p>
       </div>
       
       <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-indigo-300 dark:via-indigo-600 to-transparent group-hover:w-48 transition-all duration-500"></div>
     </div>
-
+    
+    <!-- Blog Navigation Links -->
+    <nav aria-label="Blog navigation" class="blog-navigation mb-10 flex justify-center content-center  gap-4">
+      <RouterLink v-if="currentTag" to="/blog" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Show All
+      </RouterLink>
+      <RouterLink to="/blog/archive" class="nav-link">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+        </svg>
+        Browse Archive
+      </RouterLink>
+    </nav>
+    
     <section aria-label="Blog posts" class="isolate">
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 list-none p-0">
-        <li v-for="(post, i) in posts" :key="titleToSlug(post.title) + '-' + i" class="blog-card-container">
+        <li v-for="(post, i) in filteredPosts" :key="titleToSlug(post.title) + '-' + i" class="blog-card-container">
           <article 
             class="blog-card"
-            role="article"
             :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`"
-            tabindex="0"
-            @click="navigateToPost(post.title)"
-            @keydown.enter="navigateToPost(post.title)"
-            @keydown.space.prevent="navigateToPost(post.title)"
           >
+            <RouterLink 
+              :to="'/blog/' + titleToSlug(post.title)"
+              class="card-link"
+            >
             <div class="card-content">
               <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="card-title">
                 {{ post.title }}
               </h2>
               <div :id="`post-desc-${titleToSlug(post.title)}-${i}`" class="card-body" v-html="renderMarkdown(post.content.substring(0, 100) + '...')"></div>
               <div class="card-footer">
-                <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
-                <span aria-hidden="true">•</span>
-                <span class="sr-only">Reading time: </span>
-                <span>{{ post.readingTime }} min read</span>
-                <span class="sr-only">. Click to read full article.</span>
+                <div class="card-meta">
+                  <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
+                  <span aria-hidden="true">•</span>
+                  <span class="sr-only">Reading time: </span>
+                  <span>{{ post.readingTime }} min read</span>
+                  <span class="sr-only">. Click to read full article.</span>
+                </div>
+
+                <!-- Tags section - show all tags -->
+                <div v-if="post.tags && post.tags.length > 0" class="card-tags-line">
+                  <span class="sr-only">Tags ({{ post.tags.length }} total): </span>
+                  <RouterLink
+                    v-for="tag in post.tags"
+                    :key="tag"
+                    :to="`/blog/posts/${encodeURIComponent(tag.toLowerCase())}`"
+                    class="tag-link"
+                    :aria-label="`View all posts tagged with ${tag}`"
+                    @click.stop
+                  >
+                    {{ tag }}
+                  </RouterLink>
+                </div>
               </div>
             </div>
+            </RouterLink>
           </article>
         </li>
       </ul>
@@ -63,8 +96,8 @@
       <p>Loading blog posts...</p>
     </div>
 
-    <div v-if="!loading && posts.length === 0" class="text-center py-12" aria-live="polite">
-      <p>No blog posts found. Check back soon!</p>
+    <div v-if="!loading && filteredPosts.length === 0" class="text-center py-12" aria-live="polite">
+      <p>{{ currentTag ? `No posts found tagged with "${currentTag}".` : 'No blog posts found. Check back soon!' }}</p>
     </div>
   </section>
 </template>
@@ -72,8 +105,8 @@
 <script>
 import { formatDate, titleToSlug } from '../utils/helpers';
 import { getPosts, auth } from '../config/firebase';
-import { ref, onMounted, nextTick } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted, nextTick } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import Notification from '../components/UI/Notification.vue';
 import { useNotification } from '../utils/helpers';
 import { renderMarkdown } from '../utils/markdown';
@@ -90,10 +123,34 @@ export default {
   components: {
     Notification
   },
-  setup() {
+  props: {
+    tag: {
+      type: String,
+      default: null
+    }
+  },
+  setup(props) {
     const posts = ref([])
     const loading = ref(true)
     const isAdmin = ref(false)
+    const route = useRoute()
+
+    // Get current tag from props or route
+    const currentTag = computed(() => {
+      return props.tag || route.params.tag || null
+    })
+
+    // Filter posts by tag
+    const filteredPosts = computed(() => {
+      if (!currentTag.value) return posts.value
+      
+      return posts.value.filter(post => {
+        if (!post.tags || !Array.isArray(post.tags)) return false
+        return post.tags.some(tag => 
+          tag.toLowerCase() === currentTag.value.toLowerCase()
+        )
+      })
+    })
 
     onMounted(async () => {
       try {
@@ -135,9 +192,6 @@ export default {
         loading.value = false;
       }
     })
-
-
-    // Format date for machine-readable datetime attribute
     const formatDateISO = (date) => {
       return new Date(date).toISOString().split('T')[0];
     };
@@ -159,7 +213,9 @@ export default {
       notificationMessage,
       notificationType,
       notificationIcon,
-      showNotification
+      showNotification,
+      filteredPosts,
+      currentTag
     };
   }
 };
@@ -362,16 +418,68 @@ export default {
   padding-top: 1rem;
   font-size: 0.85rem;
   color: #64748b;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
   border-top: 1px dashed #e2e8f0;
   padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .dark .card-footer {
   color: #94a3b8;
   border-color: #334155;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Tag styling in blog cards - now on separate line */
+.card-tags-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.tag-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.tag-link:hover {
+  background-color: rgba(99, 102, 241, 0.15);
+  transform: translateY(-1px);
+  color: #3730a3;
+}
+
+.tag-link:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* Dark mode tag styles */
+.dark .tag-link {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+  border-color: rgba(129, 140, 248, 0.3);
+}
+
+.dark .tag-link:hover {
+  background-color: rgba(99, 102, 241, 0.25);
+  color: #6366f1;
 }
 
 /* Ensure proper spacing in dark mode */
@@ -393,5 +501,57 @@ export default {
 .dark .prose :where(a:hover):not(:where([class~="not-prose"] *)) {
   color: #a5b4fc;
   text-decoration: underline;
+}
+
+/* Blog Navigation Links */
+.blog-navigation {
+  margin-top: 1rem;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  min-width: 140px;
+  height: 48px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+  color: #4f46e5;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link:hover,
+.nav-link:focus {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+  border-color: rgba(99, 102, 241, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.25), 0 4px 8px -2px rgba(99, 102, 241, 0.15);
+  color: #3730a3;
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.dark .nav-link {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
+  color: #818cf8;
+  border-color: rgba(129, 140, 248, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dark .nav-link:hover,
+.dark .nav-link:focus {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(139, 92, 246, 0.25));
+  border-color: rgba(129, 140, 248, 0.4);
+  color: #6366f1;
 }
 </style>

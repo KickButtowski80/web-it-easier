@@ -1,7 +1,7 @@
 <template>
 
-  <section class="container mx-auto px-4 py-24">
-    <div class="max-w-4xl mx-auto">
+  <section class="container blog-container mx-auto px-4 py-24">
+    <div class="blog-layout">
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
@@ -92,6 +92,7 @@
         <div id="post-content" class="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap tab-size-4"
           v-html="renderedContent">
         </div>
+        <CategoryTags v-if="post?.tags?.length" :tags="post.tags" />
       </article>
       <div v-else class="text-center py-12" role="status" aria-live="polite" aria-busy="true" aria-atomic="true">
         <div class="animate-pulse" role="presentation">
@@ -106,15 +107,35 @@
           Loading post...
         </p>
       </div>
+      
+      <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
+        :icon="notificationIcon" />
+        
+      <!-- Related Posts Section -->
+      <RelatedPosts 
+        v-if="post && allPosts.length > 0" 
+        :current-post-id="post.id" 
+        :current-post-title="post.title" 
+        :current-post-content="post.content" 
+        :current-post-tags="post.tags"
+        :all-posts="allPosts" 
+      />
     </div>
-    <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
-      :icon="notificationIcon" />
+    
+    <!-- Sidebar with Popular Posts -->
+    <!-- <aside class="blog-sidebar">
+      <PopularPosts 
+        v-if="post && allPosts.length > 0" 
+        :current-post-id="post.id" 
+        :all-posts="allPosts" 
+      />
+    </aside> -->
   </section>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, onBeforeUnmount, nextTick, watch } from 'vue';
-import { getPost } from '@/config/firebase';
+import { getPost, getPosts, getPostBySlug } from '@/config/firebase';
 import {
   injectBlogPostStructuredData,
   removeStructuredData,
@@ -124,11 +145,18 @@ import { titleToSlug, useNotification } from '@/utils/helpers';
 import { renderMarkdown } from '@/utils/markdown';
 import { updateCanonicalUrl, restoreCanonical } from '@/utils/seo-update-canonical-url';
 import Notification from '@/components/UI/Notification.vue';
+import RelatedPosts from '@/components/Blog/RelatedPosts.vue';
+import PopularPosts from '@/components/Blog/PopularPosts.vue';
+import CategoryTags from '@/components/Blog/CategoryTags.vue';
 import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
 import { updateMetaDescriptions, updateMetaSocialTags } from '@/utils/seo-update-description';
 import useScrollSpy from '@/composables/useScrollSpy';
+ 
+import { useRoute } from 'vue-router';
 
+ 
+const route = useRoute();
 // Props
 const props = defineProps({
   slug: {
@@ -146,6 +174,7 @@ const {
 } = useNotification();
 const hasScrolledToHash = ref(false);
 const post = ref(null);
+const allPosts = ref([]);
 const defaultCanonical = ref(null);
 // Store default meta descriptions to restore on unmount
 const defaultMetaDescriptions = ref({
@@ -172,6 +201,57 @@ const toggleToc = () => {
     }
   });
 };
+const fetchPost = async (slugArg = null) => {
+  try {
+    const incomingSlug = (slugArg || route.params.slug || route.params.title || props.slug || '').toString();
+
+    let postData = null;
+
+    if (incomingSlug) {
+      postData = await getPostBySlug(incomingSlug);
+    }
+
+    if (!postData && incomingSlug) {
+      const fallbackTitle = incomingSlug.replace(/-/g, ' ');
+      postData = await getPost(fallbackTitle);
+    }
+
+    post.value = postData;
+    
+    // Update page title and meta tags
+    if (post.value?.title) {
+      const pageTitle = `${post.value.title} | Web It Easier`;
+      document.title = pageTitle;
+      await updateCanonicalTag();
+      updateMetaSocialTags(
+        pageTitle,
+        canonicalUrl.value || window.location.href,
+        // Add other necessary parameters
+      );
+    }
+    
+    return postData;
+  } catch (error) {
+    console.error('Error fetching post:', error);
+    // Handle error appropriately
+    return null;
+  }
+};
+watch(
+  () => route.params.slug || route.params.title, // covers both cases
+  async (newParam, oldParam) => {
+    console.log('param changed:', newParam, oldParam);
+    if (newParam && newParam !== oldParam) {
+      post.value = null;
+      await fetchPost(newParam); // fetchPost now handles slug lookup with fallback
+    }
+  },
+  { immediate: true }
+);
+
+
+
+
 
 
 // Handle keyboard navigation in TOC
@@ -316,6 +396,13 @@ onMounted(async () => {
   if (defaultCanonicalEl) {
     defaultCanonical.value = defaultCanonicalEl.outerHTML;
   }
+  
+  // Fetch all posts for related posts functionality
+  try {
+    allPosts.value = await getPosts();
+  } catch (error) {
+    console.error('Error fetching all posts:', error);
+  }
 
   // Capture current meta descriptions to restore later
   const descTag = document.querySelector('meta[name="description"]');
@@ -325,9 +412,9 @@ onMounted(async () => {
   defaultMetaDescriptions.value.og = ogDescTag?.getAttribute('content') || null;
   defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
 
-  const title = deslugify(props.slug);
+   
   try {
-    const postData = await getPost(title);
+    const postData = await fetchPost();
     if (postData) {
       post.value = postData;
       // Set dynamic page title based on post content (SEO)
@@ -587,6 +674,7 @@ function deslugify(slug) {
 <!-- Externalized styles -->
 <style src="@/styles/toc.css"></style>
 <style src="@/styles/callouts.css"></style>
+<style src="@/styles/blog-layout.css"></style>
 <style>
 /* All of your existing styles are here, adapted for a standalone HTML file. */
 body {
@@ -1157,7 +1245,7 @@ body {
 
 
 #post-content pre {
-  background-color: #161b22;
+  background-color: #f8fafc;
   border-radius: 0.375rem;
   outline: none;
   transition: box-shadow 0.2s ease;
@@ -1166,9 +1254,10 @@ body {
   margin: 1.5rem 0;
   font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   line-height: 1.6;
-  color: #e2e8f0;
+  color: #1f2937;
   position: relative;
-  border-top: 2rem solid #2f55a0;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 #post-content pre:focus-visible {
@@ -1185,27 +1274,89 @@ body {
   padding: 1rem;
   font-size: 0.875rem;
   line-height: 1.6;
+  color: #1f2937;
+  background: transparent;
+}
+
+/* Override highlight.js GitHub theme for better contrast */
+#post-content pre .hljs {
+  background: transparent;
+  color: #1f2937;
+}
+
+/* Syntax highlighting with WCAG-compliant contrast */
+#post-content pre .hljs-comment,
+#post-content pre .hljs-quote {
+  color: #6b7280;
+  font-style: italic;
+}
+
+#post-content pre .hljs-keyword,
+#post-content pre .hljs-selector-tag,
+#post-content pre .hljs-literal,
+#post-content pre .hljs-built_in,
+#post-content pre .hljs-type {
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+#post-content pre .hljs-string,
+#post-content pre .hljs-symbol,
+#post-content pre .hljs-bullet,
+#post-content pre .hljs-addition {
+  color: #059669;
+  font-weight: 500;
+}
+
+#post-content pre .hljs-number,
+#post-content pre .hljs-regexp,
+#post-content pre .hljs-variable,
+#post-content pre .hljs-template-variable,
+#post-content pre .hljs-link,
+#post-content pre .hljs-name,
+#post-content pre .hljs-selector-id,
+#post-content pre .hljs-selector-class,
+#post-content pre .hljs-selector-attr,
+#post-content pre .hljs-selector-pseudo,
+#post-content pre .hljs-meta,
+#post-content pre .hljs-doctag,
+#post-content pre .hljs-title,
+#post-content pre .hljs-section,
+#post-content pre .hljs-deletion,
+#post-content pre .hljs-subst,
+#post-content pre .hljs-attr,
+#post-content pre .hljs-attribute {
+  color: #1f2937;
+}
+
+#post-content pre .hljs-emphasis {
+  font-style: italic;
+}
+
+#post-content pre .hljs-strong {
+  font-weight: 700;
 }
 
 /* Improve syntax readability in dark mode (override light GitHub theme tokens) */
 .dark #post-content pre {
-  background-color: #0b1220;
-  /* deeper dark for contrast */
-  color: #e5e7eb;
-  /* base foreground */
+  background-color: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+
+.dark #post-content pre code {
+  color: #f1f5f9;
 }
 
 .dark #post-content pre .hljs {
   background: transparent;
-  color: #e5e7eb;
-  /* default text */
+  color: #f1f5f9;
 }
 
-/* Token colors tuned for dark background */
+/* Dark mode token colors with high contrast */
 .dark #post-content pre .hljs-comment,
 .dark #post-content pre .hljs-quote {
-  color: #9ca3af;
-  /* gray-400 */
+  color: #94a3b8;
   font-style: italic;
 }
 
@@ -1214,46 +1365,37 @@ body {
 .dark #post-content pre .hljs-literal,
 .dark #post-content pre .hljs-built_in,
 .dark #post-content pre .hljs-type {
-  color: #93c5fd;
-  /* blue-300 */
+  color: #60a5fa;
+  font-weight: 600;
 }
 
 .dark #post-content pre .hljs-string,
 .dark #post-content pre .hljs-symbol,
 .dark #post-content pre .hljs-bullet,
 .dark #post-content pre .hljs-addition {
-  color: #86efac;
-  /* green-300 */
+  color: #34d399;
+  font-weight: 500;
 }
 
 .dark #post-content pre .hljs-number,
-.dark #post-content pre .hljs-attr,
-.dark #post-content pre .hljs-attribute,
+.dark #post-content pre .hljs-regexp,
+.dark #post-content pre .hljs-variable,
 .dark #post-content pre .hljs-template-variable,
-.dark #post-content pre .hljs-variable {
-  color: #fde68a;
-  /* amber-200 */
-}
-
+.dark #post-content pre .hljs-link,
+.dark #post-content pre .hljs-name,
+.dark #post-content pre .hljs-selector-id,
+.dark #post-content pre .hljs-selector-class,
+.dark #post-content pre .hljs-selector-attr,
+.dark #post-content pre .hljs-selector-pseudo,
+.dark #post-content pre .hljs-meta,
+.dark #post-content pre .hljs-doctag,
 .dark #post-content pre .hljs-title,
 .dark #post-content pre .hljs-section,
-.dark #post-content pre .hljs-selector-id,
-.dark #post-content pre .hljs-selector-class {
-  color: #c4b5fd;
-  /* violet-300 */
-}
-
-.dark #post-content pre .hljs-name,
-.dark #post-content pre .hljs-tag,
-.dark #post-content pre .hljs-meta {
-  color: #fca5a5;
-  /* red-300 */
-}
-
-/* Selection inside code blocks in dark mode */
-.dark #post-content pre ::selection {
-  background: rgba(96, 165, 250, 0.25);
-  /* blue-400/25 */
+.dark #post-content pre .hljs-deletion,
+.dark #post-content pre .hljs-subst,
+.dark #post-content pre .hljs-attr,
+.dark #post-content pre .hljs-attribute {
+  color: #f1f5f9;
 }
 
 .prose {
@@ -1360,8 +1502,8 @@ body {
 }
 
 .prose code {
-  background-color: #8b8989;
-  color: #0A0A50;
+  background-color: #e0e7ff;
+  color: #1e3a8a;
   padding: 0.15em 0.35em;
   display: inline;
   vertical-align: baseline;
@@ -1428,22 +1570,22 @@ body {
 /* Dark mode overrides for stronger contrast */
 @media (prefers-color-scheme: dark) {
   .prose h1 {
-    color: #1a1818;
+    color: #f1f5f9;
     font-weight: 700;
   }
 
   .prose h2 {
-    color: #1a1818;
+    color: #e2e8f0;
     font-weight: 600;
   }
 
   .prose h3 {
-    color: #1a1818;
+    color: #cbd5e1;
     font-weight: 600;
   }
 
   .prose h4 {
-    color: #1a1818;
+    color: #cbd5e1;
     font-weight: 600;
   }
 

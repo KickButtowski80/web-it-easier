@@ -64,6 +64,17 @@ const routes = [
     component: () => import('../views/Blog.vue'),
   },
   {
+    path: '/blog/posts/:tag',
+    name: 'BlogPostsByTag',
+    component: () => import('../views/Blog.vue'),
+    props: true
+  },
+  {
+    path: '/blog/archive',
+    name: 'BlogArchive',
+    component: () => import('../views/BlogArchive.vue'),
+  },
+  {
     path: '/blog/:slug',
     name: 'BlogPost',
     component: () => import('../views/BlogPost.vue'),

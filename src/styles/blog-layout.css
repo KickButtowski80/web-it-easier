@@ -1,0 +1,26 @@
+/* Blog Layout with Sidebar */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.blog-layout {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .container.blog-container {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    align-items: start;
+  }
+  
+  .blog-sidebar {
+    position: sticky;
+    top: 7.5rem;
+    align-self: start;
+  }
+}

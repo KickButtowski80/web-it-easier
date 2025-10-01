@@ -1,5 +1,5 @@
 <template>
-    <section class="admin-form relative">
+    <section id="main-content" class="admin-form relative" role="region" aria-labelledby="form-heading">
         <!-- Loading Overlay Component with custom screen reader text -->
         <LoadingOverlay :isLoading="isLoading" :fullPage="false" :message="'Loading post data...'"
             :subMessage="'Please wait while we retrieve your content'">
@@ -11,52 +11,213 @@
 
         <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>
         <form @submit.prevent="handleSubmit" aria-labelledby="form-heading" :class="{ 'opacity-50': isLoading }"
-            :aria-busy="isLoading">
+            :aria-busy="isLoading" novalidate>
             <div class="form-group">
-                <label for="title">Title</label>
-                <input id="title" v-model="formData.title" type="text" placeholder="Enter post title" required
-                    :aria-invalid="formErrors.title ? 'true' : 'false'" autocomplete="off">
-                <div v-if="formErrors.title" class="error-message" role="alert">{{ formErrors.title }}</div>
-            </div>
+                <label for="title">Title <span class="sr-only">(required)</span></label>
+                <input 
+                    id="title" 
+                    v-model="formData.title" 
+                    type="text" 
+                    placeholder="Enter post title" 
+                    required
+                    :aria-invalid="formErrors.title ? 'true' : 'false'"
+                    :aria-describedby="formErrors.title ? 'title-error' : undefined"
+                    autocomplete="off"
+                    aria-required="true">
 
-            <div class="form-group">
-                <label for="date">Date</label>
-                <input id="date" v-model="formData.date" type="date" required
-                    :aria-invalid="formErrors.date ? 'true' : 'false'">
-                <div v-if="formErrors.date" class="error-message" role="alert">{{ formErrors.date }}</div>
-            </div>
-
-            <div class="form-group">
-                <label for="readingTime">Reading Time (minutes)</label>
-                <input id="readingTime" v-model.number="formData.readingTime" type="number" min="1" required
-                    :aria-invalid="formErrors.readingTime ? 'true' : 'false'" aria-describedby="readingTimeHint">
-                <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
-                <div v-if="formErrors.readingTime" class="error-message" role="alert">{{ formErrors.readingTime }}</div>
-            </div>
-
-            <div class="form-group">
-                <label for="featureImage">Feature Image URL</label>
-                <input id="featureImage" v-model="formData.featureImage" type="url" placeholder="Enter image URL"
-                    :aria-invalid="formErrors.featureImage ? 'true' : 'false'">
-                <div v-if="formErrors.featureImage" class="error-message" role="alert">{{ formErrors.featureImage }}
+                <div 
+                    v-if="formErrors.title" 
+                    id="title-error" 
+                    class="error-message" 
+                    role="alert" 
+                    aria-live="assertive">
+                    {{ formErrors.title }}
                 </div>
             </div>
 
             <div class="form-group">
+                <label for="date">Publication Date <span class="sr-only">(required)</span></label>
+                <input 
+                    id="date" 
+                    v-model="formData.date" 
+                    type="date" 
+                    required
+                    :aria-invalid="formErrors.date ? 'true' : 'false'"
+                    :aria-describedby="formErrors.date ? 'date-error' : undefined"
+                    aria-required="true">
+                <div 
+                    v-if="formErrors.date" 
+                    id="date-error" 
+                    class="error-message" 
+                    role="alert" 
+                    aria-live="assertive">
+                    {{ formErrors.date }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="readingTime">Reading Time (minutes) <span class="sr-only">(required)</span></label>
+                <input 
+                    id="readingTime" 
+                    v-model.number="formData.readingTime" 
+                    type="number" 
+                    min="1" 
+                    required
+                    :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
+                    :aria-describedby="`readingTimeHint ${formErrors.readingTime ? 'readingTime-error' : ''}`"
+                    aria-required="true">
+                <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
+                <div 
+                    v-if="formErrors.readingTime" 
+                    id="readingTime-error" 
+                    class="error-message" 
+                    role="alert" 
+                    aria-live="assertive">
+                    {{ formErrors.readingTime }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="featureImage">Feature Image URL</label>
+                <input 
+                    id="featureImage" 
+                    v-model="formData.featureImage" 
+                    type="url" 
+                    placeholder="https://example.com/image.jpg"
+                    :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
+                    :aria-describedby="formErrors.featureImage ? 'featureImage-error' : undefined"
+                    aria-describedby="featureImageHint"
+                    inputmode="url">
+                <div id="featureImageHint" class="hint">Enter the full URL of the image (e.g., https://example.com/image.jpg)</div>
+                <div 
+                    v-if="formErrors.featureImage" 
+                    id="featureImage-error" 
+                    class="error-message" 
+                    role="alert"
+                    aria-live="assertive">
+                    {{ formErrors.featureImage }}
+                </div>
+            </div>
+
+            <!-- Tags Input Field -->
+            <div class="form-group">
+                <label for="tags-input">Tags <span class="tag-counter">({{ formData.tags.length }}/5)</span></label>
+                <div class="tags-input-container">
+                    <!-- Display existing tags -->
+                    <div class="tags-display" v-if="formData.tags.length > 0">
+                        <span v-for="(tag, index) in formData.tags" :key="tag" class="tag-chip">
+                            {{ tag }}
+                            <button type="button" @click="removeTag(index)" class="tag-remove"
+                                aria-label="Remove tag">&times;</button>
+                        </span>
+                    </div>
+
+                    <!-- Tag input -->
+                    <div class="tag-input-wrapper">
+                        <input 
+                            v-if="formData.tags.length < 5" 
+                            id="tags-input" 
+                            ref="tagInput" 
+                            v-model="newTag"
+                            required
+                            @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
+                            @focus="handleFocus" 
+                            @blur="handleBlur" 
+                            @keydown.down.prevent="focusNextSuggestion(1)"
+                            @keydown.up.prevent="focusPreviousSuggestion()" 
+                            @keydown.esc="isSuggestionsOpen = false"
+                            type="text"
+                            placeholder="Type a tag and press Enter to add"
+                            autocomplete="off"
+                            role="combobox"
+                            :aria-describedby="`tags-help ${formErrors.tags ? 'tags-error' : ''}`" 
+                            aria-autocomplete="list"
+                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" 
+                            aria-haspopup="listbox"
+                            :aria-controls="isSuggestionsOpen ? 'tag-suggestions' : undefined"
+                            :aria-activedescendant="isSuggestionsOpen ? activeSuggestionId : undefined"
+                            :aria-invalid="formErrors.tags ? 'true' : 'false'"
+                            aria-required="true">
+                            <div v-if="formErrors.tags" id="tags-error" class="error-message" role="alert" aria-live="polite">{{ formErrors.tags }}</div>
+                        <Transition name="tag-suggestions-fade">
+                            <div v-if="isSuggestionsOpen" class="tag-suggestions-container">
+                                <ul id="tag-suggestions" class="tag-suggestions" role="listbox"
+                                    :aria-label="`${filteredTags.length} suggestions available`">
+                                    <li v-for="(tag, index) in filteredTags" :key="tag" :id="`suggestion-${index}`"
+                                        @mousedown.prevent="selectTag(tag)" @mouseenter="focusedSuggestionIndex = index"
+                                        role="option" :aria-selected="focusedSuggestionIndex === index"
+                                        :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]">
+                                        <div class="tag-suggestion-left">
+                                            <span class="tag-suggestion-icon" aria-hidden="true">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M7 7H17M7 12H17M7 17H14" stroke="currentColor"
+                                                        stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
+                                            </span>
+                                            <span class="tag-suggestion-label" v-html="highlightMatch(tag)"></span>
+                                        </div>
+                                        <span class="tag-suggestion-action">
+                                            <kbd class="kbd">Enter</kbd>
+                                        </span>
+                                    </li>
+                                </ul>
+                                <div class="tag-suggestions-footer">
+                                    <span class="tag-suggestions-count">{{ filteredTags.length }} suggestions</span>
+                                    <span class="tag-suggestions-hint">
+                                        <kbd class="kbd">↑</kbd>
+                                    </span>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
+
+                    <div id="tags-help" class="tag-help-container" role="region" aria-labelledby="tag-help-heading">
+                        <div class="tag-help-header">
+                            <h4 id="tag-help-heading" class="tag-help-title">
+                                <span class="tag-help-title-icon" aria-hidden="true">💡</span>
+                                Quick Help
+                            </h4>
+                        </div>
+
+                        <div class="tag-help-content">
+                            <p class="tag-help-summary">
+                                <strong>How to add tags:</strong>
+                                <span v-if="formData.tags.length < 5">
+                                    Type a tag name and press <kbd>Enter</kbd>, or click outside
+                                    the
+                                    input field.
+                                </span>
+                                <span v-else>
+                                    <mark class="limit-highlight">Tag limit reached (5/5).</mark> <strong>Remove any tag
+                                        above</strong> to show the input field again.
+                                </span>
+                                <strong>Rules:</strong> Maximum 5 tags, each up to 20 characters. Use only letters,
+                                numbers, and
+                                hyphens.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="content">Content (Markdown)</label>
-                <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
-                    <span id="markdown-editor-label" class="sr-only">Markdown editor with preview</span>
+                    <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
+                    <span id="markdown-editor-label" class="sr-only">Markdown editor with preview. Use tab to switch between edit and preview modes.</span>
 
                     <!-- Tab Navigation -->
-                    <div class="markdown-tabs">
-                        <button type="button" @click="activeTab = 'edit'"
+                    <div class="markdown-tabs" role="tablist" aria-label="Markdown editor modes">
+                        <button id="edit-tab" type="button" role="tab" @click="activeTab = 'edit'"
                             :class="['tab-button', { active: activeTab === 'edit' }]" aria-controls="editor-panel"
-                            :aria-selected="activeTab === 'edit'">
+                            :aria-selected="activeTab === 'edit'"
+                            :tabindex="activeTab === 'edit' ? 0 : -1">
                             <span class="icon">✏️</span> Edit
                         </button>
-                        <button type="button" @click="activeTab = 'preview'"
+                        <button id="preview-tab" type="button" role="tab" @click="activeTab = 'preview'"
                             :class="['tab-button', { active: activeTab === 'preview' }]" aria-controls="preview-panel"
-                            :aria-selected="activeTab === 'preview'">
+                            :aria-selected="activeTab === 'preview'"
+                            :tabindex="activeTab === 'preview' ? 0 : -1">
                             <span class="icon">👁️</span> Preview
                         </button>
                     </div>
@@ -73,14 +234,22 @@
                             @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
                             @keydown.enter.exact.prevent="handleEnter1" @keydown.esc="handleEsc"
                             placeholder="Write your post content in markdown..." required
-                            :aria-invalid="formErrors.content ? 'true' : 'false'" rows="15">
+                            :aria-invalid="formErrors.content ? 'true' : 'false'"
+                            :aria-describedby="contentDescribedBy" rows="15">
                 </textarea>
-                        <div v-if="formErrors.content" class="error-message" role="alert">{{ formErrors.content }}</div>
+                        <div v-if="formErrors.content" id="content-error" class="error-message" role="alert"
+                            aria-live="polite">
+                            {{ formErrors.content }}
+                        </div>
                     </div>
 
                     <!-- Preview Panel -->
                     <div id="preview-panel" class="whitespace-pre-wrap tab-size-4" v-show="activeTab === 'preview'"
-                        role="tabpanel" aria-labelledby="preview-tab" aria-live="polite">
+                        role="tabpanel" 
+                        aria-labelledby="preview-tab" 
+                        :aria-hidden="activeTab !== 'preview'"
+                        tabindex="0"
+                        aria-live="polite">
                         <div class="preview-header">
                             <h2 id="preview-heading" class="text-xl font-semibold mb-2 sr-only">Preview</h2>
                             <article v-html="previewContent" class="preview-content prose lg:prose-lg max-w-none"
@@ -111,9 +280,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, watch, computed, onMounted, nextTick } from 'vue'
+import { normalizeTag, findSimilarTag, TagNormalizer } from '@/utils/tagNormalizer';
 import { useRouter, useRoute } from 'vue-router'
-import { addPost, updatePost, getPostById, signOut, auth } from '@/config/firebase'
+import { addPost, updatePost, getPostById, signOut, auth, validateTags } from '@/config/firebase'
 import LoadingOverlay from '@/components/UI/LoadingOverlay.vue'
 import { renderMarkdown } from '@/utils/markdown';
 import Notification from '@/components/UI/Notification.vue'
@@ -149,12 +319,33 @@ const formData = ref({
     date: new Date().toISOString().split('T')[0],
     readingTime: 5,
     featureImage: '',
-    content: ''
+    content: '',
+    tags: [] // Add tags field
 });
 
+
+// Tag-related reactive variables
+const allTags = ref([]);
+const tagInput = ref(null);
+const newTag = ref('');
+const showTagLimitMessage = ref(false);
+const showSuggestions = ref(false);
+const isTagInputFocused = ref(false);
+const focusedSuggestionIndex = ref(-1);
+let blurTimeoutId = null;
+
+
+const contentTextarea = ref(null);
+const orderListCounters = ref({});
 // Load post data if in edit mode
 onMounted(async () => {
+
+    const normalizer = new TagNormalizer();
+    const allUniqueTags = Array.from(normalizer.aliasToCanonical.keys());
     const currentPostId = props.id || route.params.id;
+
+    allTags.value = [...new Set(allUniqueTags)].sort();
+
     if (currentPostId) {
         isEditMode.value = true;
         postId.value = currentPostId;
@@ -168,7 +359,8 @@ onMounted(async () => {
                     date: post.date ? new Date(post.date.seconds * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
                     readingTime: post.readingTime || 5,
                     featureImage: post.featureImage || '',
-                    content: post.content || ''
+                    content: post.content || '',
+                    tags: post.tags || [] // Load existing tags
                 };
             }
         } catch (error) {
@@ -180,8 +372,125 @@ onMounted(async () => {
     }
 });
 
-const contentTextarea = ref(null);
-const orderListCounters = ref({});
+
+
+// Filter tags based on input
+const filteredTags = computed(() => {
+    if (!newTag.value) return [];
+    const searchTerm = newTag.value.toLowerCase();
+    const normalizedExistingTags = new Set(formData.value.tags.map(tag => normalizeTag(tag)));
+    return allTags.value
+        .filter(tag => {
+            const lowerTag = tag.toLowerCase();
+            const normalizedTag = normalizeTag(tag);
+            return lowerTag.includes(searchTerm) &&
+                !formData.value.tags.includes(tag) &&
+                !normalizedExistingTags.has(normalizedTag);
+        })
+        .slice(0, 5); // Show max 5 suggestions
+});
+
+watch([
+    () => newTag.value,
+    () => filteredTags.value.length,
+    () => isTagInputFocused.value,
+    () => formData.value.tags.length
+]
+    , ([input, suggestionsLength, isFocused, tagCount]) => {
+        if (tagCount >= 5) {
+            showSuggestions.value = false;
+            return;
+        }
+        const hasInput = input && input.trim().length > 0;
+
+        if (isFocused && hasInput && suggestionsLength > 0) {
+            showSuggestions.value = true;
+        } else if (!isFocused || !hasInput || suggestionsLength === 0) {
+            showSuggestions.value = false;
+        }
+    });
+
+const escapeHtml = (unsafe) => {
+    return unsafe.replace(/[&<>"]+/g, (char) => {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;'
+        };
+        return map[char] || char;
+    });
+};
+
+const highlightMatch = (tag) => {
+    if (!newTag.value) return escapeHtml(tag);
+    const escapedTag = escapeHtml(tag);
+    const escapedQuery = escapeHtml(newTag.value.trim());
+    if (!escapedQuery) return escapedTag;
+
+    const regex = new RegExp(`(${escapedQuery.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})`, 'ig');
+    return escapedTag.replace(regex, '<mark>$1</mark>');
+};
+
+// Add a tag from suggestions
+const selectTag = (tag) => {
+
+    if (formData.value.tags.length >= 5) return;
+
+    const normalizedSelectedTag = normalizeTag(tag);
+    const existingNormalizedTags = formData.value.tags.map(existingTag => normalizeTag(existingTag));
+
+    if (existingNormalizedTags.includes(normalizedSelectedTag)) {
+        showNotify(`Tag '${tag}' is too similar to an existing tag.`, 'error');
+        return;
+    }
+
+    formData.value.tags.push(tag.toLowerCase());
+    newTag.value = '';
+    showSuggestions.value = false;
+    focusedSuggestionIndex.value = -1;
+};
+// Focus management for keyboard navigation
+const focusNextSuggestion = (increment = 1) => {
+    if (!showSuggestions.value || filteredTags.value.length === 0) return;
+
+    const newIndex = focusedSuggestionIndex.value + increment;
+    if (newIndex >= 0 && newIndex < filteredTags.value.length) {
+        focusedSuggestionIndex.value = newIndex;
+
+    } else if (newIndex >= filteredTags.value.length) {
+        // Wrap to first item if at the end
+        focusedSuggestionIndex.value = 0;
+
+    }
+};
+
+const focusPreviousSuggestion = () => {
+    if (!showSuggestions.value || filteredTags.value.length === 0) return;
+    
+    const newIndex = focusedSuggestionIndex.value - 1;
+    if (newIndex >= 0) {
+        focusedSuggestionIndex.value = newIndex;
+    } else {
+        // Wrap to last item if at the beginning
+        focusedSuggestionIndex.value = filteredTags.value.length - 1;
+
+    }
+};
+
+
+const isSuggestionsOpen = computed(() => {
+    return showSuggestions.value && filteredTags.value.length > 0 && isTagInputFocused.value;
+});
+
+const activeSuggestionId = computed(() => {
+    if (!isSuggestionsOpen.value) return '';
+    const index = focusedSuggestionIndex.value;
+    if (index >= 0 && index < filteredTags.value.length) {
+        return `suggestion-${index}`;
+    }
+    return '';
+});
 
 
 const formErrors = ref({
@@ -189,8 +498,25 @@ const formErrors = ref({
     date: '',
     readingTime: '',
     featureImage: '',
-    content: ''
+    content: '',
+    tags: '',
 });
+
+const resetFormErrors = () => {
+    Object.keys(formErrors.value).forEach((key) => {
+        formErrors.value[key] = '';
+    });
+};
+
+const tagsAriaDescribedBy = computed(() => {
+    return formErrors.value.tags ? 'tagHelp tags-error' : 'tagHelp';
+});
+
+const titleDescribedBy = computed(() => formErrors.value.title ? 'title-error' : undefined);
+const dateDescribedBy = computed(() => formErrors.value.date ? 'date-error' : undefined);
+const readingTimeDescribedBy = computed(() => formErrors.value.readingTime ? 'readingTimeHint readingTime-error' : 'readingTimeHint');
+const featureImageDescribedBy = computed(() => formErrors.value.featureImage ? 'featureImage-error' : undefined);
+const contentDescribedBy = computed(() => formErrors.value.content ? 'content-error' : undefined);
 
 const isSubmitting = ref(false);
 const isLoading = ref(false);
@@ -206,6 +532,31 @@ const buttonText = computed(() => {
     return isEditMode.value ? 'Update Post' : 'Publish Post';
 });
 
+const handleFocus = () => {
+    if (blurTimeoutId) {
+        clearTimeout(blurTimeoutId);
+        blurTimeoutId = null;
+    }
+
+    isTagInputFocused.value = true;
+
+    if (newTag.value && newTag.value.trim().length > 0 && filteredTags.value.length > 0) {
+        showSuggestions.value = true;
+    }
+};
+
+// Blur handler with delay for better UX
+const handleBlur = () => {
+    if (blurTimeoutId) {
+        clearTimeout(blurTimeoutId);
+    }
+
+    blurTimeoutId = setTimeout(() => {
+        isTagInputFocused.value = false;
+        showSuggestions.value = false;
+        blurTimeoutId = null;
+    }, 200);
+};
 
 /**
  * Wrapper for handleTab utility function that passes the reactive formData object
@@ -578,7 +929,7 @@ const navigateToManagePosts = () => {
     router.push('/admin/manage-posts');
 };
 const cancelEdit = () => {
-    const { title, content, featureImage, date, readingTime } = formData.value;
+    const { title, content, featureImage, date, readingTime, tags } = formData.value;
     const defaultDate = new Date().toISOString().split('T')[0];
 
     // Check if any field has been modified from its default/empty state
@@ -586,7 +937,8 @@ const cancelEdit = () => {
         content ||
         featureImage ||
         date !== defaultDate ||
-        readingTime !== 5;
+        readingTime !== 5 ||
+        (tags && tags.length > 0); // Check for tags changes
 
     if (!hasChanges) {
         navigateToManagePosts();
@@ -597,11 +949,14 @@ const cancelEdit = () => {
 
 const validateForm = () => {
     let isValid = true;
-    formErrors.value = {}; // Reset errors
+    resetFormErrors();
 
     // Title validation
     if (!formData.value.title?.trim()) {
         formErrors.value.title = 'Title is required';
+        isValid = false;
+    } else if (!/[a-z0-9]/i.test(formData.value.title)) {
+        formErrors.value.title = 'Please include at least one letter or number in the title.';
         isValid = false;
     }
 
@@ -611,6 +966,12 @@ const validateForm = () => {
         isValid = false;
     }
 
+    console.log('tags on submit', formData.value.tags.length);
+    // Tags validation
+    if (!formData.value.tags?.length) {
+        formErrors.value.tags = 'At least one tag is required';
+        isValid = false;
+    }
     // Content validation
     if (!formData.value.content?.trim()) {
         formErrors.value.content = 'Content is required';
@@ -618,6 +979,76 @@ const validateForm = () => {
     }
 
     return isValid;
+};
+
+// Tag management is now handled by the tagNormalizer utility
+
+const addTag = () => {
+    if (!newTag.value.trim()) return;
+
+    // Check tag limit BEFORE any processing
+    if (formData.value.tags.length >= 5) {
+        showNotify('Maximum 5 tags reached. Remove a tag to add a new one.', 'error');
+        return; // Stop here - don't process the tag
+    }
+
+    try {
+        const inputTag = newTag.value.trim();
+        const normalizedInputTag = normalizeTag(inputTag);
+
+        // Check for exact duplicates first
+        const existingNormalizedTags = formData.value.tags.map(tag => normalizeTag(tag));
+        if (existingNormalizedTags.includes(normalizedInputTag)) {
+            showNotify(`Tag '${inputTag}' already exists (case-insensitive)`, 'error');
+            return;
+        }
+
+        // Check for similar tags
+        const similarTag = findSimilarTag(inputTag, formData.value.tags);
+        if (similarTag) {
+            showNotify(`Tag '${inputTag}' is too similar to existing tag '${similarTag}'. Please use a more specific tag.`, 'error');
+            return;
+        }
+
+        // Validate the tag using our backend validation
+        const validatedTag = [inputTag];
+
+        // Use validateTags to check the new tag
+        validateTags([...formData.value.tags, ...validatedTag]);
+
+        // If validation passes, add the tag
+        formData.value.tags.push(inputTag.toLowerCase());
+        newTag.value = '';
+
+        // Show limit message when reaching 5 tags, auto-hide after 5 seconds
+        if (formData.value.tags.length === 5) {
+            showTagLimitMessage.value = true;
+            setTimeout(() => {
+                showTagLimitMessage.value = false;
+            }, 5000); // 5 seconds
+        }
+
+        // Focus back to input for next tag
+        nextTick(() => {
+            tagInput.value?.focus();
+        });
+
+    } catch (error) {
+        showNotify(error.message, 'error');
+        // Keep focus on input for correction
+        nextTick(() => {
+            tagInput.value?.focus();
+        });
+    }
+};
+
+const removeTag = (index) => {
+    formData.value.tags.splice(index, 1);
+
+    // Focus back to input
+    nextTick(() => {
+        tagInput.value?.focus();
+    });
 };
 
 const handleSubmit = async () => {
@@ -664,7 +1095,8 @@ const handleSubmit = async () => {
                 date: new Date().toISOString().split('T')[0],
                 readingTime: 5,
                 featureImage: '',
-                content: ''
+                content: '',
+                tags: [] // Reset tags
             };
         }
     } catch (error) {
@@ -890,7 +1322,6 @@ textarea {
 
 .cancel-btn {
     padding: 0.8rem 1.5rem;
-
     height: 46px;
     display: flex;
     align-items: center;
@@ -970,32 +1401,6 @@ textarea {
     background: #f1f5f9;
     border: 1px solid #e2e8f0;
     border-radius: 6px 6px 0 0;
-    margin-bottom: -1px;
-}
-
-.toolbar-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    padding: 0.4rem 0.6rem;
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    color: #4a5568;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.toolbar-btn:hover {
-    background: #f8fafc;
-    border-color: #cbd5e0;
-    color: #4c1d95;
-}
-
-.toolbar-btn:active {
-    background: #edf2f7;
     transform: translateY(1px);
 }
 
@@ -1074,9 +1479,10 @@ textarea {
 }
 
 .error-message {
-    color: #e53e3e;
+    color: #c53030; /* Darker red for better contrast (4.6:1 on white) */
     font-size: 0.875rem;
     margin-top: 0.25rem;
+    font-weight: 500; /* Slightly bolder for better readability */
     font-weight: 500;
 }
 
@@ -1140,5 +1546,454 @@ textarea {
     .markdown-editor {
         grid-template-columns: 1fr;
     }
+}
+
+/* Tag Input Styles */
+.tags-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.375rem, 1.2vw + 0.1rem, 0.75rem);
+    margin-bottom: 0.5rem;
+}
+
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    background: #5b28a7;
+    color: white;
+    padding: clamp(0.2rem, 1vw + 0.05rem, 0.3rem) clamp(0.4rem, 1.6vw + 0.1rem, 0.6rem);
+    border-radius: 16px;
+    font-size: clamp(0.8rem, 0.8vw + 0.6rem, 0.9rem);
+    font-weight: 500;
+    border: none;
+    gap: clamp(0.375rem, 0.9vw + 0.15rem, 0.5rem);
+}
+
+.tag-remove {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0;
+    margin-left: 0.25rem;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.tag-remove:hover {
+    opacity: 1;
+}
+
+.tag-input-wrapper {
+    position: relative;
+    margin-bottom: 4px;
+    z-index: 1;
+}
+
+.tag-input-wrapper input {
+    width: 100%;
+    padding: clamp(0.625rem, 0.9vw + 0.45rem, 0.85rem);
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.tag-input-wrapper input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.tag-input-wrapper input:disabled {
+    background-color: #f7fafc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.tag-counter {
+    color: #4c1d95;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+/* Tag Suggestions Container */
+.tag-suggestions-container {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    z-index: 50;
+    overflow: hidden;
+    transform-origin: top;
+    transition: all 0.2s ease-out;
+}
+
+/* Tag Suggestions List */
+.tag-suggestions {
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* Individual Suggestion Item */
+.tag-suggestion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    color: #1e293b;
+}
+
+.tag-suggestion:hover,
+.tag-suggestion.focused {
+    background-color: #f8fafc;
+    color: #4f46e5;
+}
+
+.tag-suggestion:active {
+    background-color: #f1f5f9;
+    transform: translateY(1px);
+}
+
+/* Suggestion Content */
+.tag-suggestion-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.tag-suggestion-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.tag-suggestion-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag-suggestion-label mark {
+    background-color: #e0e7ff;
+    color: #4f46e5;
+    padding: 0 2px;
+    border-radius: 3px;
+}
+
+.tag-suggestion-action {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-left: 12px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Suggestions Footer */
+.tag-suggestions-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    border-top: 1px solid #f1f5f9;
+    background-color: #f8fafc;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.tag-suggestions-count {
+    font-weight: 500;
+}
+
+.tag-suggestions-hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Keyboard Key Styling */
+.kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #334155;
+    background-color: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Animations */
+.tag-suggestions-fade-enter-active,
+.tag-suggestions-fade-leave-active {
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.tag-suggestions-fade-enter-from,
+.tag-suggestions-fade-leave-to {
+    opacity: 0;
+    transform: translateY(-5px);
+}
+
+/* Scrollbar Styling */
+.tag-suggestions::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tag-suggestions::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.tag-suggestions::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}
+
+.tag-suggestions::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}
+
+/* Dark Mode Support */
+.dark .tag-suggestions-container {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+.dark .tag-suggestion {
+    color: #e2e8f0;
+}
+
+.dark .tag-suggestion:hover,
+.dark .tag-suggestion.focused {
+    background-color: #334155;
+    color: #818cf8;
+}
+
+.dark .tag-suggestion:active {
+    background-color: #475569;
+}
+
+.dark .tag-suggestion-icon {
+    color: #64748b;
+}
+
+.dark .tag-suggestion-label mark {
+    background-color: #3730a3;
+    color: #a5b4fc;
+}
+
+.dark .tag-suggestions-footer {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+.dark .kbd {
+    background-color: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+.tag-counter.warning {
+    color: #dd6b20;
+}
+
+.tag-counter.error {
+    color: #e53e3e;
+}
+
+/* Enhanced Tag Help Styles */
+.tag-help-container {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: clamp(1rem, 1vw + 0.8rem, 1.25rem);
+    margin-top: clamp(0.5rem, 0.8vw + 0.3rem, 0.75rem);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.tag-help-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4c1d95 0%, #7c3aed 50%, #a855f7 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.tag-help-header {
+    margin-bottom: clamp(0.75rem, 0.9vw + 0.5rem, 1rem);
+    padding-bottom: clamp(0.5rem, 0.8vw + 0.3rem, 0.75rem);
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tag-help-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: clamp(0.8rem, 0.8vw + 0.6rem, 0.9rem);
+    font-weight: 600;
+    color: #4c1d95;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tag-help-title-icon {
+    font-size: 1rem;
+}
+
+.tag-help-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vw + 0.25rem, 0.75rem);
+    margin: 0;
+}
+
+.tag-help-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.tag-help-term {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.4rem, 0.7vw + 0.2rem, 0.5rem);
+    font-size: clamp(0.8rem, 0.7vw + 0.55rem, 0.85rem);
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+}
+
+.tag-help-description {
+    font-size: clamp(0.8rem, 0.7vw + 0.55rem, 0.85rem);
+    color: #4a5568;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0 clamp(0.1rem, 0.4vw, 0.25rem) 0 clamp(1.5rem, 1.8vw + 0.8rem, 2rem);
+    padding: 0.125rem clamp(0.25rem, 0.7vw, 0.5rem);
+}
+
+/* Simplified tag help content */
+.tag-help-content {
+    padding: 0.5rem 0;
+}
+
+.tag-limit-message {
+    margin-top: 0.75rem;
+    padding: 0.5rem;
+    background-color: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 4px;
+    color: #92400e;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dark .tag-limit-message {
+    background-color: #451a03;
+    border-color: #d97706;
+    color: #fbbf24;
+}
+
+.tag-help-icon {
+    font-size: clamp(1rem, 0.6vw + 0.85rem, 1.25rem);
+    width: clamp(1.25rem, 1vw + 0.9rem, 1.5rem);
+    height: clamp(1.25rem, 1vw + 0.9rem, 1.5rem);
+}
+
+/* Disabled input message styling */
+.tag-input-disabled-message {
+    padding: clamp(0.5rem, 0.8vw + 0.3rem, 0.75rem);
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    color: #64748b;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.dark .tag-input-disabled-message {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+.tag-help-text kbd {
+    background: #e2e8f0;
+    border: 1px solid #cbd5e0;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .2);
+    color: #374151;
+    display: inline-block;
+    font-family: 'Fira Code', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0.125rem 0.375rem;
+    margin: 0 0.125rem;
+}
+
+.dark .tag-limit-message {
+    background-color: #451a03;
+    border-color: #d97706;
+    color: #fbbf24;
+}
+
+
+/* Highlighted text for limit reached */
+.limit-highlight {
+    background-color: #fef3c7;
+    color: #92400e;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-weight: 600;
+}
+
+.dark .limit-highlight {
+    background-color: #451a03;
+    color: #fbbf24;
 }
 </style>

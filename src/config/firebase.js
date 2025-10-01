@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, doc, getDoc } from "firebase/firestore/lite"; // Lite SDK for reads
+import { getFirestore, collection, getDocs, doc, getDoc, query, where } from "firebase/firestore/lite"; // Lite SDK for reads
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail, 
   onAuthStateChanged, reauthenticateWithCredential, EmailAuthProvider, updatePassword as firebaseUpdatePassword,
   browserLocalPersistence, browserSessionPersistence, setPersistence
@@ -20,6 +20,13 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+// Connect to emulator in development
+// if (import.meta.env.DEV) {
+//   const { connectFirestoreEmulator } = await import('firebase/firestore/lite');
+//   connectFirestoreEmulator(db, '127.0.0.1', 8080);
+//   console.log('Connected to Firestore emulator');
+// }
 
 // Initialize Firebase Auth
 const auth = getAuth(app);
@@ -129,10 +136,93 @@ const withRetry = async (operation, maxRetries = 3) => {
   }
 };
 
+/**
+ * Public API function to get a post by its slug
+ *
+ * @param {string} slug - The slug of the post to retrieve
+ * @returns {Object|null} Formatted post object or null if not found/error
+ */
+export const getPostBySlug = async (slug) => {
+  if (!slug) return null;
 
+  try {
+    const post = await findPostBySlug(slug);
+    if (post != null) {
+      const data = post.data();
+      return {
+        id: post.id,
+        ...data,
+        date: data?.date ? formatDate(data.date.toDate()) : 'No date'
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error in getPostBySlug:', error);
+    return null;
+  }
+};
 
+/**
+ * Validate tags array according to the requirements
+ * - Max 5 tags per post
+ * - Each tag max 20 characters
+ * - Alphanumeric + hyphens/underscores only
+ * - No duplicates
+ * - Convert to lowercase
+ * 
+ * @param {Array<string>} tags - Array of tag strings
+ * @returns {Array<string>} Validated and cleaned tags array
+ * @throws {Error} If validation fails
+ */
+export const validateTags = (tags) => {
+  if (!Array.isArray(tags)) {
+    throw new Error('Tags must be an array');
+  }
+  
+  if (tags.length > 5) {
+    throw new Error('Maximum 5 tags allowed per post');
+  }
+  
+  const cleanedTags = [];
+  const seenTags = new Set();
+  
+  for (const tag of tags) {
+    if (typeof tag !== 'string') {
+      throw new Error('All tags must be strings');
+    }
+    
+    const trimmedTag = tag.trim();
+    if (trimmedTag.length === 0) continue; // Skip empty tags
+    
+    if (trimmedTag.length > 20) {
+      throw new Error(`Tag "${trimmedTag}" exceeds 20 characters`);
+    }
+    
+    // Check for valid characters: alphanumeric, hyphens, underscores
+    const validTagRegex = /^[a-zA-Z0-9_-]+$/;
+    if (!validTagRegex.test(trimmedTag)) {
+      throw new Error(`Tag "${trimmedTag}" contains invalid characters. Only alphanumeric, hyphens, and underscores are allowed`);
+    }
+    
+    const lowerTag = trimmedTag.toLowerCase();
+    
+    // Step 1: Check for duplicates BEFORE adding
+    if (seenTags.has(lowerTag)) {
+      throw new Error(`Duplicate tag: "${trimmedTag}"`);
+    }
+    
+    // Step 2: Add to seenTags (for future duplicate checks) AND to cleanedTags (for output)
+    seenTags.add(lowerTag);
+    cleanedTags.push(lowerTag);
+  }
+  
+  return cleanedTags;
+};
 
-
+/**
+ * Get all blog posts from Firestore
+ * @returns {Promise<Array>} Formatted array of blog posts with IDs and formatted dates
+ */
 export const getPosts = async () => {
   return withRetry(async () => {
     /* TEST RETRY MECHANISM: Uncomment to simulate network failures
@@ -168,19 +258,29 @@ export const getPosts = async () => {
  * @param {string} title - The title to search for
  * @returns {Object|null} Raw Firestore document reference or null if not found
  */
-const findPostByTitle = async (title) => {
+const findPostByField = async (field, value) => {
+  if (!field || typeof field !== 'string' || !value) return null;
+
   return withRetry(async () => {
+    const normalized = value.toLowerCase().trim();
     const postsRef = collection(db, 'posts');
-    const snapshot = await getDocs(postsRef);
+    const postsQuery = query(postsRef, where(field, '==', normalized));
+    const snapshot = await getDocs(postsQuery);
     if (snapshot.empty) return null;
-    const lowerTitle = title.toLowerCase().trim();
-    const post = snapshot.docs.find(doc => {
-      const data = doc.data();
-      return data.title && data.title.toLowerCase().trim() === lowerTitle;
-    })
-    return post || null;
+
+    return snapshot.docs.find(Boolean) || null;
   });
 };
+
+const findPostByTitle = async (title) => findPostByField('title', title);
+
+/**
+ * Internal helper function to find a post by its slug (case-insensitive)
+ *
+ * @param {string} slug - The slug to search for
+ * @returns {Object|null} Raw Firestore document reference or null if not found
+ */
+const findPostBySlug = async (slug) => findPostByField('slug', slug);
 /**
  * Public API function to get a post by its title
  * 
@@ -189,20 +289,23 @@ const findPostByTitle = async (title) => {
  * 2. Data formatting (especially for dates)
  * 3. A clean interface for components to consume
  * 
- * Used primarily for public-facing blog pages where posts are accessed by title/slug
- * 
+ * Used primarily for public-facing blog pages where posts are accessed by title
+ * but the slug is also available to maintain backwards compatibility.
+ *
  * @param {string} title - The title of the post to retrieve
  * @returns {Object|null} Formatted post object or null if not found/error
  */
 export const getPost = async (title) => {
+  if (!title) return null;
+
   try {
     const post = await findPostByTitle(title);
-    // Safe guard against undefined as well
     if (post != null) {
+      const data = post.data();
       return {
         id: post.id,
-        ...post.data(),
-        date: post.data().date ? formatDate(post.data().date.toDate()) : 'No date'
+        ...data,
+        date: data?.date ? formatDate(data.date.toDate()) : 'No date'
       };
     }
     return null;
@@ -235,9 +338,14 @@ export const addPost = async (postData) => {
   const existing = await findPostByTitle(postData.title);
   if (existing) throw new Error('A post with this title already exists!');
   
+  // Validate and clean tags
+  // empty array is for a post that is not having any tags
+  const validatedTags = validateTags(postData.tags || []);
+  
   // Create the post document
   const newPost = {
     ...postData,
+    tags: validatedTags, // Include validated tags
     date: postData.date instanceof Date ? postData.date : new Date(postData.date),
     createdAt: serverTimestamp(),
     slug: titleToSlug(postData.title)
@@ -333,6 +441,34 @@ export const getPostById = async (postId) => {
 };
 
 /**
+ * Get all unique tags from existing blog posts for auto-suggestions
+ * 
+ * This function collects all tags from all posts and returns a unique,
+ * sorted array of tag strings for use in the tag input component.
+ * 
+ * @returns {Promise<Array<string>>} Sorted array of unique tag strings
+ */
+export const getAllTags = async () => {
+  return withRetry(async () => {
+    const snapshot = await getDocs(collection(db, 'posts'));
+    const tagSet = new Set();
+    
+    snapshot.docs.forEach(doc => {
+      const data = doc.data();
+      if (data.tags && Array.isArray(data.tags)) {
+        data.tags.forEach(tag => {
+          if (typeof tag === 'string') {
+            tagSet.add(tag.toLowerCase().trim());
+          }
+        });
+      }
+    });
+    
+    return Array.from(tagSet).sort();
+  });
+};
+
+/**
  * Update an existing blog post in Firestore
  * 
  * This function performs several important operations:
@@ -361,11 +497,30 @@ export const updatePost = async (postId, postData) => {
     throw new Error('Another post with this title already exists!');
   }
 
+  // Validate and clean tags
+  // empty array is for a post that is not having any tags
+  const validatedTags = validateTags(postData.tags || []);
+
   // Update the post with new data and timestamp
   const postRef = doc(db, 'posts', postId);
+  
+  // Handle date conversion properly (Firestore Timestamp to Date)
+  let dateToUse = postData.date;
+  if (postData.date && typeof postData.date.toDate === 'function') {
+    // It's a Firestore Timestamp, convert to Date
+    dateToUse = postData.date.toDate();
+  } else if (postData.date instanceof Date) {
+    // It's already a Date
+    dateToUse = postData.date;
+  } else {
+    // Try to convert from string/other format
+    dateToUse = new Date(postData.date);
+  }
+  
   const updatedData = {
     ...postData,
-    date: postData.date instanceof Date ? postData.date : new Date(postData.date),
+    tags: validatedTags, // Include validated tags
+    date: dateToUse,
     updatedAt: serverTimestamp(),
     slug: titleToSlug(postData.title)
   };

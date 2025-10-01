@@ -1,15 +1,17 @@
 <template>
-  <a href="#main-content"
-    class="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:bg-white focus-visible:text-blue-500 focus-visible:py-2 focus-visible:px-4 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-opacity-50 focus-visible:z-[9999]">
-    Skip to main content
-  </a>
-  <Menu />
-  <GoBackTop />
+  <header role="banner" class="relative" aria-label="Site header">
+    <a href="#main-content"
+      class="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:bg-white focus-visible:text-blue-500 focus-visible:py-2 focus-visible:px-4 focus-visible:rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-opacity-50 focus-visible:z-[9999]">
+      Skip to main content
+    </a>
+    <Menu />
+  </header>
+ 
   <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
     :icon="notificationIcon" :duration="3000" />
   <main class="md:overflow-visible mt-[4rem] mb-1 pb-[50px]
      md:pb-0" id="main-content" tabindex="-1" role="main">
-
+     <GoBackTop />
     <router-view v-slot="{ Component }">
       <transition name="fade" mode="out-in">
         <!-- if render key is not used,
