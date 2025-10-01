@@ -153,10 +153,11 @@ import "highlight.js/styles/github.css";
 import { updateMetaDescriptions, updateMetaSocialTags } from '@/utils/seo-update-description';
 import useScrollSpy from '@/composables/useScrollSpy';
  
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
  
 const route = useRoute();
+const router = useRouter();
 // Props
 const props = defineProps({
   slug: {
@@ -201,6 +202,17 @@ const toggleToc = () => {
     }
   });
 };
+const redirectToNotFound = (missingSlug) => {
+  if (route.name === 'NotFound') return;
+
+  const pathMatch = route.fullPath.replace(/^\//, '').split('/');
+  router.replace({
+    name: 'NotFound',
+    params: { pathMatch },
+    query: missingSlug ? { missing: missingSlug } : undefined
+  });
+};
+
 const fetchPost = async (slugArg = null) => {
   try {
     const incomingSlug = (slugArg || route.params.slug || route.params.title || props.slug || '').toString();
@@ -214,6 +226,11 @@ const fetchPost = async (slugArg = null) => {
     if (!postData && incomingSlug) {
       const fallbackTitle = incomingSlug.replace(/-/g, ' ');
       postData = await getPost(fallbackTitle);
+    }
+
+    if (!postData && incomingSlug) {
+      redirectToNotFound(incomingSlug);
+      return null;
     }
 
     post.value = postData;
