@@ -44,17 +44,23 @@ export default {
     const mainContent = ref(null);
     const popularPosts = ref([]);
     const route = useRoute();
+    // AbortController keeps the 404 ping under control:
+    //   • lets us abort the fetch when the component unmounts (user navigates away)
+    //   • cooperates with the timeout below so slow/offline requests do not hang forever
     const abortController = typeof window !== 'undefined' ? new AbortController() : null;
 
     const notifyServer404 = async () => {
       if (typeof window === 'undefined') return;
       if (!abortController) return;
 
+      // Cancel the request automatically after 4s so the controller can clean things up
       const timeoutId = window.setTimeout(() => abortController.abort(), 4000);
 
       try {
+        // Hit the lightweight serverless endpoint so Vercel emits a real 404 status
         const apiUrl = new URL('/api/not-found', window.location.origin);
         if (route?.fullPath) {
+          // Include the missing path for logging/analytics on the server side
           apiUrl.searchParams.set('path', route.fullPath);
         }
         await fetch(apiUrl.toString(), {
@@ -93,6 +99,7 @@ export default {
     });
 
     onBeforeUnmount(() => {
+      // Abort any in-flight request so the component doesn't hold open network work
       abortController?.abort();
     });
 
