@@ -57,7 +57,6 @@ export default {
         if (route?.fullPath) {
           apiUrl.searchParams.set('path', route.fullPath);
         }
-
         await fetch(apiUrl.toString(), {
           method: 'GET',
           cache: 'no-store',

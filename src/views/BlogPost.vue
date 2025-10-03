@@ -203,6 +203,7 @@ const toggleToc = () => {
   });
 };
 const redirectToNotFound = (missingSlug) => {
+  //if route is already not found, do not redirect
   if (route.name === 'NotFound') return;
 
   const pathMatch = route.fullPath.replace(/^\//, '').split('/');
