@@ -26,26 +26,59 @@
             </RouterLink>
           </li>
         </ul>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { getPosts } from '@/config/firebase';
 import { formatDate, titleToSlug } from '@/utils/helpers';
 import { findPopularPosts } from '@/utils/related-posts';
+import { useRoute } from 'vue-router';
 
 export default {
   name: "NotFound",
   setup() {
     const mainContent = ref(null);
     const popularPosts = ref([]);
-    
+    const route = useRoute();
+    const abortController = typeof window !== 'undefined' ? new AbortController() : null;
+
+    const notifyServer404 = async () => {
+      if (typeof window === 'undefined') return;
+      if (!abortController) return;
+
+      const timeoutId = window.setTimeout(() => abortController.abort(), 4000);
+
+      try {
+        const apiUrl = new URL('/api/not-found', window.location.origin);
+        if (route?.fullPath) {
+          apiUrl.searchParams.set('path', route.fullPath);
+        }
+
+        await fetch(apiUrl.toString(), {
+          method: 'GET',
+          cache: 'no-store',
+          signal: abortController.signal,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Failed to notify server of 404 status:', error);
+        }
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
+    };
+
     onMounted(async () => {
       // Update page title
       document.title = 'Page Not Found | Web It Easier';
+
+      notifyServer404();
 
       // Focus the main content for screen readers
       mainContent.value.focus();
@@ -58,7 +91,11 @@ export default {
         console.error('Error fetching posts for 404 page:', error);
       }
     });
-    
+
+    onBeforeUnmount(() => {
+      abortController?.abort();
+    });
+
     return {
       mainContent,
       popularPosts,
