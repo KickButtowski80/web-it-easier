@@ -202,10 +202,14 @@ const toggleToc = () => {
     }
   });
 };
+// When we fail to load a post, hop to the catch-all 404 route while
+// keeping the address bar on the original path for user context/SEO.
+// Use the route name instead of fullPath so we bypass the /blog/:slug matcher.
 const redirectToNotFound = (missingSlug) => {
-  //if route is already not found, do not redirect
+  // Do nothing if we already landed on the 404 route
   if (route.name === 'NotFound') return;
 
+  // Split the current fullPath into segments so the catch-all param can rebuild it
   const pathMatch = route.fullPath.replace(/^\//, '').split('/');
   router.replace({
     name: 'NotFound',
