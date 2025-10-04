@@ -22,6 +22,13 @@
 - **Hosting**: Vercel
 - **Images**: Optimized WebP format
 
+## 404 Handling on Vercel
+
+- **Client route**: Vue Router’s catch-all path renders `src/views/NotFound.vue` so visitors stay inside the SPA experience.
+- **Server signal**: The page pings `/api/not-found`, which returns HTTP 404, giving Lighthouse and crawlers the correct status despite SPA rewrites.
+- **Configuration**: Vercel rewrites in `vercel.json` keep API routes (including `api/not-found.js`) separate while every other path falls back to `index.html` for client-side routing.
+- **Fallback file**: `public/404.html` remains in the repo as a static safety net if future hosting modes require it.
+
 ## Project Highlights
 
 - **Performance**: 90+ Lighthouse scores

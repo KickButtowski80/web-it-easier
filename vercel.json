@@ -1,22 +1,11 @@
 {
   "version": 2,
   "rewrites": [
+    { "source": "/api/not-found", "destination": "/api/not-found.js" },
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { 
       "source": "/(.*)", 
-      "destination": "/index.html",
-      "has": [
-        {
-          "type": "header",
-          "key": "x-vercel-404",
-          "value": "false"
-        }
-      ]
-    },
-    { 
-      "source": "/(.*)", 
-      "destination": "/404.html",
-      "statusCode": 404
+      "destination": "/index.html"
     }
   ],
   "headers": [

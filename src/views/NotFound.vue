@@ -32,20 +32,59 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { getPosts } from '@/config/firebase';
 import { formatDate, titleToSlug } from '@/utils/helpers';
 import { findPopularPosts } from '@/utils/related-posts';
+import { useRoute } from 'vue-router';
 
 export default {
   name: "NotFound",
   setup() {
     const mainContent = ref(null);
     const popularPosts = ref([]);
-    
+    const route = useRoute();
+    // AbortController keeps the 404 ping under control:
+    //   • lets us abort the fetch when the component unmounts (user navigates away)
+    //   • cooperates with the timeout below so slow/offline requests do not hang forever
+    const abortController = typeof window !== 'undefined' ? new AbortController() : null;
+
+    const notifyServer404 = async () => {
+      if (typeof window === 'undefined') return;
+      if (!abortController) return;
+
+      // Cancel the request automatically after 4s so the controller can clean things up
+      const timeoutId = window.setTimeout(() => abortController.abort(), 4000);
+
+      try {
+        // Hit the lightweight serverless endpoint so Vercel emits a real 404 status
+        const apiUrl = new URL('/api/not-found', window.location.origin);
+        if (route?.fullPath) {
+          // Include the missing path for logging/analytics on the server side
+          apiUrl.searchParams.set('path', route.fullPath);
+        }
+        await fetch(apiUrl.toString(), {
+          method: 'GET',
+          cache: 'no-store',
+          signal: abortController.signal,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Failed to notify server of 404 status:', error);
+        }
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
+    };
+
     onMounted(async () => {
       // Update page title
       document.title = 'Page Not Found | Web It Easier';
+
+      notifyServer404();
 
       // Focus the main content for screen readers
       mainContent.value.focus();
@@ -58,7 +97,12 @@ export default {
         console.error('Error fetching posts for 404 page:', error);
       }
     });
-    
+
+    onBeforeUnmount(() => {
+      // Abort any in-flight request so the component doesn't hold open network work
+      abortController?.abort();
+    });
+
     return {
       mainContent,
       popularPosts,

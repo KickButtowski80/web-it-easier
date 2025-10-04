@@ -95,8 +95,12 @@ const routes = [
 
 // Navigation guard to handle status codes
 const setStatus = (to, from, next) => {
+  console.log(`[Router] Navigating from ${from.path} to ${to.path} (${to.name})`);
+  
   // Set status code for 404 pages
   if (to.name === 'NotFound') {
+    console.log('[Router] 404 - Page not found:', to.path);
+    
     // Update page title
     document.title = 'Page Not Found | Your Site Name';
     
@@ -107,6 +111,7 @@ const setStatus = (to, from, next) => {
     if (typeof window !== 'undefined') {
       // Only update state if this is a client-side navigation
       if (from.name) {
+        console.log('[Router] Client-side 404, updating history state');
         window.history.replaceState({}, '', window.location.pathname);
       }
       
@@ -118,9 +123,6 @@ const setStatus = (to, from, next) => {
         document.head.appendChild(meta);
       }
       meta.content = '404';
-      
-      // For initial page load, the server will handle the 404 status
-      // For client-side navigation, we rely on meta tags for SEO
     }
   }
   next();
@@ -270,5 +272,8 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'Login' });
   }
 });
+
+// Register the navigation guard after router creation
+router.beforeEach(setStatus);
 
 export default router
