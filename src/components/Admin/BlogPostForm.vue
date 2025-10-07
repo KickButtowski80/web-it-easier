@@ -26,7 +26,7 @@
 
                 <div 
                     v-if="formErrors.title" 
-                    :id="`title-error-${formErrors.title ? 'true' : 'false'}`" 
+                    id="title-error" 
                     class="error-message" 
                     role="alert" 
                     aria-live="assertive">
@@ -46,7 +46,7 @@
                     aria-required="true">
                 <div 
                     v-if="formErrors.date" 
-                    :id="`date-error-${formErrors.date ? 'true' : 'false'}`" 
+                    id="date-error" 
                     class="error-message" 
                     role="alert" 
                     aria-live="assertive">
@@ -68,7 +68,7 @@
                 <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
                 <div 
                     v-if="formErrors.readingTime" 
-                    :id="`readingTime-error-${formErrors.readingTime ? 'true' : 'false'}`" 
+                    id="readingTime-error" 
                     class="error-message" 
                     role="alert" 
                     aria-live="assertive">
@@ -82,21 +82,19 @@
                         id="featureImage" 
                         v-model="formData.featureImage" 
                         type="url" 
-                        placeholder="https://example.com/image.jpg"
                         :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
                         :aria-describedby="featureImageDescribedBy"
-                    aria-describedby="featureImageHint"
                     inputmode="url">
                 <div id="featureImageHint" class="hint">Enter the full URL of the image (e.g., https://example.com/image.jpg)</div>
                 <div 
                     v-if="formErrors.featureImage" 
-                    :id="`featureImage-error-${formErrors.featureImage ? 'true' : 'false'}`" 
                     id="featureImage-error" 
                     class="error-message" 
                     role="alert"
                     aria-live="assertive">
                     {{ formErrors.featureImage }}
                 </div>
+
             </div>
 
             <!-- Tags Input Field -->
@@ -119,7 +117,7 @@
                             id="tags-input" 
                             ref="tagInput" 
                             v-model="newTag"
-                            required
+                            :required="formData.tags.length === 0"
                             @keydown.enter.prevent="handleTagEnter"
                             @focus="handleFocus" 
                             @blur="handleBlur" 
@@ -130,20 +128,20 @@
                             placeholder="Type a tag and press Enter to add"
                             autocomplete="off"
                             role="combobox"
-                            :aria-describedby="tagsAriaDescribedBy" 
+                            :aria-describedby="tagsAriaDescribedBy"
                             aria-autocomplete="list"
-                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" 
+                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'"
                             aria-haspopup="listbox"
                             :aria-controls="isSuggestionsOpen ? 'tag-suggestions' : undefined"
-                            :aria-activedescendant="isSuggestionsOpen ? activeSuggestionId : undefined"
+                            :aria-activedescendant="isSuggestionsOpen ? `tag-suggestion-${focusedSuggestionIndex}` : undefined"
                             :aria-invalid="formErrors.tags ? 'true' : 'false'"
-                            aria-required="true">
+                            :aria-required="formData.tags.length === 0 ? 'true' : 'false'">
                             <div v-if="formErrors.tags" id="tags-error" class="error-message" role="alert" aria-live="polite">{{ formErrors.tags }}</div>
                         <Transition name="tag-suggestions-fade">
                             <div v-if="isSuggestionsOpen" class="tag-suggestions-container">
                                 <ul id="tag-suggestions" class="tag-suggestions" role="listbox"
                                     :aria-label="`${filteredTags.length} suggestions available`">
-                                    <li v-for="(tag, index) in filteredTags" :key="tag" :id="`suggestion-${index}`"
+                                    <li v-for="(tag, index) in filteredTags" :key="tag" :id="`tag-suggestion-${index}`"
                                         @mousedown.prevent="selectTag(tag)" 
                                         @mouseenter="handleSuggestionMouseEnter(index)"
                                         role="option" :aria-selected="focusedSuggestionIndex === index"
@@ -206,6 +204,14 @@
                 <label for="content">Content (Markdown)</label>
                     <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
                     <span id="markdown-editor-label" class="sr-only">Markdown editor with preview. Use tab to switch between edit and preview modes.</span>
+                    <div 
+                        v-if="formErrors.content" 
+                        id="content-error" 
+                        class="error-message" 
+                        role="alert"
+                        aria-live="assertive">
+                        {{ formErrors.content }}
+                    </div>
 
                     <!-- Tab Navigation -->
                     <div class="markdown-tabs" role="tablist" aria-label="Markdown editor modes">
@@ -283,6 +289,30 @@
 <script setup>
 import { ref, watch, computed, onMounted, nextTick } from 'vue'
 import { normalizeTag, findSimilarTag, TagNormalizer } from '@/utils/tagNormalizer';
+
+// Centralized error handling utility
+const handleError = (error, context = '') => {
+    let errorMessage = error.message || 'An unexpected error occurred';
+    const logContext = context ? `[${context}]` : '';
+    
+    // Add more context to the error message based on the operation
+    if (context === 'savePost') {
+        errorMessage = `Failed to ${isEditMode.value ? 'update' : 'publish'} post. ${errorMessage}`;
+    } else if (context === 'loadPost') {
+        errorMessage = `Failed to load post. ${errorMessage}`;
+    } else if (context === 'addTag') {
+        errorMessage = `Failed to add tag. ${errorMessage}`;
+    }
+    
+    // Log the full error for debugging
+    console.error(`${logContext} ${errorMessage}`, error);
+    
+    // Show user-friendly notification
+    showNotify(errorMessage, 'error');
+    
+    // Return a rejected promise for async functions
+    return Promise.reject(error);
+};
 import { useRouter, useRoute } from 'vue-router'
 import { addPost, updatePost, getPostById, signOut, auth, validateTags } from '@/config/firebase'
 import LoadingOverlay from '@/components/UI/LoadingOverlay.vue'
@@ -375,8 +405,7 @@ onMounted(async () => {
                 };
             }
         } catch (error) {
-            console.error('Error loading post:', error);
-            showNotify('Failed to load post. Please try again.', 'error');
+            handleError(error, 'loadPost');
         } finally {
             isLoading.value = false;
         }
@@ -570,7 +599,7 @@ const tagsAriaDescribedBy = computed(() => {
 const titleDescribedBy = computed(() => formErrors.value.title ? 'title-error' : undefined);
 const dateDescribedBy = computed(() => formErrors.value.date ? 'date-error' : undefined);
 const readingTimeDescribedBy = computed(() => formErrors.value.readingTime ? 'readingTimeHint readingTime-error' : 'readingTimeHint');
-const featureImageDescribedBy = computed(() => formErrors.value.featureImage ? 'featureImage-error' : undefined);
+const featureImageDescribedBy = computed(() => formErrors.value.featureImage ? 'featureImageHint featureImage-error' : 'featureImageHint');
 const contentDescribedBy = computed(() => formErrors.value.content ? 'content-error' : undefined);
 
 const isSubmitting = ref(false);
@@ -1088,7 +1117,7 @@ const addTag = () => {
         });
 
     } catch (error) {
-        showNotify(error.message, 'error');
+        handleError(error, 'addTag');
         // Keep focus on input for correction
         nextTick(() => {
             tagInput.value?.focus();
@@ -1154,13 +1183,13 @@ const handleSubmit = async () => {
             };
         }
     } catch (error) {
-        console.error(`Error ${isEditMode.value ? 'updating' : 'publishing'} post:`, error);
-        showNotify(`Failed to ${isEditMode.value ? 'update' : 'publish'} post. ${error.message || 'Please try again.'}`, 'error');
+        handleError(error, 'savePost');
     } finally {
         isSubmitting.value = false;
     }
 }
 </script>
+
 
 <style scoped>
 /* 
