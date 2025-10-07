@@ -169,60 +169,83 @@ class TagNormalizer {
 
 
   /**
-   * Normalize a tag to its canonical form
-   * @param {string} tag - The tag to normalize
-   * @returns {string} The normalized tag
+   * Normalize arbitrary tag input into the canonical string stored in Firestore.
+   *
+   * The normalization pipeline:
+   * - lowercases and trims the input;
+   * - strips unsupported characters while preserving dots for versions (`node.js` → `nodejs`);
+   * - resolves direct aliases via `aliasToCanonical` (`js` → `javascript`);
+   * - applies pattern-based fallbacks such as removing trailing ".js" (`react.js` → `react`);
+   * - caches the result so repeated lookups are O(1).
+   *
+   * @param {string} tag - Raw tag text from user input or seeded data.
+   * @returns {string} Canonical tag identifier used throughout the app.
+   * @example
+   * normalize('React.js'); // 'react'
+   * normalize('Python3.9'); // 'python'
+   * normalize('js'); // 'javascript'
+   * normalize('   Tailwind CSS   '); // 'tailwindcss'
    */
   normalize(tag) {
+    // Early return for invalid inputs (null, undefined, non-strings)
     if (!tag || typeof tag !== 'string') {
       return '';
     }
- 
-    // Check normalizedTagCache first
+    
+    // Cache check - skip processing if we've seen this exact input before
+    // Uses lowercase version as key for case-insensitive matching
     const normalizedCacheKey = tag.toLowerCase();
     if (this.normalizedTagCache.has(normalizedCacheKey)) {
       return this.normalizedTagCache.get(normalizedCacheKey);
     }
 
-    // Step 1: Clean and normalize input
+    // Step 1: Initial cleaning and normalization
     let normalized = tag
-      .toLowerCase()
-      .trim()
-      // Preserve dots, remove other special characters
+      .toLowerCase()    // Convert to lowercase for case-insensitive comparison
+      .trim()           // Remove leading/trailing whitespace
+      // Keep only alphanumeric and dot characters (for version numbers)
+      // Example: 'Node.js' -> 'node.js', 'C++' -> 'c'
       .replace(/[^a-z0-9.]+/g, '');
 
-    // Step 2: Direct mapping lookup (most efficient)
+    // Step 2: Direct alias lookup (fast path for exact matches)
+    // Example: 'js' → 'javascript', 'ts' → 'typescript'
     if (this.aliasToCanonical.has(normalized)) {
       const result = this.aliasToCanonical.get(normalized);
       this.normalizedTagCache.set(normalizedCacheKey, result);
       return result;
     }
 
+    // Step 3: Apply pattern-based transformations
+    // Handles cases like 'react.js' → 'react' → (lookup 'react')
     for (const pattern of this.patterns) {
       const match = normalized.match(pattern.regex);
       if (match) {
+        // Apply the pattern transformation (e.g., remove '.js' suffix)
         const candidate = normalized.replace(pattern.regex, pattern.replacement);
-        // Check if the pattern result has a mapping
+        
+        // If the transformed version exists in our aliases, use it
         if (this.aliasToCanonical.has(candidate)) {
           const result = this.aliasToCanonical.get(candidate);
           this.normalizedTagCache.set(normalizedCacheKey, result);
           return result;
         }
+        // Update normalized for potential further processing
         normalized = candidate;
-        break;
+        break; // Stop after first matching pattern
       }
     }
 
-    // Step 4: Final cleanup - keep only alphanumeric and dots in version numbers
+    // Step 4: Final cleanup of any remaining special characters
+    // Example: 'node.js!' → 'node.js'
     normalized = normalized.replace(/[^a-z0-9.]/g, '');
 
-    // Step 5: Handle multiple consecutive dots
-    normalized = normalized.replace(/\.+/g, '.');
+    // Step 5: Normalize dots (handle multiple or malformed dots)
+    normalized = normalized
+      .replace(/\.+/g, '.')     // Collapse multiple dots into one
+      .replace(/^\.|\.$/g, ''); // Remove leading/trailing dots
 
-    // Remove leading/trailing dots
-    normalized = normalized.replace(/^\.|\.$/g, '');
-
-    // Step 6: Return normalized or original if cleanup failed
+    // Step 6: Return final result with caching
+    // Fallback to basic alphanumeric if normalization resulted in empty string
     const result = normalized || tag.toLowerCase().replace(/[^a-z0-9]/g, '');
     this.normalizedTagCache.set(normalizedCacheKey, result);
     return result;
@@ -250,6 +273,9 @@ class TagNormalizer {
    * Check if a tag is already in its canonical form
    * @param {string} tag - The tag to check
    * @returns {boolean} True if the tag is canonical
+   * @example
+   * isCanonical('react'); // true
+   * isCanonical('React.js'); // false
    */
   isCanonical(tag) {
     const normalized = this.normalize(tag);
@@ -262,6 +288,10 @@ class TagNormalizer {
    * @param {string} b - Second normalized tag
    * @returns {boolean} True if tags are similar
    * @private
+   * @example
+   * isSimilar('javascript', 'javascript'); // true (handled earlier)
+   * isSimilar('web', 'webd'); // true (length difference 1, substring match)
+   * isSimilar('react', 'reactnative'); // false
    */
   isSimilar(a, b) {
     // Quick check for common typos (1-2 character differences)
@@ -293,6 +323,9 @@ class TagNormalizer {
    * @param {string} newTag - The new tag to check
    * @param {string[]} existingTags - Array of existing tags to check against
    * @returns {string|null} The first similar tag found, or null if none
+   * @example
+   * findSimilarTag('webd', ['web', 'javascript']); // 'web'
+   * findSimilarTag('svelte', ['react', 'vue']); // null
    */
   findSimilarTag(newTag, existingTags) {
     if (!newTag || !existingTags?.length) return null;
