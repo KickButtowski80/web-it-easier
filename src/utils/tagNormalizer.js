@@ -11,6 +11,16 @@
 /**
  * TagNormalizer - Normalizes and standardizes tags
  */
+
+/**
+ * Strip numeric suffix from a tag string
+ * @param {string} value - The tag string to process
+ * @returns {string} Tag without trailing numbers
+ * @example
+ * stripNumericSuffix('vue3'); // 'vue'
+ * stripNumericSuffix('python'); // 'python'
+ * @private
+ */
 const stripNumericSuffix = (value) => value.replace(/\d+$/, '');
 
 class TagNormalizer {
@@ -99,12 +109,13 @@ class TagNormalizer {
       ['artificialintelligence', ['ai', 'artificialintelligence', 'artificial-intelligence']],
 
       // Computer Science
+      // Note: 'cs' also appears in 'csharp' - context determines which is used
       ['computerscience', ['cs', 'computerscience', 'computer-science', 'compsci']],
       ['algorithm', ['algorithm', 'algorithms', 'algo']],
       ['datastructure', ['datastructure', 'datastructures', 'data-structure', 'ds']],
       ['computability', ['computability', 'computation', 'computable']],
       ['complexity', ['complexity', 'computationalcomplexity', 'complexitytheory']],
-      ['turingmachine', ['turingmachine', 'turing-machine', 'turing']],
+      ['turingmachine', ['turingmachine', 'turing-machine']],
       ['functional', ['functional', 'functionalprogramming', 'fp']],
       ['objectoriented', ['oop', 'objectoriented', 'object-oriented']],
       ['imperative', ['imperative', 'procedural']],
@@ -114,7 +125,8 @@ class TagNormalizer {
       ['operatingsystem', ['os', 'operatingsystem', 'operating-system']],
       ['compiler', ['compiler', 'compilers', 'compilation']],
       ['parallelcomputing', ['parallel', 'parallelcomputing', 'concurrency']],
-      ['alanturing', ['alanturing', 'alan-turing', 'turing']],
+      ['alanturing', ['alanturing', 'alan-turing']],
+      // Note: 'turing' removed from both 'turingmachine' and 'alanturing' to avoid ambiguity
       ['turingtest', ['turingtest', 'turing-test']],
       ['churchturing', ['churchturing', 'church-turing']],
 
@@ -162,7 +174,8 @@ class TagNormalizer {
    * @param {string} canonicalTag - Canonical tag identifier
    * @returns {string[]} Alias list (empty if unknown)
    * @example
-   * getAliases('react'); // ['react', 'reactjs', 'react.js']
+   * getAliases('react'); // ['react', 'reactjs', 'react.js', 'react-jsx']
+   * getAliases('vue'); // ['vue', 'vuejs', 'vue.js', 'vue-jsx']
    */
   getAliases(canonicalTag) {
     if (!canonicalTag) return [];
@@ -258,11 +271,12 @@ class TagNormalizer {
    * Get all variations for a canonical tag
    * @param {string} canonicalTag - The canonical tag to find variations for
    * @returns {string[]} Array of variant tags
+   * @note This uses O(n) iteration for consistency with the existing API.
+   *       Kept for backward compatibility, though direct Map lookup would be O(1).
    */
   getVariations(canonicalTag) {
-    // This is an inefficient way to get variations. A better approach is to use canonicalToAliases.
-    // However, to keep the logic simple and based on the existing structure, we will use it.
-    // A more performant version would be to return this.canonicalToAliases.get(canonicalTag)
+    // Iterates through all aliases to find matches
+    // Alternative: return [...(this.canonicalToAliases.get(canonicalTag) || [])]
     const variations = [];
     for (const [alias, canonical] of this.aliasToCanonical.entries()) {
       if (canonical === canonicalTag) {
@@ -297,28 +311,33 @@ class TagNormalizer {
    * isSimilar('react', 'reactnative'); // false
    */
   isSimilar(a, b) {
-    debugger;
     // Quick check for common typos (1-2 character differences)
     const lengthDifference = Math.abs(a.length - b.length);
 
+    // Check if both tags share the same base after stripping numeric suffixes
+    // Example: 'vue2' and 'vue3' both have base 'vue' but should remain distinct
     const baseA = stripNumericSuffix(a);
     const baseB = stripNumericSuffix(b);
     const shareNumericSuffixBase = (baseA !== a || baseB !== b) && baseA === baseB;
     if (shareNumericSuffixBase) {
-      return false;
+      return false; // Keep version-specific tags separate (vue2 vs vue3)
     }
 
-    // Treat very short tokens as distinct unless they are almost identical (e.g. 'js' vs 'jsx')
+    // Heuristic 1: Short tags (≤3 chars) need stricter matching
+    // Prevents false positives like 'js' vs 'jsx' (different technologies)
+    // Only match if length diff ≤1 AND one is substring of other
     if (a.length <= 3 || b.length <= 3) {
       return lengthDifference <= 1 && (a.includes(b) || b.includes(a));
     }
 
-    // Only consider substring matches similar when lengths are close (prevents css vs tailwindcss)
+    // Heuristic 2: Medium length difference with substring relationship
+    // Example: 'web' vs 'webd' (typo), but NOT 'css' vs 'tailwindcss' (different)
     if (lengthDifference <= 2) {
       return a.includes(b) || b.includes(a);
     }
 
-    // Prefix relationship implies similarity only when the strings share comparable length
+    // Heuristic 3: Prefix matching for similar-length tags
+    // Example: 'react' vs 'reacts' (typo), but NOT 'react' vs 'reactnative'
     return lengthDifference <= 2 && (a.startsWith(b) || b.startsWith(a));
   }
 
