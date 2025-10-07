@@ -38,8 +38,11 @@ class TagNormalizer {
       ['rust', ['rust']],
 
       // Web Frameworks
-      ['react', ['react', 'reactjs', 'react.js']],
-      ['vue', ['vue', 'vuejs', 'vue.js']],
+      // Note on JSX: We use framework-specific JSX tags (react-jsx, vue-jsx) to distinguish
+      // between different JSX implementations, as they can have framework-specific behaviors.
+      // Example: 'react-jsx' will normalize to 'react', 'vue-jsx' to 'vue'
+      ['react', ['react', 'reactjs', 'react.js', 'react-jsx']],
+      ['vue', ['vue', 'vuejs', 'vue.js', 'vue-jsx']],
       ['angular', ['angular', 'angularjs']],
       ['svelte', ['svelte']],
       ['nextjs', ['next', 'nextjs', 'next.js']],
@@ -294,6 +297,7 @@ class TagNormalizer {
    * isSimilar('react', 'reactnative'); // false
    */
   isSimilar(a, b) {
+    debugger;
     // Quick check for common typos (1-2 character differences)
     const lengthDifference = Math.abs(a.length - b.length);
 
