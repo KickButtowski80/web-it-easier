@@ -158,6 +158,8 @@ class TagNormalizer {
    * Retrieve all aliases known for a canonical tag
    * @param {string} canonicalTag - Canonical tag identifier
    * @returns {string[]} Alias list (empty if unknown)
+   * @example
+   * getAliases('react'); // ['react', 'reactjs', 'react.js']
    */
   getAliases(canonicalTag) {
     if (!canonicalTag) return [];
@@ -170,6 +172,10 @@ class TagNormalizer {
    * Normalize a tag to its canonical form
    * @param {string} tag - The tag to normalize
    * @returns {string} The normalized tag
+   * @example
+   * normalize('React.js'); // 'react'
+   * normalize('Python3.9'); // 'python'
+   * normalize('js'); // 'javascript'
    */
   normalize(tag) {
     if (!tag || typeof tag !== 'string') {
@@ -248,6 +254,9 @@ class TagNormalizer {
    * Check if a tag is already in its canonical form
    * @param {string} tag - The tag to check
    * @returns {boolean} True if the tag is canonical
+   * @example
+   * isCanonical('react'); // true
+   * isCanonical('React.js'); // false
    */
   isCanonical(tag) {
     const normalized = this.normalize(tag);
@@ -260,6 +269,10 @@ class TagNormalizer {
    * @param {string} b - Second normalized tag
    * @returns {boolean} True if tags are similar
    * @private
+   * @example
+   * isSimilar('javascript', 'javascript'); // true (handled earlier)
+   * isSimilar('web', 'webd'); // true (length difference 1, substring match)
+   * isSimilar('react', 'reactnative'); // false
    */
   isSimilar(a, b) {
     // Quick check for common typos (1-2 character differences)
@@ -267,7 +280,6 @@ class TagNormalizer {
 
     const baseA = stripNumericSuffix(a);
     const baseB = stripNumericSuffix(b);
-    debugger;
     const shareNumericSuffixBase = (baseA !== a || baseB !== b) && baseA === baseB;
     if (shareNumericSuffixBase) {
       return false;
@@ -292,6 +304,9 @@ class TagNormalizer {
    * @param {string} newTag - The new tag to check
    * @param {string[]} existingTags - Array of existing tags to check against
    * @returns {string|null} The first similar tag found, or null if none
+   * @example
+   * findSimilarTag('webd', ['web', 'javascript']); // 'web'
+   * findSimilarTag('svelte', ['react', 'vue']); // null
    */
   findSimilarTag(newTag, existingTags) {
     if (!newTag || !existingTags?.length) return null;
