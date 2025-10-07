@@ -310,7 +310,11 @@ const handleError = (error, context = '') => {
     // Show user-friendly notification
     showNotify(errorMessage, 'error');
     
-    // Return a rejected promise for async functions
+    // Return a rejected promise to ensure proper error propagation
+    // in async/await chains. This is crucial because:
+    // 1. It allows parent async functions to catch and handle the error
+    // 2. It prevents the code from continuing execution after an error
+    // 3. It maintains the error's stack trace for debugging
     return Promise.reject(error);
 };
 import { useRouter, useRoute } from 'vue-router'
