@@ -479,7 +479,8 @@ const selectTag = (tag) => {
     const existingNormalizedTags = formData.value.tags.map(existingTag => normalizeTag(existingTag));
 
     if (existingNormalizedTags.includes(normalizedSelectedTag)) {
-        showNotify(`Tag '${tag}' is too similar to an existing tag.`, 'error');
+        const error = new Error(`Tag '${tag}' is too similar to an existing tag.`);
+        handleError(error, 'addTag');
         return;
     }
 
@@ -1050,12 +1051,27 @@ const validateForm = () => {
         isValid = false;
     }
 
-    console.log('tags on submit', formData.value.tags.length);
     // Tags validation
     if (!formData.value.tags?.length) {
         formErrors.value.tags = 'At least one tag is required';
         isValid = false;
     }
+
+    // Reading time validation
+    if (!formData.value.readingTime || formData.value.readingTime < 1) {
+        formErrors.value.readingTime = 'Reading time must be at least 1 minute';
+        isValid = false;
+    }
+
+    // Feature image URL validation (if provided)
+    if (formData.value.featureImage?.trim()) {
+        const urlPattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i;
+        if (!urlPattern.test(formData.value.featureImage.trim())) {
+            formErrors.value.featureImage = 'Please enter a valid image URL (must start with http:// or https:// and end with a valid image extension)';
+            isValid = false;
+        }
+    }
+
     // Content validation
     if (!formData.value.content?.trim()) {
         formErrors.value.content = 'Content is required';
@@ -1072,7 +1088,8 @@ const addTag = () => {
 
     // Check tag limit BEFORE any processing
     if (formData.value.tags.length >= 5) {
-        showNotify('Maximum 5 tags reached. Remove a tag to add a new one.', 'error');
+        const error = new Error('Maximum 5 tags reached. Remove a tag to add a new one.');
+        handleError(error, 'addTag');
         return; // Stop here - don't process the tag
     }
 
@@ -1082,14 +1099,16 @@ const addTag = () => {
         // Check for exact duplicates first
         const existingNormalizedTags = formData.value.tags.map(tag => normalizeTag(tag));
         if (existingNormalizedTags.includes(normalizedInputTag)) {
-            showNotify(`Tag '${inputTag}' already exists (case-insensitive)`, 'error');
+            const error = new Error(`Tag '${inputTag}' already exists (case-insensitive)`);
+            handleError(error, 'addTag');
             return;
         }
 
         // Check for similar tags
         const similarTag = findSimilarTag(inputTag, formData.value.tags);
         if (similarTag) {
-            showNotify(`Tag '${inputTag}' is too similar to existing tag '${similarTag}'. Please use a more specific tag.`, 'error');
+            const error = new Error(`Tag '${inputTag}' is too similar to existing tag '${similarTag}'. Please use a more specific tag.`);
+            handleError(error, 'addTag');
             return;
         }
 
