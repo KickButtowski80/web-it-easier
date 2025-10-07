@@ -120,7 +120,7 @@
                             ref="tagInput" 
                             v-model="newTag"
                             required
-                            @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
+                            @keydown.enter.prevent="handleTagEnter"
                             @focus="handleFocus" 
                             @blur="handleBlur" 
                             @keydown.down.prevent="focusNextSuggestion(1)"
@@ -144,7 +144,8 @@
                                 <ul id="tag-suggestions" class="tag-suggestions" role="listbox"
                                     :aria-label="`${filteredTags.length} suggestions available`">
                                     <li v-for="(tag, index) in filteredTags" :key="tag" :id="`suggestion-${index}`"
-                                        @mousedown.prevent="selectTag(tag)" @mouseenter="focusedSuggestionIndex = index"
+                                        @mousedown.prevent="selectTag(tag)" 
+                                        @mouseenter="focusedSuggestionIndex = index"
                                         role="option" :aria-selected="focusedSuggestionIndex === index"
                                         :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]">
                                         <div class="tag-suggestion-left">
@@ -323,6 +324,15 @@ const formData = ref({
     tags: [] // Add tags field
 });
 
+const formErrors = ref({
+    title: '',
+    date: '',
+    readingTime: '',
+    featureImage: '',
+    tags: '',
+    content: ''
+});
+
 
 // Tag-related reactive variables
 const allTags = ref([]);
@@ -371,8 +381,6 @@ onMounted(async () => {
         }
     }
 });
-
-
 
 // Filter tags based on input
 const filteredTags = computed(() => {
@@ -434,7 +442,6 @@ const highlightMatch = (tag) => {
 
 // Add a tag from suggestions
 const selectTag = (tag) => {
-
     if (formData.value.tags.length >= 5) return;
 
     const normalizedSelectedTag = normalizeTag(tag);
@@ -452,6 +459,7 @@ const selectTag = (tag) => {
 };
 // Focus management for keyboard navigation
 const focusNextSuggestion = (increment = 1) => {
+
     if (!showSuggestions.value || filteredTags.value.length === 0) return;
 
     const newIndex = focusedSuggestionIndex.value + increment;
@@ -492,15 +500,51 @@ const activeSuggestionId = computed(() => {
     return '';
 });
 
+const highlightedSuggestion = computed(() => {
+    const suggestions = filteredTags.value;
+    if (!suggestions.length) return null;
 
-const formErrors = ref({
-    title: '',
-    date: '',
-    readingTime: '',
-    featureImage: '',
-    content: '',
-    tags: '',
+    const typedTag = newTag.value?.trim();
+    if (typedTag) {
+        const normalizedTypedTag = normalizeTag(typedTag);
+        const exactMatch = suggestions.find(tag => normalizeTag(tag) === normalizedTypedTag);
+        if (exactMatch) {
+            return exactMatch;
+        }
+    }
+
+    const index = focusedSuggestionIndex.value;
+    if (index >= 0 && index < suggestions.length) {
+        return suggestions[index];
+    }
+
+    return null;
 });
+
+const handleTagEnter = () => {
+    const suggestions = filteredTags.value;
+    if (!suggestions.length) {
+        addTag();
+        return;
+    }
+
+    const typedTag = newTag.value?.trim();
+    const highlighted = highlightedSuggestion.value;
+
+    if (highlighted) {
+        const normalizedHighlighted = normalizeTag(highlighted);
+        const normalizedTyped = typedTag ? normalizeTag(typedTag) : '';
+
+        // If the user typed something matching this suggestion (exact match) or explicitly navigated to it,
+        // we should add the suggestion.
+        if (normalizedHighlighted === normalizedTyped || focusedSuggestionIndex.value >= 0) {
+            selectTag(highlighted);
+            return;
+        }
+    }
+
+    addTag();
+};
 
 const resetFormErrors = () => {
     Object.keys(formErrors.value).forEach((key) => {
@@ -995,7 +1039,6 @@ const addTag = () => {
     try {
         const inputTag = newTag.value.trim();
         const normalizedInputTag = normalizeTag(inputTag);
-
         // Check for exact duplicates first
         const existingNormalizedTags = formData.value.tags.map(tag => normalizeTag(tag));
         if (existingNormalizedTags.includes(normalizedInputTag)) {

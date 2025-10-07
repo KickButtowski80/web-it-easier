@@ -11,6 +11,8 @@
 /**
  * TagNormalizer - Normalizes and standardizes tags
  */
+const stripNumericSuffix = (value) => value.replace(/\d+$/, '');
+
 class TagNormalizer {
   constructor() {
     // Cache for storing normalized tags to avoid redundant processing
@@ -262,6 +264,14 @@ class TagNormalizer {
   isSimilar(a, b) {
     // Quick check for common typos (1-2 character differences)
     const lengthDifference = Math.abs(a.length - b.length);
+
+    const baseA = stripNumericSuffix(a);
+    const baseB = stripNumericSuffix(b);
+    debugger;
+    const shareNumericSuffixBase = (baseA !== a || baseB !== b) && baseA === baseB;
+    if (shareNumericSuffixBase) {
+      return false;
+    }
 
     // Treat very short tokens as distinct unless they are almost identical (e.g. 'js' vs 'jsx')
     if (a.length <= 3 || b.length <= 3) {
