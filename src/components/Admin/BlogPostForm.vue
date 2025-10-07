@@ -388,6 +388,7 @@ const filteredTags = computed(() => {
     if (!newTag.value) return [];
     const searchTerm = newTag.value.toLowerCase();
     const normalizedExistingTags = new Set(formData.value.tags.map(tag => normalizeTag(tag)));
+   
     return allTags.value
         .filter(tag => {
             const lowerTag = tag.toLowerCase();
