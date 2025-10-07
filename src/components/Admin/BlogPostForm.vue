@@ -8,26 +8,25 @@
                 This may take a few seconds depending on your connection speed.
             </template>
         </LoadingOverlay>
-
         <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>
         <form @submit.prevent="handleSubmit" aria-labelledby="form-heading" :class="{ 'opacity-50': isLoading }"
             :aria-busy="isLoading" novalidate>
             <div class="form-group">
                 <label for="title">Title <span class="sr-only">(required)</span></label>
-                <input 
-                    id="title" 
-                    v-model="formData.title" 
-                    type="text" 
-                    placeholder="Enter post title" 
-                    required
-                    :aria-invalid="formErrors.title ? 'true' : 'false'"
-                    :aria-describedby="formErrors.title ? 'title-error' : undefined"
+                    <input 
+                        id="title" 
+                        v-model="formData.title" 
+                        type="text" 
+                        placeholder="Enter post title" 
+                        required
+                        :aria-invalid="formErrors.title ? 'true' : 'false'"
+                        :aria-describedby="titleDescribedBy"
                     autocomplete="off"
                     aria-required="true">
 
                 <div 
                     v-if="formErrors.title" 
-                    id="title-error" 
+                    :id="`title-error-${formErrors.title ? 'true' : 'false'}`" 
                     class="error-message" 
                     role="alert" 
                     aria-live="assertive">
@@ -37,17 +36,17 @@
 
             <div class="form-group">
                 <label for="date">Publication Date <span class="sr-only">(required)</span></label>
-                <input 
-                    id="date" 
-                    v-model="formData.date" 
-                    type="date" 
-                    required
-                    :aria-invalid="formErrors.date ? 'true' : 'false'"
-                    :aria-describedby="formErrors.date ? 'date-error' : undefined"
+                    <input 
+                        id="date" 
+                        v-model="formData.date" 
+                        type="date" 
+                        required
+                        :aria-invalid="formErrors.date ? 'true' : 'false'"
+                        :aria-describedby="dateDescribedBy"
                     aria-required="true">
                 <div 
                     v-if="formErrors.date" 
-                    id="date-error" 
+                    :id="`date-error-${formErrors.date ? 'true' : 'false'}`" 
                     class="error-message" 
                     role="alert" 
                     aria-live="assertive">
@@ -57,19 +56,19 @@
 
             <div class="form-group">
                 <label for="readingTime">Reading Time (minutes) <span class="sr-only">(required)</span></label>
-                <input 
-                    id="readingTime" 
-                    v-model.number="formData.readingTime" 
-                    type="number" 
-                    min="1" 
-                    required
-                    :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
-                    :aria-describedby="`readingTimeHint ${formErrors.readingTime ? 'readingTime-error' : ''}`"
+                    <input 
+                        id="readingTime" 
+                        v-model.number="formData.readingTime" 
+                        type="number" 
+                        min="1" 
+                        required
+                        :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
+                        :aria-describedby="readingTimeDescribedBy"
                     aria-required="true">
                 <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
                 <div 
                     v-if="formErrors.readingTime" 
-                    id="readingTime-error" 
+                    :id="`readingTime-error-${formErrors.readingTime ? 'true' : 'false'}`" 
                     class="error-message" 
                     role="alert" 
                     aria-live="assertive">
@@ -79,18 +78,19 @@
 
             <div class="form-group">
                 <label for="featureImage">Feature Image URL</label>
-                <input 
-                    id="featureImage" 
-                    v-model="formData.featureImage" 
-                    type="url" 
-                    placeholder="https://example.com/image.jpg"
-                    :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
-                    :aria-describedby="formErrors.featureImage ? 'featureImage-error' : undefined"
+                    <input 
+                        id="featureImage" 
+                        v-model="formData.featureImage" 
+                        type="url" 
+                        placeholder="https://example.com/image.jpg"
+                        :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
+                        :aria-describedby="featureImageDescribedBy"
                     aria-describedby="featureImageHint"
                     inputmode="url">
                 <div id="featureImageHint" class="hint">Enter the full URL of the image (e.g., https://example.com/image.jpg)</div>
                 <div 
                     v-if="formErrors.featureImage" 
+                    :id="`featureImage-error-${formErrors.featureImage ? 'true' : 'false'}`" 
                     id="featureImage-error" 
                     class="error-message" 
                     role="alert"
@@ -130,7 +130,7 @@
                             placeholder="Type a tag and press Enter to add"
                             autocomplete="off"
                             role="combobox"
-                            :aria-describedby="`tags-help ${formErrors.tags ? 'tags-error' : ''}`" 
+                            :aria-describedby="tagsAriaDescribedBy" 
                             aria-autocomplete="list"
                             :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" 
                             aria-haspopup="listbox"
@@ -145,7 +145,7 @@
                                     :aria-label="`${filteredTags.length} suggestions available`">
                                     <li v-for="(tag, index) in filteredTags" :key="tag" :id="`suggestion-${index}`"
                                         @mousedown.prevent="selectTag(tag)" 
-                                        @mouseenter="focusedSuggestionIndex = index"
+                                        @mouseenter="handleSuggestionMouseEnter(index)"
                                         role="option" :aria-selected="focusedSuggestionIndex === index"
                                         :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]">
                                         <div class="tag-suggestion-left">
@@ -342,6 +342,7 @@ const showTagLimitMessage = ref(false);
 const showSuggestions = ref(false);
 const isTagInputFocused = ref(false);
 const focusedSuggestionIndex = ref(-1);
+const lastSuggestionFocusWasKeyboard = ref(false);
 let blurTimeoutId = null;
 
 
@@ -465,10 +466,12 @@ const focusNextSuggestion = (increment = 1) => {
     const newIndex = focusedSuggestionIndex.value + increment;
     if (newIndex >= 0 && newIndex < filteredTags.value.length) {
         focusedSuggestionIndex.value = newIndex;
+        lastSuggestionFocusWasKeyboard.value = true;
 
     } else if (newIndex >= filteredTags.value.length) {
         // Wrap to first item if at the end
         focusedSuggestionIndex.value = 0;
+        lastSuggestionFocusWasKeyboard.value = true;
 
     }
 };
@@ -479,11 +482,18 @@ const focusPreviousSuggestion = () => {
     const newIndex = focusedSuggestionIndex.value - 1;
     if (newIndex >= 0) {
         focusedSuggestionIndex.value = newIndex;
+        lastSuggestionFocusWasKeyboard.value = true;
     } else {
         // Wrap to last item if at the beginning
         focusedSuggestionIndex.value = filteredTags.value.length - 1;
+        lastSuggestionFocusWasKeyboard.value = true;
 
     }
+};
+
+const handleSuggestionMouseEnter = (index) => {
+    focusedSuggestionIndex.value = index;
+    lastSuggestionFocusWasKeyboard.value = false;
 };
 
 
@@ -537,7 +547,7 @@ const handleTagEnter = () => {
 
         // If the user typed something matching this suggestion (exact match) or explicitly navigated to it,
         // we should add the suggestion.
-        if (normalizedHighlighted === normalizedTyped || focusedSuggestionIndex.value >= 0) {
+        if (normalizedHighlighted === normalizedTyped || lastSuggestionFocusWasKeyboard.value) {
             selectTag(highlighted);
             return;
         }
