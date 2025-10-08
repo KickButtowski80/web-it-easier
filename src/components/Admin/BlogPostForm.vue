@@ -434,7 +434,7 @@ watch(() => formData.value.content, (newContent) => {
     clearFieldError('content', !!newContent?.trim());
 });
 
-// so when the form data tags length value changes, we validate it as newTagsLength    
+
 watch(() => formData.value.tags.length, (newTagsLength) => {
     clearFieldError('tags', newTagsLength > 0);
 });
@@ -522,14 +522,6 @@ const isSuggestionsOpen = computed(() => {
     return showSuggestions.value && filteredTags.value.length > 0 && isTagInputFocused.value;
 });
 
-const activeSuggestionId = computed(() => {
-    if (!isSuggestionsOpen.value) return '';
-    const index = focusedSuggestionIndex.value;
-    if (index >= 0 && index < filteredTags.value.length) {
-        return `suggestion-${index}`;
-    }
-    return '';
-});
 
 const highlightedSuggestion = computed(() => {
     const suggestions = filteredTags.value;
