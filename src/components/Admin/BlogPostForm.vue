@@ -8,70 +8,36 @@
                 This may take a few seconds depending on your connection speed.
             </template>
         </LoadingOverlay>
-
         <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>
         <form @submit.prevent="handleSubmit" aria-labelledby="form-heading" :class="{ 'opacity-50': isLoading }"
             :aria-busy="isLoading" novalidate>
             <div class="form-group">
                 <label for="title">Title <span class="sr-only">(required)</span></label>
-                <input 
-                    id="title" 
-                    v-model="formData.title" 
-                    type="text" 
-                    placeholder="Enter post title" 
-                    required
-                    :aria-invalid="formErrors.title ? 'true' : 'false'"
-                    :aria-describedby="formErrors.title ? 'title-error' : undefined"
-                    autocomplete="off"
-                    aria-required="true">
-
-                <div 
-                    v-if="formErrors.title" 
-                    id="title-error" 
-                    class="error-message" 
-                    role="alert" 
-                    aria-live="assertive">
+                <input id="title" v-model="formData.title" type="text" placeholder="Enter post title" required
+                    :aria-invalid="formErrors.title ? 'true' : 'false'" :aria-describedby="titleDescribedBy"
+                    autocomplete="off" aria-required="true">
+                <div v-if="formErrors.title" id="title-error" class="error-message" role="alert" aria-live="assertive">
                     {{ formErrors.title }}
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="date">Publication Date <span class="sr-only">(required)</span></label>
-                <input 
-                    id="date" 
-                    v-model="formData.date" 
-                    type="date" 
-                    required
-                    :aria-invalid="formErrors.date ? 'true' : 'false'"
-                    :aria-describedby="formErrors.date ? 'date-error' : undefined"
+                <input id="date" v-model="formData.date" type="date" required
+                    :aria-invalid="formErrors.date ? 'true' : 'false'" :aria-describedby="dateDescribedBy"
                     aria-required="true">
-                <div 
-                    v-if="formErrors.date" 
-                    id="date-error" 
-                    class="error-message" 
-                    role="alert" 
-                    aria-live="assertive">
+                <div v-if="formErrors.date" id="date-error" class="error-message" role="alert" aria-live="assertive">
                     {{ formErrors.date }}
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="readingTime">Reading Time (minutes) <span class="sr-only">(required)</span></label>
-                <input 
-                    id="readingTime" 
-                    v-model.number="formData.readingTime" 
-                    type="number" 
-                    min="1" 
-                    required
-                    :aria-invalid="formErrors.readingTime ? 'true' : 'false'"
-                    :aria-describedby="`readingTimeHint ${formErrors.readingTime ? 'readingTime-error' : ''}`"
+                <input id="readingTime" v-model.number="formData.readingTime" type="number" min="1" required
+                    :aria-invalid="formErrors.readingTime ? 'true' : 'false'" :aria-describedby="readingTimeDescribedBy"
                     aria-required="true">
                 <div id="readingTimeHint" class="hint">Estimated time to read this article in minutes</div>
-                <div 
-                    v-if="formErrors.readingTime" 
-                    id="readingTime-error" 
-                    class="error-message" 
-                    role="alert" 
+                <div v-if="formErrors.readingTime" id="readingTime-error" class="error-message" role="alert"
                     aria-live="assertive">
                     {{ formErrors.readingTime }}
                 </div>
@@ -79,24 +45,17 @@
 
             <div class="form-group">
                 <label for="featureImage">Feature Image URL</label>
-                <input 
-                    id="featureImage" 
-                    v-model="formData.featureImage" 
-                    type="url" 
-                    placeholder="https://example.com/image.jpg"
+                <input id="featureImage" v-model="formData.featureImage" type="url"
                     :aria-invalid="formErrors.featureImage ? 'true' : 'false'"
-                    :aria-describedby="formErrors.featureImage ? 'featureImage-error' : undefined"
-                    aria-describedby="featureImageHint"
-                    inputmode="url">
-                <div id="featureImageHint" class="hint">Enter the full URL of the image (e.g., https://example.com/image.jpg)</div>
-                <div 
-                    v-if="formErrors.featureImage" 
-                    id="featureImage-error" 
-                    class="error-message" 
-                    role="alert"
+                    :aria-describedby="featureImageDescribedBy" inputmode="url">
+                <div id="featureImageHint" class="hint">Enter the full URL of the image (e.g.,
+                    https://example.com/image.jpg)
+                </div>
+                <div v-if="formErrors.featureImage" id="featureImage-error" class="error-message" role="alert"
                     aria-live="assertive">
                     {{ formErrors.featureImage }}
                 </div>
+
             </div>
 
             <!-- Tags Input Field -->
@@ -114,42 +73,33 @@
 
                     <!-- Tag input -->
                     <div class="tag-input-wrapper">
-                        <input 
-                            v-if="formData.tags.length < 5" 
-                            id="tags-input" 
-                            ref="tagInput" 
-                            v-model="newTag"
-                            required
-                            @keydown.enter.prevent="filteredTags.length ? selectTag(filteredTags[0]) : addTag()"
-                            @focus="handleFocus" 
-                            @blur="handleBlur" 
-                            @keydown.down.prevent="focusNextSuggestion(1)"
-                            @keydown.up.prevent="focusPreviousSuggestion()" 
-                            @keydown.esc="isSuggestionsOpen = false"
-                            type="text"
-                            placeholder="Type a tag and press Enter to add"
-                            autocomplete="off"
-                            role="combobox"
-                            :aria-describedby="`tags-help ${formErrors.tags ? 'tags-error' : ''}`" 
-                            aria-autocomplete="list"
-                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" 
-                            aria-haspopup="listbox"
+                        <input v-if="formData.tags.length < 5" id="tags-input" ref="tagInput" v-model="newTag"
+                            :required="formData.tags.length === 0" @keydown.enter.prevent="handleTagEnter"
+                            @focus="handleFocus" @blur="handleBlur" @keydown.down.prevent="focusNextSuggestion(1)"
+                            @keydown.up.prevent="focusPreviousSuggestion()" @keydown.esc="isSuggestionsOpen = false"
+                            type="text" placeholder="Type a tag and press Enter to add" autocomplete="off"
+                            role="combobox" :aria-describedby="tagsAriaDescribedBy" aria-autocomplete="list"
+                            :aria-expanded="isSuggestionsOpen ? 'true' : 'false'" aria-haspopup="listbox"
                             :aria-controls="isSuggestionsOpen ? 'tag-suggestions' : undefined"
-                            :aria-activedescendant="isSuggestionsOpen ? activeSuggestionId : undefined"
+                            :aria-activedescendant="isSuggestionsOpen ? `tag-suggestion-${focusedSuggestionIndex}` : undefined"
                             :aria-invalid="formErrors.tags ? 'true' : 'false'"
-                            aria-required="true">
-                            <div v-if="formErrors.tags" id="tags-error" class="error-message" role="alert" aria-live="polite">{{ formErrors.tags }}</div>
+                            :aria-required="formData.tags.length === 0 ? 'true' : 'false'">
+                        <div v-if="formErrors.tags" id="tags-error" class="error-message" role="alert"
+                            aria-live="polite">{{
+                            formErrors.tags }}</div>
                         <Transition name="tag-suggestions-fade">
                             <div v-if="isSuggestionsOpen" class="tag-suggestions-container">
                                 <ul id="tag-suggestions" class="tag-suggestions" role="listbox"
                                     :aria-label="`${filteredTags.length} suggestions available`">
-                                    <li v-for="(tag, index) in filteredTags" :key="tag" :id="`suggestion-${index}`"
-                                        @mousedown.prevent="selectTag(tag)" @mouseenter="focusedSuggestionIndex = index"
-                                        role="option" :aria-selected="focusedSuggestionIndex === index"
+                                    <li v-for="(tag, index) in filteredTags" :key="tag" :id="`tag-suggestion-${index}`"
+                                        @mousedown.prevent="selectTag(tag)"
+                                        @mouseenter="handleSuggestionMouseEnter(index)" role="option"
+                                        :aria-selected="focusedSuggestionIndex === index"
                                         :class="['tag-suggestion', { 'focused': focusedSuggestionIndex === index }]">
                                         <div class="tag-suggestion-left">
                                             <span class="tag-suggestion-icon" aria-hidden="true">
-                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                                    aria-hidden="true" focusable="false"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M7 7H17M7 12H17M7 17H14" stroke="currentColor"
                                                         stroke-width="2" stroke-linecap="round"
@@ -203,21 +153,25 @@
             </div>
             <div class="form-group">
                 <label for="content">Content (Markdown)</label>
-                    <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
-                    <span id="markdown-editor-label" class="sr-only">Markdown editor with preview. Use tab to switch between edit and preview modes.</span>
+                <div class="markdown-editor" role="group" aria-labelledby="markdown-editor-label">
+                    <span id="markdown-editor-label" class="sr-only">Markdown editor with preview. Use tab to switch
+                        between
+                        edit and preview modes.</span>
+                    <div v-if="formErrors.content" id="content-error" class="error-message" role="alert"
+                        aria-live="assertive">
+                        {{ formErrors.content }}
+                    </div>
 
                     <!-- Tab Navigation -->
                     <div class="markdown-tabs" role="tablist" aria-label="Markdown editor modes">
                         <button id="edit-tab" type="button" role="tab" @click="activeTab = 'edit'"
                             :class="['tab-button', { active: activeTab === 'edit' }]" aria-controls="editor-panel"
-                            :aria-selected="activeTab === 'edit'"
-                            :tabindex="activeTab === 'edit' ? 0 : -1">
+                            :aria-selected="activeTab === 'edit'" :tabindex="activeTab === 'edit' ? 0 : -1">
                             <span class="icon">✏️</span> Edit
                         </button>
                         <button id="preview-tab" type="button" role="tab" @click="activeTab = 'preview'"
                             :class="['tab-button', { active: activeTab === 'preview' }]" aria-controls="preview-panel"
-                            :aria-selected="activeTab === 'preview'"
-                            :tabindex="activeTab === 'preview' ? 0 : -1">
+                            :aria-selected="activeTab === 'preview'" :tabindex="activeTab === 'preview' ? 0 : -1">
                             <span class="icon">👁️</span> Preview
                         </button>
                     </div>
@@ -234,8 +188,8 @@
                             @keydown.shift.tab.exact.prevent="handleShiftTabWrapper"
                             @keydown.enter.exact.prevent="handleEnter1" @keydown.esc="handleEsc"
                             placeholder="Write your post content in markdown..." required
-                            :aria-invalid="formErrors.content ? 'true' : 'false'"
-                            :aria-describedby="contentDescribedBy" rows="15">
+                            :aria-invalid="formErrors.content ? 'true' : 'false'" :aria-describedby="contentDescribedBy"
+                            rows="15">
                 </textarea>
                         <div v-if="formErrors.content" id="content-error" class="error-message" role="alert"
                             aria-live="polite">
@@ -245,11 +199,8 @@
 
                     <!-- Preview Panel -->
                     <div id="preview-panel" class="whitespace-pre-wrap tab-size-4" v-show="activeTab === 'preview'"
-                        role="tabpanel" 
-                        aria-labelledby="preview-tab" 
-                        :aria-hidden="activeTab !== 'preview'"
-                        tabindex="0"
-                        aria-live="polite">
+                        role="tabpanel" aria-labelledby="preview-tab" :aria-hidden="activeTab !== 'preview'"
+                        tabindex="0" aria-live="polite">
                         <div class="preview-header">
                             <h2 id="preview-heading" class="text-xl font-semibold mb-2 sr-only">Preview</h2>
                             <article v-html="previewContent" class="preview-content prose lg:prose-lg max-w-none"
@@ -282,6 +233,35 @@
 <script setup>
 import { ref, watch, computed, onMounted, nextTick } from 'vue'
 import { normalizeTag, findSimilarTag, TagNormalizer } from '@/utils/tagNormalizer';
+
+// Centralized error handling utility
+const handleError = (error, context = '') => {
+    let errorMessage = error.message || 'An unexpected error occurred';
+    const logContext = context ? `[${context}]` : '';
+
+    // Add more context to the error message based on the operation
+    if (context === 'savePost') {
+        errorMessage = `Failed to ${isEditMode.value ? 'update' : 'publish'} post. ${errorMessage}`;
+    } else if (context === 'loadPost') {
+        errorMessage = `Failed to load post. ${errorMessage}`;
+    } else if (context === 'addTag') {
+        errorMessage = `Failed to add tag. ${errorMessage}`;
+    }
+
+    // Log the full error for debugging
+    console.error(`${logContext} ${errorMessage}`, error);
+
+    // Show user-friendly notification
+    showNotify(errorMessage, 'error');
+
+    // Return a rejected promise to ensure proper error propagation
+    // in async/await chains. This is crucial because:
+    // 1. It allows parent async functions to catch and handle the error
+    // 2. It prevents the code from continuing execution after an error
+    // 3. It maintains the error's stack trace for debugging
+    return Promise.reject(error);
+};
+const imageUrlPattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i;
 import { useRouter, useRoute } from 'vue-router'
 import { addPost, updatePost, getPostById, signOut, auth, validateTags } from '@/config/firebase'
 import LoadingOverlay from '@/components/UI/LoadingOverlay.vue'
@@ -323,6 +303,21 @@ const formData = ref({
     tags: [] // Add tags field
 });
 
+const formErrors = ref({
+    title: '',
+    date: '',
+    readingTime: '',
+    featureImage: '',
+    tags: '',
+    content: ''
+});
+
+
+const clearFieldError = (field, isValid) => {
+    if (isValid && formErrors.value[field]) {
+        formErrors.value[field] = '';
+    }
+};
 
 // Tag-related reactive variables
 const allTags = ref([]);
@@ -332,6 +327,7 @@ const showTagLimitMessage = ref(false);
 const showSuggestions = ref(false);
 const isTagInputFocused = ref(false);
 const focusedSuggestionIndex = ref(-1);
+const lastSuggestionFocusWasKeyboard = ref(false);
 let blurTimeoutId = null;
 
 
@@ -364,21 +360,19 @@ onMounted(async () => {
                 };
             }
         } catch (error) {
-            console.error('Error loading post:', error);
-            showNotify('Failed to load post. Please try again.', 'error');
+            handleError(error, 'loadPost');
         } finally {
             isLoading.value = false;
         }
     }
 });
 
-
-
 // Filter tags based on input
 const filteredTags = computed(() => {
     if (!newTag.value) return [];
     const searchTerm = newTag.value.toLowerCase();
     const normalizedExistingTags = new Set(formData.value.tags.map(tag => normalizeTag(tag)));
+
     return allTags.value
         .filter(tag => {
             const lowerTag = tag.toLowerCase();
@@ -410,6 +404,41 @@ watch([
         }
     });
 
+// so when the form data title value changes, we validate it as newTitle    
+watch(() => formData.value.title, (newTitle) => {
+    const trimmed = newTitle?.trim() || '';
+    const isValidTitle = trimmed.length > 0 && /[a-z0-9]/i.test(trimmed);
+    clearFieldError('title', isValidTitle);
+});
+
+// so when the form data date value changes, we validate it as newDate    
+watch(() => formData.value.date, (newDate) => {
+    clearFieldError('date', !!newDate);
+});
+
+// so when the form data readingTime value changes, we validate it as newReadingTime    
+watch(() => formData.value.readingTime, (newReadingTime) => {
+    const numericValue = Number(newReadingTime);
+    clearFieldError('readingTime', Number.isFinite(numericValue) && numericValue >= 1);
+});
+
+// so when the form data featureImage value changes, we validate it as newFeatureImage    
+watch(() => formData.value.featureImage, (newFeatureImage) => {
+    const trimmed = newFeatureImage?.trim();
+    const isValidImage = !trimmed || imageUrlPattern.test(trimmed);
+    clearFieldError('featureImage', isValidImage);
+});
+ 
+// so when the form data content value changes, we validate it as newContent    
+watch(() => formData.value.content, (newContent) => {
+    clearFieldError('content', !!newContent?.trim());
+});
+
+
+watch(() => formData.value.tags.length, (newTagsLength) => {
+    clearFieldError('tags', newTagsLength > 0);
+});
+
 const escapeHtml = (unsafe) => {
     return unsafe.replace(/[&<>"]+/g, (char) => {
         const map = {
@@ -434,14 +463,14 @@ const highlightMatch = (tag) => {
 
 // Add a tag from suggestions
 const selectTag = (tag) => {
-
     if (formData.value.tags.length >= 5) return;
 
     const normalizedSelectedTag = normalizeTag(tag);
     const existingNormalizedTags = formData.value.tags.map(existingTag => normalizeTag(existingTag));
 
     if (existingNormalizedTags.includes(normalizedSelectedTag)) {
-        showNotify(`Tag '${tag}' is too similar to an existing tag.`, 'error');
+        const error = new Error(`Tag '${tag}' is too similar to an existing tag.`);
+        handleError(error, 'addTag');
         return;
     }
 
@@ -452,30 +481,40 @@ const selectTag = (tag) => {
 };
 // Focus management for keyboard navigation
 const focusNextSuggestion = (increment = 1) => {
+
     if (!showSuggestions.value || filteredTags.value.length === 0) return;
 
     const newIndex = focusedSuggestionIndex.value + increment;
     if (newIndex >= 0 && newIndex < filteredTags.value.length) {
         focusedSuggestionIndex.value = newIndex;
+        lastSuggestionFocusWasKeyboard.value = true;
 
     } else if (newIndex >= filteredTags.value.length) {
         // Wrap to first item if at the end
         focusedSuggestionIndex.value = 0;
+        lastSuggestionFocusWasKeyboard.value = true;
 
     }
 };
 
 const focusPreviousSuggestion = () => {
     if (!showSuggestions.value || filteredTags.value.length === 0) return;
-    
+
     const newIndex = focusedSuggestionIndex.value - 1;
     if (newIndex >= 0) {
         focusedSuggestionIndex.value = newIndex;
+        lastSuggestionFocusWasKeyboard.value = true;
     } else {
         // Wrap to last item if at the beginning
         focusedSuggestionIndex.value = filteredTags.value.length - 1;
+        lastSuggestionFocusWasKeyboard.value = true;
 
     }
+};
+
+const handleSuggestionMouseEnter = (index) => {
+    focusedSuggestionIndex.value = index;
+    lastSuggestionFocusWasKeyboard.value = false;
 };
 
 
@@ -483,24 +522,52 @@ const isSuggestionsOpen = computed(() => {
     return showSuggestions.value && filteredTags.value.length > 0 && isTagInputFocused.value;
 });
 
-const activeSuggestionId = computed(() => {
-    if (!isSuggestionsOpen.value) return '';
-    const index = focusedSuggestionIndex.value;
-    if (index >= 0 && index < filteredTags.value.length) {
-        return `suggestion-${index}`;
+
+const highlightedSuggestion = computed(() => {
+    const suggestions = filteredTags.value;
+    if (!suggestions.length) return null;
+
+    const typedTag = newTag.value?.trim();
+    if (typedTag) {
+        const normalizedTypedTag = normalizeTag(typedTag);
+        const exactMatch = suggestions.find(tag => normalizeTag(tag) === normalizedTypedTag);
+        if (exactMatch) {
+            return exactMatch;
+        }
     }
-    return '';
+
+    const index = focusedSuggestionIndex.value;
+    if (index >= 0 && index < suggestions.length) {
+        return suggestions[index];
+    }
+
+    return null;
 });
 
+const handleTagEnter = () => {
+    const suggestions = filteredTags.value;
+    if (!suggestions.length) {
+        addTag();
+        return;
+    }
 
-const formErrors = ref({
-    title: '',
-    date: '',
-    readingTime: '',
-    featureImage: '',
-    content: '',
-    tags: '',
-});
+    const typedTag = newTag.value?.trim();
+    const highlighted = highlightedSuggestion.value;
+
+    if (highlighted) {
+        const normalizedHighlighted = normalizeTag(highlighted);
+        const normalizedTyped = typedTag ? normalizeTag(typedTag) : '';
+
+        // If the user typed something matching this suggestion (exact match) or explicitly navigated to it,
+        // we should add the suggestion.
+        if (normalizedHighlighted === normalizedTyped || lastSuggestionFocusWasKeyboard.value) {
+            selectTag(highlighted);
+            return;
+        }
+    }
+
+    addTag();
+};
 
 const resetFormErrors = () => {
     Object.keys(formErrors.value).forEach((key) => {
@@ -515,7 +582,7 @@ const tagsAriaDescribedBy = computed(() => {
 const titleDescribedBy = computed(() => formErrors.value.title ? 'title-error' : undefined);
 const dateDescribedBy = computed(() => formErrors.value.date ? 'date-error' : undefined);
 const readingTimeDescribedBy = computed(() => formErrors.value.readingTime ? 'readingTimeHint readingTime-error' : 'readingTimeHint');
-const featureImageDescribedBy = computed(() => formErrors.value.featureImage ? 'featureImage-error' : undefined);
+const featureImageDescribedBy = computed(() => formErrors.value.featureImage ? 'featureImageHint featureImage-error' : 'featureImageHint');
 const contentDescribedBy = computed(() => formErrors.value.content ? 'content-error' : undefined);
 
 const isSubmitting = ref(false);
@@ -966,12 +1033,26 @@ const validateForm = () => {
         isValid = false;
     }
 
-    console.log('tags on submit', formData.value.tags.length);
     // Tags validation
     if (!formData.value.tags?.length) {
         formErrors.value.tags = 'At least one tag is required';
         isValid = false;
     }
+
+    // Reading time validation
+    if (!formData.value.readingTime || formData.value.readingTime < 1) {
+        formErrors.value.readingTime = 'Reading time must be at least 1 minute';
+        isValid = false;
+    }
+
+    // Feature image URL validation (if provided)
+    if (formData.value.featureImage?.trim()) {
+        if (!imageUrlPattern.test(formData.value.featureImage.trim())) {
+            formErrors.value.featureImage = 'Please enter a valid image URL (must start with http:// or https:// and end with a valid image extension)';
+            isValid = false;
+        }
+    }
+
     // Content validation
     if (!formData.value.content?.trim()) {
         formErrors.value.content = 'Content is required';
@@ -988,25 +1069,27 @@ const addTag = () => {
 
     // Check tag limit BEFORE any processing
     if (formData.value.tags.length >= 5) {
-        showNotify('Maximum 5 tags reached. Remove a tag to add a new one.', 'error');
+        const error = new Error('Maximum 5 tags reached. Remove a tag to add a new one.');
+        handleError(error, 'addTag');
         return; // Stop here - don't process the tag
     }
 
     try {
         const inputTag = newTag.value.trim();
         const normalizedInputTag = normalizeTag(inputTag);
-
         // Check for exact duplicates first
         const existingNormalizedTags = formData.value.tags.map(tag => normalizeTag(tag));
         if (existingNormalizedTags.includes(normalizedInputTag)) {
-            showNotify(`Tag '${inputTag}' already exists (case-insensitive)`, 'error');
+            const error = new Error(`Tag '${inputTag}' already exists (case-insensitive)`);
+            handleError(error, 'addTag');
             return;
         }
 
         // Check for similar tags
         const similarTag = findSimilarTag(inputTag, formData.value.tags);
         if (similarTag) {
-            showNotify(`Tag '${inputTag}' is too similar to existing tag '${similarTag}'. Please use a more specific tag.`, 'error');
+            const error = new Error(`Tag '${inputTag}' is too similar to existing tag '${similarTag}'. Please use a more specific tag.`);
+            handleError(error, 'addTag');
             return;
         }
 
@@ -1034,7 +1117,7 @@ const addTag = () => {
         });
 
     } catch (error) {
-        showNotify(error.message, 'error');
+        handleError(error, 'addTag');
         // Keep focus on input for correction
         nextTick(() => {
             tagInput.value?.focus();
@@ -1100,13 +1183,13 @@ const handleSubmit = async () => {
             };
         }
     } catch (error) {
-        console.error(`Error ${isEditMode.value ? 'updating' : 'publishing'} post:`, error);
-        showNotify(`Failed to ${isEditMode.value ? 'update' : 'publish'} post. ${error.message || 'Please try again.'}`, 'error');
+        handleError(error, 'savePost');
     } finally {
         isSubmitting.value = false;
     }
 }
 </script>
+
 
 <style scoped>
 /* 
@@ -1479,10 +1562,12 @@ textarea {
 }
 
 .error-message {
-    color: #c53030; /* Darker red for better contrast (4.6:1 on white) */
+    color: #c53030;
+    /* Darker red for better contrast (4.6:1 on white) */
     font-size: 0.875rem;
     margin-top: 0.25rem;
-    font-weight: 500; /* Slightly bolder for better readability */
+    font-weight: 500;
+    /* Slightly bolder for better readability */
     font-weight: 500;
 }
 
