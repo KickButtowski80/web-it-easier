@@ -325,7 +325,6 @@ export default {
   transform-style: preserve-3d;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05);
   outline: none;
-  min-height: 280px;
   display: flex;
   flex-direction: column;
   will-change: transform, box-shadow;
