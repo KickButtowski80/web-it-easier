@@ -50,7 +50,8 @@
             :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`"
           >
-          {{ post.date }}
+          
+<span v-if="post.updatedAt"> · Updated {{ relativeTime(post.updatedAt) }}</span>
             <RouterLink 
               :to="'/blog/' + titleToSlug(post.title)"
               class="card-link"
@@ -104,7 +105,7 @@
 </template>
 
 <script>
-import { formatDate, formatDateISO, titleToSlug } from '../utils/helpers';
+import { formatDate, formatDateISO, titleToSlug, relativeTime } from '../utils/helpers';
 import { getPosts, auth } from '../config/firebase';
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -214,7 +215,8 @@ export default {
       notificationIcon,
       showNotification,
       filteredPosts,
-      currentTag
+      currentTag,
+      relativeTime
     };
   }
 };
