@@ -18,6 +18,7 @@
       </svg>
       Related Articles
     </h2>
+    
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <router-link 
         v-for="post in relatedPosts" 
@@ -26,6 +27,8 @@
         class="related-post-card"
         :aria-labelledby="`related-post-title-${post.id}`"
       >
+
+      <RelativeTimeBadge v-if="post.updatedAt" :post-updated-at="post.updatedAt" />
         <article class="h-full">
           <div class="card-content">
             <h3 :id="`related-post-title-${post.id}`" class="card-title">
@@ -50,7 +53,8 @@
 <script setup>
 import { computed } from 'vue';
 import { TagNormalizer } from '@/utils/tagNormalizer';
-import { titleToSlug } from '@/utils/helpers';
+import { formatDate, formatDateISO, titleToSlug } from '@/utils/helpers';
+import RelativeTimeBadge from './RelativeTimeBadge.vue';
 
 const props = defineProps({
   allPosts: {
@@ -145,18 +149,8 @@ const relatedPosts = computed(() => {
 
   return topPosts;
 });
-// Format date helpers
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
 
-const formatDateISO = (dateString) => {
-  return new Date(dateString).toISOString().split('T')[0];
-};
+
 </script>
 
 <style scoped>
