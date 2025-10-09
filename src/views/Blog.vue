@@ -67,7 +67,7 @@
               </span>
             </time> -->
 
-            <RelativeTimeBadge :post-updated-at="post.updatedAt" />
+            <RelativeTimeBadge  v-if="post.updatedAt" :post-updated-at="post.updatedAt" />
             <RouterLink :to="'/blog/' + titleToSlug(post.title)" class="card-link">
               <div class="card-content">
                 <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="card-title">
