@@ -50,6 +50,7 @@
             :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`"
           >
+          {{ post.date }}
             <RouterLink 
               :to="'/blog/' + titleToSlug(post.title)"
               class="card-link"
@@ -103,7 +104,7 @@
 </template>
 
 <script>
-import { formatDate, titleToSlug } from '../utils/helpers';
+import { formatDate, formatDateISO, titleToSlug } from '../utils/helpers';
 import { getPosts, auth } from '../config/firebase';
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -155,6 +156,7 @@ export default {
     onMounted(async () => {
       try {
         posts.value = await getPosts()
+     
         // Check if user is logged in
         auth.onAuthStateChanged(user => {
           isAdmin.value = !!user
@@ -192,10 +194,7 @@ export default {
         loading.value = false;
       }
     })
-    const formatDateISO = (date) => {
-      return new Date(date).toISOString().split('T')[0];
-    };
-
+  
     const router = useRouter();
     const navigateToPost = (title) => {
       router.push('/blog/' + titleToSlug(title));

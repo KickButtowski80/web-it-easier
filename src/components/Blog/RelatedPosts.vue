@@ -50,7 +50,7 @@
 <script setup>
 import { computed } from 'vue';
 import { TagNormalizer } from '@/utils/tagNormalizer';
-import { titleToSlug } from '@/utils/helpers';
+import { formatDate, formatDateISO, titleToSlug } from '@/utils/helpers';
 
 const props = defineProps({
   allPosts: {
@@ -145,18 +145,8 @@ const relatedPosts = computed(() => {
 
   return topPosts;
 });
-// Format date helpers
-const formatDate = (dateString) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-};
 
-const formatDateISO = (dateString) => {
-  return new Date(dateString).toISOString().split('T')[0];
-};
+
 </script>
 
 <style scoped>
