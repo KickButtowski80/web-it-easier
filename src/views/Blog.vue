@@ -57,25 +57,10 @@
           <article class="blog-card" :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`">
 
-            <time
-              v-if="post.updatedAt"
-              class="updated-at"
-              :datetime="formatDateISO(post.updatedAt)"
-            >
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                viewBox="0 0 24 24"
-                class="updated-at__icon"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  fill="none"
-                  d="M12 6v6l3 1.5m6-1.5a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
+            <time v-if="post.updatedAt" class="updated-at" :datetime="formatDateISO(post.updatedAt)">
+              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="updated-at__icon">
+                <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                  fill="none" d="M12 6v6l3 1.5m6-1.5a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span class="updated-at__label">
                 Updated {{ relativeTime(post.updatedAt) }}
@@ -87,7 +72,7 @@
                   {{ post.title }}
                 </h2>
                 <div :id="`post-desc-${titleToSlug(post.title)}-${i}`" class="card-body"
-                  v-html="renderMarkdown(post.content.split(/\s+/).slice(0, 18).join(' ') + '…')"></div>
+                  v-html="renderMarkdown(post.excerpt || generateExcerpt(post.content))"></div>
                 <div class="card-footer">
                   <div class="card-meta">
                     <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
@@ -176,6 +161,16 @@ export default {
       })
     })
 
+    const generateExcerpt = (markdown, defaultWords = 18) => {
+      const html = renderMarkdown(markdown);
+      const container = document.createElement('div');
+      container.innerHTML = html;
+      const firstParagraph = container.querySelector('p');
+      if (firstParagraph) return firstParagraph.innerHTML;
+      const text = container.textContent || '';
+      return text.split(/\s+/).slice(0, defaultWords).join(' ') + '…';
+    };
+
     onMounted(async () => {
       try {
         posts.value = await getPosts()
@@ -238,7 +233,8 @@ export default {
       showNotification,
       filteredPosts,
       currentTag,
-      relativeTime
+      relativeTime,
+      generateExcerpt
     };
   }
 };
