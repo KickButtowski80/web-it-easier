@@ -142,10 +142,41 @@ const formatDateISO = (dateString) => {
   return {
     showNotification,
     notificationMessage,
-    notificationType,
     notificationIcon,
     showNotify
   };
 }
-  // Export utility functions for use in other modules
-  export { formatDate, formatDateISO, titleToSlug, useNotification };
+
+/**
+ * Produce a human-readable relative time string (e.g., "2 days ago", "in 3 hours").
+ * Accepts the same date-like values handled by `toDate()` including Firestore
+ * timestamps, ISO strings, numbers (ms or seconds), and native Date objects.
+ *
+ * @param {unknown} pastDate - The date to compare against the current time.
+ * @returns {string} Localized relative time phrase, or an empty string when parsing fails.
+ */
+const relativeTime = (pastDate) => {
+  const normalizedPastDate = toDate(pastDate);
+  if (!normalizedPastDate) return '';
+
+  const now = Date.now();
+  const pastToNowMsDifference = normalizedPastDate.getTime() - now;
+  const pastToNowMsAbsolute = Math.abs(pastToNowMsDifference);
+
+  const units = [
+    { limit: 60_000, divisor: 1_000, unit: 'second' },
+    { limit: 3_600_000, divisor: 60_000, unit: 'minute' },
+    { limit: 86_400_000, divisor: 3_600_000, unit: 'hour' },
+    { limit: 604_800_000, divisor: 86_400_000, unit: 'day' },
+    { limit: 2_592_000_000, divisor: 604_800_000, unit: 'week' },
+    { limit: 31_536_000_000, divisor: 2_592_000_000, unit: 'month' },
+    { limit: Infinity, divisor: 31_536_000_000, unit: 'year' }
+  ];
+
+  const { divisor, unit } = units.find(({ limit }) => pastToNowMsAbsolute < limit);
+  const relativeAmount = Math.round(pastToNowMsDifference / divisor);
+
+  return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(relativeAmount, unit);
+};
+
+export { formatDate, formatDateISO, titleToSlug, useNotification, relativeTime };
