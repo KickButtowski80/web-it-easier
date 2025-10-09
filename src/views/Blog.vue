@@ -56,7 +56,7 @@
         <li v-for="(post, i) in filteredPosts" :key="titleToSlug(post.title) + '-' + i" class="blog-card-container">
           <article class="blog-card" :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`">
-
+<!-- 
             <time v-if="post.updatedAt" class="updated-at" :datetime="formatDateISO(post.updatedAt)">
               <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="updated-at__icon">
                 <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
@@ -65,7 +65,9 @@
               <span class="updated-at__label">
                 Updated {{ relativeTime(post.updatedAt) }}
               </span>
-            </time>
+            </time> -->
+
+            <RelativeTimeBadge :post-updated-at="post.updatedAt" />
             <RouterLink :to="'/blog/' + titleToSlug(post.title)" class="card-link">
               <div class="card-content">
                 <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="card-title">
@@ -120,6 +122,7 @@ import Notification from '../components/UI/Notification.vue';
 import { useNotification } from '../utils/helpers';
 import { renderMarkdown } from '../utils/markdown';
 import { updateCanonicalUrl } from '../utils/seo-update-canonical-url';
+import RelativeTimeBadge from '../components/Blog/RelativeTimeBadge.vue';
 const {
   showNotification,
   notificationMessage,
@@ -130,7 +133,8 @@ const {
 
 export default {
   components: {
-    Notification
+    Notification,
+    RelativeTimeBadge
   },
   props: {
     tag: {
@@ -285,7 +289,8 @@ export default {
       filteredPosts,
       currentTag,
       relativeTime,
-      generateExcerpt
+      generateExcerpt,
+      RelativeTimeBadge
     };
   }
 };
@@ -648,30 +653,5 @@ export default {
   color: #6366f1;
 }
 
-.updated-at {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #4f46e5;
-  background: rgba(99, 102, 241, 0.12);
-  padding: 0.25rem 0.65rem;
-  border-radius: 9999px;
-  letter-spacing: 0.01em;
-}
 
-.updated-at__icon {
-  width: 0.9rem;
-  height: 0.9rem;
-}
-
-.updated-at__label {
-  display: inline-block;
-}
-
-.dark .updated-at {
-  color: #c7d2fe;
-  background: rgba(129, 140, 248, 0.22);
-}
 </style>
