@@ -2,22 +2,18 @@
 
   <section class="container mx-auto px-4 py-28">
     <div class="relative mb-20 text-center overflow-visible">
-      <div
-        class="absolute -top-6 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-      </div>
-
+      <div class="absolute -top-6 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      
       <div class="inline-block relative group">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6 relative z-10 text-gray-900 dark:text-white">
           <span class="relative inline-block">
             <span class="relative z-10">{{ currentTag ? `#${currentTag}` : 'Blog' }}</span>
-            <span
-              class="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 -z-0 transform -rotate-1 translate-y-1 group-hover:translate-y-2 transition-all duration-300"></span>
+            <span class="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 -z-0 transform -rotate-1 translate-y-1 group-hover:translate-y-2 transition-all duration-300"></span>
           </span>
         </h1>
       </div>
-
-      <div
-        class="max-w-2xl mx-auto relative
+      
+      <div class="max-w-2xl mx-auto relative
                 before:absolute before:left-0 before:top-1/2 before:w-8 before:h-px before:bg-gradient-to-r before:from-transparent before:to-gray-300 dark:before:to-gray-600
                 after:absolute after:right-0 after:top-1/2 after:w-8 after:h-px after:bg-gradient-to-l after:from-transparent after:to-gray-300 dark:after:to-gray-600">
         <p class="text-gray-500 dark:text-gray-400 font-medium px-10">
@@ -26,75 +22,68 @@
           </span>
         </p>
       </div>
-
-      <div
-        class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-indigo-300 dark:via-indigo-600 to-transparent group-hover:w-48 transition-all duration-500">
-      </div>
+      
+      <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-0.5 bg-gradient-to-r from-transparent via-indigo-300 dark:via-indigo-600 to-transparent group-hover:w-48 transition-all duration-500"></div>
     </div>
-
+    
     <!-- Blog Navigation Links -->
     <nav aria-label="Blog navigation" class="blog-navigation mb-10 flex justify-center content-center  gap-4">
       <RouterLink v-if="currentTag" to="/blog" class="nav-link">
-        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
         Show All
       </RouterLink>
       <RouterLink to="/blog/archive" class="nav-link">
-        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
         </svg>
         Browse Archive
       </RouterLink>
     </nav>
-
+    
     <section aria-label="Blog posts" class="isolate">
       <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 list-none p-0">
         <li v-for="(post, i) in filteredPosts" :key="titleToSlug(post.title) + '-' + i" class="blog-card-container">
-          <article class="blog-card" :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
-            :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`">
-<!-- 
-            <time v-if="post.updatedAt" class="updated-at" :datetime="formatDateISO(post.updatedAt)">
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="updated-at__icon">
-                <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                  fill="none" d="M12 6v6l3 1.5m6-1.5a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span class="updated-at__label">
-                Updated {{ relativeTime(post.updatedAt) }}
-              </span>
-            </time> -->
+          <article 
+            class="blog-card"
+            :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
+            :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`"
+          >
+            <RouterLink 
+              :to="'/blog/' + titleToSlug(post.title)"
+              class="card-link"
+            >
+            <div class="card-content">
+              <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="card-title">
+                {{ post.title }}
+              </h2>
+              <div :id="`post-desc-${titleToSlug(post.title)}-${i}`" class="card-body" v-html="renderMarkdown(post.content.substring(0, 100) + '...')"></div>
+              <div class="card-footer">
+                <div class="card-meta">
+                  <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
+                  <span aria-hidden="true">•</span>
+                  <span class="sr-only">Reading time: </span>
+                  <span>{{ post.readingTime }} min read</span>
+                  <span class="sr-only">. Click to read full article.</span>
+                </div>
 
-            <RelativeTimeBadge  v-if="post.updatedAt" :post-updated-at="post.updatedAt" />
-            <RouterLink :to="'/blog/' + titleToSlug(post.title)" class="card-link">
-              <div class="card-content">
-                <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="card-title">
-                  {{ post.title }}
-                </h2>
-                <div :id="`post-desc-${titleToSlug(post.title)}-${i}`" class="card-body"
-                  v-html="renderMarkdown(generateExcerpt(post.content))"></div>
-                <div class="card-footer">
-                  <div class="card-meta">
-                    <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
-                    <span aria-hidden="true">•</span>
-                    <span class="sr-only">Reading time: </span>
-                    <span>{{ post.readingTime }} min read</span>
-                    <span class="sr-only">. Click to read full article.</span>
-                  </div>
-
-                  <!-- Tags section - show all tags -->
-                  <div v-if="post.tags && post.tags.length > 0" class="card-tags-line">
-                    <span class="sr-only">Tags ({{ post.tags.length }} total): </span>
-                    <RouterLink v-for="tag in post.tags" :key="tag"
-                      :to="`/blog/posts/${encodeURIComponent(tag.toLowerCase())}`" class="tag-link"
-                      :aria-label="`View all posts tagged with ${tag}`" @click.stop>
-                      {{ tag }}
-                    </RouterLink>
-                  </div>
+                <!-- Tags section - show all tags -->
+                <div v-if="post.tags && post.tags.length > 0" class="card-tags-line">
+                  <span class="sr-only">Tags ({{ post.tags.length }} total): </span>
+                  <RouterLink
+                    v-for="tag in post.tags"
+                    :key="tag"
+                    :to="`/blog/posts/${encodeURIComponent(tag.toLowerCase())}`"
+                    class="tag-link"
+                    :aria-label="`View all posts tagged with ${tag}`"
+                    @click.stop
+                  >
+                    {{ tag }}
+                  </RouterLink>
                 </div>
               </div>
+            </div>
             </RouterLink>
           </article>
         </li>
@@ -114,7 +103,7 @@
 </template>
 
 <script>
-import { formatDate, formatDateISO, titleToSlug, relativeTime } from '../utils/helpers';
+import { formatDate, titleToSlug } from '../utils/helpers';
 import { getPosts, auth } from '../config/firebase';
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -122,7 +111,6 @@ import Notification from '../components/UI/Notification.vue';
 import { useNotification } from '../utils/helpers';
 import { renderMarkdown } from '../utils/markdown';
 import { updateCanonicalUrl } from '../utils/seo-update-canonical-url';
-import RelativeTimeBadge from '../components/Blog/RelativeTimeBadge.vue';
 const {
   showNotification,
   notificationMessage,
@@ -133,8 +121,7 @@ const {
 
 export default {
   components: {
-    Notification,
-    RelativeTimeBadge
+    Notification
   },
   props: {
     tag: {
@@ -156,80 +143,18 @@ export default {
     // Filter posts by tag
     const filteredPosts = computed(() => {
       if (!currentTag.value) return posts.value
-
+      
       return posts.value.filter(post => {
         if (!post.tags || !Array.isArray(post.tags)) return false
-        return post.tags.some(tag =>
+        return post.tags.some(tag => 
           tag.toLowerCase() === currentTag.value.toLowerCase()
         )
       })
     })
 
-    const generateExcerpt = (markdown, wordLimit = 22) => {
-      if (!markdown) return '';
-
-      const tokens = markdown.trim().split(/\s+/);
-      if (!tokens.length) return '';
-
-      const excerptTokens = [];
-      let wordCount = 0;
-      let boldBalance = 0;
-      let italicBalance = 0;
-      let codeBalance = 0;
-
-      const updateBalances = token => {
-        const boldMatches = token.match(/\*\*/g);
-        if (boldMatches) boldBalance = (boldBalance + boldMatches.length) % 2;
-        //  Assert that the character immediately before our current spot is NOT an asterisk. ?< before 
-        //  Assert that the character immediately after our current spot is NOT an asterisk. ? after 
-        const italicMatches = token.match(/(?<!\*)\*(?!\*)/g);
-        if (italicMatches) italicBalance = (italicBalance + italicMatches.length) % 2;
-
-        const underscoreMatches = token.match(/__/g);
-        if (underscoreMatches) italicBalance = (italicBalance + underscoreMatches.length) % 2;
-
-        const codeMatches = token.match(/`/g);
-        if (codeMatches) codeBalance = (codeBalance + codeMatches.length) % 2;
-      };
-
-      for (let i = 0; i < tokens.length; i++) {
-        const token = tokens[i];
-        excerptTokens.push(token);
-        wordCount += 1;
-        updateBalances(token);
-
-        const reachedLimit = wordCount >= wordLimit;
-        const markersBalanced = boldBalance === 0 && italicBalance === 0 && codeBalance === 0;
-
-        if (reachedLimit && markersBalanced) {
-          break;
-        }
-      }
-
-      let excerpt = excerptTokens.join(' ');
-      const hasMore = excerptTokens.length < tokens.length;
-
-      if (boldBalance !== 0) excerpt += '**';
-      if (italicBalance !== 0) excerpt += '*';
-      if (codeBalance !== 0) excerpt += '`';
-
-      if (hasMore) {
-        if (!excerpt.endsWith('**') && !excerpt.endsWith('*') && !excerpt.endsWith('`')) {
-          excerpt += '…';
-        } else {
-          excerpt += ' …';
-        }
-      }
-      if (excerpt.startsWith('>')) {
-        excerpt = `${excerpt.replace(/^>\s*/, '> ')}\n`;
-      }
-      return excerpt;
-    };
-
     onMounted(async () => {
       try {
         posts.value = await getPosts()
-
         // Check if user is logged in
         auth.onAuthStateChanged(user => {
           isAdmin.value = !!user
@@ -237,12 +162,12 @@ export default {
 
         // Wait for the next DOM update cycle
         await nextTick();
-
+        
         try {
           console.log('Updating canonical URL for blog page...');
           const canonicalUrl = updateCanonicalUrl();
           console.log('Canonical URL set to:', canonicalUrl);
-
+          
           // Verify the canonical tag was created/updated
           const canonicalTag = document.querySelector('link[rel="canonical"]');
           if (canonicalTag) {
@@ -267,6 +192,9 @@ export default {
         loading.value = false;
       }
     })
+    const formatDateISO = (date) => {
+      return new Date(date).toISOString().split('T')[0];
+    };
 
     const router = useRouter();
     const navigateToPost = (title) => {
@@ -287,10 +215,7 @@ export default {
       notificationIcon,
       showNotification,
       filteredPosts,
-      currentTag,
-      relativeTime,
-      generateExcerpt,
-      RelativeTimeBadge
+      currentTag
     };
   }
 };
@@ -298,15 +223,8 @@ export default {
 
 <style scoped>
 @keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
 }
 
 .blog-card-container {
@@ -330,6 +248,7 @@ export default {
   transform-style: preserve-3d;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05);
   outline: none;
+  min-height: 280px;
   display: flex;
   flex-direction: column;
   will-change: transform, box-shadow;
@@ -358,16 +277,16 @@ export default {
 .blog-card:focus {
   transform: translateY(-4px);
   border-color: #6366f1;
-  box-shadow: 0 12px 25px -5px rgba(99, 102, 241, 0.15),
-    0 8px 10px -6px rgba(99, 102, 241, 0.1),
-    0 0 0 1px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 12px 25px -5px rgba(99, 102, 241, 0.15), 
+              0 8px 10px -6px rgba(99, 102, 241, 0.1),
+              0 0 0 1px rgba(99, 102, 241, 0.1);
 }
 
 .blog-card:active {
   transform: translateY(-2px);
-  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.1),
-    0 2px 5px -1px rgba(0, 0, 0, 0.06),
-    inset 0 0 0 1px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.1), 
+              0 2px 5px -1px rgba(0, 0, 0, 0.06),
+              inset 0 0 0 1px rgba(99, 102, 241, 0.1);
 }
 
 .blog-card:hover::before {
@@ -389,9 +308,9 @@ export default {
 .dark .blog-card:hover,
 .dark .blog-card:focus {
   border-color: #818cf8;
-  box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.25),
-    0 10px 10px -5px rgba(99, 102, 241, 0.1),
-    0 0 0 1px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.25), 
+              0 10px 10px -5px rgba(99, 102, 241, 0.1),
+              0 0 0 1px rgba(99, 102, 241, 0.1);
 }
 
 .dark .blog-card:active {
@@ -432,8 +351,7 @@ export default {
 
 .dark .card-body {
   color: #e2e8f0;
-  font-weight: 400;
-  /* Slightly lighter in dark mode for better readability */
+  font-weight: 400; /* Slightly lighter in dark mode for better readability */
 }
 
 /* Ensure proper spacing for touch targets */
@@ -442,12 +360,11 @@ export default {
     min-height: 300px;
     padding: 2rem;
   }
-
+  
   .card-body {
-    font-size: 1.1rem;
-    /* Slightly larger on touch devices */
+    font-size: 1.1rem; /* Slightly larger on touch devices */
   }
-
+  
   .card-content {
     gap: 1.25rem;
   }
@@ -480,25 +397,10 @@ export default {
   color: #475569;
   font-size: 0.95rem;
   line-height: 1.7;
-  padding: 1rem 1.25rem;
-  background: linear-gradient(120deg, rgba(99, 102, 241, 0.06), rgba(129, 140, 248, 0.04));
-  border-left: 3px solid rgba(99, 102, 241, 0.35);
-  border-radius: 14px;
-  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.08);
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.blog-card:hover .card-body,
-.blog-card:focus .card-body {
-  border-color: rgba(99, 102, 241, 0.55);
-  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.14);
 }
 
 .dark .card-body {
   color: #cbd5e1;
-  background: linear-gradient(120deg, rgba(79, 70, 229, 0.14), rgba(129, 140, 248, 0.08));
-  border-left: 3px solid rgba(165, 180, 252, 0.45);
-  box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.12);
 }
 
 .card-body :deep(*) {
@@ -652,6 +554,4 @@ export default {
   border-color: rgba(129, 140, 248, 0.4);
   color: #6366f1;
 }
-
-
 </style>

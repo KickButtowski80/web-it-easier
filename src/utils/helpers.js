@@ -1,100 +1,17 @@
 import { ref } from 'vue';
 /**
- * Normalize various date representations into a native `Date` instance.
- *
- * ### Supported inputs
- * - Native `Date` objects (`new Date('2025-06-22')`)
- * - Firestore `Timestamp` objects (`{ seconds: 1733548800, nanoseconds: 0 }`)
- * - Values exposing `toDate()` (e.g., Firestore Timestamp class)
- * - UNIX epoch **seconds** (e.g., `1733548800`)
- * - UNIX epoch **milliseconds** (e.g., `1733548800000`)
- * - ISO 8601 strings (`'2025-06-22T00:00:00Z'`)
- * - Numeric strings (`'1733548800'`, `'1733548800000'`)
- *
- * ### Return value
- * - Returns a valid `Date` when the input can be parsed
- * - Returns `null` if the input is falsy or cannot be interpreted as a date
- *
- * @example
- * toDate('2025-06-22');            // -> Date('2025-06-22T00:00:00Z')
- * toDate(1733548800);              // -> Date('2025-12-07T00:00:00Z') (seconds -> ms)
- * toDate({ seconds: 1733548800 }); // -> Date('2025-12-07T00:00:00Z')
- * toDate(firestoreTimestamp);      // -> Date instance via timestamp.toDate()
- * toDate('not-a-date');            // -> null
- *
- * @param {unknown} value - Date-like input to normalize
- * @returns {Date|null} A valid `Date` or null when the value cannot be parsed
+ * Helper function to format dates consistently throughout the application
+ * 
+ * @param {Date} date - JavaScript Date object to format
+ * @returns {string} Formatted date string (e.g., "May 20, 2025")
  */
-const toDate = (value) => {
-  if (!value) return null;
-
-  if (value instanceof Date) {
-    return Number.isNaN(value.getTime()) ? null : value;
-  }
-
-  if (typeof value === 'number') {
-    const normalized = value < 1e12 ? value * 1000 : value;
-    const date = new Date(normalized);
-    return Number.isNaN(date.getTime()) ? null : date;
-  }
-
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    if (!trimmed) return null;
-
-    const numeric = Number(trimmed);
-    if (!Number.isNaN(numeric)) {
-      return toDate(numeric);
-    }
-
-    const date = new Date(trimmed);
-    return Number.isNaN(date.getTime()) ? null : date;
-  }
-
-  if (typeof value === 'object') {
-    if (typeof value.toDate === 'function') {
-      return toDate(value.toDate());
-    }
-
-    if ('seconds' in value || 'nanoseconds' in value) {
-      const seconds = Number(value.seconds ?? 0);
-      const nanos = Number(value.nanoseconds ?? 0);
-      return toDate(seconds * 1000 + nanos / 1e6);
-    }
-  }
-
-  return null;
-};
-
-/**
- * Format a date-like value consistently across the application.
- * Accepts Date objects, strings, numbers (ms or seconds), and Firestore timestamps.
- *
- * @param {unknown} value - The date-like value to format
- * @param {Intl.DateTimeFormatOptions} [options] - Override default formatting
- * @returns {string} Formatted date string or 'Invalid date' when parsing fails
- */
-const formatDate = (value, options = { year: 'numeric', month: 'short', day: 'numeric' }) => {
-  const date = toDate(value);
-  if (!date) {
-    return 'Invalid date';
-  }
-
-  try {
-    return date.toLocaleDateString('en-US', options);
-  } catch (error) {
-    console.error('formatDate failed for value:', value, error);
-    return 'Invalid date';
-  }
-};
+const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric'
+    });
+  };
   
-
-
-const formatDateISO = (dateString) => {
-  const date = toDate(dateString);
-  return date ? date.toISOString().split('T')[0] : '';
-};
-
   const generateSlugFallback = () => {
     if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
       return crypto.randomUUID();
@@ -142,41 +59,10 @@ const formatDateISO = (dateString) => {
   return {
     showNotification,
     notificationMessage,
+    notificationType,
     notificationIcon,
     showNotify
   };
 }
-
-/**
- * Produce a human-readable relative time string (e.g., "2 days ago", "in 3 hours").
- * Accepts the same date-like values handled by `toDate()` including Firestore
- * timestamps, ISO strings, numbers (ms or seconds), and native Date objects.
- *
- * @param {unknown} pastDate - The date to compare against the current time.
- * @returns {string} Localized relative time phrase, or an empty string when parsing fails.
- */
-const relativeTime = (pastDate) => {
-  const normalizedPastDate = toDate(pastDate);
-  if (!normalizedPastDate) return '';
-
-  const now = Date.now();
-  const pastToNowMsDifference = normalizedPastDate.getTime() - now;
-  const pastToNowMsAbsolute = Math.abs(pastToNowMsDifference);
-
-  const units = [
-    { limit: 60_000, divisor: 1_000, unit: 'second' },
-    { limit: 3_600_000, divisor: 60_000, unit: 'minute' },
-    { limit: 86_400_000, divisor: 3_600_000, unit: 'hour' },
-    { limit: 604_800_000, divisor: 86_400_000, unit: 'day' },
-    { limit: 2_592_000_000, divisor: 604_800_000, unit: 'week' },
-    { limit: 31_536_000_000, divisor: 2_592_000_000, unit: 'month' },
-    { limit: Infinity, divisor: 31_536_000_000, unit: 'year' }
-  ];
-
-  const { divisor, unit } = units.find(({ limit }) => pastToNowMsAbsolute < limit);
-  const relativeAmount = Math.round(pastToNowMsDifference / divisor);
-
-  return new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(relativeAmount, unit);
-};
-
-export { formatDate, formatDateISO, titleToSlug, useNotification, relativeTime };
+  // Export utility functions for use in other modules
+  export { formatDate, titleToSlug, useNotification };
