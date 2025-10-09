@@ -87,7 +87,7 @@
                   {{ post.title }}
                 </h2>
                 <div :id="`post-desc-${titleToSlug(post.title)}-${i}`" class="card-body"
-                  v-html="renderMarkdown(post.content.substring(0, 100) + '...')"></div>
+                  v-html="renderMarkdown(post.content.split(/\s+/).slice(0, 18).join(' ') + '…')"></div>
                 <div class="card-footer">
                   <div class="card-meta">
                     <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
