@@ -72,7 +72,7 @@
                   {{ post.title }}
                 </h2>
                 <div :id="`post-desc-${titleToSlug(post.title)}-${i}`" class="card-body"
-                  v-html="renderMarkdown( generateExcerpt(post.content))"></div>
+                  v-html="renderMarkdown(generateExcerpt(post.content))"></div>
                 <div class="card-footer">
                   <div class="card-meta">
                     <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
@@ -164,25 +164,62 @@ export default {
     const generateExcerpt = (markdown, wordLimit = 22) => {
       if (!markdown) return '';
 
-      const html = renderMarkdown(markdown);
+      const tokens = markdown.trim().split(/\s+/);
+      if (!tokens.length) return '';
 
-      if (typeof document !== 'undefined') {
-        const container = document.createElement('div');
-        container.innerHTML = html;
-        const text = (container.textContent || '').trim();
+      const excerptTokens = [];
+      let wordCount = 0;
+      let boldBalance = 0;
+      let italicBalance = 0;
+      let codeBalance = 0;
 
-        if (text) {
-          const tokens = text.split(/\s+/);
-          const truncated = tokens.slice(0, wordLimit).join(' ');
-          return tokens.length > wordLimit ? `${truncated}…` : truncated;
+      const updateBalances = token => {
+        const boldMatches = token.match(/\*\*/g);
+        if (boldMatches) boldBalance = (boldBalance + boldMatches.length) % 2;
+        //  Assert that the character immediately before our current spot is NOT an asterisk. ?< before 
+        //  Assert that the character immediately after our current spot is NOT an asterisk. ? after 
+        const italicMatches = token.match(/(?<!\*)\*(?!\*)/g);
+        if (italicMatches) italicBalance = (italicBalance + italicMatches.length) % 2;
+
+        const underscoreMatches = token.match(/__/g);
+        if (underscoreMatches) italicBalance = (italicBalance + underscoreMatches.length) % 2;
+
+        const codeMatches = token.match(/`/g);
+        if (codeMatches) codeBalance = (codeBalance + codeMatches.length) % 2;
+      };
+
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        excerptTokens.push(token);
+        wordCount += 1;
+        updateBalances(token);
+
+        const reachedLimit = wordCount >= wordLimit;
+        const markersBalanced = boldBalance === 0 && italicBalance === 0 && codeBalance === 0;
+
+        if (reachedLimit && markersBalanced) {
+          break;
         }
       }
 
-      const plain = markdown.replace(/\s+/g, ' ').trim();
-      if (!plain) return '';
-      const words = plain.split(/\s+/);
-      const preview = words.slice(0, wordLimit).join(' ');
-      return words.length > wordLimit ? `${preview}…` : preview;
+      let excerpt = excerptTokens.join(' ');
+      const hasMore = excerptTokens.length < tokens.length;
+
+      if (boldBalance !== 0) excerpt += '**';
+      if (italicBalance !== 0) excerpt += '*';
+      if (codeBalance !== 0) excerpt += '`';
+
+      if (hasMore) {
+        if (!excerpt.endsWith('**') && !excerpt.endsWith('*') && !excerpt.endsWith('`')) {
+          excerpt += '…';
+        } else {
+          excerpt += ' …';
+        }
+      }
+      if (excerpt.startsWith('>')) {
+        excerpt = `${excerpt.replace(/^>\s*/, '> ')}\n`;
+      }
+      return excerpt;
     };
 
     onMounted(async () => {
