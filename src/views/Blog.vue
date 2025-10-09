@@ -72,7 +72,7 @@
                   {{ post.title }}
                 </h2>
                 <div :id="`post-desc-${titleToSlug(post.title)}-${i}`" class="card-body"
-                  v-html="renderMarkdown(post.excerpt || generateExcerpt(post.content))"></div>
+                  v-html="renderMarkdown( generateExcerpt(post.content))"></div>
                 <div class="card-footer">
                   <div class="card-meta">
                     <time :datetime="formatDateISO(post.date)" class="mr-4">{{ formatDate(post.date) }}</time>
@@ -161,14 +161,28 @@ export default {
       })
     })
 
-    const generateExcerpt = (markdown, defaultWords = 18) => {
+    const generateExcerpt = (markdown, wordLimit = 22) => {
+      if (!markdown) return '';
+
       const html = renderMarkdown(markdown);
-      const container = document.createElement('div');
-      container.innerHTML = html;
-      const firstParagraph = container.querySelector('p');
-      if (firstParagraph) return firstParagraph.innerHTML;
-      const text = container.textContent || '';
-      return text.split(/\s+/).slice(0, defaultWords).join(' ') + '…';
+
+      if (typeof document !== 'undefined') {
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        const text = (container.textContent || '').trim();
+
+        if (text) {
+          const tokens = text.split(/\s+/);
+          const truncated = tokens.slice(0, wordLimit).join(' ');
+          return tokens.length > wordLimit ? `${truncated}…` : truncated;
+        }
+      }
+
+      const plain = markdown.replace(/\s+/g, ' ').trim();
+      if (!plain) return '';
+      const words = plain.split(/\s+/);
+      const preview = words.slice(0, wordLimit).join(' ');
+      return words.length > wordLimit ? `${preview}…` : preview;
     };
 
     onMounted(async () => {
@@ -425,10 +439,25 @@ export default {
   color: #475569;
   font-size: 0.95rem;
   line-height: 1.7;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(120deg, rgba(99, 102, 241, 0.06), rgba(129, 140, 248, 0.04));
+  border-left: 3px solid rgba(99, 102, 241, 0.35);
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.08);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blog-card:hover .card-body,
+.blog-card:focus .card-body {
+  border-color: rgba(99, 102, 241, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.14);
 }
 
 .dark .card-body {
   color: #cbd5e1;
+  background: linear-gradient(120deg, rgba(79, 70, 229, 0.14), rgba(129, 140, 248, 0.08));
+  border-left: 3px solid rgba(165, 180, 252, 0.45);
+  box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.12);
 }
 
 .card-body :deep(*) {
