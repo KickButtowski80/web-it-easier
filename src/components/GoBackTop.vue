@@ -1,4 +1,5 @@
 <template>
+  <!-- Native button keeps semantics while the animation lives inside -->
   <button type="button" class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
     <div class="doorway" ref="doorWay">
       <div id="openDoor" class="door" ref="door">
@@ -10,9 +11,11 @@
       </div>
     </div>
   </button>
+  <!-- Screen-reader only region announces when the page returns to the top -->
+  <span ref="statusRegion" class="sr-only" aria-live="polite"></span>
 </template>
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 export default {
   setup() {
@@ -21,31 +24,72 @@ export default {
     const doorWay = ref(null);
     const openDoor = ref(null);
     const animationFrameId = ref(null);
+    const scrollFrame = ref(null); // Tracks the pending RAF so we only mutate per frame
+    const statusRegion = ref(null); // Reference to the live region for announcements
+    const announceTimeout = ref(null); // Clears announcement text after the polite message is spoken
+
+    const cleanupAnimation = () => {
+      if (animationFrameId.value) {
+        cancelAnimationFrame(animationFrameId.value);
+        animationFrameId.value = null;
+      }
+    };
+
+    const announceTop = () => {
+      if (!statusRegion.value) return;
+
+      // Briefly set copy so assistive tech announces the successful scroll
+      statusRegion.value.textContent = "Scrolled to top";
+
+      if (announceTimeout.value) {
+        clearTimeout(announceTimeout.value);
+      }
+
+      announceTimeout.value = setTimeout(() => {
+        if (statusRegion.value) {
+          statusRegion.value.textContent = "";
+        }
+        announceTimeout.value = null;
+      }, 1200);
+    };
 
     const handleScroll = () => {
-
-      if (window.scrollY > 30) {
-        door.value.classList.remove("hidden");
-        door.value.classList.add("show");
-        openDoor.value.classList.remove("hidden");
-        openDoor.value.classList.add("show");
-        doorWay.value.classList.remove("hidden");
-        doorWay.value.classList.add("show");
-      } else {
-        door.value.style.transform = "rotateY(0deg)";
-        door.value.classList.remove("show");
-        door.value.classList.add("hidden");
-        openDoor.value.classList.remove("show");
-        openDoor.value.classList.add("hidden");
-        doorWay.value.classList.remove("show");
-        doorWay.value.classList.add("hidden");
+      // Prevent redundant DOM work by coalescing events into a single RAF callback
+      if (scrollFrame.value !== null) {
+        return;
       }
+
+      scrollFrame.value = requestAnimationFrame(() => {
+        scrollFrame.value = null;
+
+        if (!door.value || !openDoor.value || !doorWay.value) {
+          return;
+        }
+
+        if (window.scrollY > 30) {
+          door.value.classList.remove("hidden");
+          door.value.classList.add("show");
+          openDoor.value.classList.remove("hidden");
+          openDoor.value.classList.add("show");
+          doorWay.value.classList.remove("hidden");
+          doorWay.value.classList.add("show");
+        } else {
+          door.value.style.transform = "rotateY(0deg)";
+          door.value.classList.remove("show");
+          door.value.classList.add("hidden");
+          openDoor.value.classList.remove("show");
+          openDoor.value.classList.add("hidden");
+          doorWay.value.classList.remove("show");
+          doorWay.value.classList.add("hidden");
+        }
+      });
     };
 
     const scrollToTop = () => {
       door.value.style.transform = "rotateY(55deg)";
       history.replaceState({}, '', location.pathname);
       window.scrollTo({ top: 0, behavior: "smooth" });
+      announceTop();
 
     };
     const handleTouchStart = (event) => {
@@ -55,10 +99,7 @@ export default {
 
     const handleTouchEnd = (event) => {
       // Cancel any previous animation frame (if needed)
-      if (animationFrameId.value) {
-        cancelAnimationFrame(animationFrameId.value);
-        animationFrameId.value = null;
-      }
+      cleanupAnimation();
 
       animationFrameId.value = requestAnimationFrame(() => {
         door.value.style.transform = "rotateY(0deg)";
@@ -86,12 +127,34 @@ export default {
 
     });
 
+    onBeforeUnmount(() => {
+      window.removeEventListener("scroll", handleScroll);
+
+      if (doorGroup.value) {
+        doorGroup.value.removeEventListener("touchstart", handleTouchStart);
+        doorGroup.value.removeEventListener("touchend", handleTouchEnd);
+      }
+
+      cleanupAnimation();
+
+      if (scrollFrame.value !== null) {
+        cancelAnimationFrame(scrollFrame.value);
+        scrollFrame.value = null;
+      }
+
+      if (announceTimeout.value) {
+        clearTimeout(announceTimeout.value);
+        announceTimeout.value = null;
+      }
+    });
+
     return {
       doorGroup,
       openDoor,
       door,
       doorWay,
       scrollToTop,
+      statusRegion,
     };
   },
 };
@@ -115,6 +178,15 @@ export default {
   bottom: 3.5rem;
   right: 1rem;
   touch-action: manipulation;
+}
+
+.doorgroup:focus-visible {
+  outline: 3px solid #4f46e5;
+  outline-offset: 4px;
+}
+
+.dark .doorgroup:focus-visible {
+  outline-color: #c7d2fe;
 }
 
 .doorway {
@@ -148,5 +220,17 @@ export default {
 
 .door:focus-visible {
   transform: rotateY(55deg);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>
