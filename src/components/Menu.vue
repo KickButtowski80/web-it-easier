@@ -3,15 +3,9 @@
   <AdminLayout v-if="isAdmin" class="admin-layout-bar" />
   <HamburgerMenu :hideIt="true" />
   <BottomMenu :hideIt="false" />
-  
+
   <!-- Floating Action Button for mobile -->
-  <button 
-  type="button"
-    v-if="!isAdmin" 
-    class="mobile-login-btn"
-    @click="navigateToLogin"
-    aria-label="Go to login page"
-  >
+  <button type="button" v-if="!isAdmin" class="mobile-login-btn" @click="navigateToLogin" aria-label="Go to login page">
     <i class="fas fa-sign-in-alt"></i>
   </button>
 </template>
