@@ -5,7 +5,8 @@
   <BottomMenu :hideIt="false" />
 
   <!-- Floating Action Button for mobile -->
-  <button type="button" v-if="!isAdmin" class="mobile-login-btn" @click="navigateToLogin" aria-label="Go to login page">
+  <button type="button" v-if="!isAdmin" class="mobile-login-btn"
+   @click="navigateToLogin" aria-label="Go to login page">
     <i class="fas fa-sign-in-alt"></i>
   </button>
 </template>
@@ -47,3 +48,10 @@ onUnmounted(() => {
   document.title = defaultTitle;
 });
 </script>
+
+<style scoped>
+.mobile-login-btn:focus-visible {
+  outline: 3px solid #8b5cf6;
+  outline-offset: 4px;
+}
+</style>
