@@ -6,6 +6,7 @@
   
   <!-- Floating Action Button for mobile -->
   <button 
+  type="button"
     v-if="!isAdmin" 
     class="mobile-login-btn"
     @click="navigateToLogin"
@@ -21,7 +22,7 @@ import TopMenu from "./Menus/TopMenu.vue";
 // Using defineAsyncComponent for AdminLayout to maintain code-splitting
 import { defineAsyncComponent } from 'vue';
 const AdminLayout = defineAsyncComponent(() => import("./Admin/AdminLayout.vue"));
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onUnmounted, watch } from "vue";
 import { auth } from "@/config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from 'vue-router';
@@ -42,18 +43,13 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
-onMounted(() => {
-  document.title = "Menu Page";
-});
+const defaultTitle = "Menu Page";
+
+watch(isAdmin, (value) => {
+  document.title = value ? "Menu Page - Admin" : defaultTitle;
+}, { immediate: true });
 
 onUnmounted(() => {
-  document.title = "Menu Page";
-});   
-
-onMounted(() => {
-  document.title = "Menu Page - Admin";
-});
-onUnmounted(() => {
-  document.title = "Menu Page";
+  document.title = defaultTitle;
 });
 </script>
