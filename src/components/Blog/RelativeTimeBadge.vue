@@ -59,18 +59,21 @@ export default {
   border-radius: 9999px;
   letter-spacing: 0.01em;
   border: 1px solid rgba(99, 102, 241, 0.2);
+
 }
 
 .updated-at--md {
   font-size: 1rem;
   gap: 0.35rem;
   padding: 0.25rem 0.65rem;
+  margin-bottom: 1rem;
 }
 
 .updated-at--sm {
   font-size: 0.85rem;
   gap: 0.3rem;
   padding: 0.2rem 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .updated-at--sm .updated-at__icon {
