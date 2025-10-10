@@ -205,12 +205,18 @@ export default {
   width: 100%;
   height: 100%;
   background: rgb(146, 47, 153);
+  color: #ffffff; /* High contrast against the violet door */
   font-size: 24px;
   border-left: none;
   transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
   transform: rotateY(0deg);
   transform-origin: left center;
   user-select: none;
+}
+
+.dark .door {
+  background: rgb(146, 47, 153);
+  color: #fce7f3; /* Soft white with adequate contrast in dark mode */
 }
 
 .door * {
