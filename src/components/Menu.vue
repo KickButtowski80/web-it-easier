@@ -3,12 +3,6 @@
   <AdminLayout v-if="isAdmin" class="admin-layout-bar" />
   <HamburgerMenu :hideIt="true" />
   <BottomMenu :hideIt="false" />
-
-  <!-- Floating Action Button for mobile -->
-  <button type="button" v-if="!isAdmin" class="mobile-login-btn"
-   @click="navigateToLogin" aria-label="Go to login page">
-    <i class="fas fa-sign-in-alt"></i>
-  </button>
 </template>
 <script setup>
 import BottomMenu from "./Menus/BottomMenu.vue";
@@ -24,11 +18,6 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const isAdmin = ref(false);
-
-// Function to navigate to login
-const navigateToLogin = () => {
-  router.push('/login');
-};
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
@@ -48,10 +37,3 @@ onUnmounted(() => {
   document.title = defaultTitle;
 });
 </script>
-
-<style scoped>
-.mobile-login-btn:focus-visible {
-  outline: 3px solid #8b5cf6;
-  outline-offset: 4px;
-}
-</style>
