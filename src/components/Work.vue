@@ -26,15 +26,16 @@
         class="font-bold text-xl mb-2 text-blue-700 flex justify-center items-center"
       >
         <button
+          type="button"
           @click="toggleReadMoreStatus"
           @keydown.enter.space.prevent="toggleReadMoreStatus"
           :aria-expanded="readMoreStatus ? 'true' : 'false'"
           :aria-controls="`card-${projectId}`"
-          :aria-label="`${readMoreStatus ? 'Collapse' : 'Expand'} project details for ${projectTitle}`"
+          :aria-describedby="`project-toggle-desc-${projectId}`"
           class="focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-500 text-white bg-purple-700 hover:bg-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 flex item-center w-fit transition-all duration-200"
         >
           {{ readMoreText }}
-          <span class="sr-only">for {{ projectTitle }}</span>
+          <span class="sr-only" :id="`project-toggle-desc-${projectId}`">project details for {{ projectTitle }}</span>
         </button>
       </section>
 
