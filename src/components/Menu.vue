@@ -14,9 +14,7 @@ const AdminLayout = defineAsyncComponent(() => import("./Admin/AdminLayout.vue")
 import { ref, onUnmounted, watch } from "vue";
 import { auth } from "@/config/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { useRouter } from 'vue-router';
 
-const router = useRouter();
 const isAdmin = ref(false);
 
 onAuthStateChanged(auth, (user) => {
