@@ -1,5 +1,5 @@
 <template>
-  <button class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
+  <button type="button" class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
     <div class="doorway" ref="doorWay">
       <div id="openDoor" class="door" ref="door">
         <div ref="openDoor" class="mx-auto text-center mt-2 w-full h-full text-xl">
