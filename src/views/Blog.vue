@@ -56,17 +56,6 @@
         <li v-for="(post, i) in filteredPosts" :key="titleToSlug(post.title) + '-' + i" class="blog-card-container">
           <article class="blog-card" :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`">
-<!-- 
-            <time v-if="post.updatedAt" class="updated-at" :datetime="formatDateISO(post.updatedAt)">
-              <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" class="updated-at__icon">
-                <path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                  fill="none" d="M12 6v6l3 1.5m6-1.5a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span class="updated-at__label">
-                Updated {{ relativeTime(post.updatedAt) }}
-              </span>
-            </time> -->
-
             <RelativeTimeBadge  v-if="post.updatedAt" :post-updated-at="post.updatedAt" />
             <RouterLink :to="'/blog/' + titleToSlug(post.title)" class="card-link">
               <div class="card-content">
