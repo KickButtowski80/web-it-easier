@@ -36,6 +36,12 @@
 - **SEO**: Sitemap, meta tags, OpenGraph
 - **Accessibility**: WCAG 2.1 compliant
 
+## SEO Configuration
+
+- **Sitemap**: `public/sitemap.xml` lists all live marketing and blog URLs and is referenced from `robots.txt` at `https://web-it-easier.vercel.app/sitemap.xml`.
+- **Robots directives**: `public/robots.txt` allows key pages and assets, blocks admin/API areas and sensitive file types, and keeps critical resources (`*.css`, `*.js`, images) crawlable for Googlebot.
+- **Host metadata**: Includes `Host: web-it-easier.vercel.app` for crawlers that respect the directive; crawl delay remains disabled but documented for future use.
+
 ## Live Demo
 
 [Visit Website](https://web-it-easier.vercel.app)
