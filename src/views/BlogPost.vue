@@ -5,14 +5,8 @@
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
           <h1 :id="'post-title-' + post.id"
-            class="text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
-            <span class="group inline-block w-full max-w-4xl px-8 py-4 rounded-2xl bg-gray-50/40 dark:bg-gray-800/20
-             backdrop-blur-sm hover:bg-gray-50/60 dark:hover:bg-gray-800/30 transition-colors duration-200">
-              <span class="bg-gradient-to-r from-indigo-700 via-blue-600 to-cyan-500 bg-clip-text text-transparent
-                         group-hover:opacity-90 transition-opacity duration-200">
-                {{ post.title }}
-              </span>
-            </span>
+            class="post-title text-4xl md:text-5xl font-extrabold tracking-tighter leading-wider mb-2">
+            {{ post.title }}
           </h1>
           <div class="w-16 h-0.5 bg-gray-300 dark:bg-gray-600 mx-auto mt-4" aria-hidden="true"></div>
         </header>
@@ -107,21 +101,15 @@
           Loading post...
         </p>
       </div>
-      
+
       <Notification v-model="showNotification" :message="notificationMessage" :type="notificationType"
         :icon="notificationIcon" />
-        
+
       <!-- Related Posts Section -->
-      <RelatedPosts 
-        v-if="post && allPosts.length > 0" 
-        :current-post-id="post.id" 
-        :current-post-title="post.title" 
-        :current-post-content="post.content" 
-        :current-post-tags="post.tags"
-        :all-posts="allPosts" 
-      />
+      <RelatedPosts v-if="post && allPosts.length > 0" :current-post-id="post.id" :current-post-title="post.title"
+        :current-post-content="post.content" :current-post-tags="post.tags" :all-posts="allPosts" />
     </div>
-    
+
     <!-- Sidebar with Popular Posts -->
     <!-- <aside class="blog-sidebar">
       <PopularPosts 
@@ -152,10 +140,10 @@ import { formatDate } from '@/utils/helpers';
 import "highlight.js/styles/github.css";
 import { updateMetaDescriptions, updateMetaSocialTags } from '@/utils/seo-update-description';
 import useScrollSpy from '@/composables/useScrollSpy';
- 
+
 import { useRoute, useRouter } from 'vue-router';
 
- 
+
 const route = useRoute();
 const router = useRouter();
 // Props
@@ -239,7 +227,7 @@ const fetchPost = async (slugArg = null) => {
     }
 
     post.value = postData;
-    
+
     // Update page title and meta tags
     if (post.value?.title) {
       const pageTitle = `${post.value.title} | Web It Easier`;
@@ -251,7 +239,7 @@ const fetchPost = async (slugArg = null) => {
         // Add other necessary parameters
       );
     }
-    
+
     return postData;
   } catch (error) {
     console.error('Error fetching post:', error);
@@ -418,7 +406,7 @@ onMounted(async () => {
   if (defaultCanonicalEl) {
     defaultCanonical.value = defaultCanonicalEl.outerHTML;
   }
-  
+
   // Fetch all posts for related posts functionality
   try {
     allPosts.value = await getPosts();
@@ -434,7 +422,7 @@ onMounted(async () => {
   defaultMetaDescriptions.value.og = ogDescTag?.getAttribute('content') || null;
   defaultMetaDescriptions.value.twitter = twDescTag?.getAttribute('content') || null;
 
-   
+
   try {
     const postData = await fetchPost();
     if (postData) {
@@ -514,7 +502,7 @@ onMounted(async () => {
 
       // Start scroll spy with hash navigation enabled
       startScrollSpy();
-      
+
       // Handle initial hash scroll after content is rendered
       if (window.location.hash && !hasScrolledToHash.value) {
         scrollToHash();
@@ -649,7 +637,7 @@ const scrollSpy = useScrollSpy({
 
 const { activeId, start: startScrollSpy, stop: stopScrollSpy } = scrollSpy;
 
- 
+
 
 
 // Clean up canonical tag when component is unmounted
@@ -708,15 +696,24 @@ body {
   margin-bottom: 1.5rem;
 }
 
-#post-content h1 {
-  font-size: clamp(2rem, 8vw, 3rem);
+.post-title {
+  font-size: clamp(2.25rem, 7vw, 3.25rem);
   font-weight: 900;
-  margin: 3rem 0 2rem;
+  margin: 2.5rem 0 2rem;
   line-height: 1.1;
-  color: #2563eb;
-  text-transform: uppercase;
+  color: #1d4ed8;
+  
   letter-spacing: 1px;
-  position: relative;
+  padding: 1.5rem 2rem;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(129, 140, 248, 0.18));
+  box-shadow: 0 18px 40px -20px rgba(59, 130, 246, 0.45);
+  display: inline-block;
+}
+
+.post-title:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(129, 140, 248, 0.24));
+  box-shadow: 0 22px 45px -18px rgba(79, 70, 229, 0.5);
 }
 
 #post-content h2 {
@@ -727,10 +724,8 @@ body {
   line-height: 1.3;
   display: inline-block;
   position: relative;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background-color: rgba(37, 99, 235, 0.05);
+  color: #2563eb;
   animation: gradientFlow 2s ease forwards;
   background-size: 200% 200%;
 }
@@ -1267,19 +1262,19 @@ body {
 
 
 #post-content pre {
-  background-color: #f8fafc;
-  border-radius: 0.375rem;
+  background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+  border-radius: 0.75rem;
   outline: none;
-  transition: box-shadow 0.2s ease;
-  text-align: center;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  text-align: left;
   overflow-x: auto;
   margin: 1.5rem 0;
   font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   line-height: 1.6;
-  color: #1f2937;
+  color: #0f172a;
   position: relative;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 10px 30px -20px rgba(59, 130, 246, 0.6);
 }
 
 #post-content pre:focus-visible {
@@ -1293,17 +1288,17 @@ body {
   white-space: pre-wrap;
   word-wrap: break-word;
   display: block;
-  padding: 1rem;
+  padding: 1.25rem;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #1f2937;
+  color: inherit;
   background: transparent;
 }
 
 /* Override highlight.js GitHub theme for better contrast */
 #post-content pre .hljs {
   background: transparent;
-  color: #1f2937;
+  color: inherit;
 }
 
 /* Syntax highlighting with WCAG-compliant contrast */
@@ -1361,18 +1356,18 @@ body {
 
 /* Improve syntax readability in dark mode (override light GitHub theme tokens) */
 .dark #post-content pre {
-  background-color: #0f172a;
-  border-color: #334155;
-  color: #f1f5f9;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-color: #1e3a8a;
+  color: #e2e8f0;
 }
 
 .dark #post-content pre code {
-  color: #f1f5f9;
+  color: inherit;
 }
 
 .dark #post-content pre .hljs {
   background: transparent;
-  color: #f1f5f9;
+  color: inherit;
 }
 
 /* Dark mode token colors with high contrast */
