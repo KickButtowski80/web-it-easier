@@ -1262,19 +1262,19 @@ body {
 
 
 #post-content pre {
-  background-color: #f8fafc;
-  border-radius: 0.375rem;
+  background: linear-gradient(135deg, #eff6ff, #e0f2fe);
+  border-radius: 0.75rem;
   outline: none;
-  transition: box-shadow 0.2s ease;
-  text-align: center;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  text-align: left;
   overflow-x: auto;
   margin: 1.5rem 0;
   font-family: 'Fira Code', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   line-height: 1.6;
-  color: #1f2937;
+  color: #0f172a;
   position: relative;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #bfdbfe;
+  box-shadow: 0 10px 30px -20px rgba(59, 130, 246, 0.6);
 }
 
 #post-content pre:focus-visible {
@@ -1288,17 +1288,17 @@ body {
   white-space: pre-wrap;
   word-wrap: break-word;
   display: block;
-  padding: 1rem;
+  padding: 1.25rem;
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #1f2937;
+  color: inherit;
   background: transparent;
 }
 
 /* Override highlight.js GitHub theme for better contrast */
 #post-content pre .hljs {
   background: transparent;
-  color: #1f2937;
+  color: inherit;
 }
 
 /* Syntax highlighting with WCAG-compliant contrast */
@@ -1356,18 +1356,18 @@ body {
 
 /* Improve syntax readability in dark mode (override light GitHub theme tokens) */
 .dark #post-content pre {
-  background-color: #0f172a;
-  border-color: #334155;
-  color: #f1f5f9;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-color: #1e3a8a;
+  color: #e2e8f0;
 }
 
 .dark #post-content pre code {
-  color: #f1f5f9;
+  color: inherit;
 }
 
 .dark #post-content pre .hljs {
   background: transparent;
-  color: #f1f5f9;
+  color: inherit;
 }
 
 /* Dark mode token colors with high contrast */
