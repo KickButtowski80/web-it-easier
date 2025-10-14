@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-    <url>
-      <loc>https://web-it-easier.vercel.app/</loc>
-      <lastmod>2025-07-30</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>1.0</priority>
-    </url>
-  
+  <url>
+    <loc>https://web-it-easier.vercel.app/</loc>
+    <lastmod>2025-07-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
 
-    <url>
-      <loc>https://web-it-easier.vercel.app/blog/happy-birthday-to-allen-turing</loc>
-      <lastmod>2025-06-23</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
 
-    <url>
-      <loc>https://web-it-easier.vercel.app/blog/the-business-impact-of-website-speed</loc>
-      <lastmod>2025-04-01</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
+  <url>
+    <loc>https://web-it-easier.vercel.app/blog/happy-birthday-to-allen-turing</loc>
+    <lastmod>2025-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
-    <url>
-      <loc>https://web-it-easier.vercel.app/blog/how-we-help-businesses-scale</loc>
-      <lastmod>2025-06-09</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-    </url>
 
-    <url>
-      <loc>https://web-it-easier.vercel.app/blog/the-human-in-the-loop-why-every-line-of-ai-generated-code-must-be-reviewed</loc>
-      <lastmod>2025-09-30</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>0.8</priority>
-    </url>
-  
+  <url>
+    <loc>https://web-it-easier.vercel.app/blog/the-business-impact-of-website-speed</loc>
+    <lastmod>2025-04-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+
+  <url>
+    <loc>https://web-it-easier.vercel.app/blog/how-we-help-businesses-scale</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>
+      https://web-it-easier.vercel.app/blog/the-human-in-the-loop-why-every-line-of-ai-generated-code-must-be-reviewed</loc>
+    <lastmod>2025-09-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://web-it-easier.vercel.app/blog/designed-by-accident-perfected-for-focus</loc>
+    <lastmod>2025-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
