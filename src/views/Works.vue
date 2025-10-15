@@ -1,5 +1,5 @@
 <template>
-  <section id="our-works" class="works-section py-24 text-text-1">
+  <section id="our-works" class="works-section py-24 text-text-1 -mt-24 md:-mt-28 relative z-[5]">
     <div class="works-section__decor works-section__decor--one" aria-hidden="true"></div>
     <div class="works-section__decor works-section__decor--two" aria-hidden="true"></div>
     <div class="works-section__decor works-section__decor--grid" aria-hidden="true"></div>
@@ -57,9 +57,57 @@ export default {
   isolation: isolate;
   background:
     radial-gradient(120% 85% at 15% -5%, rgba(124, 58, 237, 0.28), transparent 60%),
-    radial-gradient(95% 65% at 85% 0%, rgba(236, 72, 153, 0.22), transparent 65%),
-    linear-gradient(180deg, var(--color-surface-2) 0%, var(--color-surface-1) 45%, var(--color-surface-3) 100%);
+    radial-gradient(95% 65% at 85% 0%, rgba(236, 72, 153, 0.2), transparent 65%),
+    linear-gradient(180deg,
+      rgba(55, 35, 115, 0.94) 0%,
+      rgba(99, 52, 181, 0.88) 20%,
+      rgba(153, 104, 222, 0.82) 42%,
+      rgba(208, 161, 255, 0.86) 68%,
+      rgba(244, 225, 255, 0.97) 90%,
+      rgba(248, 240, 255, 1) 100%);
   transition: background 0.4s ease;
+}
+
+.works-section::before {
+  content: "";
+  position: absolute;
+  top: -12rem;
+  left: -24%;
+  width: 92%;
+  height: 20rem;
+  background: linear-gradient(112deg,
+      rgba(18, 16, 46, 0.92) 0%,
+      rgba(44, 28, 94, 0.78) 42%,
+      rgba(99, 102, 241, 0.28) 82%,
+      rgba(99, 102, 241, 0) 100%);
+  transform: skewY(-8deg) rotate(-2deg);
+  filter: blur(3.2rem);
+  opacity: 0.8;
+  z-index: 1;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.works-section::after {
+  content: "";
+  position: absolute;
+  top: -6rem;
+  right: -12%;
+  width: 78%;
+  height: 16rem;
+  background: linear-gradient(270deg,
+      rgba(236, 213, 255, 0.95) 0%,
+      rgba(203, 191, 255, 0.75) 35%,
+      rgba(167, 139, 255, 0.48) 70%,
+      rgba(129, 140, 248, 0.2) 92%,
+      rgba(129, 140, 248, 0) 100%);
+  transform: skewY(-3deg) rotate(7deg);
+  opacity: 0.76;
+  mix-blend-mode: screen;
+  filter: blur(0.28rem);
+  z-index: 2;
+  box-shadow: 0 24px 60px rgba(103, 80, 164, 0.22);
+  pointer-events: none;
 }
 
 .dark .works-section {
@@ -67,6 +115,16 @@ export default {
     radial-gradient(120% 95% at 18% -10%, rgba(129, 140, 248, 0.28), transparent 68%),
     radial-gradient(110% 70% at 90% 5%, rgba(236, 72, 153, 0.16), transparent 62%),
     linear-gradient(185deg, rgba(26, 31, 78, 0.95) 0%, rgba(17, 24, 39, 0.9) 55%, rgba(30, 27, 75, 0.92) 100%);
+}
+
+.dark .works-section::before {
+  background: linear-gradient(110deg, rgba(10, 12, 32, 0.96) 0%, rgba(30, 27, 75, 0.78) 60%, rgba(99, 102, 241, 0.16) 88%, rgba(10, 12, 32, 0) 100%);
+  opacity: 0.9;
+}
+
+.dark .works-section::after {
+  background: linear-gradient(282deg, rgba(148, 163, 255, 0.55) 0%, rgba(148, 163, 255, 0.18) 58%, rgba(148, 163, 255, 0) 100%);
+  opacity: 0.32;
 }
 
 .works-section__decor {
