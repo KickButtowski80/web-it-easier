@@ -6,6 +6,18 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        'surface-1': 'var(--color-surface-1)',
+        'surface-2': 'var(--color-surface-2)',
+        'surface-3': 'var(--color-surface-3)',
+        'text-1': 'var(--color-text-1)',
+        'text-muted': 'var(--color-text-muted)',
+        accent: 'var(--color-accent)',
+        'accent-soft': 'var(--color-accent-soft)',
+      },
+      backgroundImage: {
+        'page-gradient': 'var(--gradient-page)',
+      },
       height: {
         'navbar-height': '3rem',
         'md-navbar-height': '6rem',
