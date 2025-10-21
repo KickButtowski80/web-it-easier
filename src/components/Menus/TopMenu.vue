@@ -1,18 +1,24 @@
 <template>
   <section class="bg-purple-400 fixed top-0 
   w-full z-50 h-md-navbar-height" :class="{ 'bg-purple-950': isDark }">
-    <div class="p-2 flex h-md-navbar-height md:justify-between items-center">
+    <div class="p-2 flex h-md-navbar-height items-center gap-4">
       <span class="font-semibold text-5xl"> IT 🚪 </span>
-      <nav class="hidden md:[&>*]:pr-5 md:[&>*]:text-2xl md:[&>*]:p-5
-         md:[&>*]:font-semibold md:flex md:justify-between md:items-center
-         " aria-label="main">
-        <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
-        <RouterLink :to="{ name: 'Blog' }">Blog</RouterLink>
-        <RouterLink :to="{ name: 'Home', hash: '#our-works' }">Our Works</RouterLink>
-        <RouterLink :to="{ name: 'Home', hash: '#hire-us' }" class="border rounded-xl bg-purple-950 text-white">Hire Us
-        </RouterLink>
-        <button type="button" class="doorgroup" @click="isDark = !isDark" @keydown.enter="isDark = !isDark" @keydown.space="isDark = !isDark"
-          :aria-pressed="isDark" aria-label="isDark ? 'Return to the night' : 'Step into the light'"
+      <div class="flex items-center gap-4 ml-auto">
+        <nav class="hidden md:flex md:items-center md:gap-6 md:[&>*]:text-2xl md:[&>*]:p-5 md:[&>*]:font-semibold md:[&>*]:rounded-xl" aria-label="main">
+          <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
+          <RouterLink :to="{ name: 'Blog' }">Blog</RouterLink>
+          <RouterLink :to="{ name: 'Home', hash: '#our-works' }">Our Works</RouterLink>
+          <RouterLink :to="{ name: 'Home', hash: '#hire-us' }" class="border rounded-xl bg-purple-950 text-white">Hire Us
+          </RouterLink>
+        </nav>
+        <button
+          type="button"
+          class="doorgroup"
+          @click="isDark = !isDark"
+          @keydown.enter="isDark = !isDark"
+          @keydown.space="isDark = !isDark"
+          :aria-pressed="isDark"
+          aria-label="isDark ? 'Return to the night' : 'Step into the light'"
           :title="isDark ? 'Return to the night' : 'Step into the light'">
           <div class="doorway" :class="{ 'doorway--lit': !isDark }" ref="doorWay">
             <div class="door" ref="door" :class="{ 'door--open': !isDark }" id="openDoor">
@@ -22,7 +28,7 @@
             </div>
           </div>
         </button>
-      </nav>
+      </div>
     </div>
   </section>
 </template>
