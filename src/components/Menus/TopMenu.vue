@@ -8,7 +8,12 @@
           <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
           <RouterLink :to="{ name: 'Blog' }">Blog</RouterLink>
           <RouterLink :to="{ name: 'Home', hash: '#our-works' }">Our Works</RouterLink>
-          <RouterLink :to="{ name: 'Home', hash: '#hire-us' }" class="border rounded-xl bg-purple-950 text-white">Hire Us
+          <RouterLink
+            :to="{ name: 'Home', hash: '#hire-us' }"
+            class="rounded-xl border border-purple-400 bg-purple-900 px-4 py-2 text-white
+             transition-colors hover:bg-purple-800 dark:border-indigo-500 dark:bg-indigo-700 
+             dark:hover:bg-indigo-600 dark:hover:text-white"
+          >Hire Us
           </RouterLink>
         </nav>
         <button
