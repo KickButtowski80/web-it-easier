@@ -116,10 +116,47 @@ export default {
   position: absolute;
 }
 
+
 .diagonal::after {
   bottom: -75px;
   background: linear-gradient(-145deg, #7612e9, #c471ed, #f64f59);
   transform: skewY(-538deg);
   z-index: -2;
+}
+
+.dark .diagonal::after {
+  background: linear-gradient(-140deg, #3b1a96, #6d28d9, #c026d3);
+}
+
+.diagonal::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 -16rem 0;
+  height: 22rem;
+  background: linear-gradient(
+    174deg,
+    rgba(124, 18, 233, 0) 0%,
+    rgba(116, 18, 233, 0.12) 28%,
+    rgba(88, 35, 156, 0.48) 60%,
+    rgba(53, 24, 110, 0.65) 78%,
+    var(--color-surface-2, #ede9fe) 100%
+  );
+  clip-path: polygon(0 32%, 100% 10%, 100% 100%, 0 100%);
+  mix-blend-mode: multiply;
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.dark .diagonal::before {
+  background: linear-gradient(
+    176deg,
+    rgba(32, 6, 85, 0) 0%,
+    rgba(55, 16, 124, 0.18) 32%,
+    rgba(66, 26, 142, 0.46) 60%,
+    rgba(42, 19, 103, 0.72) 78%,
+    rgba(15, 6, 52, 0.92) 100%
+  );
 }
 </style>
