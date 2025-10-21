@@ -56,21 +56,35 @@ export default {
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(120% 85% at 15% -8%, rgba(124, 58, 237, 0.22), transparent 60%),
-    radial-gradient(95% 65% at 88% 2%, rgba(236, 72, 153, 0.16), transparent 65%),
-    linear-gradient(184deg, rgba(237, 233, 254, 1) 0%, rgba(242, 238, 255, 0.96) 45%, rgba(250, 247, 255, 0.98) 100%);
+    radial-gradient(120% 85% at 15% -5%, rgba(124, 58, 237, 0.28), transparent 60%),
+    radial-gradient(95% 65% at 85% 0%, rgba(236, 72, 153, 0.2), transparent 65%),
+    linear-gradient(180deg,
+      rgba(55, 35, 115, 0.94) 0%,
+      rgba(99, 52, 181, 0.88) 20%,
+      rgba(153, 104, 222, 0.82) 42%,
+      rgba(208, 161, 255, 0.86) 68%,
+      rgba(244, 225, 255, 0.97) 90%,
+      rgba(248, 240, 255, 1) 100%);
   transition: background 0.4s ease;
 }
 
 .works-section::before {
   content: "";
   position: absolute;
-  top: -5.5rem;
-  left: 0;
-  right: 0;
-  height: 7.5rem;
-  background: linear-gradient(180deg, rgba(235, 229, 251, 0.92) 0%, rgba(235, 229, 251, 0.25) 55%, rgba(235, 229, 251, 0) 100%);
-  z-index: 0;
+  top: -12rem;
+  left: -24%;
+  width: 92%;
+  height: 20rem;
+  background: linear-gradient(112deg,
+      rgba(18, 16, 46, 0.92) 0%,
+      rgba(44, 28, 94, 0.78) 42%,
+      rgba(99, 102, 241, 0.28) 82%,
+      rgba(99, 102, 241, 0) 100%);
+  transform: skewY(-8deg) rotate(-2deg);
+  filter: blur(3.2rem);
+  opacity: 0.8;
+  z-index: 1;
+  mix-blend-mode: multiply;
   pointer-events: none;
 }
 
@@ -142,6 +156,16 @@ export default {
 
 .dark .works-section::before {
   background: linear-gradient(180deg, rgba(40, 34, 89, 0.8) 0%, rgba(40, 34, 89, 0) 100%);
+}
+
+.dark .works-section::before {
+  background: linear-gradient(110deg, rgba(10, 12, 32, 0.96) 0%, rgba(30, 27, 75, 0.78) 60%, rgba(99, 102, 241, 0.16) 88%, rgba(10, 12, 32, 0) 100%);
+  opacity: 0.9;
+}
+
+.dark .works-section::after {
+  background: linear-gradient(282deg, rgba(148, 163, 255, 0.55) 0%, rgba(148, 163, 255, 0.18) 58%, rgba(148, 163, 255, 0) 100%);
+  opacity: 0.32;
 }
 
 .works-section__decor {
