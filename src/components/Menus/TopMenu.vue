@@ -20,7 +20,11 @@
           :aria-pressed="isDark"
           aria-label="isDark ? 'Return to the night' : 'Step into the light'"
           :title="isDark ? 'Return to the night' : 'Step into the light'">
-          <div class="doorway" :class="{ 'doorway--lit': !isDark }" ref="doorWay">
+          <div
+            class="doorway border-2 border-purple-500 bg-purple-200 transition-colors dark:border-indigo-200 dark:bg-indigo-900"
+            :class="{ 'doorway--lit': !isDark }"
+            ref="doorWay"
+          >
             <div class="door" ref="door" :class="{ 'door--open': !isDark }" id="openDoor">
               <div class="door-content">
                 <span class="door-icon" aria-hidden="true">{{ isDark ? '🌙' : '☀️' }}</span>
@@ -72,14 +76,12 @@ watch(isDark, () => {
   outline-color: #c7d2fe;
 }
 .doorway {
-  border: 0.3125rem solid #0f0a1a;
   height: 4rem;
   width: 2.75rem;
   position: relative;
   perspective: 11.25rem;
-  background: #7c3aed;
   border-radius: 0.25rem;
-  box-shadow: inset 0 0 0.5rem rgba(15, 10, 26, 0.5);
+  box-shadow: inset 0 0 0.35rem rgba(76, 29, 149, 0.25);
   transition: box-shadow 0.3s ease;
 }
 
@@ -160,18 +162,8 @@ watch(isDark, () => {
   z-index: -1;
 }
 
-
 .dark .doorway {
-  background: #4c1d95;
-  box-shadow: inset 0 0 0.375rem rgba(15, 10, 26, 0.6);
-}
-
-.dark .doorway--lit {
-  box-shadow: inset 0 0 0.375rem rgba(15, 10, 26, 0.6), 0 0 1.25rem rgba(99, 102, 241, 0.65), 0 0 0.625rem rgba(99, 102, 241, 0.4);
-}
-
-.dark .doorway--lit::after {
-  background: radial-gradient(circle, rgba(196, 181, 253, 0.7) 0%, rgba(165, 180, 252, 0.3) 40%, rgba(165, 180, 252, 0.1) 65%, transparent 80%);
+  box-shadow: inset 0 0 0.35rem rgba(15, 10, 26, 0.6);
 }
 
 .dark .door {
