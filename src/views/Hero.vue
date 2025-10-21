@@ -49,10 +49,10 @@
       </div>
     </div>
     <div class="text-center">
-      <h1 class="hero-slogan text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan">
+      <h1 class="hero-slogan text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan text-gray-900 dark:text-white">
         The Door to an easier digital future
       </h1>
-      <p class="hero-tagline font-thin text-xl opacity-0 animate-slogan-tagline">
+      <p class="hero-tagline font-thin text-xl opacity-0 animate-slogan-tagline text-gray-800 dark:text-gray-300">
         one website at a time
       </p>
     </div>
@@ -105,7 +105,7 @@ export default {
 .diagonal {
   position: relative;
   isolation: isolate;
-  background-image: linear-gradient(308deg, #5b21b6 0%, #9333ea 28%, #f472b6 62%, #fb7185 100%);
+  background-image: linear-gradient(30deg, #5b21b6 0%, #9333ea 20%, #f472b6 62%, #fb7185 100%);
 }
 
 .dark .diagonal {
@@ -122,8 +122,8 @@ export default {
 
 .diagonal::after {
   bottom: -75px;
-  background: linear-gradient(-145deg, #7612e9, #c471ed, #f64f59);
-  transform: skewY(-538deg);
+  background: linear-gradient(45deg, #7612e9, #c471ed, #f64f59);
+  transform: skewY(185deg);
   z-index: -2;
 }
 
@@ -138,11 +138,11 @@ export default {
   height: 22rem;
   background: linear-gradient(
     174deg,
-    rgba(124, 18, 233, 0) 0%,
-    rgba(116, 18, 233, 0.12) 28%,
-    rgba(88, 35, 156, 0.48) 60%,
-    rgba(53, 24, 110, 0.65) 78%,
-    var(--color-surface-2, #ede9fe) 100%
+    rgba(255, 255, 255, 0) 0%,
+    rgba(245, 240, 255, 0.5) 28%,
+    rgba(230, 220, 250, 0.8) 60%,
+    rgba(210, 200, 240, 0.9) 78%,
+    var(--color-surface-2, #f9f5ff) 100%
   );
   clip-path: polygon(0 32%, 100% 10%, 100% 100%, 0 100%);
   mix-blend-mode: multiply;
