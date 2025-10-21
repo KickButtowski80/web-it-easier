@@ -109,7 +109,10 @@ export default {
 }
 
 .dark .diagonal {
-  background-image: linear-gradient(320deg, #140a2d, #27115a, #4c1d95);
+  background-image:
+    radial-gradient(circle at 14% 34%, rgba(255, 236, 204, 0.96) 0%, rgba(255, 236, 204, 0.42) 38%, rgba(255, 236, 204, 0.12) 64%, rgba(255, 236, 204, 0) 80%),
+    radial-gradient(circle at 22% 18%, rgba(211, 164, 255, 0.35), rgba(211, 164, 255, 0) 78%),
+    linear-gradient(320deg, #140a2d, #27115a, #4c1d95);
 }
 
 .diagonal::before,
@@ -122,13 +125,15 @@ export default {
 
 .diagonal::after {
   bottom: -75px;
-  background: linear-gradient(45deg, #7612e9, #c471ed, #f64f59);
+  background: linear-gradient(45deg, rgba(118, 18, 233, 0.4), rgba(196, 113, 237, 0.32), rgba(246, 79, 89, 0.28));
   transform: skewY(185deg);
+  opacity: 0.75;
   z-index: -2;
 }
 
 .dark .diagonal::after {
-  background: linear-gradient(-140deg, #3b1a96, #6d28d9, #c026d3);
+  background: linear-gradient(20deg, rgba(59, 26, 150, 0.55), rgba(109, 40, 217, 0.45), rgba(192, 38, 211, 0.4));
+  opacity: 0.7;
 }
 
 .diagonal::before {
@@ -144,7 +149,7 @@ export default {
     rgba(210, 200, 240, 0.9) 78%,
     var(--color-surface-2, #f9f5ff) 100%
   );
-  clip-path: polygon(0 32%, 100% 10%, 100% 100%, 0 100%);
+  clip-path: polygon(0 42%, 100% 22%, 100% 100%, 0 100%);
   mix-blend-mode: multiply;
   opacity: 0.95;
   pointer-events: none;
