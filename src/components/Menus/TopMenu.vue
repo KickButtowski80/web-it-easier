@@ -141,16 +141,16 @@ watch(isDark, () => {
 .doorway--lit::after {
   content: "";
   position: absolute;
-  inset: -0.375rem;
+  inset: -0.3rem;
   border-radius: 0.5rem;
-  background: radial-gradient(circle, rgba(253, 224, 71, 0.75) 0%, rgba(253, 224, 71, 0.35) 40%, rgba(253, 224, 71, 0.1) 65%, transparent 80%);
+  background: radial-gradient(circle, rgba(253, 224, 71, 0.85) 0%, rgba(253, 224, 71, 0.42) 34%, rgba(253, 224, 71, 0.14) 60%, transparent 78%);
   pointer-events: none;
 }
 
 .doorway--lit::before {
   content: "";
   position: absolute;
-  top: 0.4rem;
+  top: 1.6rem;
   right: 0.25rem;
   width: 7.5rem;
   height: 14.5rem;
