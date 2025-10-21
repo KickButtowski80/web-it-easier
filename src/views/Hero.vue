@@ -49,10 +49,10 @@
       </div>
     </div>
     <div class="text-center">
-      <h1 class="text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan">
+      <h1 class="hero-slogan text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan">
         The Door to an easier digital future
       </h1>
-      <p class="font-thin text-xl opacity-0 animate-slogan-tagline">
+      <p class="hero-tagline font-thin text-xl opacity-0 animate-slogan-tagline">
         one website at a time
       </p>
     </div>
@@ -119,7 +119,6 @@ export default {
   height: 200px;
   position: absolute;
 }
-
 
 .diagonal::after {
   bottom: -75px;
