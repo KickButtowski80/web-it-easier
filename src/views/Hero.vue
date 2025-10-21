@@ -105,7 +105,7 @@ export default {
 .diagonal {
   position: relative;
   isolation: isolate;
-  background-image: linear-gradient(30deg, #5b21b6 0%, #9333ea 20%, #f472b6 62%, #fb7185 100%);
+  background-image: linear-gradient(24deg, #7c3aed 0%, #a855f7 25%, #f472b6 62%, #fb7185 100%);
 }
 
 .dark .diagonal {
