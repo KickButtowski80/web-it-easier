@@ -150,11 +150,12 @@ export default {
 .dark .works-section {
     background:
         radial-gradient(120% 95% at 18% -12%, rgba(129, 140, 248, 0.42), transparent 78%),
-        radial-gradient(115% 75% at 90% 12%, rgba(236, 72, 153, 0.18), transparent 70%),
+        radial-gradient(115% 75% at 90% 12%, rgba(236, 72, 153, 0.14), transparent 68%),
         linear-gradient(185deg,
             rgba(58, 68, 160, 0.92) 0%,
-            rgba(72, 63, 196, 0.82) 52%,
-            rgba(57, 42, 148, 0.88) 100%
+            rgba(72, 63, 196, 0.8) 52%,
+            rgba(94, 72, 198, 0.7) 82%,
+            rgba(116, 95, 220, 0.65) 100%
         );
 }
 .dark .works-section::before {
@@ -168,9 +169,9 @@ export default {
 }
 .dark .works-section::after {
     background: linear-gradient(282deg,
-        rgba(165, 180, 252, 0.54) 0%,
-        rgba(148, 163, 255, 0.24) 58%,
-        rgba(96, 80, 180, 0.22) 100%
+        rgba(165, 180, 252, 0.5) 0%,
+        rgba(148, 163, 255, 0.22) 58%,
+        rgba(116, 95, 220, 0.18) 100%
     );
     clip-path: polygon(0 0, 100% 14%, 100% 100%, 0 88%);
     opacity: 0.44;
@@ -179,12 +180,12 @@ export default {
 }
 .dark .works-section::after::after {
     background: radial-gradient(circle,
-        rgba(153, 133, 255, 0.26) 0%,
-        rgba(109, 95, 205, 0.19) 46%,
+        rgba(153, 133, 255, 0.24) 0%,
+        rgba(109, 95, 205, 0.18) 46%,
         rgba(68, 56, 163, 0) 100%
     );
     filter: blur(12px);
-    opacity: 0.18;
+    opacity: 0.16;
 }
 
 /* ======================================= */
