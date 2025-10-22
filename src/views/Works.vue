@@ -149,32 +149,42 @@ export default {
 /* ======================================= */
 .dark .works-section {
     background:
-        radial-gradient(120% 95% at 18% -12%, rgba(129, 140, 248, 0.28), transparent 68%),
-        radial-gradient(110% 70% at 92% 6%, rgba(236, 72, 153, 0.12), transparent 62%),
-        linear-gradient(185deg, rgba(26, 31, 78, 0.92) 0%, rgba(17, 24, 39, 0.88) 52%, rgba(30, 27, 75, 0.94) 100%);
+        radial-gradient(120% 95% at 18% -12%, rgba(129, 140, 248, 0.42), transparent 78%),
+        radial-gradient(115% 75% at 90% 12%, rgba(236, 72, 153, 0.18), transparent 70%),
+        linear-gradient(185deg,
+            rgba(58, 68, 160, 0.92) 0%,
+            rgba(72, 63, 196, 0.82) 52%,
+            rgba(57, 42, 148, 0.88) 100%
+        );
 }
-
 .dark .works-section::before {
-    background: linear-gradient(110deg, rgba(10, 12, 32, 0.96) 0%, rgba(30, 27, 75, 0.78) 60%, rgba(99, 102, 241, 0.16) 88%, rgba(10, 12, 32, 0) 100%);
-    opacity: 0.9;
+    background: linear-gradient(110deg,
+        rgba(57, 51, 140, 0.68) 0%,
+        rgba(99, 102, 241, 0.48) 60%,
+        rgba(148, 163, 255, 0.2) 92%,
+        rgba(57, 51, 140, 0) 100%
+    );
+    opacity: 0.68;
 }
-
 .dark .works-section::after {
-    background: linear-gradient(282deg, rgba(148, 163, 255, 0.55) 0%, rgba(148, 163, 255, 0.18) 58%, rgba(148, 163, 255, 0) 100%);
+    background: linear-gradient(282deg,
+        rgba(165, 180, 252, 0.54) 0%,
+        rgba(148, 163, 255, 0.24) 58%,
+        rgba(96, 80, 180, 0.22) 100%
+    );
     clip-path: polygon(0 0, 100% 14%, 100% 100%, 0 88%);
-    opacity: 0.32;
+    opacity: 0.44;
     transform: skewY(-2.2deg);
     transform-origin: top;
 }
-
 .dark .works-section::after::after {
     background: radial-gradient(circle,
-        rgba(120, 110, 210, 0.28) 0%,
-        rgba(88, 78, 170, 0.18) 42%,
-        rgba(44, 38, 112, 0) 100%
+        rgba(153, 133, 255, 0.26) 0%,
+        rgba(109, 95, 205, 0.19) 46%,
+        rgba(68, 56, 163, 0) 100%
     );
-    filter: blur(14px);
-    opacity: 0;
+    filter: blur(12px);
+    opacity: 0.18;
 }
 
 /* ======================================= */

@@ -134,8 +134,11 @@ export default {
 }
 
 .dark .diagonal::after {
-  background: linear-gradient(20deg, rgba(59, 26, 150, 0.55), rgba(109, 40, 217, 0.45), rgba(192, 38, 211, 0.4));
-  opacity: 0.7;
+  background: linear-gradient(18deg,
+      rgba(45, 21, 110, 0.45),
+      rgba(92, 36, 180, 0.32),
+      rgba(158, 38, 211, 0.24));
+  opacity: 0.58;
 }
 
 .diagonal::before {
@@ -163,10 +166,10 @@ export default {
   background: linear-gradient(
     176deg,
     rgba(32, 6, 85, 0) 0%,
-    rgba(55, 16, 124, 0.22) 30%,
-    rgba(66, 26, 142, 0.5) 58%,
-    rgba(46, 24, 109, 0.74) 76%,
-    rgba(22, 10, 62, 0.93) 100%
+    rgba(50, 14, 112, 0.16) 32%,
+    rgba(60, 20, 132, 0.38) 58%,
+    rgba(38, 18, 98, 0.66) 78%,
+    rgba(18, 8, 54, 0.88) 100%
   );
 }
 </style>
