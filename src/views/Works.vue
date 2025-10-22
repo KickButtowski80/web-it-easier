@@ -259,15 +259,21 @@ export default {
     font-weight: 700;
     text-align: center;
     margin-bottom: 0.75rem;
-    color: var(--color-text-1);
+    color: rgba(30, 27, 75, 0.9);
+}
+.dark .works-title {
+    color: rgba(226, 232, 240, 0.95);
 }
 .works-subtitle {
     max-width: 38rem;
     margin: 0 auto 3rem;
     text-align: center;
-    color: var(--color-text-muted);
+    color: rgba(55, 65, 81, 0.82);
     font-size: 1.05rem;
     line-height: 1.7;
+}
+.dark .works-subtitle {
+    color: rgba(203, 213, 225, 0.88);
 }
 
 /* Works Card - Added performance hint for hover effects */

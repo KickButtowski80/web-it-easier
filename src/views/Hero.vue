@@ -49,10 +49,10 @@
       </div>
     </div>
     <div class="text-center">
-      <h1 class="hero-slogan text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan text-gray-900 dark:text-white">
+      <h1 class="hero-slogan text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan text-slate-800 dark:text-white">
         The Door to an easier digital future
       </h1>
-      <p class="hero-tagline font-thin text-xl opacity-0 animate-slogan-tagline text-gray-800 dark:text-gray-300">
+      <p class="hero-tagline font-thin text-xl opacity-0 animate-slogan-tagline text-slate-700 dark:text-gray-300">
         one website at a time
       </p>
     </div>
