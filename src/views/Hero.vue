@@ -124,11 +124,13 @@ export default {
 }
 
 .diagonal::after {
-  bottom: -75px;
+  bottom: -110px;
+  height: 260px;
   background: linear-gradient(45deg, rgba(118, 18, 233, 0.4), rgba(196, 113, 237, 0.32), rgba(246, 79, 89, 0.28));
   transform: skewY(185deg);
   opacity: 0.75;
-  z-index: -2;
+  z-index: 60;
+  pointer-events: none;
 }
 
 .dark .diagonal::after {
@@ -139,17 +141,17 @@ export default {
 .diagonal::before {
   content: "";
   position: absolute;
-  inset: auto 0 -16rem 0;
-  height: 22rem;
+  inset: auto 0 -14rem 0;
+  height: 18rem;
   background: linear-gradient(
     174deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(245, 240, 255, 0.5) 28%,
-    rgba(230, 220, 250, 0.8) 60%,
-    rgba(210, 200, 240, 0.9) 78%,
-    var(--color-surface-2, #f9f5ff) 100%
+    rgba(245, 240, 255, 0.32) 24%,
+    rgba(196, 181, 253, 0.58) 52%,
+    rgba(144, 118, 220, 0.78) 74%,
+    rgba(78, 52, 145, 0.9) 100%
   );
-  clip-path: polygon(0 42%, 100% 22%, 100% 100%, 0 100%);
+  clip-path: polygon(0 58%, 100% 30%, 100% 100%, 0 100%);
   mix-blend-mode: multiply;
   opacity: 0.95;
   pointer-events: none;
@@ -161,10 +163,10 @@ export default {
   background: linear-gradient(
     176deg,
     rgba(32, 6, 85, 0) 0%,
-    rgba(55, 16, 124, 0.18) 32%,
-    rgba(66, 26, 142, 0.46) 60%,
-    rgba(42, 19, 103, 0.72) 78%,
-    rgba(15, 6, 52, 0.92) 100%
+    rgba(55, 16, 124, 0.22) 30%,
+    rgba(66, 26, 142, 0.5) 58%,
+    rgba(46, 24, 109, 0.74) 76%,
+    rgba(22, 10, 62, 0.93) 100%
   );
 }
 </style>
