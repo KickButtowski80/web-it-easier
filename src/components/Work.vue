@@ -32,7 +32,7 @@
           :aria-expanded="readMoreStatus ? 'true' : 'false'"
           :aria-controls="`card-${projectId}`"
           :aria-describedby="`project-toggle-desc-${projectId}`"
-          class="mb-2 flex w-fit items-center rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-offset-2 hover:bg-purple-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus:ring-indigo-300"
+          class="mb-2 flex w-fit items-center rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-offset-2 hover:bg-purple-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400 dark:focus:ring-offset-indigo-950"
         >
           {{ readMoreText }}
           <span class="sr-only" :id="`project-toggle-desc-${projectId}`">project details for {{ projectTitle }}</span>
