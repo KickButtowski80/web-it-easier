@@ -4,15 +4,22 @@
     <div class="p-2 flex h-md-navbar-height items-center gap-4">
       <span class="font-semibold text-5xl"> IT 🚪 </span>
       <div class="flex items-center gap-4 ml-auto">
-        <nav class="hidden md:flex md:items-center md:gap-6 md:[&>*]:text-2xl md:[&>*]:p-5 md:[&>*]:font-semibold md:[&>*]:rounded-xl" aria-label="main">
-          <RouterLink :to="{ name: 'Home' }">Home</RouterLink>
-          <RouterLink :to="{ name: 'Blog' }">Blog</RouterLink>
-          <RouterLink :to="{ name: 'Home', hash: '#our-works' }">Our Works</RouterLink>
+        <nav class="hidden md:flex md:items-center md:gap-6" aria-label="main">
+          <RouterLink 
+            :to="{ name: 'Home' }" 
+            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white"
+          >Home</RouterLink>
+          <RouterLink 
+            :to="{ name: 'Blog' }" 
+            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white"
+          >Blog</RouterLink>
+          <RouterLink 
+            :to="{ name: 'Home', hash: '#our-works' }" 
+            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white"
+          >Our Works</RouterLink>
           <RouterLink
             :to="{ name: 'Home', hash: '#hire-us' }"
-            class="rounded-xl border border-purple-400 bg-purple-900 px-4 py-2 text-white
-             transition-colors hover:bg-purple-800 dark:border-indigo-500 dark:bg-indigo-700 
-             dark:hover:bg-indigo-600 dark:hover:text-white"
+            class="rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
           >Hire Us
           </RouterLink>
         </nav>
