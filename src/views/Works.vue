@@ -23,6 +23,8 @@
         </div>
       </div>
     </div>
+    <div class="works-section__divider" aria-hidden="true"></div>
+    <div class="works-section__divider works-section__divider--lower" aria-hidden="true"></div>
   </section>
 </template>
 
@@ -240,6 +242,53 @@ export default {
         linear-gradient(rgba(148, 163, 255, 0.08) 1px, transparent 1px),
         linear-gradient(90deg, rgba(167, 139, 250, 0.06) 1px, transparent 1px);
     opacity: 0.28;
+}
+
+.works-section__divider {
+    position: absolute;
+    inset: auto 0 -7rem 0;
+    height: 13rem;
+    background: linear-gradient(352deg,
+            rgba(124, 58, 237, 0.42) 0%,
+            rgba(168, 85, 247, 0.28) 52%,
+            rgba(236, 72, 153, 0.08) 78%,
+            rgba(255, 255, 255, 0) 92%);
+    transform: skewY(6deg);
+    transform-origin: bottom right;
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.dark .works-section__divider {
+    background: linear-gradient(350deg,
+            rgba(99, 102, 241, 0.38) 0%,
+            rgba(129, 140, 248, 0.25) 52%,
+            rgba(56, 189, 248, 0.08) 80%,
+            rgba(129, 140, 248, 0) 94%);
+    opacity: 0.78;
+}
+
+.works-section__divider--lower {
+    inset: auto 0 -11rem 0;
+    height: 16rem;
+    background: linear-gradient(190deg,
+            rgba(236, 72, 153, 0.18) 0%,
+            rgba(168, 85, 247, 0.12) 42%,
+            rgba(124, 58, 237, 0.08) 72%,
+            rgba(255, 255, 255, 0) 94%);
+    transform: skewY(-5deg);
+    transform-origin: top left;
+    opacity: 0.6;
+}
+
+.dark .works-section__divider--lower {
+    background: linear-gradient(186deg,
+            rgba(56, 189, 248, 0.22) 0%,
+            rgba(129, 140, 248, 0.18) 44%,
+            rgba(79, 70, 229, 0.12) 74%,
+            rgba(24, 24, 56, 0) 96%);
+    opacity: 0.52;
 }
 
 /* ======================================= */
