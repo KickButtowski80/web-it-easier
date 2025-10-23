@@ -8,7 +8,11 @@
                 This may take a few seconds depending on your connection speed.
             </template>
         </LoadingOverlay>
-        <h1 id="form-heading">{{ isEditMode ? 'Edit Blog Post' : 'New Blog Post' }}</h1>
+        <h1
+          class="text-4xl sm:text-5xl font-black tracking-tight mb-6 bg-gradient-to-r from-purple-600 via-sky-500 to-indigo-600 text-transparent bg-clip-text drop-shadow-sm dark:from-purple-300 dark:via-sky-300 dark:to-indigo-200"
+        >
+        {{ isEditMode ? 'Edit Blog Post' : 'Create New Blog Post' }}
+      </h1>
         <form @submit.prevent="handleSubmit" aria-labelledby="form-heading" :class="{ 'opacity-50': isLoading }"
             :aria-busy="isLoading" novalidate>
             <div class="form-group">
@@ -1250,15 +1254,9 @@ const handleSubmit = async () => {
     position: relative;
 }
 
-h1 {
-    font-size: clamp(1.5rem, 5vw, 1.8rem);
-    color: #4c1d95;
-    /* Match the purple brand color */
+.admin-form > h1 {
     margin-bottom: clamp(1rem, 4vw, 1.5rem);
     text-align: center;
-    font-weight: 700;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #4c1d95;
 }
 
 

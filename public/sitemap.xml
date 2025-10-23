@@ -47,4 +47,12 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://web-it-easier.vercel.app/blog/curly-howard-code-a-tribute-from-a-fan-who-grew-up-laughing</loc>
+    <lastmod>2025-10-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+
 </urlset>
