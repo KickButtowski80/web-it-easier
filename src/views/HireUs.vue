@@ -1,61 +1,38 @@
 <template>
-  <section
-    id="hire-us"
-    aria-label="Hire Us Section"
-    class="flex flex-col items-center justify-center relative py-16"
-  >
+  <section id="hire-us" aria-label="Hire Us Section" class="flex flex-col items-center justify-center relative py-16">
     <div class="hire-us__divider" aria-hidden="true"></div>
     <header class="text-center mb-20 relative z-20">
       <h1 class="font-bold py-6 text-3xl">Hire Our Team</h1>
     </header>
 
-    <div
-      id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-[1.1rem] relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[60%]"
-    >
+    <div id="members-cards-info"
+      class="w-96 bg-purple-400 p-6 rounded-[1.1rem] relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[60%]">
       <div class="card relative">
         <header class="text-2xl font-semibold">Our Team members</header>
-        <section
-          class="members flex flex-col items-center justify-center gap-2"
-        >
+        <section class="members flex flex-col items-center justify-center gap-2">
           <div>
             <h2 class="font-bold text-2xl">Sam T</h2>
-            <img
-              src="/programmers/Samuel-C-Tyler.svg"
-              alt="picture of Samuel C Tyler the lead developer"
-              class="float-right w-1/2 overflow-hidden"
-              loading="lazy"
-              width="300"
-              height="300"
-            />
+            <img src="/programmers/Samuel-C-Tyler.svg" alt="picture of Samuel C Tyler the lead developer"
+              class="float-right w-1/2 overflow-hidden" loading="lazy" width="300" height="300" />
             <p class="text-lg font-semibold" role="doc-subtitle">Lead Developer</p>
             <a href="#sam-info" class="text-blue-700 underline">more info...</a>
           </div>
           <div>
             <h2 class="font-bold text-2xl">Izak T</h2>
-            <img
-              src="/programmers/izak-t.svg"
-              alt="picture of Izak Tarashandegan the founder and Developer"
-              class="float-right w-1/2 overflow-hidden"
-              loading="lazy"
-            />
+            <img src="/programmers/izak-t.svg" alt="picture of Izak Tarashandegan the founder and Developer"
+              class="float-right w-1/2 overflow-hidden" loading="lazy" />
             <p class="text-lg font-semibold" role="doc-subtitle">Founder / Developer</p>
-            <a href="#izak-info" class="text-blue-700 underline"
-              >more info...</a
-            >
+            <a href="#izak-info" class="text-blue-700 underline">more info...</a>
           </div>
         </section>
       </div>
 
       <section
-        class="contact-info md:absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
-      >
+        class="contact-info md:absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass">
         <section class="col-span-1">
           <div class="card">
             <div class="font-normal text-gray-900">
-              <h2
-                class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
-              >
+              <h2 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700">
                 Contact Us to make your dream a reality
               </h2>
               <div class="flex flex-col gap-5 mt-16">
@@ -75,15 +52,12 @@
     </div>
 
     <section
-      class="contact-info md:absolute z-[1] grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass"
-    >
+      class="contact-info md:absolute z-[1] grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass">
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
           <div class="font-normal text-gray-900">
-            <h2
-              class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700"
-            >
+            <h2 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700">
               Contact Us to make your dream a reality
             </h2>
             <div class="flex flex-col gap-5 mt-16">
@@ -102,24 +76,17 @@
     </section>
 
     <section
-      class="members-info md:absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb1-8"
-    >
+      class="members-info md:absolute grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb1-8">
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-          <div
-            id="sam-info"
-            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed"
-          >
+          <div id="sam-info"
+            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed">
             <a href="#close"> X </a>
             <h2 class="font-bold py-3 text-3xl">Samuel C Tyler</h2>
             <p class="text-xl font-semibold mb-4" role="doc-subtitle">Lead Developer</p>
-            <img
-              src="/programmers/Samuel-C-Tyler.svg"
-              alt="Samuel C Tyler the leader coder"
-              class="float-right overflow-hidden w-1/2 fit-content"
-              loading="lazy"
-            />
+            <img src="/programmers/Samuel-C-Tyler.svg" alt="Samuel C Tyler the leader coder"
+              class="float-right overflow-hidden w-1/2 fit-content" loading="lazy" />
             <p>
               Web Application Developer with 10+ years experience in modern,
               full-stack, component-based design with a focus on reliability via
@@ -132,19 +99,13 @@
             </p>
           </div>
 
-          <div
-            id="izak-info"
-            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed"
-          >
+          <div id="izak-info"
+            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed">
             <a href="#close"> X </a>
             <h2 class="font-bold py-3 text-3xl">Izak Tarashandegan</h2>
             <p class="text-xl font-semibold mb-4" role="doc-subtitle">Founder / Coder</p>
-            <img
-              src="/programmers/izak-t.svg"
-              alt="izak tarashandegan the founder and coder"
-              class="float-right overflow-hidden w-1/2 fit-content"
-              loading="lazy"           
-            />
+            <img src="/programmers/izak-t.svg" alt="izak tarashandegan the founder and coder"
+              class="float-right overflow-hidden w-1/2 fit-content" loading="lazy" />
             <p>
               At IT, we specialize in helping businesses build a strong internet
               presence. With a degree in CS from CSUN and years of experience as
@@ -184,10 +145,12 @@ export default {
 header h1 {
   animation: slide-in 0.8s ease-in-out;
 }
+
 @keyframes slide-in {
   from {
     transform: translateX(-100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -205,7 +168,7 @@ header h1 {
 }
 
 #hire-us {
-  height: 100%; 
+  height: 100%;
   min-height: 100%;
   position: relative;
   overflow: hidden;
@@ -220,11 +183,9 @@ header h1 {
   left: 0;
   height: 100%;
   width: 100%;
-  background-image: linear-gradient(
-    135deg,
-    transparent 50%,
-    rgb(189, 128, 250) 50%
-  );
+  background-image: linear-gradient(135deg,
+      transparent 50%,
+      rgb(189, 128, 250) 50%);
   background-size: 48rem 48rem;
   transition: background-position 0.2s;
   background-attachment: fixed;
@@ -234,12 +195,12 @@ header h1 {
 }
 
 #hire-us::after {
-    content: "";
-    position: absolute;
-  top: -8.5rem;
+  content: "";
+  position: absolute;
+  top: -2.5rem;
   left: -18%;
   right: -10%;
-  height: 15rem;
+  height: 12rem;
   background:
     radial-gradient(118% 88% at 4% 22%, rgba(186, 196, 255, 0.42), transparent 74%),
     linear-gradient(160deg, rgba(236, 72, 153, 0.12) 10%, rgba(168, 85, 247, 0.16) 44%, rgba(124, 58, 237, 0.08) 74%, rgba(255, 255, 255, 0) 100%);
@@ -251,8 +212,8 @@ header h1 {
 
 .dark #hire-us::after {
   background:
-    radial-gradient(118% 88% at 4% 22%, rgba(99, 110, 230, 0.52), transparent 72%),
-    linear-gradient(156deg, rgba(99, 102, 241, 0.28) 12%, rgba(148, 163, 255, 0.24) 48%, rgba(71, 85, 179, 0.18) 78%, rgba(28, 28, 60, 0) 100%);
+    radial-gradient(118% 88% at 4% 22%, rgba(99, 110, 230, 0.64), transparent 70%),
+    linear-gradient(156deg, rgba(99, 102, 241, 0.36) 12%, rgba(148, 163, 255, 0.3) 48%, rgba(71, 85, 179, 0.22) 78%, rgba(28, 28, 60, 0) 100%);
   opacity: 0.86;
 }
 
@@ -289,6 +250,7 @@ header h1 {
   place-items: center;
   gap: 2rem;
 }
+
 #members-cards-info .contact-info {
   opacity: 0;
   width: 24rem;
@@ -296,6 +258,7 @@ header h1 {
   left: 0;
   z-index: -1;
 }
+
 #members-cards-info .members div {
   width: 100%;
   background: white;
@@ -306,6 +269,7 @@ header h1 {
     transform 0.5s ease-in-out,
     opacity 0.5s ease-in-out;
 }
+
 .members-info .card div {
   width: 60%;
   height: 33.75rem;
@@ -318,11 +282,13 @@ header h1 {
   position: absolute;
   top: -10%;
 }
+
 .contact-info {
   transition:
     transform 0.5s ease-in-out,
     opacity 0.5s ease-in-out;
 }
+
 #hire-us:has(:target) .contact-info {
   transform: translateX(-100%);
   opacity: 0;
@@ -338,7 +304,7 @@ header h1 {
   background-color: #bd80fa;
 }
 
-#hire-us:has(:target):has(.members-info) #members-cards-info + .card {
+#hire-us:has(:target):has(.members-info) #members-cards-info+.card {
   opacity: 0;
 }
 
@@ -368,6 +334,7 @@ a[href="#close"] {
     height: auto;
     width: auto;
   }
+
   #hire-us {
     height: auto;
   }
@@ -375,6 +342,7 @@ a[href="#close"] {
   #hire-us::before {
     display: none;
   }
+
   #members-cards-info {
     display: none;
   }
@@ -383,6 +351,7 @@ a[href="#close"] {
     margin: 0;
     padding: 0;
   }
+
   .members-info::before {
     content: "Our Team Members";
     width: 100%;
@@ -394,6 +363,7 @@ a[href="#close"] {
     font-weight: bold;
     text-align: center;
   }
+
   .members-info .card {
     display: flex;
     flex-direction: column;
@@ -413,9 +383,11 @@ a[href="#close"] {
     top: 100%;
     transition: none;
   }
+
   #hire-us .contact-info {
     width: calc(19rem - 0.5rem);
   }
+
   a[href="#close"] {
     display: none;
   }
@@ -425,9 +397,11 @@ a[href="#close"] {
   #members-cards-info {
     left: -11rem;
   }
+
   .contact-info {
     left: 10rem;
   }
+
   .members-info {
     left: 8rem;
   }

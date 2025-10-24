@@ -301,7 +301,7 @@ export default {
             rgba(168, 85, 247, 0.22) 42%,
             rgba(124, 58, 237, 0.14) 72%,
             rgba(255, 255, 255, 0) 96%);
-    transform: skewY(-8.5deg);
+    transform: skewY(-2.5deg);
     transform-origin: top left;
     opacity: 0.64;
 }
