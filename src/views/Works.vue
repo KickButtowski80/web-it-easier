@@ -250,14 +250,14 @@ export default {
 
 .works-section__divider {
     position: absolute;
-    inset: auto 0 -7rem 0;
+    inset: auto 0 -3rem 0;
     height: 13rem;
     background: linear-gradient(352deg,
             rgba(124, 58, 237, 0.42) 0%,
             rgba(168, 85, 247, 0.28) 52%,
             rgba(236, 72, 153, 0.08) 78%,
             rgba(255, 255, 255, 0) 92%);
-    transform: skewY(6deg);
+    transform: skewY(-5deg);
     transform-origin: bottom right;
     opacity: 0.9;
     pointer-events: none;
@@ -296,26 +296,25 @@ export default {
 }
 
 .works-section__divider--lower {
-    inset: auto -2% -9.5rem 6%;
-    height: 15rem;
+    inset: auto -2% -14.5rem 0%;
+    height: 18rem;
     background: linear-gradient(201deg,
-            rgba(236, 72, 153, 0.16) 12%,
-            rgba(168, 85, 247, 0.1) 48%,
-            rgba(124, 58, 237, 0.06) 76%,
-            rgba(255, 255, 255, 0) 100%);
-    transform: skewY(-2.5deg);
+            rgba(236, 72, 153, 0.34) 8%,
+            rgba(168, 85, 247, 0.22) 42%,
+            rgba(124, 58, 237, 0.14) 72%,
+            rgba(255, 255, 255, 0) 96%);
+    transform: skewY(-8.5deg);
     transform-origin: top left;
-    clip-path: polygon(0 10%, 100% 24%, 100% 100%, 0 100%);
-    opacity: 0.46;
+    opacity: 0.64;
 }
 
 .dark .works-section__divider--lower {
     background: linear-gradient(199deg,
-            rgba(56, 189, 248, 0.18) 16%,
-            rgba(129, 140, 248, 0.14) 54%,
-            rgba(79, 70, 229, 0.1) 82%,
-            rgba(18, 21, 56, 0) 100%);
-    opacity: 0.46;
+            rgba(56, 189, 248, 0.26) 12%,
+            rgba(129, 140, 248, 0.2) 50%,
+            rgba(79, 70, 229, 0.14) 80%,
+            rgba(18, 21, 56, 0) 98%);
+    opacity: 0.58;
 }
 
 /* ======================================= */
