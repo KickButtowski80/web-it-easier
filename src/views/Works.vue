@@ -3,6 +3,7 @@
     <div class="works-section__decor works-section__decor--one" aria-hidden="true"></div>
     <div class="works-section__decor works-section__decor--two" aria-hidden="true"></div>
     <div class="works-section__decor works-section__decor--grid" aria-hidden="true"></div>
+    <div class="works-section__divider works-section__divider--top" aria-hidden="true"></div>
     <div class="container relative z-10 mx-auto px-4 lg:px-8">
       <p class="works-kicker">Featured Projects</p>
       <h1 class="works-title">Our Works</h1>
@@ -100,14 +101,14 @@ export default {
     width: 92%;
     height: 20rem;
     background: linear-gradient(112deg,
-        rgba(18, 16, 46, 0.92) 0%,
-        rgba(44, 28, 94, 0.78) 42%,
-        rgba(99, 102, 241, 0.28) 82%,
-        rgba(99, 102, 241, 0) 100%
+        rgba(18, 16, 46, 0.88) 0%,
+        rgba(64, 36, 128, 0.74) 36%,
+        rgba(129, 140, 248, 0.32) 76%,
+        rgba(129, 140, 248, 0.08) 100%
     );
     transform: skewY(-8deg) rotate(-2deg);
     filter: blur(3.2rem); 
-    opacity: 0.8;
+    opacity: 0.92;
 }
 
 /* ELEMENT: ::after (Top Clip-Path Border) */
@@ -116,9 +117,12 @@ export default {
     left: 0;
     right: 0;
     height: 9rem;
-    background: linear-gradient(176deg, rgba(118, 18, 233, 0.18) 10%, rgba(92, 47, 176, 0.32) 55%, rgba(237, 233, 254, 0.9) 100%);
+    background: linear-gradient(176deg,
+        rgba(146, 64, 246, 0.24) 8%,
+        rgba(109, 76, 217, 0.4) 56%,
+        rgba(237, 233, 254, 0.95) 100%);
     clip-path: polygon(0 0, 100% 12%, 100% 100%, 0 88%);
-    opacity: 0.85;
+    opacity: 0.95;
     transform: skewY(-2.2deg);
     transform-origin: top;
 }
@@ -162,21 +166,21 @@ export default {
 }
 .dark .works-section::before {
     background: linear-gradient(110deg,
-        rgba(57, 51, 140, 0.68) 0%,
-        rgba(99, 102, 241, 0.48) 60%,
-        rgba(148, 163, 255, 0.2) 92%,
-        rgba(57, 51, 140, 0) 100%
+        rgba(28, 25, 82, 0.96) 0%,
+        rgba(62, 64, 158, 0.78) 52%,
+        rgba(120, 130, 220, 0.38) 86%,
+        rgba(48, 50, 128, 0.16) 100%
     );
-    opacity: 0.68;
+    opacity: 0.95;
 }
 .dark .works-section::after {
-    background: linear-gradient(282deg,
-        rgba(165, 180, 252, 0.5) 0%,
-        rgba(148, 163, 255, 0.22) 58%,
-        rgba(116, 95, 220, 0.18) 100%
+    background: linear-gradient(286deg,
+        rgba(186, 204, 255, 0.62) 0%,
+        rgba(168, 194, 255, 0.38) 54%,
+        rgba(148, 128, 242, 0.24) 100%
     );
     clip-path: polygon(0 0, 100% 14%, 100% 100%, 0 88%);
-    opacity: 0.44;
+    opacity: 0.58;
     transform: skewY(-2.2deg);
     transform-origin: top;
 }
@@ -260,35 +264,58 @@ export default {
     z-index: 1;
 }
 
+.works-section__divider--top {
+    inset: -6.5rem 0 auto 0;
+    height: 12rem;
+    background: linear-gradient(196deg,
+            rgba(168, 85, 247, 0.26) 0%,
+            rgba(129, 140, 248, 0.18) 46%,
+            rgba(255, 255, 255, 0) 88%);
+    transform: skewY(-5deg);
+    transform-origin: top left;
+    opacity: 0.88;
+    mix-blend-mode: screen;
+}
+
 .dark .works-section__divider {
     background: linear-gradient(350deg,
-            rgba(99, 102, 241, 0.38) 0%,
-            rgba(129, 140, 248, 0.25) 52%,
-            rgba(56, 189, 248, 0.08) 80%,
-            rgba(129, 140, 248, 0) 94%);
-    opacity: 0.78;
+            rgba(99, 102, 241, 0.48) 0%,
+            rgba(129, 140, 248, 0.32) 52%,
+            rgba(56, 189, 248, 0.16) 82%,
+            rgba(129, 140, 248, 0) 96%);
+    opacity: 0.9;
+}
+
+.dark .works-section__divider--top {
+    background: linear-gradient(200deg,
+            rgba(139, 92, 246, 0.32) 0%,
+            rgba(165, 180, 252, 0.24) 48%,
+            rgba(148, 163, 255, 0.1) 88%);
+    opacity: 0.82;
+    mix-blend-mode: lighten;
 }
 
 .works-section__divider--lower {
-    inset: auto 0 -11rem 0;
+    inset: auto -4% -11rem 8%;
     height: 16rem;
-    background: linear-gradient(190deg,
-            rgba(236, 72, 153, 0.18) 0%,
-            rgba(168, 85, 247, 0.12) 42%,
-            rgba(124, 58, 237, 0.08) 72%,
-            rgba(255, 255, 255, 0) 94%);
-    transform: skewY(-5deg);
+    background: linear-gradient(198deg,
+            rgba(236, 72, 153, 0.14) 10%,
+            rgba(168, 85, 247, 0.1) 46%,
+            rgba(124, 58, 237, 0.06) 78%,
+            rgba(255, 255, 255, 0) 100%);
+    transform: skewY(-3deg);
     transform-origin: top left;
-    opacity: 0.6;
+    clip-path: polygon(0 18%, 100% 28%, 100% 100%, 0 100%);
+    opacity: 0.44;
 }
 
 .dark .works-section__divider--lower {
-    background: linear-gradient(186deg,
-            rgba(56, 189, 248, 0.22) 0%,
-            rgba(129, 140, 248, 0.18) 44%,
-            rgba(79, 70, 229, 0.12) 74%,
-            rgba(24, 24, 56, 0) 96%);
-    opacity: 0.52;
+    background: linear-gradient(194deg,
+            rgba(56, 189, 248, 0.16) 18%,
+            rgba(129, 140, 248, 0.12) 56%,
+            rgba(79, 70, 229, 0.08) 86%,
+            rgba(18, 21, 56, 0) 100%);
+    opacity: 0.42;
 }
 
 /* ======================================= */
