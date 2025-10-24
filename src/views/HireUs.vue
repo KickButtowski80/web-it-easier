@@ -207,6 +207,8 @@ header h1 {
   height: 100%; 
   min-height: 100%;
   position: relative;
+  overflow: hidden;
+  z-index: 0;
 }
 
 #hire-us::before {
@@ -226,6 +228,32 @@ header h1 {
   background-attachment: fixed;
   background-position: bottom right;
   background-repeat: no-repeat;
+  z-index: 0;
+}
+
+#hire-us::after {
+  content: "";
+  position: absolute;
+  top: -8.5rem;
+  left: -16%;
+  width: 140%;
+  height: 22rem;
+  background:
+    radial-gradient(118% 88% at 4% 22%, rgba(186, 196, 255, 0.42), transparent 74%),
+    linear-gradient(202deg, rgba(236, 72, 153, 0.12) 10%, rgba(168, 85, 247, 0.16) 44%, rgba(124, 58, 237, 0.08) 74%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0.78;
+  transform: skewY(-2.2deg);
+  transform-origin: top left;
+  clip-path: polygon(0 0, 100% 24%, 100% 74%, 0 78%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dark #hire-us::after {
+  background:
+    radial-gradient(118% 88% at 4% 22%, rgba(99, 110, 230, 0.52), transparent 72%),
+    linear-gradient(204deg, rgba(99, 102, 241, 0.28) 12%, rgba(148, 163, 255, 0.24) 48%, rgba(71, 85, 179, 0.18) 78%, rgba(28, 28, 60, 0) 100%);
+  opacity: 0.86;
 }
 
 #members-cards-info .card {

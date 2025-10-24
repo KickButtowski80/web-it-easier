@@ -296,26 +296,26 @@ export default {
 }
 
 .works-section__divider--lower {
-    inset: auto -4% -11rem 8%;
-    height: 16rem;
-    background: linear-gradient(198deg,
-            rgba(236, 72, 153, 0.14) 10%,
-            rgba(168, 85, 247, 0.1) 46%,
-            rgba(124, 58, 237, 0.06) 78%,
+    inset: auto -2% -9.5rem 6%;
+    height: 15rem;
+    background: linear-gradient(201deg,
+            rgba(236, 72, 153, 0.16) 12%,
+            rgba(168, 85, 247, 0.1) 48%,
+            rgba(124, 58, 237, 0.06) 76%,
             rgba(255, 255, 255, 0) 100%);
-    transform: skewY(-3deg);
+    transform: skewY(-2.5deg);
     transform-origin: top left;
-    clip-path: polygon(0 18%, 100% 28%, 100% 100%, 0 100%);
-    opacity: 0.44;
+    clip-path: polygon(0 10%, 100% 24%, 100% 100%, 0 100%);
+    opacity: 0.46;
 }
 
 .dark .works-section__divider--lower {
-    background: linear-gradient(194deg,
-            rgba(56, 189, 248, 0.16) 18%,
-            rgba(129, 140, 248, 0.12) 56%,
-            rgba(79, 70, 229, 0.08) 86%,
+    background: linear-gradient(199deg,
+            rgba(56, 189, 248, 0.18) 16%,
+            rgba(129, 140, 248, 0.14) 54%,
+            rgba(79, 70, 229, 0.1) 82%,
             rgba(18, 21, 56, 0) 100%);
-    opacity: 0.42;
+    opacity: 0.46;
 }
 
 /* ======================================= */
