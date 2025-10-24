@@ -4,6 +4,7 @@
     aria-label="Hire Us Section"
     class="flex flex-col items-center justify-center relative py-16"
   >
+    <div class="hire-us__divider" aria-hidden="true"></div>
     <header class="text-center mb-20 relative z-20">
       <h1 class="font-bold py-6 text-3xl">Hire Our Team</h1>
     </header>
@@ -193,13 +194,13 @@ header h1 {
 }
 
 .glass {
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(0.625rem);
+  backdrop-filter: blur(0.625rem);
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 1rem;
   padding: 1.5rem;
   color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
   opacity: 1;
 }
 
@@ -209,6 +210,7 @@ header h1 {
   position: relative;
   overflow: hidden;
   z-index: 0;
+  --hire-transition-speed: 0.5s;
 }
 
 #hire-us::before {
@@ -223,7 +225,7 @@ header h1 {
     transparent 50%,
     rgb(189, 128, 250) 50%
   );
-  background-size: 768px 768px;
+  background-size: 48rem 48rem;
   transition: background-position 0.2s;
   background-attachment: fixed;
   background-position: bottom right;
@@ -232,19 +234,17 @@ header h1 {
 }
 
 #hire-us::after {
-  content: "";
-  position: absolute;
+    content: "";
+    position: absolute;
   top: -8.5rem;
-  left: -16%;
-  width: 140%;
-  height: 22rem;
+  left: -18%;
+  right: -10%;
+  height: 15rem;
   background:
     radial-gradient(118% 88% at 4% 22%, rgba(186, 196, 255, 0.42), transparent 74%),
-    linear-gradient(202deg, rgba(236, 72, 153, 0.12) 10%, rgba(168, 85, 247, 0.16) 44%, rgba(124, 58, 237, 0.08) 74%, rgba(255, 255, 255, 0) 100%);
+    linear-gradient(160deg, rgba(236, 72, 153, 0.12) 10%, rgba(168, 85, 247, 0.16) 44%, rgba(124, 58, 237, 0.08) 74%, rgba(255, 255, 255, 0) 100%);
   opacity: 0.78;
-  transform: skewY(-2.2deg);
-  transform-origin: top left;
-  clip-path: polygon(0 0, 100% 24%, 100% 74%, 0 78%);
+
   pointer-events: none;
   z-index: 0;
 }
@@ -252,12 +252,36 @@ header h1 {
 .dark #hire-us::after {
   background:
     radial-gradient(118% 88% at 4% 22%, rgba(99, 110, 230, 0.52), transparent 72%),
-    linear-gradient(204deg, rgba(99, 102, 241, 0.28) 12%, rgba(148, 163, 255, 0.24) 48%, rgba(71, 85, 179, 0.18) 78%, rgba(28, 28, 60, 0) 100%);
+    linear-gradient(156deg, rgba(99, 102, 241, 0.28) 12%, rgba(148, 163, 255, 0.24) 48%, rgba(71, 85, 179, 0.18) 78%, rgba(28, 28, 60, 0) 100%);
   opacity: 0.86;
 }
 
+.hire-us__divider {
+  position: absolute;
+  inset: -6rem -1% auto -6%;
+  height: 11rem;
+  background: linear-gradient(194deg,
+      rgba(168, 85, 247, 0.22) 10%,
+      rgba(124, 58, 237, 0.14) 54%,
+      rgba(236, 72, 153, 0.08) 92%,
+      rgba(255, 255, 255, 0) 100%);
+
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dark .hire-us__divider {
+  background: linear-gradient(192deg,
+      rgba(99, 102, 241, 0.34) 12%,
+      rgba(148, 163, 255, 0.24) 58%,
+      rgba(79, 70, 229, 0.16) 94%,
+      rgba(24, 24, 56, 0) 100%);
+  opacity: 0.7;
+}
+
 #members-cards-info .card {
-  width: calc(100% - 0px);
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -267,7 +291,7 @@ header h1 {
 }
 #members-cards-info .contact-info {
   opacity: 0;
-  width: 384px;
+  width: 24rem;
   top: 0;
   left: 0;
   z-index: -1;
@@ -275,7 +299,7 @@ header h1 {
 #members-cards-info .members div {
   width: 100%;
   background: white;
-  border: 1px solid gray;
+  border: 0.0625rem solid gray;
   border-radius: 10%;
   padding: 2rem;
   transition:
@@ -283,12 +307,14 @@ header h1 {
     opacity 0.5s ease-in-out;
 }
 .members-info .card div {
-  width: calc(60% - 0rem);
-  height: calc(540px - 0rem);
+  width: 60%;
+  height: 33.75rem;
   padding: 1.5rem;
   opacity: 0;
   color: black;
-  transition: all 2s ease-in-out;
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
   position: absolute;
   top: -10%;
 }
@@ -328,13 +354,13 @@ header h1 {
 
 a[href="#close"] {
   float: right;
-  border: 2px solid black;
-  padding: 5px;
-  border-radius: 5px;
+  border: 0.125rem solid black;
+  padding: 0.3125rem;
+  border-radius: 0.3125rem;
   text-decoration: none;
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: 26.5625rem) {
   #hire-us * {
     overflow: initial;
     position: static;
@@ -381,10 +407,11 @@ a[href="#close"] {
   #hire-us .members-info .card div {
     position: relative;
     opacity: 1;
-    width: calc(19rem - 0.5rem);
+    width: 18.5rem;
     height: auto;
     padding: 0.9rem;
     top: 100%;
+    transition: none;
   }
   #hire-us .contact-info {
     width: calc(19rem - 0.5rem);
@@ -394,7 +421,7 @@ a[href="#close"] {
   }
 }
 
-@media screen and (min-width: 426px) and (max-width: 769px) {
+@media screen and (min-width: 26.625rem) and (max-width: 48.0625rem) {
   #members-cards-info {
     left: -11rem;
   }

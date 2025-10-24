@@ -154,7 +154,6 @@ export default {
     rgba(144, 118, 220, 0.78) 74%,
     rgba(78, 52, 145, 0.9) 100%
   );
-  clip-path: polygon(0 58%, 100% 30%, 100% 100%, 0 100%);
   mix-blend-mode: multiply;
   opacity: 0.95;
   pointer-events: none;

@@ -121,7 +121,6 @@ export default {
         rgba(146, 64, 246, 0.24) 8%,
         rgba(109, 76, 217, 0.4) 56%,
         rgba(237, 233, 254, 0.95) 100%);
-    clip-path: polygon(0 0, 100% 12%, 100% 100%, 0 88%);
     opacity: 0.95;
     transform: skewY(-2.2deg);
     transform-origin: top;
@@ -179,7 +178,6 @@ export default {
         rgba(168, 194, 255, 0.38) 54%,
         rgba(148, 128, 242, 0.24) 100%
     );
-    clip-path: polygon(0 0, 100% 14%, 100% 100%, 0 88%);
     opacity: 0.58;
     transform: skewY(-2.2deg);
     transform-origin: top;
