@@ -125,7 +125,7 @@ export default {
 
 .diagonal::after {
   bottom: -110px;
-  height: 260px;
+  height: 200px;
   background: linear-gradient(45deg, rgba(118, 18, 233, 0.4), rgba(196, 113, 237, 0.32), rgba(246, 79, 89, 0.28));
   transform: skewY(185deg);
   opacity: 0.75;
