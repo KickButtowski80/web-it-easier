@@ -2,47 +2,47 @@
   <section id="hire-us" aria-label="Hire Us Section" class="flex flex-col items-center justify-center relative py-16">
     <div class="hire-us__divider" aria-hidden="true"></div>
     <header class="text-center mb-20 relative z-20">
-      <h1 class="font-bold py-6 text-3xl">Hire Our Team</h1>
+      <h1 class="font-bold py-6 text-3xl text-slate-900 dark:text-slate-100">Hire Our Team</h1>
     </header>
 
     <div id="members-cards-info"
-      class="w-96 bg-purple-400 p-6 rounded-[1.1rem] relative text-blue-700 z-[2] left-0 md:left-[-14rem] border-white border-1 h-[60%]">
+      class="w-96 bg-purple-400 dark:bg-slate-950/70 p-6 rounded-[1.1rem] relative text-blue-700 dark:text-sky-300 z-[2] left-0 md:left-[-14rem] border-white dark:border-slate-700 border-1 h-[60%]">
       <div class="card relative">
-        <header class="text-2xl font-semibold">Our Team members</header>
+        <header class="text-2xl font-semibold text-slate-900 dark:text-slate-100">Our Team members</header>
         <section class="members flex flex-col items-center justify-center gap-2">
           <div>
-            <h2 class="font-bold text-2xl">Sam T</h2>
+            <h2 class="font-bold text-2xl text-slate-900 dark:text-slate-100">Sam T</h2>
             <img src="/programmers/Samuel-C-Tyler.svg" alt="picture of Samuel C Tyler the lead developer"
               class="float-right w-1/2 overflow-hidden" loading="lazy" width="300" height="300" />
-            <p class="text-lg font-semibold" role="doc-subtitle">Lead Developer</p>
-            <a href="#sam-info" class="text-blue-700 underline">more info...</a>
+            <p class="text-lg font-semibold text-slate-800 dark:text-slate-300" role="doc-subtitle">Lead Developer</p>
+            <a href="#sam-info" class="text-blue-700 dark:text-sky-300 underline">more info...</a>
           </div>
           <div>
-            <h2 class="font-bold text-2xl">Izak T</h2>
+            <h2 class="font-bold text-2xl text-slate-900 dark:text-slate-100">Izak T</h2>
             <img src="/programmers/izak-t.svg" alt="picture of Izak Tarashandegan the founder and Developer"
               class="float-right w-1/2 overflow-hidden" loading="lazy" />
-            <p class="text-lg font-semibold" role="doc-subtitle">Founder / Developer</p>
-            <a href="#izak-info" class="text-blue-700 underline">more info...</a>
+            <p class="text-lg font-semibold text-slate-800 dark:text-slate-300" role="doc-subtitle">Founder / Developer</p>
+            <a href="#izak-info" class="text-blue-700 dark:text-sky-300 underline">more info...</a>
           </div>
         </section>
       </div>
 
       <section
-        class="contact-info md:absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass">
+        class="contact-info md:absolute grid grid-cols-1 md1:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white dark:bg-slate-950/80 border border-gray-200 dark:border-slate-700 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-slate-950 glass">
         <section class="col-span-1">
           <div class="card">
-            <div class="font-normal text-gray-900">
-              <h2 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700">
+            <div class="font-normal text-gray-900 dark:text-slate-100">
+              <h2 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700 dark:text-sky-300">
                 Contact Us to make your dream a reality
               </h2>
               <div class="flex flex-col gap-5 mt-16">
                 <div>
-                  Tel:
-                  <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
+                  <span class="text-slate-900 dark:text-slate-300">Tel:</span>
+                  <a href="tel:+1 (424)-442-0591" class="text-blue-700 dark:text-sky-300">(424)-442-0591 </a>
                 </div>
                 <div>
-                  Email:
-                  <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
+                  <span class="text-slate-900 dark:text-slate-300">Email:</span>
+                  <a href="mailto:pazpaz25@gmail.com" class="text-blue-700 dark:text-sky-300">pazpaz25@gmail.com</a>
                 </div>
               </div>
             </div>
@@ -52,22 +52,22 @@
     </div>
 
     <section
-      class="contact-info md:absolute z-[1] grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 glass">
+      class="contact-info md:absolute z-[1] grid grid-cols-1 md:grid-cols-2 max-w-sm md:max-w-xl lg:max-w-3xl p-6 mb-16 md:mb-8 bg-white dark:bg-slate-950/80 border border-gray-200 dark:border-slate-700 rounded-lg shadow hover:bg-gray-100 dark:hover:bg-slate-950 glass">
       <div class="col-span-1"></div>
       <section class="col-span-1">
         <div class="card">
-          <div class="font-normal text-gray-900">
-            <h2 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700">
+          <div class="font-normal text-gray-900 dark:text-slate-100">
+            <h2 class="text-center w-full pr-[28px] font-semibold text-2xl text-blue-700 dark:text-sky-300">
               Contact Us to make your dream a reality
             </h2>
             <div class="flex flex-col gap-5 mt-16">
               <div>
-                Tel:
-                <a href="tel:+1 (424)-442-0591">(424)-442-0591 </a>
+                <span class="text-slate-900 dark:text-slate-300">Tel:</span>
+                <a href="tel:+1 (424)-442-0591" class="text-blue-700 dark:text-sky-300">(424)-442-0591 </a>
               </div>
               <div>
-                Email:
-                <a href="mailto:pazpaz25@gmail.com">pazpaz25@gmail.com</a>
+                <span class="text-slate-900 dark:text-slate-300">Email:</span>
+                <a href="mailto:pazpaz25@gmail.com" class="text-blue-700 dark:text-sky-300">pazpaz25@gmail.com</a>
               </div>
             </div>
           </div>
@@ -81,10 +81,10 @@
       <section class="col-span-1">
         <div class="card">
           <div id="sam-info"
-            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 rounded-lg shadow-md max-w-2xl leading-relaxed">
-            <a href="#close"> X </a>
+            class="bg-gradient-to-r from-blue-100 to-purple-500 dark:from-slate-950 dark:via-indigo-950 dark:to-slate-950 text-slate-900 dark:text-slate-100 rounded-lg shadow-md max-w-2xl leading-relaxed">
+            <a href="#close" class="text-slate-700 dark:text-sky-300 font-semibold"> X </a>
             <h2 class="font-bold py-3 text-3xl">Samuel C Tyler</h2>
-            <p class="text-xl font-semibold mb-4" role="doc-subtitle">Lead Developer</p>
+            <p class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-300" role="doc-subtitle">Lead Developer</p>
             <img src="/programmers/Samuel-C-Tyler.svg" alt="Samuel C Tyler the leader coder"
               class="float-right overflow-hidden w-1/2 fit-content" loading="lazy" />
             <p>
@@ -100,10 +100,10 @@
           </div>
 
           <div id="izak-info"
-            class="bg-gradient-to-r from-blue-100 to-purple-500 text-gray-800 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed">
-            <a href="#close"> X </a>
+            class="bg-gradient-to-r from-blue-100 to-purple-500 dark:from-slate-950 dark:via-indigo-950 dark:to-slate-950 text-slate-900 dark:text-slate-100 p-6 rounded-lg shadow-md max-w-2xl leading-relaxed">
+            <a href="#close" class="text-slate-700 dark:text-sky-300 font-semibold"> X </a>
             <h2 class="font-bold py-3 text-3xl">Izak Tarashandegan</h2>
-            <p class="text-xl font-semibold mb-4" role="doc-subtitle">Founder / Coder</p>
+            <p class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-300" role="doc-subtitle">Founder / Coder</p>
             <img src="/programmers/izak-t.svg" alt="izak tarashandegan the founder and coder"
               class="float-right overflow-hidden w-1/2 fit-content" loading="lazy" />
             <p>
@@ -270,17 +270,30 @@ header h1 {
     opacity 0.5s ease-in-out;
 }
 
+.dark #members-cards-info .members div {
+  background: rgba(15, 23, 42, 0.92);
+  border-color: rgba(148, 163, 184, 0.4);
+  color: rgb(226, 232, 240);
+}
+
 .members-info .card div {
   width: 60%;
   height: 33.75rem;
   padding: 1.5rem;
   opacity: 0;
-  color: black;
+  color: #1f2937;
   transition:
     transform 0.5s ease-in-out,
     opacity 0.5s ease-in-out;
   position: absolute;
   top: -10%;
+}
+
+.dark .members-info .card div {
+  color: rgb(226, 232, 240);
+  background: linear-gradient(160deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.88));
+  border-radius: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
 }
 
 .contact-info {
