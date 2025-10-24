@@ -49,10 +49,10 @@
       </div>
     </div>
     <div class="text-center">
-      <h1 class="text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan">
+      <h1 class="hero-slogan text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan text-slate-900 dark:text-slate-100">
         The Door to an easier digital future
       </h1>
-      <p class="font-thin text-xl opacity-0 animate-slogan-tagline">
+      <p class="hero-tagline font-thin text-xl opacity-0 animate-slogan-tagline text-slate-700 dark:text-slate-200">
         one website at a time
       </p>
     </div>
@@ -105,7 +105,14 @@ export default {
 .diagonal {
   position: relative;
   isolation: isolate;
-  background-image: linear-gradient(315deg, #7612e9, #c471ed, #f64f59);
+  background-image: linear-gradient(24deg, #7c3aed 0%, #a855f7 25%, #f472b6 62%, #fb7185 100%);
+}
+
+.dark .diagonal {
+  background-image:
+    radial-gradient(circle at 14% 34%, rgba(255, 236, 204, 0.96) 0%, rgba(255, 236, 204, 0.42) 38%, rgba(255, 236, 204, 0.12) 64%, rgba(255, 236, 204, 0) 80%),
+    radial-gradient(circle at 22% 18%, rgba(211, 164, 255, 0.35), rgba(211, 164, 255, 0) 78%),
+    linear-gradient(320deg, #140a2d, #27115a, #4c1d95);
 }
 
 .diagonal::before,
@@ -117,9 +124,51 @@ export default {
 }
 
 .diagonal::after {
-  bottom: -75px;
-  background: linear-gradient(-145deg, #7612e9, #c471ed, #f64f59);
-  transform: skewY(-538deg);
-  z-index: -2;
+  bottom: -110px;
+  height: 200px;
+  background: linear-gradient(45deg, rgba(118, 18, 233, 0.4), rgba(196, 113, 237, 0.32), rgba(246, 79, 89, 0.28));
+  transform: skewY(185deg);
+  opacity: 0.75;
+  z-index: 60;
+  pointer-events: none;
+}
+
+.dark .diagonal::after {
+  background: linear-gradient(18deg,
+      rgba(45, 21, 110, 0.45),
+      rgba(92, 36, 180, 0.32),
+      rgba(158, 38, 211, 0.24));
+  opacity: 0.58;
+}
+
+.diagonal::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 -14rem 0;
+  height: 18rem;
+  background: linear-gradient(
+    174deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(245, 240, 255, 0.32) 24%,
+    rgba(196, 181, 253, 0.58) 52%,
+    rgba(144, 118, 220, 0.78) 74%,
+    rgba(78, 52, 145, 0.9) 100%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.dark .diagonal::before {
+  background: linear-gradient(
+    176deg,
+    rgba(32, 6, 85, 0) 0%,
+    rgba(50, 14, 112, 0.16) 32%,
+    rgba(60, 20, 132, 0.38) 58%,
+    rgba(38, 18, 98, 0.66) 78%,
+    rgba(18, 8, 54, 0.88) 100%
+  );
 }
 </style>
