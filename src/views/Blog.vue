@@ -1,7 +1,21 @@
 <template>
 
-  <section class="container mx-auto px-4 py-28">
-    <div class="relative mb-20 text-center overflow-visible">
+  <section class="blog-section relative overflow-hidden py-28">
+    <!-- Top diagonal hero decoration -->
+    <div class="blog-hero-pattern blog-hero-pattern--left" aria-hidden="true"></div>
+    <div class="blog-hero-pattern blog-hero-pattern--right" aria-hidden="true"></div>
+    
+    <!-- Bottom content wave -->
+    <div class="blog-content-wave blog-content-wave--primary" aria-hidden="true"></div>
+    <div class="blog-content-wave blog-content-wave--secondary" aria-hidden="true"></div>
+    
+    <!-- Floating accent orbs -->
+    <div class="blog-accent-orb blog-accent-orb--one" aria-hidden="true"></div>
+    <div class="blog-accent-orb blog-accent-orb--two" aria-hidden="true"></div>
+    <div class="blog-accent-orb blog-accent-orb--three" aria-hidden="true"></div>
+
+    <div class="container relative z-10 mx-auto px-4">
+    <div class="blog-hero-intro relative mb-20 text-center overflow-visible">
       <div
         class="absolute -top-6 left-1/2 -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500">
       </div>
@@ -98,6 +112,7 @@
 
     <div v-if="!loading && filteredPosts.length === 0" class="text-center py-12" aria-live="polite">
       <p>{{ currentTag ? `No posts found tagged with "${currentTag}".` : 'No blog posts found. Check back soon!' }}</p>
+    </div>
     </div>
   </section>
 </template>
@@ -287,7 +302,6 @@ export default {
 
 <style scoped>
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -298,6 +312,298 @@ export default {
   }
 }
 
+/* ======================================= */
+/* BLOG SECTION PATTERNS & DECORATIONS */
+/* ======================================= */
+
+.blog-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  --blog-primary: #6366f1;
+  --blog-primary-vivid: #4f46e5;
+  --blog-primary-soft: rgba(99, 102, 241, 0.7);
+  --blog-accent: #a855f7;
+  --blog-accent-vivid: #9333ea;
+  --blog-accent-soft: rgba(168, 85, 247, 0.6);
+  --blog-secondary: #f43f5e;
+  --blog-secondary-vivid: #e11d48;
+  --blog-secondary-soft: rgba(244, 63, 94, 0.5);
+  --blog-tertiary: #06b6d4;
+  --blog-tertiary-soft: rgba(6, 182, 212, 0.4);
+  --blog-gold: #f59e0b;
+  --blog-gold-soft: rgba(245, 158, 11, 0.4);
+  background: 
+    radial-gradient(ellipse 120% 85% at 20% -10%, var(--blog-primary-soft) 0%, transparent 65%),
+    radial-gradient(ellipse 95% 70% at 80% 5%, var(--blog-accent-soft) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 45% 25%, var(--blog-tertiary-soft) 0%, transparent 55%),
+    linear-gradient(182deg, #fefefe 0%, #f0f4ff 25%, #f8fafc 55%, #f1f5f9 100%);
+}
+
+.dark .blog-section {
+  --blog-primary: #818cf8;
+  --blog-primary-vivid: #6366f1;
+  --blog-primary-soft: rgba(129, 140, 248, 0.5);
+  --blog-accent: #c084fc;
+  --blog-accent-vivid: #a855f7;
+  --blog-accent-soft: rgba(192, 132, 252, 0.4);
+  --blog-secondary: #fb7185;
+  --blog-secondary-vivid: #f43f5e;
+  --blog-secondary-soft: rgba(251, 113, 133, 0.3);
+  --blog-tertiary: #22d3ee;
+  --blog-tertiary-soft: rgba(34, 211, 238, 0.25);
+  --blog-gold: #fbbf24;
+  --blog-gold-soft: rgba(251, 191, 36, 0.25);
+  background: 
+    radial-gradient(ellipse 115% 90% at 25% -15%, var(--blog-primary-soft) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 75% at 75% 0%, var(--blog-accent-soft) 0%, transparent 65%),
+    radial-gradient(ellipse 85% 65% at 40% 20%, var(--blog-tertiary-soft) 0%, transparent 60%),
+    linear-gradient(188deg, #0f172a 0%, #1e293b 45%, #0f172a 100%);
+}
+
+/* Hero Pattern - Top tilted decorations */
+.blog-hero-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.blog-hero-pattern--left {
+  background: linear-gradient(135deg, 
+    var(--blog-primary-vivid) 0%, 
+    var(--blog-primary) 30%,
+    var(--blog-primary-soft) 60%, 
+    transparent 85%);
+  clip-path: polygon(0 0, 65% 0, 40% 100%, 0 100%);
+  transform: skewY(-3deg);
+  transform-origin: top left;
+  box-shadow: inset 0 0 80px rgba(79, 70, 229, 0.3);
+}
+
+.blog-hero-pattern--right {
+  background: linear-gradient(115deg,
+    var(--blog-accent-vivid) 0%,
+    var(--blog-accent) 35%,
+    var(--blog-accent-soft) 65%,
+    transparent 80%);
+  clip-path: polygon(35% 0, 100% 0, 100% 100%, 60% 100%);
+  transform: skewY(2deg);
+  transform-origin: top right;
+  box-shadow: inset 0 0 60px rgba(147, 51, 234, 0.25);
+}
+
+.dark .blog-hero-pattern--left {
+  background: linear-gradient(135deg,
+    var(--blog-primary-vivid) 0%,
+    var(--blog-primary) 25%,
+    var(--blog-primary-soft) 50%,
+    transparent 70%);
+  box-shadow: inset 0 0 100px rgba(99, 102, 241, 0.4);
+}
+
+.dark .blog-hero-pattern--right {
+  background: linear-gradient(115deg,
+    var(--blog-accent-vivid) 0%,
+    var(--blog-accent) 30%,
+    var(--blog-accent-soft) 55%,
+    transparent 75%);
+  box-shadow: inset 0 0 80px rgba(168, 85, 247, 0.35);
+}
+
+/* Bottom Wave - Multi-layered innovative design */
+.blog-content-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.blog-content-wave--primary {
+  background: linear-gradient(345deg,
+    var(--blog-secondary-vivid) 0%,
+    var(--blog-secondary) 20%,
+    var(--blog-tertiary) 45%,
+    var(--blog-primary) 70%,
+    transparent 95%);
+  transform: skewY(4deg);
+  transform-origin: bottom left;
+  opacity: 0.9;
+  filter: blur(0.5px);
+}
+
+.blog-content-wave--secondary {
+  position: absolute;
+  bottom: 25px;
+  left: -8%;
+  right: -8%;
+  height: 120px;
+  background: linear-gradient(340deg,
+    var(--blog-gold) 0%,
+    var(--blog-gold-soft) 25%,
+    var(--blog-accent-vivid) 50%,
+    var(--blog-tertiary-soft) 75%,
+    transparent 98%);
+  transform: skewY(-3deg);
+  transform-origin: bottom right;
+  opacity: 0.7;
+  mix-blend-mode: overlay;
+  filter: blur(1px);
+}
+
+.dark .blog-content-wave--primary {
+  background: linear-gradient(350deg,
+    var(--blog-secondary-vivid) 0%,
+    var(--blog-secondary) 18%,
+    var(--blog-tertiary) 40%,
+    var(--blog-primary-vivid) 65%,
+    transparent 92%);
+  opacity: 0.8;
+  filter: blur(0.8px);
+  mix-blend-mode: screen;
+}
+
+.dark .blog-content-wave--secondary {
+  background: linear-gradient(335deg,
+    var(--blog-gold-vivid) 0%,
+    var(--blog-gold) 22%,
+    var(--blog-accent) 45%,
+    var(--blog-tertiary) 70%,
+    transparent 96%);
+  opacity: 0.6;
+  mix-blend-mode: color-dodge;
+  filter: blur(1.5px);
+}
+
+/* Floating Accent Orbs - Enhanced with innovative colors */
+.blog-accent-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  filter: blur(35px);
+  opacity: 0.7;
+  animation: float-orb 8s ease-in-out infinite;
+}
+
+.blog-accent-orb--one {
+  width: 140px;
+  height: 140px;
+  top: 8%;
+  left: 12%;
+  background: radial-gradient(circle at 30% 30%, 
+    var(--blog-primary-vivid) 0%, 
+    var(--blog-primary) 40%, 
+    transparent 75%);
+  animation-delay: 0s;
+  box-shadow: 0 0 60px rgba(79, 70, 229, 0.3);
+}
+
+.blog-accent-orb--two {
+  width: 110px;
+  height: 110px;
+  top: 18%;
+  right: 15%;
+  background: radial-gradient(circle at 70% 70%, 
+    var(--blog-secondary-vivid) 0%, 
+    var(--blog-tertiary) 35%, 
+    var(--blog-secondary) 60%, 
+    transparent 80%);
+  animation-delay: 2.5s;
+  box-shadow: 0 0 50px rgba(225, 29, 72, 0.25);
+}
+
+.blog-accent-orb--three {
+  width: 130px;
+  height: 130px;
+  bottom: 12%;
+  left: 65%;
+  background: radial-gradient(circle at 40% 60%, 
+    var(--blog-gold) 0%, 
+    var(--blog-accent-vivid) 30%, 
+    var(--blog-tertiary-soft) 65%, 
+    transparent 85%);
+  animation-delay: 4.5s;
+  box-shadow: 0 0 55px rgba(245, 158, 11, 0.2);
+}
+
+.dark .blog-accent-orb {
+  opacity: 0.5;
+  filter: blur(45px);
+  mix-blend-mode: screen;
+}
+
+.dark .blog-accent-orb--one {
+  background: radial-gradient(circle at 30% 30%, 
+    var(--blog-primary-vivid) 0%, 
+    var(--blog-primary) 35%, 
+    transparent 70%);
+  box-shadow: 0 0 80px rgba(99, 102, 241, 0.4);
+}
+
+.dark .blog-accent-orb--two {
+  background: radial-gradient(circle at 70% 70%, 
+    var(--blog-secondary-vivid) 0%, 
+    var(--blog-tertiary) 30%, 
+    var(--blog-secondary) 55%, 
+    transparent 75%);
+  box-shadow: 0 0 70px rgba(244, 63, 94, 0.35);
+}
+
+.dark .blog-accent-orb--three {
+  background: radial-gradient(circle at 40% 60%, 
+    var(--blog-gold) 0%, 
+    var(--blog-accent-vivid) 25%, 
+    var(--blog-tertiary-soft) 60%, 
+    transparent 80%);
+  box-shadow: 0 0 65px rgba(251, 191, 36, 0.3);
+}
+
+@keyframes float-orb {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(20px, -15px) scale(1.15);
+  }
+  50% {
+    transform: translate(-15px, 20px) scale(0.9);
+  }
+  75% {
+    transform: translate(15px, 15px) scale(1.1);
+  }
+}
+
+.blog-hero-intro::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -44%);
+  width: min(44vw, 360px);
+  height: min(22vw, 200px);
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.08) 58%, rgba(255, 255, 255, 0) 82%);
+  filter: blur(9px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dark .blog-hero-intro::before {
+  background: radial-gradient(circle at center, rgba(120, 137, 255, 0.26) 0%, rgba(15, 23, 42, 0) 80%);
+  filter: blur(16px);
+}
+
+/* ======================================= */
+/* BLOG CARDS */
+/* ======================================= */
 .blog-card-container {
   contain: content;
   min-width: 0;
