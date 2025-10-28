@@ -70,7 +70,8 @@
         <li v-for="(post, i) in filteredPosts" :key="titleToSlug(post.title) + '-' + i" class="blog-card-container">
           <article class="blog-card" :aria-labelledby="`post-title-${titleToSlug(post.title)}-${i}`"
             :aria-describedby="`post-desc-${titleToSlug(post.title)}-${i}`">
-            <RelativeTimeBadge  v-if="post.updatedAt" :post-updated-at="post.updatedAt" />
+            <RelativeTimeBadge  v-if="post.updatedAt" :post-updated-at="formatDateISO(post.updatedAt) || formatDateISO(post.date)" />
+          
             <RouterLink :to="'/blog/' + titleToSlug(post.title)" class="card-link">
               <div class="card-content">
                 <h2 :id="`post-title-${titleToSlug(post.title)}-${i}`" class="card-title">
