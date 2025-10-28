@@ -28,7 +28,10 @@
         :aria-labelledby="`related-post-title-${post.id}`"
       >
 
-      <RelativeTimeBadge v-if="post.updatedAt" :post-updated-at="post.updatedAt" />
+      <RelativeTimeBadge
+        v-if="post.updatedAt"
+        :post-updated-at="formatDateISO(post.updatedAt) || formatDateISO(post.date)"
+      />
         <article class="h-full">
           <div class="card-content">
             <h3 :id="`related-post-title-${post.id}`" class="card-title">
