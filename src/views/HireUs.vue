@@ -162,9 +162,16 @@ header h1 {
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 1rem;
   padding: 1.5rem;
-  color: #fff;
+  color: #1f2937;
   box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.1);
   opacity: 1;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark .glass {
+  background-color: rgba(30, 41, 59, 0.3);
+  color: #e2e8f0;
+  box-shadow: 0 0.25rem 0.375rem rgba(0, 0, 0, 0.3);
 }
 
 #hire-us {
@@ -173,7 +180,35 @@ header h1 {
   position: relative;
   overflow: hidden;
   z-index: 0;
+  --hire-primary: #bd80fa;
+  --hire-primary-soft: rgba(189, 128, 250, 0.42);
+  --hire-secondary: #a855f7;
+  --hire-secondary-soft: rgba(168, 85, 247, 0.16);
+  --hire-accent: #7c3aed;
+  --hire-accent-soft: rgba(124, 58, 237, 0.08);
+  --hire-gold: rgb(189, 128, 250);
+  --hire-gold-soft: rgba(186, 196, 255, 0.42);
+  --hire-blue: rgba(99, 110, 230, 0.64);
+  --hire-blue-soft: rgba(99, 102, 241, 0.36);
+  --hire-indigo: #4c1d95;
+  --hire-indigo-soft: rgba(71, 85, 179, 0.22);
   --hire-transition-speed: 0.5s;
+  transition: background 0.3s ease;
+}
+
+.dark #hire-us {
+  --hire-primary: #6366f1;
+  --hire-primary-soft: rgba(99, 102, 241, 0.35);
+  --hire-secondary: #a855f7;
+  --hire-secondary-soft: rgba(168, 85, 247, 0.16);
+  --hire-accent: #4c1d95;
+  --hire-accent-soft: rgba(124, 58, 237, 0.08);
+  --hire-gold: rgb(129, 140, 248);
+  --hire-gold-soft: rgba(129, 140, 248, 0.42);
+  --hire-blue: rgba(99, 110, 230, 0.64);
+  --hire-blue-soft: rgba(99, 102, 241, 0.36);
+  --hire-indigo: #4c1d95;
+  --hire-indigo-soft: rgba(71, 85, 179, 0.22);
 }
 
 #hire-us::before {
@@ -185,13 +220,19 @@ header h1 {
   width: 100%;
   background-image: linear-gradient(135deg,
       transparent 50%,
-      rgb(189, 128, 250) 50%);
+      var(--hire-primary) 50%);
   background-size: 48rem 48rem;
   transition: background-position 0.2s;
   background-attachment: fixed;
   background-position: bottom right;
   background-repeat: no-repeat;
   z-index: 0;
+}
+
+.dark #hire-us::before {
+  background-image: linear-gradient(135deg,
+      transparent 50%,
+      var(--hire-primary-soft) 50%);
 }
 
 #hire-us::after {
@@ -202,18 +243,18 @@ header h1 {
   right: -10%;
   height: 12rem;
   background:
-    radial-gradient(118% 88% at 4% 22%, rgba(186, 196, 255, 0.42), transparent 74%),
-    linear-gradient(160deg, rgba(236, 72, 153, 0.12) 10%, rgba(168, 85, 247, 0.16) 44%, rgba(124, 58, 237, 0.08) 74%, rgba(255, 255, 255, 0) 100%);
+    radial-gradient(118% 88% at 4% 22%, var(--hire-gold-soft), transparent 74%),
+    linear-gradient(160deg, var(--hire-secondary-soft) 10%, var(--hire-secondary-soft) 44%, var(--hire-accent-soft) 74%, rgba(255, 255, 255, 0) 100%);
   opacity: 0.78;
-
   pointer-events: none;
   z-index: 0;
+  transition: opacity 0.3s ease, background 0.3s ease;
 }
 
 .dark #hire-us::after {
   background:
-    radial-gradient(118% 88% at 4% 22%, rgba(99, 110, 230, 0.64), transparent 70%),
-    linear-gradient(156deg, rgba(99, 102, 241, 0.36) 12%, rgba(148, 163, 255, 0.3) 48%, rgba(71, 85, 179, 0.22) 78%, rgba(28, 28, 60, 0) 100%);
+    radial-gradient(118% 88% at 4% 22%, var(--hire-blue), transparent 70%),
+    linear-gradient(156deg, var(--hire-blue-soft) 12%, rgba(148, 163, 255, 0.3) 48%, var(--hire-indigo-soft) 78%, rgba(28, 28, 60, 0) 100%);
   opacity: 0.86;
 }
 
@@ -222,21 +263,21 @@ header h1 {
   inset: -6rem -1% auto -6%;
   height: 11rem;
   background: linear-gradient(194deg,
-      rgba(168, 85, 247, 0.22) 10%,
-      rgba(124, 58, 237, 0.14) 54%,
+      var(--hire-secondary-soft) 10%,
+      var(--hire-accent-soft) 54%,
       rgba(236, 72, 153, 0.08) 92%,
       rgba(255, 255, 255, 0) 100%);
-
   opacity: 0.7;
   pointer-events: none;
   z-index: 1;
+  transition: opacity 0.3s ease, background 0.3s ease;
 }
 
 .dark .hire-us__divider {
   background: linear-gradient(192deg,
-      rgba(99, 102, 241, 0.34) 12%,
+      var(--hire-blue-soft) 12%,
       rgba(148, 163, 255, 0.24) 58%,
-      rgba(79, 70, 229, 0.16) 94%,
+      var(--hire-indigo-soft) 94%,
       rgba(24, 24, 56, 0) 100%);
   opacity: 0.7;
 }

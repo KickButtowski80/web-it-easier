@@ -66,21 +66,31 @@ export default {
     position: relative;
     overflow: hidden;
     isolation: isolate;
+    --works-primary: #7c3aed;
+    --works-primary-soft: rgba(124, 58, 237, 0.28);
+    --works-secondary: #ec4899;
+    --works-secondary-soft: rgba(236, 72, 153, 0.2);
+    --works-accent: #9918fb;
+    --works-accent-soft: rgba(153, 104, 222, 0.82);
+    --works-light: rgba(244, 225, 255, 0.97);
+    --works-text-primary: var(--color-text-primary);
+    --works-text-secondary: var(--color-text-secondary);
+    
     background:
         /* Radial 1 */
-        radial-gradient(120% 85% at 15% -5%, rgba(124, 58, 237, 0.28), transparent 60%),
+        radial-gradient(120% 85% at 15% -5%, var(--works-primary-soft), transparent 60%),
         /* Radial 2 */
-        radial-gradient(95% 65% at 85% 0%, rgba(236, 72, 153, 0.2), transparent 65%),
+        radial-gradient(95% 65% at 85% 0%, var(--works-secondary-soft), transparent 65%),
         /* Linear Gradient (Main Background) */
         linear-gradient(180deg,
             rgba(55, 35, 115, 0.94) 0%,
             rgba(99, 52, 181, 0.88) 20%,
-            rgba(153, 104, 222, 0.82) 42%,
+            var(--works-accent-soft) 42%,
             rgba(208, 161, 255, 0.86) 68%,
-            rgba(244, 225, 255, 0.97) 90%,
+            var(--works-light) 90%,
             rgba(248, 240, 255, 1) 100%
         );
-    transition: background 0.4s ease;
+    transition: background 0.3s ease;
 }
 
 /* Pseudo-Elements Base Styles - Added performance hint */
@@ -126,41 +136,30 @@ export default {
     transform-origin: top;
 }
 
-/* ELEMENT: ::after::after (Inner Radial Glow) */
-.works-section::after::after {
-    content: ""; 
-    position: absolute;
-    top: -1.5rem;
-    left: 6%;
-    width: 18rem;
-    height: 18rem;
-    background: radial-gradient(circle,
-        rgba(255, 255, 255, 0.7) 0%,
-        rgba(236, 217, 255, 0.35) 38%,
-        rgba(224, 204, 255, 0.16) 62%,
-        rgba(207, 187, 248, 0) 100%
-    );
-    border-radius: 50%;
-    transform: translate(-30%, -35%);
-    filter: blur(8px); 
-    mix-blend-mode: screen;
-    opacity: 0.75;
-    pointer-events: none;
-    will-change: transform, filter, opacity;
-}
+/* Remove the fragile nested pseudo-element for better maintainability */
 
 /* ======================================= */
 /* 2. DARK MODE STYLES */
 /* ======================================= */
 .dark .works-section {
+    --works-primary: #6366f1;
+    --works-primary-soft: rgba(129, 140, 248, 0.42);
+    --works-secondary: #ec4899;
+    --works-secondary-soft: rgba(236, 72, 153, 0.14);
+    --works-accent: #634ac3;
+    --works-accent-soft: rgba(94, 72, 198, 0.7);
+    --works-light: rgba(116, 95, 220, 0.65);
+    --works-text-primary: #e2e8f0;
+    --works-text-secondary: #cbd5e1;
+    
     background:
-        radial-gradient(120% 95% at 18% -12%, rgba(129, 140, 248, 0.42), transparent 78%),
-        radial-gradient(115% 75% at 90% 12%, rgba(236, 72, 153, 0.14), transparent 68%),
+        radial-gradient(120% 95% at 18% -12%, var(--works-primary-soft), transparent 78%),
+        radial-gradient(115% 75% at 90% 12%, var(--works-secondary-soft), transparent 68%),
         linear-gradient(185deg,
             rgba(58, 68, 160, 0.92) 0%,
             rgba(72, 63, 196, 0.8) 52%,
-            rgba(94, 72, 198, 0.7) 82%,
-            rgba(116, 95, 220, 0.65) 100%
+            var(--works-accent-soft) 82%,
+            var(--works-light) 100%
         );
 }
 .dark .works-section::before {
@@ -182,15 +181,7 @@ export default {
     transform: skewY(-2.2deg);
     transform-origin: top;
 }
-.dark .works-section::after::after {
-    background: radial-gradient(circle,
-        rgba(153, 133, 255, 0.24) 0%,
-        rgba(109, 95, 205, 0.18) 46%,
-        rgba(68, 56, 163, 0) 100%
-    );
-    filter: blur(12px);
-    opacity: 0.16;
-}
+/* Simplified dark mode without the nested pseudo-element */
 
 /* ======================================= */
 /* 3. DECORATION ELEMENTS */
@@ -326,38 +317,38 @@ export default {
     letter-spacing: 0.12em;
     text-transform: uppercase;
     font-weight: 600;
-    color: var(--color-accent);
+    color: var(--works-primary);
     background: rgba(255, 255, 255, 0.65);
     border-radius: 999px;
     padding: 0.35rem 1.1rem;
     margin: 0 auto 1.5rem;
     width: max-content;
-    box-shadow: 0 1rem 2.5rem rgba(124, 58, 237, 0.12);
+    box-shadow: 0 1rem 2.5rem var(--works-primary-soft);
 }
 .dark .works-kicker {
     background: rgba(30, 27, 75, 0.65);
-    box-shadow: 0 1.2rem 3rem rgba(129, 140, 248, 0.15);
+    box-shadow: 0 1.2rem 3rem var(--works-primary-soft);
 }
 .works-title {
     font-size: clamp(2.5rem, 4vw + 0.5rem, 3.5rem);
     font-weight: 700;
     text-align: center;
     margin-bottom: 0.75rem;
-    color: rgba(30, 27, 75, 0.9);
+    color: var(--works-text-primary);
 }
 .dark .works-title {
-    color: rgba(226, 232, 240, 0.95);
+    color: var(--works-text-primary);
 }
 .works-subtitle {
     max-width: 38rem;
     margin: 0 auto 3rem;
     text-align: center;
-    color: rgba(55, 65, 81, 0.82);
+    color: var(--works-text-secondary);
     font-size: 1.05rem;
     line-height: 1.7;
 }
 .dark .works-subtitle {
-    color: rgba(203, 213, 225, 0.88);
+    color: var(--works-text-secondary);
 }
 
 /* Works Card - Added performance hint for hover effects */

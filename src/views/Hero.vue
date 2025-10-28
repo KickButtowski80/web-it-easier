@@ -1,8 +1,8 @@
 <template>
   <section
     id="hero"
-    class="bg-purple-500 h-[90vh] md:mt-[4.5rem] md:h-[40rem] text-white flex flex-col items-center justify-center
-     md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
+    class="h-[90vh] md:mt-[4.5rem] md:h-[40rem] text-white flex flex-col items-center justify-center
+     md:flex-row md:gap-20 md:text-9xl mx-auto diagonal relative overflow-hidden"
   >
     <div class="relative" style="perspective: 1000px">
       <div
@@ -105,14 +105,33 @@ export default {
 .diagonal {
   position: relative;
   isolation: isolate;
-  background-image: linear-gradient(24deg, #7c3aed 0%, #a855f7 25%, #f472b6 62%, #fb7185 100%);
+  --hero-primary: #7c3aed;
+  --hero-primary-soft: rgba(124, 58, 237, 0.28);
+  --hero-secondary: #a855f7;
+  --hero-secondary-soft: rgba(168, 85, 247, 0.24);
+  --hero-accent: #f472b6;
+  --hero-accent-soft: rgba(244, 114, 182, 0.32);
+  --hero-gold: rgba(255, 236, 204, 0.96);
+  --hero-blue: rgba(211, 164, 255, 0.35);
+  
+  background-image: linear-gradient(24deg, var(--hero-primary) 0%, var(--hero-secondary) 25%, var(--hero-accent) 62%, #fb7185 100%);
+  transition: background 0.3s ease, background-color 0.3s ease;
 }
 
 .dark .diagonal {
+  --hero-primary: #140a2d;
+  --hero-primary-soft: rgba(99, 102, 241, 0.42);
+  --hero-secondary: #27115a;
+  --hero-secondary-soft: rgba(192, 132, 252, 0.35);
+  --hero-accent: #4c1d95;
+  --hero-accent-soft: rgba(244, 114, 182, 0.24);
+  --hero-gold: rgba(255, 236, 204, 0.42);
+  --hero-blue: rgba(211, 164, 255, 0.35);
+  
   background-image:
-    radial-gradient(circle at 14% 34%, rgba(255, 236, 204, 0.96) 0%, rgba(255, 236, 204, 0.42) 38%, rgba(255, 236, 204, 0.12) 64%, rgba(255, 236, 204, 0) 80%),
-    radial-gradient(circle at 22% 18%, rgba(211, 164, 255, 0.35), rgba(211, 164, 255, 0) 78%),
-    linear-gradient(320deg, #140a2d, #27115a, #4c1d95);
+    radial-gradient(circle at 14% 34%, var(--hero-gold) 0%, rgba(255, 236, 204, 0.12) 64%, rgba(255, 236, 204, 0) 80%),
+    radial-gradient(circle at 22% 18%, var(--hero-blue), rgba(211, 164, 255, 0) 78%),
+    linear-gradient(320deg, var(--hero-primary), var(--hero-secondary), var(--hero-accent));
 }
 
 .diagonal::before,
@@ -126,18 +145,19 @@ export default {
 .diagonal::after {
   bottom: -110px;
   height: 200px;
-  background: linear-gradient(45deg, rgba(118, 18, 233, 0.4), rgba(196, 113, 237, 0.32), rgba(246, 79, 89, 0.28));
+  background: linear-gradient(45deg, var(--hero-primary-soft), var(--hero-secondary-soft), var(--hero-accent-soft));
   transform: skewY(185deg);
   opacity: 0.75;
   z-index: 60;
   pointer-events: none;
+  transition: opacity 0.3s ease, background 0.3s ease;
 }
 
 .dark .diagonal::after {
   background: linear-gradient(18deg,
-      rgba(45, 21, 110, 0.45),
-      rgba(92, 36, 180, 0.32),
-      rgba(158, 38, 211, 0.24));
+      var(--hero-primary-soft),
+      var(--hero-secondary-soft),
+      var(--hero-accent-soft));
   opacity: 0.58;
 }
 
