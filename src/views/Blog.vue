@@ -649,13 +649,35 @@ export default {
   transition: transform 0.3s ease;
 }
 
+.blog-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at top right,
+    rgba(99, 102, 241, 0.28) 0%,
+    rgba(99, 102, 241, 0.16) 40%,
+    transparent 68%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .blog-card:hover,
-.blog-card:focus {
+.blog-card:focus-within {
   transform: translateY(-4px);
   border-color: #6366f1;
   box-shadow: 0 12px 25px -5px rgba(99, 102, 241, 0.15),
     0 8px 10px -6px rgba(99, 102, 241, 0.1),
     0 0 0 1px rgba(99, 102, 241, 0.1);
+}
+
+.blog-card:hover::after,
+.blog-card:focus-within::after {
+  opacity: 1;
 }
 
 .blog-card:active {
@@ -676,13 +698,20 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+.dark .blog-card::after {
+  background: radial-gradient(circle at top right,
+    rgba(129, 140, 248, 0.3) 0%,
+    rgba(129, 140, 248, 0.18) 38%,
+    transparent 66%);
+}
+
 .dark .blog-card:focus-visible {
   outline-color: #818cf8;
   box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.3);
 }
 
 .dark .blog-card:hover,
-.dark .blog-card:focus {
+.dark .blog-card:focus-within {
   border-color: #818cf8;
   box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.25),
     0 10px 10px -5px rgba(99, 102, 241, 0.1),

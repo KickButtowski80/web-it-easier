@@ -378,7 +378,7 @@ export default {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at top right, rgba(124, 58, 237, 0.22), transparent 55%);
+    background: radial-gradient(circle at top right, rgba(124, 58, 237, 0.35), transparent 55%);
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
@@ -400,7 +400,7 @@ export default {
     box-shadow: 0 26px 48px rgba(9, 12, 20, 0.55);
 }
 .dark .works-card::before {
-    background: radial-gradient(circle at top right, rgba(129, 140, 248, 0.28), transparent 60%);
+    background: radial-gradient(circle at top right, rgba(129, 140, 248, 0.35), transparent 60%);
 }
 .dark .works-card:hover {
     border-color: rgba(129, 140, 248, 0.45);
