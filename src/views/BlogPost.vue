@@ -834,34 +834,6 @@ body {
   list-style-type: lower-roman;
 }
 
-#post-content.prose blockquote {
-  border-left: 4px solid #d1d5db;
-  /* Light gray border on the left */
-  padding-left: 1rem;
-  margin: 1.5rem 0;
-  color: #374151;
-  /* Darker text for better contrast */
-  font-style: italic;
-}
-
-/* Prevent cascading resets to child elements */
-#post-content.prose blockquote p * {
-  all: revert;
-}
-
-#post-content.prose blockquote cite {
-  display: block;
-  margin-top: 0.75rem;
-  font-size: 0.9em;
-  color: #4b5563;
-  font-style: normal;
-  font-weight: 500;
-}
-
-#post-content.prose blockquote cite::before {
-  content: '\2014\00A0';
-}
-
 /* Custom bullet point */
 #post-content li::before {
   content: '•';
