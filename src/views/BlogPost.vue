@@ -1270,7 +1270,7 @@ body {
 #post-content h4 {
   font-size: clamp(1.25rem, 3.5vw, 1.4rem);
   font-weight: 600;
-  color: #1f2937;
+  color: #374151;
   margin: 1.75rem 0 0.9rem;
   padding: 1rem 0 1.25rem 1.5rem;
   position: relative;
