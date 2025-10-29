@@ -19,6 +19,10 @@
     <!-- Side accent panels -->
     <div class="blog-side-panel blog-side-panel--left" aria-hidden="true"></div>
     <div class="blog-side-panel blog-side-panel--right" aria-hidden="true"></div>
+    
+    <!-- Bottom anchored tilted box -->
+    <div class="blog-footer-pattern blog-footer-pattern--left" aria-hidden="true"></div>
+    <div class="blog-footer-pattern blog-footer-pattern--right" aria-hidden="true"></div>
 
     <div class="container relative z-10 mx-auto px-4">
     <div class="blog-layout">
@@ -950,6 +954,56 @@ function deslugify(slug) {
   transform-origin: top right;
 }
 
+/* Bottom Footer Pattern - Subtle grounding effect */
+.blog-footer-pattern {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 140px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.blog-footer-pattern--left {
+  background: linear-gradient(145deg,
+    rgba(99, 102, 241, 0.14) 0%,
+    rgba(99, 102, 241, 0.08) 40%,
+    transparent 85%);
+  clip-path: polygon(0 0, 50% 0, 35% 100%, 0 100%);
+  transform: skewY(2deg);
+  transform-origin: bottom left;
+  box-shadow: inset 0 0 55px rgba(99, 102, 241, 0.18);
+}
+
+.blog-footer-pattern--right {
+  background: linear-gradient(135deg,
+    rgba(124, 58, 237, 0.14) 0%,
+    rgba(124, 58, 237, 0.08) 40%,
+    transparent 85%);
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 65% 100%);
+  transform: skewY(-2deg);
+  transform-origin: bottom right;
+  box-shadow: inset 0 0 48px rgba(124, 58, 237, 0.16);
+}
+
+.dark .blog-footer-pattern--left {
+  background: linear-gradient(145deg,
+    rgba(129, 140, 248, 0.1) 0%,
+    rgba(129, 140, 248, 0.05) 40%,
+    transparent 85%);
+  box-shadow: inset 0 0 45px rgba(129, 140, 248, 0.15);
+}
+
+.dark .blog-footer-pattern--right {
+  background: linear-gradient(135deg,
+    rgba(168, 85, 247, 0.1) 0%,
+    rgba(168, 85, 247, 0.05) 40%,
+    transparent 85%);
+  box-shadow: inset 0 0 40px rgba(168, 85, 247, 0.12);
+}
+
 /* Dark mode adjustments */
 .dark .blog-hero-pattern--left {
   background: linear-gradient(135deg,
@@ -1091,14 +1145,14 @@ body {
 }
 
 .post-title {
-  font-size: clamp(2.25rem, 7vw, 3.25rem);
+  font-size: clamp(1.4rem, 4vw + 0.6rem, 2.9rem);
   font-weight: 900;
   margin: 2.5rem 0 2rem;
   line-height: 1.1;
   color: #0f172a;
 
-  letter-spacing: 1px;
-  padding: 1.5rem 2rem;
+  letter-spacing: clamp(0.5px, 0.15vw + 0.2px, 1px);
+  padding: clamp(1rem, 3vw + 0.5rem, 1.5rem) clamp(1.25rem, 4vw + 0.5rem, 2rem);
   border-radius: 1.5rem;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.14));
   box-shadow: 0 18px 40px -22px rgba(59, 130, 246, 0.35);
