@@ -834,37 +834,6 @@ body {
   list-style-type: lower-roman;
 }
 
-/* Custom bullet point */
-#post-content li::before {
-  content: '•';
-  position: absolute;
-  left: 0.75rem;
-  color: #3b82f6;
-  font-size: 1.25rem;
-  line-height: 1.4;
-  transition: transform 0.2s ease;
-}
-
-#post-content li:hover::before {
-  transform: scale(1.5);
-  color: #2563eb;
-}
-
-/* Dark mode support */
-.dark #post-content li {
-  background: rgba(30, 41, 59, 0.3);
-  border-left-color: #60a5fa;
-  color: #e2e8f0;
-}
-
-.dark #post-content li:hover {
-  background: rgba(59, 130, 246, 0.1);
-}
-
-.dark #post-content li::before {
-  color: #60a5fa;
-}
-
 #post-content blockquote {
   position: relative;
   display: block;
