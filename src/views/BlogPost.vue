@@ -1474,16 +1474,6 @@ body {
   padding-bottom: 0.5rem;
 }
 
-#post-content.prose h3 {
-  font-size: 1.75rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-weight: 500;
-  color: #374151;
-  padding-left: 1.25rem;
-  position: relative;
-}
-
 #post-content.prose h4 {
   font-size: 1.5rem;
   margin-top: 2rem;
@@ -1597,7 +1587,7 @@ body {
   }
 }
 
-#post-content.prose h3:target {
+#post-content h3:target {
   color: #3b82f6;
   padding-left: 1.25rem;
   background-color: rgba(59, 130, 246, 0.1);
@@ -1615,18 +1605,13 @@ body {
   font-weight: 700;
 }
 
-.dark #post-content.prose h3 {
-  color: #cbd5e1;
-  font-weight: 600;
-}
-
 .dark #post-content.prose h4 {
   color: #cbd5e1;
   font-weight: 600;
 }
 
 /* Target highlight on headings in dark mode */
-.dark #post-content.prose h3:target,
+.dark #post-content h3:target,
 .dark #post-content.prose h4:target {
   background-color: rgba(59, 130, 246, 0.18);
   /* slightly stronger for dark */
