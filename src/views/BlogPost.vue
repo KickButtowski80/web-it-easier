@@ -1,6 +1,26 @@
 <template>
 
-  <section class="container blog-container mx-auto px-4 py-24">
+  <section class="blog-post-section relative overflow-hidden py-28">
+    <!-- Top diagonal hero decorations with enhanced design -->
+    <div class="blog-hero-pattern blog-hero-pattern--left" aria-hidden="true"></div>
+    <div class="blog-hero-pattern blog-hero-pattern--center" aria-hidden="true"></div>
+    <div class="blog-hero-pattern blog-hero-pattern--right" aria-hidden="true"></div>
+    
+    <!-- Floating geometric shapes -->
+    <div class="blog-geometric blog-geometric--triangle" aria-hidden="true"></div>
+    <div class="blog-geometric blog-geometric--hexagon" aria-hidden="true"></div>
+    <div class="blog-geometric blog-geometric--circle" aria-hidden="true"></div>
+    
+    <!-- Animated gradient orbs -->
+    <div class="blog-gradient-orb blog-gradient-orb--primary" aria-hidden="true"></div>
+    <div class="blog-gradient-orb blog-gradient-orb--secondary" aria-hidden="true"></div>
+    <div class="blog-gradient-orb blog-gradient-orb--tertiary" aria-hidden="true"></div>
+    
+    <!-- Side accent panels -->
+    <div class="blog-side-panel blog-side-panel--left" aria-hidden="true"></div>
+    <div class="blog-side-panel blog-side-panel--right" aria-hidden="true"></div>
+
+    <div class="container relative z-10 mx-auto px-4">
     <div class="blog-layout">
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
@@ -108,6 +128,7 @@
       <!-- Related Posts Section -->
       <RelatedPosts v-if="post && allPosts.length > 0" :current-post-id="post.id" :current-post-title="post.title"
         :current-post-content="post.content" :current-post-tags="post.tags" :all-posts="allPosts" />
+    </div>
     </div>
 
     <!-- Sidebar with Popular Posts -->
@@ -686,6 +707,386 @@ function deslugify(slug) {
 <style src="@/styles/callouts.css"></style>
 <style src="@/styles/blog-layout.css"></style>
 <style>
+/* ======================================= */
+/* INNOVATIVE BLOG POST TILTED BOX DESIGN */
+/* ======================================= */
+
+/* CSS Variables for consistent theming */
+.blog-post-section {
+  --blog-primary: #6366f1;
+  --blog-primary-vivid: #4f46e5;
+  --blog-primary-soft: rgba(99, 102, 241, 0.7);
+  --blog-accent: #a855f7;
+  --blog-accent-vivid: #9333ea;
+  --blog-accent-soft: rgba(168, 85, 247, 0.6);
+  --blog-secondary: #f43f5e;
+  --blog-secondary-vivid: #e11d48;
+  --blog-secondary-soft: rgba(244, 63, 94, 0.5);
+  --blog-tertiary: #06b6d4;
+  --blog-tertiary-soft: rgba(6, 182, 212, 0.4);
+  --blog-gold: #38bdf8;
+  --blog-gold-soft: rgba(56, 189, 248, 0.4);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: 
+    radial-gradient(ellipse 120% 85% at 20% -10%, var(--blog-primary-soft) 0%, transparent 65%),
+    radial-gradient(ellipse 95% 70% at 80% 5%, var(--blog-accent-soft) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 45% 25%, var(--blog-tertiary-soft) 0%, transparent 55%),
+    linear-gradient(182deg, #fefefe 0%, #f0f4ff 25%, #f8fafc 55%, #f1f5f9 100%);
+  min-height: 100vh;
+}
+
+.dark .blog-post-section {
+  --blog-primary: #818cf8;
+  --blog-primary-vivid: #6366f1;
+  --blog-primary-soft: rgba(129, 140, 248, 0.5);
+  --blog-accent: #c084fc;
+  --blog-accent-vivid: #a855f7;
+  --blog-accent-soft: rgba(192, 132, 252, 0.4);
+  --blog-secondary: #fb7185;
+  --blog-secondary-vivid: #f43f5e;
+  --blog-secondary-soft: rgba(251, 113, 133, 0.3);
+  --blog-tertiary: #22d3ee;
+  --blog-tertiary-soft: rgba(34, 211, 238, 0.25);
+  --blog-gold: #0ea5e9;
+  --blog-gold-soft: rgba(14, 165, 233, 0.3);
+  background: 
+    radial-gradient(ellipse 115% 90% at 25% -15%, var(--blog-primary-soft) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 75% at 75% 0%, var(--blog-accent-soft) 0%, transparent 65%),
+    radial-gradient(ellipse 85% 65% at 40% 20%, var(--blog-tertiary-soft) 0%, transparent 60%),
+    linear-gradient(188deg, #0f172a 0%, #1e293b 45%, #0f172a 100%);
+}
+
+/* Hero Pattern - Enhanced tilted decorations */
+.blog-hero-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 320px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.blog-hero-pattern--left {
+  background: linear-gradient(135deg, 
+    var(--blog-primary-vivid) 0%, 
+    var(--blog-primary) 30%,
+    var(--blog-primary-soft) 60%, 
+    transparent 85%);
+  clip-path: polygon(0 0, 45% 0, 25% 100%, 0 100%);
+  transform: skewY(-4deg);
+  transform-origin: top left;
+  box-shadow: inset 0 0 100px rgba(79, 70, 229, 0.35);
+  animation: float-left 12s ease-in-out infinite;
+}
+
+.blog-hero-pattern--center {
+  background: linear-gradient(125deg,
+    var(--blog-tertiary) 0%,
+    rgba(129, 140, 248, 0.45) 35%,
+    rgba(56, 189, 248, 0.6) 60%,
+    transparent 85%);
+  clip-path: polygon(30% 0, 70% 0, 55% 100%, 45% 100%);
+  transform: skewY(2deg);
+  transform-origin: top center;
+  box-shadow: inset 0 0 80px rgba(6, 182, 212, 0.3);
+  animation: float-center 15s ease-in-out infinite;
+}
+
+.blog-hero-pattern--right {
+  background: linear-gradient(115deg,
+    var(--blog-accent-vivid) 0%,
+    var(--blog-accent) 35%,
+    var(--blog-accent-soft) 65%,
+    transparent 80%);
+  clip-path: polygon(55% 0, 100% 0, 100% 100%, 75% 100%);
+  transform: skewY(3deg);
+  transform-origin: top right;
+  box-shadow: inset 0 0 70px rgba(147, 51, 234, 0.3);
+  animation: float-right 10s ease-in-out infinite;
+}
+
+/* Floating Geometric Shapes */
+.blog-geometric {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.6;
+  animation: float-geometric 20s ease-in-out infinite;
+}
+
+.blog-geometric--triangle {
+  top: 15%;
+  left: 8%;
+  width: 0;
+  height: 0;
+  border-left: 40px solid transparent;
+  border-right: 40px solid transparent;
+  border-bottom: 70px solid var(--blog-primary-soft);
+  transform: rotate(15deg);
+  animation-delay: 0s;
+  filter: blur(1px);
+}
+
+.blog-geometric--hexagon {
+  top: 25%;
+  right: 12%;
+  width: 60px;
+  height: 33px;
+  background: var(--blog-accent-soft);
+  position: relative;
+  animation-delay: 3s;
+  filter: blur(1.5px);
+}
+
+.blog-geometric--hexagon:before,
+.blog-geometric--hexagon:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+}
+
+.blog-geometric--hexagon:before {
+  bottom: 100%;
+  border-bottom: 17px solid var(--blog-accent-soft);
+}
+
+.blog-geometric--hexagon:after {
+  top: 100%;
+  border-top: 17px solid var(--blog-accent-soft);
+}
+
+.blog-geometric--circle {
+  bottom: 20%;
+  left: 15%;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, var(--blog-gold) 0%, var(--blog-gold-soft) 70%, transparent 100%);
+  border-radius: 50%;
+  animation-delay: 6s;
+  filter: blur(2px);
+}
+
+/* Animated Gradient Orbs */
+.blog-gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  filter: blur(40px);
+  opacity: 0.7;
+  animation: orb-float 8s ease-in-out infinite;
+}
+
+.blog-gradient-orb--primary {
+  width: 180px;
+  height: 180px;
+  top: 10%;
+  left: 5%;
+  background: radial-gradient(circle at 30% 30%, 
+    var(--blog-primary-vivid) 0%, 
+    var(--blog-primary) 40%, 
+    transparent 75%);
+  animation-delay: 0s;
+  box-shadow: 0 0 80px rgba(79, 70, 229, 0.4);
+}
+
+.blog-gradient-orb--secondary {
+  width: 150px;
+  height: 150px;
+  top: 20%;
+  right: 8%;
+  background: radial-gradient(circle at 70% 70%, 
+    var(--blog-secondary-vivid) 0%, 
+    var(--blog-tertiary) 35%, 
+    var(--blog-secondary) 60%, 
+    transparent 80%);
+  animation-delay: 2.5s;
+  box-shadow: 0 0 70px rgba(225, 29, 72, 0.35);
+}
+
+.blog-gradient-orb--tertiary {
+  width: 160px;
+  height: 160px;
+  bottom: 15%;
+  right: 20%;
+  background: radial-gradient(circle at 40% 60%, 
+    rgba(14, 165, 233, 0.85) 0%, 
+    rgba(99, 102, 241, 0.55) 35%, 
+    rgba(129, 140, 248, 0.35) 65%, 
+    transparent 85%);
+  animation-delay: 4.5s;
+  box-shadow: 0 0 75px rgba(56, 189, 248, 0.35);
+}
+
+/* Side Accent Panels */
+.blog-side-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.8;
+}
+
+.blog-side-panel--left {
+  left: 0;
+  background: linear-gradient(90deg, 
+    var(--blog-primary-soft) 0%, 
+    transparent 100%);
+  transform: skewX(-2deg);
+  transform-origin: top left;
+}
+
+.blog-side-panel--right {
+  right: 0;
+  background: linear-gradient(-90deg, 
+    var(--blog-accent-soft) 0%, 
+    transparent 100%);
+  transform: skewX(2deg);
+  transform-origin: top right;
+}
+
+/* Dark mode adjustments */
+.dark .blog-hero-pattern--left {
+  background: linear-gradient(135deg,
+    var(--blog-primary-vivid) 0%,
+    var(--blog-primary) 25%,
+    var(--blog-primary-soft) 50%,
+    transparent 70%);
+  box-shadow: inset 0 0 120px rgba(99, 102, 241, 0.45);
+}
+
+.dark .blog-hero-pattern--center {
+  background: linear-gradient(125deg,
+    var(--blog-tertiary) 0%,
+    rgba(99, 102, 241, 0.45) 30%,
+    rgba(14, 165, 233, 0.55) 55%,
+    transparent 80%);
+  box-shadow: inset 0 0 100px rgba(34, 211, 238, 0.4);
+}
+
+.dark .blog-hero-pattern--right {
+  background: linear-gradient(115deg,
+    var(--blog-accent-vivid) 0%,
+    var(--blog-accent) 30%,
+    var(--blog-accent-soft) 55%,
+    transparent 75%);
+  box-shadow: inset 0 0 90px rgba(168, 85, 247, 0.4);
+}
+
+.dark .blog-gradient-orb {
+  opacity: 0.5;
+  filter: blur(50px);
+  mix-blend-mode: screen;
+}
+
+.dark .blog-gradient-orb--primary {
+  background: radial-gradient(circle at 30% 30%, 
+    var(--blog-primary-vivid) 0%, 
+    var(--blog-primary) 35%, 
+    transparent 70%);
+  box-shadow: 0 0 100px rgba(99, 102, 241, 0.5);
+}
+
+.dark .blog-gradient-orb--secondary {
+  background: radial-gradient(circle at 70% 70%, 
+    var(--blog-secondary-vivid) 0%, 
+    var(--blog-tertiary) 30%, 
+    var(--blog-secondary) 55%, 
+    transparent 75%);
+  box-shadow: 0 0 90px rgba(244, 63, 94, 0.45);
+}
+
+.dark .blog-gradient-orb--tertiary {
+  background: radial-gradient(circle at 40% 60%, 
+    rgba(14, 165, 233, 0.85) 0%, 
+    rgba(99, 102, 241, 0.55) 30%, 
+    rgba(129, 140, 248, 0.35) 60%, 
+    transparent 80%);
+  box-shadow: 0 0 85px rgba(14, 165, 233, 0.45);
+}
+
+/* Animations */
+@keyframes float-left {
+  0%, 100% {
+    transform: skewY(-4deg) translateY(0) translateX(0);
+  }
+  33% {
+    transform: skewY(-4deg) translateY(-10px) translateX(5px);
+  }
+  66% {
+    transform: skewY(-4deg) translateY(5px) translateX(-3px);
+  }
+}
+
+@keyframes float-center {
+  0%, 100% {
+    transform: skewY(2deg) translateY(0) scale(1);
+  }
+  25% {
+    transform: skewY(2deg) translateY(-8px) scale(1.02);
+  }
+  50% {
+    transform: skewY(2deg) translateY(6px) scale(0.98);
+  }
+  75% {
+    transform: skewY(2deg) translateY(-4px) scale(1.01);
+  }
+}
+
+@keyframes float-right {
+  0%, 100% {
+    transform: skewY(3deg) translateY(0) translateX(0);
+  }
+  33% {
+    transform: skewY(3deg) translateY(-12px) translateX(-8px);
+  }
+  66% {
+    transform: skewY(3deg) translateY(8px) translateX(4px);
+  }
+}
+
+@keyframes float-geometric {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-20px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(10px) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-15px) rotate(270deg);
+  }
+}
+
+@keyframes orb-float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -20px) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, 30px) scale(0.9);
+  }
+  75% {
+    transform: translate(20px, 20px) scale(1.05);
+  }
+}
+
+/* ======================================= */
+/* BLOG POST CONTENT STYLES */
+/* ======================================= */
+
 /* All of your existing styles are here, adapted for a standalone HTML file. */
 body {
   font-family: 'Inter', sans-serif;
@@ -701,32 +1102,34 @@ body {
   font-weight: 900;
   margin: 2.5rem 0 2rem;
   line-height: 1.1;
-  color: #1e40af;
-  
+  color: #0f172a;
+
   letter-spacing: 1px;
   padding: 1.5rem 2rem;
   border-radius: 1.5rem;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(129, 140, 248, 0.18));
-  box-shadow: 0 18px 40px -20px rgba(59, 130, 246, 0.45);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.14));
+  box-shadow: 0 18px 40px -22px rgba(59, 130, 246, 0.35);
+  text-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
   display: inline-block;
 }
 
 .post-title:hover {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(129, 140, 248, 0.24));
-  box-shadow: 0 22px 45px -18px rgba(79, 70, 229, 0.5);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.16), rgba(99, 102, 241, 0.22));
+  box-shadow: 0 22px 45px -20px rgba(79, 70, 229, 0.45);
 }
 
 /* Dark mode post title */
 .dark .post-title {
-  color: #60a5fa;
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(167, 139, 250, 0.2));
-  box-shadow: 0 18px 40px -20px rgba(96, 165, 250, 0.4);
+  color: #e0f2fe;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.25), rgba(129, 140, 248, 0.28));
+  box-shadow: 0 18px 40px -20px rgba(96, 165, 250, 0.35);
+  text-shadow: 0 4px 12px rgba(15, 23, 42, 0.55);
 }
 
 /* Dark mode post title hover */
 .dark .post-title:hover {
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.22), rgba(167, 139, 250, 0.28));
-  box-shadow: 0 22px 45px -18px rgba(96, 165, 250, 0.55);
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.32), rgba(129, 140, 248, 0.36));
+  box-shadow: 0 22px 45px -18px rgba(96, 165, 250, 0.5);
 }
 
 #post-content h2 {
