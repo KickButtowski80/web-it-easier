@@ -743,12 +743,6 @@ body {
   background-size: 200% 200%;
 }
 
-/* Dark mode h2 */
-.dark #post-content h2 {
-  color: #60a5fa;
-  background-color: rgba(96, 165, 250, 0.1);
-}
-
 #post-content h2::before {
   content: '';
   position: absolute;
@@ -789,13 +783,6 @@ body {
 
 }
 
-/* Dark mode h3 */
-.dark #post-content h3 {
-  color: #60a5fa;
-  background-color: rgba(96, 165, 250, 0.08);
-  border-left-color: #60a5fa;
-}
-
 #post-content h3::before {
   content: '';
   position: absolute;
@@ -819,11 +806,6 @@ body {
   line-height: 1.7;
   color: #1f2937;
   font-size: 1.125rem;
-}
-
-/* Dark mode paragraphs */
-.dark #post-content p {
-  color: #e2e8f0;
 }
 
 #post-content.prose ol ol {
@@ -897,24 +879,6 @@ body {
   content: '\2014\00A0';
 }
 
-/* Dark mode support */
-.dark #post-content blockquote {
-  background: #1e293b;
-  color: #e2e8f0;
-  border-left-color: #60a5fa;
-}
-
-.dark #post-content blockquote p {
-  color: #f3f4f6;
-}
-
-.dark #post-content blockquote cite {
-  margin: 0;
-  padding: 0.5rem 1.5rem 1.5rem;
-  background: transparent;
-  box-shadow: none;
-}
-
 /* Style paragraphs that are immediately followed by a list */
 #post-content p:has(+ ul),
 #post-content h4:has(+ ul),
@@ -937,17 +901,6 @@ body {
     box-shadow 0.2s ease;
   cursor: pointer;
   overflow: hidden;
-}
-
-/* Dark mode paragraph lists */
-.dark #post-content p:has(+ ul),
-.dark #post-content h4:has(+ ul),
-.dark #post-content p:has(+ ol),
-.dark #post-content h4:has(+ ol),
-.dark #post-content p:has(+ h2) {
-  background: rgba(30, 41, 59, 0.9);
-  border-left-color: #60a5fa;
-  color: #f3f4f6;
 }
 
 /* Rotating arrow marker */
@@ -1180,46 +1133,6 @@ body {
   }
 }
 
-/* Dark mode support */
-.dark #post-content p+ul,
-.dark #post-content p+ol,
-.dark #post-content h4+ul,
-.dark #post-content h4+ol {
-  background: rgba(30, 41, 59, 0.4);
-  border-left-color: #60a5fa;
-}
-
-/* Dark mode table styles */
-.dark #post-content table {
-  background: #1e293b;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-}
-
-.dark #post-content th {
-  background-color: #1e293b;
-  color: #e2e8f0;
-  border-bottom-color: #334155;
-}
-
-.dark #post-content td {
-  border-bottom-color: #334155;
-  color: #cbd5e1;
-}
-
-.dark #post-content tbody tr:hover {
-  background-color: #1e293b;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-}
-
-.dark #post-content tbody tr:nth-child(even) {
-  background-color: rgba(30, 41, 59, 0.5);
-}
-
-.dark #post-content p:has(+ ul),
-.dark #post-content p:has(+ ol) {
-  color: #f3f4f6;
-}
-
 #post-content hr {
   border: none;
   height: 0.1875rem;
@@ -1336,67 +1249,6 @@ body {
 
 #post-content pre .hljs-strong {
   font-weight: 700;
-}
-
-/* Improve syntax readability in dark mode (override light GitHub theme tokens) */
-.dark #post-content pre {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  border-color: #1e3a8a;
-  color: #e2e8f0;
-}
-
-.dark #post-content pre code {
-  color: inherit;
-}
-
-.dark #post-content pre .hljs {
-  background: transparent;
-  color: inherit;
-}
-
-/* Dark mode token colors with high contrast */
-.dark #post-content pre .hljs-comment,
-.dark #post-content pre .hljs-quote {
-  color: #94a3b8;
-  font-style: italic;
-}
-
-.dark #post-content pre .hljs-keyword,
-.dark #post-content pre .hljs-selector-tag,
-.dark #post-content pre .hljs-literal,
-.dark #post-content pre .hljs-built_in,
-.dark #post-content pre .hljs-type {
-  color: #60a5fa;
-  font-weight: 600;
-}
-
-.dark #post-content pre .hljs-string,
-.dark #post-content pre .hljs-symbol,
-.dark #post-content pre .hljs-bullet,
-.dark #post-content pre .hljs-addition {
-  color: #34d399;
-  font-weight: 500;
-}
-
-.dark #post-content pre .hljs-number,
-.dark #post-content pre .hljs-regexp,
-.dark #post-content pre .hljs-variable,
-.dark #post-content pre .hljs-template-variable,
-.dark #post-content pre .hljs-link,
-.dark #post-content pre .hljs-name,
-.dark #post-content pre .hljs-selector-id,
-.dark #post-content pre .hljs-selector-class,
-.dark #post-content pre .hljs-selector-attr,
-.dark #post-content pre .hljs-selector-pseudo,
-.dark #post-content pre .hljs-meta,
-.dark #post-content pre .hljs-doctag,
-.dark #post-content pre .hljs-title,
-.dark #post-content pre .hljs-section,
-.dark #post-content pre .hljs-deletion,
-.dark #post-content pre .hljs-subst,
-.dark #post-content pre .hljs-attr,
-.dark #post-content pre .hljs-attribute {
-  color: #f1f5f9;
 }
 
 .prose {
@@ -1543,10 +1395,18 @@ body {
   background-color: rgba(59, 130, 246, 0.1);
 }
 
-/* Dark mode overrides for stronger contrast */
-.dark #post-content.prose h1 {
-  color: #f1f5f9;
-  font-weight: 700;
+/* ==========================
+   Dark mode overrides
+   ========================== */
+.dark #post-content h2 {
+  color: #60a5fa;
+  background-color: rgba(96, 165, 250, 0.1);
+}
+
+.dark #post-content h3 {
+  color: #60a5fa;
+  background-color: rgba(96, 165, 250, 0.08);
+  border-left-color: #60a5fa;
 }
 
 .dark #post-content h4 {
@@ -1554,33 +1414,148 @@ body {
   font-weight: 600;
 }
 
-/* Target highlight on headings in dark mode */
 .dark #post-content h3:target,
 .dark #post-content h4:target {
   background-color: rgba(59, 130, 246, 0.18);
-  /* slightly stronger for dark */
 }
 
-/* Blockquote contrast in dark mode */
-.dark #post-content.prose blockquote {
-  border-left: 4px solid #374151;
-  /* gray-700 */
-  color: #d1d5db;
-  /* gray-300 */
+.dark #post-content.prose h1 {
+  color: #f1f5f9;
+  font-weight: 700;
 }
 
-/* Inline code contrast in dark mode */
+.dark #post-content p {
+  color: #e2e8f0;
+}
+
 .dark #post-content :not(pre)>code {
   color: #93c5fd;
-  /* blue-300 */
   background-color: rgba(59, 130, 246, 0.18);
   border-color: rgba(59, 130, 246, 0.35);
 }
 
-/* Base code block background lift for dark mode (keep hljs theme intact) */
-.dark pre {
-  background-color: rgba(17, 24, 39, 0.6);
-  /* gray-900 w/ translucency */
+.dark #post-content blockquote {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-left-color: #60a5fa;
+}
+
+.dark #post-content blockquote p {
+  color: #f3f4f6;
+}
+
+.dark #post-content blockquote cite {
+  margin: 0;
+  padding: 0.5rem 1.5rem 1.5rem;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dark #post-content p:has(+ ul),
+.dark #post-content h4:has(+ ul),
+.dark #post-content p:has(+ ol),
+.dark #post-content h4:has(+ ol),
+.dark #post-content p:has(+ h2) {
+  background: rgba(30, 41, 59, 0.9);
+  border-left-color: #60a5fa;
+  color: #f3f4f6;
+}
+
+.dark #post-content p+ul,
+.dark #post-content p+ol,
+.dark #post-content h4+ul,
+.dark #post-content h4+ol {
+  background: rgba(30, 41, 59, 0.4);
+  border-left-color: #60a5fa;
+}
+
+.dark #post-content table {
+  background: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark #post-content th {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-bottom-color: #334155;
+}
+
+.dark #post-content td {
+  border-bottom-color: #334155;
+  color: #cbd5e1;
+}
+
+.dark #post-content tbody tr:hover {
+  background-color: #1e293b;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark #post-content tbody tr:nth-child(even) {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+.dark #post-content p:has(+ ul),
+.dark #post-content p:has(+ ol) {
+  color: #f3f4f6;
+}
+
+.dark #post-content pre {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border-color: #1e3a8a;
+  color: #e2e8f0;
+}
+
+.dark #post-content pre code {
+  color: inherit;
+}
+
+.dark #post-content pre .hljs {
+  background: transparent;
+  color: inherit;
+}
+
+.dark #post-content pre .hljs-comment,
+.dark #post-content pre .hljs-quote {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.dark #post-content pre .hljs-keyword,
+.dark #post-content pre .hljs-selector-tag,
+.dark #post-content pre .hljs-literal,
+.dark #post-content pre .hljs-built_in,
+.dark #post-content pre .hljs-type {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.dark #post-content pre .hljs-string,
+.dark #post-content pre .hljs-symbol,
+.dark #post-content pre .hljs-bullet,
+.dark #post-content pre .hljs-addition {
+  color: #34d399;
+  font-weight: 500;
+}
+
+.dark #post-content pre .hljs-number,
+.dark #post-content pre .hljs-regexp,
+.dark #post-content pre .hljs-variable,
+.dark #post-content pre .hljs-template-variable,
+.dark #post-content pre .hljs-link,
+.dark #post-content pre .hljs-name,
+.dark #post-content pre .hljs-selector-id,
+.dark #post-content pre .hljs-selector-class,
+.dark #post-content pre .hljs-selector-attr,
+.dark #post-content pre .hljs-selector-pseudo,
+.dark #post-content pre .hljs-meta,
+.dark #post-content pre .hljs-doctag,
+.dark #post-content pre .hljs-title,
+.dark #post-content pre .hljs-section,
+.dark #post-content pre .hljs-deletion,
+.dark #post-content pre .hljs-subst,
+.dark #post-content pre .hljs-attr,
+.dark #post-content pre .hljs-attribute {
+  color: #f1f5f9;
 }
 
 /* Navigation styles - keeping only essential nav styles */
