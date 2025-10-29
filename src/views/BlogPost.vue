@@ -1092,19 +1092,40 @@ body {
   border-bottom: none;
 }
 
+/* Table row and cell styling */
 #post-content tbody tr {
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
     background-color 0.2s ease,
     box-shadow 0.2s ease;
   transform-origin: left center;
+  background-color: transparent; /* Ensure row background is transparent by default */
+}
+
+/* Make sure table cells are transparent to show row hover */
+#post-content td {
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+/* Hover state for both row and cells */
+#post-content tbody tr:hover,
+#post-content tbody tr:hover td {
+  background-color: #e2e8f0; /* Slightly deeper slate for clearer hover */
+  color: #1f2937;
 }
 
 #post-content tbody tr:hover {
-  background-color: #f8fafc;
   transform: scale(1.01);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   position: relative;
   z-index: 1;
+}
+
+/* Dark mode hover */
+.dark #post-content tbody tr:hover,
+.dark #post-content tbody tr:hover td {
+  background-color: rgba(51, 65, 85, 0.85); /* lighter slate for stronger contrast */
+  color: #e2e8f0;
 }
 
 #post-content tbody tr:last-child {
