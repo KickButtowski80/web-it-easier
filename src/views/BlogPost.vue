@@ -1474,14 +1474,17 @@ body {
   padding-bottom: 0.5rem;
 }
 
-#post-content.prose h4 {
-  font-size: 1.5rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  font-weight: 500;
-  color: #4b5563;
-  padding: 1rem 0 1.5rem 1.5rem;
+#post-content h4 {
+  font-size: clamp(1.25rem, 3.5vw, 1.4rem);
+  font-weight: 600;
+  color: #1f2937;
+  margin: 1.75rem 0 0.9rem;
+  padding: 1rem 0 1.25rem 1.5rem;
   position: relative;
+  border-left: 3px solid rgba(59, 130, 246, 0.45);
+  background-color: rgba(30, 64, 175, 0.05);
+  border-radius: 0 0.4rem 0.4rem 0;
+  letter-spacing: 0.01em;
 }
 
 .prose p {
@@ -1593,7 +1596,7 @@ body {
   background-color: rgba(59, 130, 246, 0.1);
 }
 
-#post-content.prose h4:target {
+#post-content h4:target {
   color: #3b82f6;
   padding-left: 1.5rem;
   background-color: rgba(59, 130, 246, 0.1);
@@ -1605,14 +1608,14 @@ body {
   font-weight: 700;
 }
 
-.dark #post-content.prose h4 {
+.dark #post-content h4 {
   color: #cbd5e1;
   font-weight: 600;
 }
 
 /* Target highlight on headings in dark mode */
 .dark #post-content h3:target,
-.dark #post-content.prose h4:target {
+.dark #post-content h4:target {
   background-color: rgba(59, 130, 246, 0.18);
   /* slightly stronger for dark */
 }
