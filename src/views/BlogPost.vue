@@ -1729,7 +1729,7 @@ body {
 }
 
 #post-content.prose h1 {
-  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-size: clamp(1.35rem, 4vw + 0.9rem, 2.5rem);
   margin-top: 2.5rem;
   margin-bottom: 1.5rem;
   font-weight: 700;
