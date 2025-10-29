@@ -1515,7 +1515,7 @@ body {
   margin-top: 1.25rem;
 }
 
-.prose code {
+#post-content :not(pre)>code {
   background-color: #e0e7ff;
   color: #1e3a8a;
   padding: 0.15em 0.35em;
@@ -1530,7 +1530,7 @@ body {
 
 
 @media (hover: none) {
-  .prose code {
+  #post-content :not(pre)>code {
     padding: 0.2em 0.45em;
   }
 }
@@ -1601,7 +1601,7 @@ body {
 }
 
 /* Inline code contrast in dark mode */
-.dark #post-content.prose code {
+.dark #post-content :not(pre)>code {
   color: #93c5fd;
   /* blue-300 */
   background-color: rgba(59, 130, 246, 0.18);
