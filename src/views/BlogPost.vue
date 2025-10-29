@@ -769,7 +769,7 @@ body {
 #post-content h3 {
   font-size: clamp(1.5rem, 4vw, 1.5rem);
   font-weight: 700;
-  color: #1e3a8a;
+  color: #0f172a;
   margin: 1.75rem 0 0.9rem;
   padding: 1.5rem 1rem 2rem;
   display: inline-block;
