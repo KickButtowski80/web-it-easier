@@ -870,7 +870,7 @@ body {
   display: block;
   margin-top: 0.75rem;
   font-size: 0.9em;
-  color: #6b7280;
+  color: #374151;
   font-style: normal;
   font-weight: 500;
 }
