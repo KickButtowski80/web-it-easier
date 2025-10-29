@@ -817,16 +817,17 @@ function deslugify(slug) {
 }
 
 .blog-geometric--triangle {
-  top: 15%;
-  left: 8%;
+  top: 14%;
+  left: 10%;
   width: 0;
   height: 0;
-  border-left: 40px solid transparent;
-  border-right: 40px solid transparent;
-  border-bottom: 70px solid var(--blog-primary-soft);
-  transform: rotate(15deg);
+  border-left: 55px solid transparent;
+  border-right: 55px solid transparent;
+  border-bottom: 95px solid rgba(99, 102, 241, 0.42);
+  transform: rotate(12deg);
   animation-delay: 0s;
-  filter: blur(1px);
+  filter: blur(0.5px);
+  box-shadow: 0 18px 35px rgba(99, 102, 241, 0.35);
 }
 
 .blog-geometric--hexagon {
