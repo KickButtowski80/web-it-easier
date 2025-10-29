@@ -701,7 +701,7 @@ body {
   font-weight: 900;
   margin: 2.5rem 0 2rem;
   line-height: 1.1;
-  color: #1d4ed8;
+  color: #1e40af;
   
   letter-spacing: 1px;
   padding: 1.5rem 2rem;
@@ -716,6 +716,19 @@ body {
   box-shadow: 0 22px 45px -18px rgba(79, 70, 229, 0.5);
 }
 
+/* Dark mode post title */
+.dark .post-title {
+  color: #60a5fa;
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(167, 139, 250, 0.2));
+  box-shadow: 0 18px 40px -20px rgba(96, 165, 250, 0.4);
+}
+
+/* Dark mode post title hover */
+.dark .post-title:hover {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.22), rgba(167, 139, 250, 0.28));
+  box-shadow: 0 22px 45px -18px rgba(96, 165, 250, 0.55);
+}
+
 #post-content h2 {
   font-size: clamp(2rem, 6vw, 2rem);
   font-weight: 800;
@@ -724,10 +737,16 @@ body {
   line-height: 1.3;
   display: inline-block;
   position: relative;
-  background-color: rgba(37, 99, 235, 0.05);
-  color: #2563eb;
+  background-color: rgba(30, 64, 175, 0.08);
+  color: #1e3a8a;
   animation: gradientFlow 2s ease forwards;
   background-size: 200% 200%;
+}
+
+/* Dark mode h2 */
+.dark #post-content h2 {
+  color: #60a5fa;
+  background-color: rgba(96, 165, 250, 0.1);
 }
 
 #post-content h2::before {
@@ -756,18 +775,25 @@ body {
 #post-content h3 {
   font-size: clamp(1.5rem, 4vw, 1.5rem);
   font-weight: 700;
-  color: #1e40af;
+  color: #1e3a8a;
   margin: 1.75rem 0 0.9rem;
   padding: 1.5rem 1rem 2rem;
   display: inline-block;
   box-sizing: border-box;
   position: relative;
-  background-color: rgba(37, 99, 235, 0.05);
-  border-left: 4px solid #3b82f6;
+  background-color: rgba(30, 64, 175, 0.06);
+  border-left: 4px solid #1e40af;
   border-radius: 0 4px 4px 0;
   width: 100%;
   max-width: 100%;
 
+}
+
+/* Dark mode h3 */
+.dark #post-content h3 {
+  color: #60a5fa;
+  background-color: rgba(96, 165, 250, 0.08);
+  border-left-color: #60a5fa;
 }
 
 #post-content h3::before {
@@ -791,8 +817,13 @@ body {
 #post-content p {
   margin: 1.25em 0;
   line-height: 1.7;
-  color: #2d3748;
+  color: #1f2937;
   font-size: 1.125rem;
+}
+
+/* Dark mode paragraphs */
+.dark #post-content p {
+  color: #e2e8f0;
 }
 
 #post-content.prose ol ol {
@@ -804,12 +835,12 @@ body {
 }
 
 #post-content.prose blockquote {
-  border-left: 4px solid #e5e7eb;
+  border-left: 4px solid #d1d5db;
   /* Light gray border on the left */
   padding-left: 1rem;
   margin: 1.5rem 0;
-  color: #4b5563;
-  /* Slightly darker text */
+  color: #374151;
+  /* Darker text for better contrast */
   font-style: italic;
 }
 
@@ -822,7 +853,7 @@ body {
   display: block;
   margin-top: 0.75rem;
   font-size: 0.9em;
-  color: #6b7280;
+  color: #4b5563;
   font-style: normal;
   font-weight: 500;
 }
@@ -851,6 +882,7 @@ body {
 .dark #post-content li {
   background: rgba(30, 41, 59, 0.3);
   border-left-color: #60a5fa;
+  color: #e2e8f0;
 }
 
 .dark #post-content li:hover {
@@ -964,6 +996,17 @@ body {
     box-shadow 0.2s ease;
   cursor: pointer;
   overflow: hidden;
+}
+
+/* Dark mode paragraph lists */
+.dark #post-content p:has(+ ul),
+.dark #post-content h4:has(+ ul),
+.dark #post-content p:has(+ ol),
+.dark #post-content h4:has(+ ol),
+.dark #post-content p:has(+ h2) {
+  background: rgba(30, 41, 59, 0.9);
+  border-left-color: #60a5fa;
+  color: #f3f4f6;
 }
 
 /* Rotating arrow marker */
@@ -1144,7 +1187,7 @@ body {
 #post-content th {
   background-color: #f7fafc;
   font-weight: 600;
-  color: #2d3748;
+  color: #1f2937;
   text-transform: uppercase;
   font-size: 0.8em;
   letter-spacing: 0.05em;
@@ -1421,43 +1464,32 @@ body {
   padding: 1rem;
 }
 
-.prose h1 {
+#post-content.prose h1 {
   font-size: 2.5rem;
   margin-top: 2.5rem;
   margin-bottom: 1.5rem;
   font-weight: 700;
-  color: #1f2937;
+  color: #111827;
   border-bottom: 0.125rem solid #e5e7eb;
   padding-bottom: 0.5rem;
 }
 
-.prose h2 {
-  font-size: 2rem;
-  margin-top: 2.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: 600;
-  color: #374151;
-  border-left: 0.25rem solid #3b82f6;
-  padding-left: 0.75rem;
-  position: relative;
-}
-
-.prose h3 {
+#post-content.prose h3 {
   font-size: 1.75rem;
   margin-top: 2rem;
   margin-bottom: 1rem;
   font-weight: 500;
-  color: #4b5563;
+  color: #374151;
   padding-left: 1.25rem;
   position: relative;
 }
 
-.prose h4 {
+#post-content.prose h4 {
   font-size: 1.5rem;
   margin-top: 2rem;
   margin-bottom: 1rem;
   font-weight: 500;
-  color: #6b7280;
+  color: #4b5563;
   padding: 1rem 0 1.5rem 1.5rem;
   position: relative;
 }
@@ -1565,76 +1597,61 @@ body {
   }
 }
 
-.prose h2:target {
-  color: #3b82f6;
-  border-left: 4px solid #3b82f6;
-  padding-left: 0.75rem;
-  background-color: rgba(59, 130, 246, 0.1);
-}
-
-.prose h3:target {
+#post-content.prose h3:target {
   color: #3b82f6;
   padding-left: 1.25rem;
   background-color: rgba(59, 130, 246, 0.1);
 }
 
-.prose h4:target {
+#post-content.prose h4:target {
   color: #3b82f6;
   padding-left: 1.5rem;
   background-color: rgba(59, 130, 246, 0.1);
 }
 
 /* Dark mode overrides for stronger contrast */
-@media (prefers-color-scheme: dark) {
-  .prose h1 {
-    color: #f1f5f9;
-    font-weight: 700;
-  }
+.dark #post-content.prose h1 {
+  color: #f1f5f9;
+  font-weight: 700;
+}
 
-  .prose h2 {
-    color: #e2e8f0;
-    font-weight: 600;
-  }
+.dark #post-content.prose h3 {
+  color: #cbd5e1;
+  font-weight: 600;
+}
 
-  .prose h3 {
-    color: #cbd5e1;
-    font-weight: 600;
-  }
+.dark #post-content.prose h4 {
+  color: #cbd5e1;
+  font-weight: 600;
+}
 
-  .prose h4 {
-    color: #cbd5e1;
-    font-weight: 600;
-  }
+/* Target highlight on headings in dark mode */
+.dark #post-content.prose h3:target,
+.dark #post-content.prose h4:target {
+  background-color: rgba(59, 130, 246, 0.18);
+  /* slightly stronger for dark */
+}
 
-  /* Target highlight on headings in dark mode */
-  .prose h2:target,
-  .prose h3:target,
-  .prose h4:target {
-    background-color: rgba(59, 130, 246, 0.18);
-    /* slightly stronger for dark */
-  }
+/* Blockquote contrast in dark mode */
+.dark #post-content.prose blockquote {
+  border-left: 4px solid #374151;
+  /* gray-700 */
+  color: #d1d5db;
+  /* gray-300 */
+}
 
-  /* Blockquote contrast in dark mode */
-  #post-content.prose blockquote {
-    border-left: 4px solid #374151;
-    /* gray-700 */
-    color: #d1d5db;
-    /* gray-300 */
-  }
+/* Inline code contrast in dark mode */
+.dark #post-content.prose code {
+  color: #93c5fd;
+  /* blue-300 */
+  background-color: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.35);
+}
 
-  /* Inline code contrast in dark mode */
-  #post-content.prose code {
-    color: #93c5fd;
-    /* blue-300 */
-    background-color: rgba(59, 130, 246, 0.18);
-    border-color: rgba(59, 130, 246, 0.35);
-  }
-
-  /* Base code block background lift for dark mode (keep hljs theme intact) */
-  pre {
-    background-color: rgba(17, 24, 39, 0.6);
-    /* gray-900 w/ translucency */
-  }
+/* Base code block background lift for dark mode (keep hljs theme intact) */
+.dark pre {
+  background-color: rgba(17, 24, 39, 0.6);
+  /* gray-900 w/ translucency */
 }
 
 /* Navigation styles - keeping only essential nav styles */
