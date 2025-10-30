@@ -1,6 +1,6 @@
 <template>
 
-  <section class="blog-post-section relative overflow-hidden py-28">
+  <section class="blog-post-section relative py-28">
     <!-- Top diagonal hero decorations with enhanced design -->
     <div class="blog-hero-pattern blog-hero-pattern--left" aria-hidden="true"></div>
     <div class="blog-hero-pattern blog-hero-pattern--center" aria-hidden="true"></div>
@@ -24,7 +24,7 @@
     <div class="blog-footer-pattern blog-footer-pattern--left" aria-hidden="true"></div>
     <div class="blog-footer-pattern blog-footer-pattern--right" aria-hidden="true"></div>
 
-    <div class="container relative z-10 mx-auto px-4">
+    <div class="container blog-container relative z-10 mx-auto px-4">
     <div class="blog-layout">
       <article v-if="post" :aria-labelledby="'post-title-' + post.id" :aria-describedby="'post-meta-' + post.id">
         <header class="text-center my-8">
@@ -731,7 +731,7 @@ function deslugify(slug) {
   --blog-gold: #38bdf8;
   --blog-gold-soft: rgba(56, 189, 248, 0.25);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
   background: 
     radial-gradient(ellipse 120% 85% at 18% -12%, rgba(99, 102, 241, 0.18) 0%, transparent 55%),
