@@ -1,7 +1,3 @@
-/* Blog Layout with Sidebar */
-.blog-layout {
-  width: 100%;
-}
 
 @media (min-width: 1024px) {
   .container.blog-container {
