@@ -1,12 +1,12 @@
 <template>
   <article 
     :aria-label="'Project: ' + projectTitle"
-    class="grid place-items-center shadow-md"
+    class="grid place-items-center"
     :data-expanded="readMoreStatus"
   >
-    <div class="max-w-sm w-full mx-2 rounded overflow-hidden shadow-lg bg-white flex flex-col">
+    <div class="flex w-full max-w-sm flex-col overflow-hidden rounded-2xl border border-purple-200/70 bg-white/90 shadow-xl transition-colors duration-300 dark:border-indigo-400/40 dark:bg-slate-800/70">
       <img
-        class="min-w-full h-full object-contain border rounded-lg border-purple-800 my-5 overflow-hidden"
+        class="my-5 h-full min-w-full rounded-xl border border-purple-500/80 object-contain shadow-sm transition-colors duration-300 dark:border-indigo-300/70"
         :src="image"
         :title="imageAlt"
         :alt="imageAlt"
@@ -17,13 +17,13 @@
       <Transition name="slide-fade">
         <h2
           v-show="!readMoreStatus"
-          class="font-bold text-xl mb-2 text-blue-700 text-center"
+          class="mb-2 text-center text-xl font-semibold text-purple-700 transition-colors duration-300 dark:text-indigo-200"
         >
           {{ projectTitle }}
         </h2>
       </Transition>
       <section
-        class="font-bold text-xl mb-2 text-blue-700 flex justify-center items-center"
+        class="mb-2 flex items-center justify-center text-xl font-semibold text-purple-700 dark:text-indigo-100"
       >
         <button
           type="button"
@@ -32,7 +32,7 @@
           :aria-expanded="readMoreStatus ? 'true' : 'false'"
           :aria-controls="`card-${projectId}`"
           :aria-describedby="`project-toggle-desc-${projectId}`"
-          class="focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-500 text-white bg-purple-700 hover:bg-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 flex item-center w-fit transition-all duration-200"
+          class="mb-2 flex w-fit items-center rounded-lg bg-purple-600 px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-offset-2 hover:bg-purple-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:focus:ring-indigo-400 dark:focus:ring-offset-indigo-950"
         >
           {{ readMoreText }}
           <span class="sr-only" :id="`project-toggle-desc-${projectId}`">project details for {{ projectTitle }}</span>
@@ -55,7 +55,7 @@
             :projectTitle="projectTitle"
           />
           <div 
-            class="gray-bg-card flex-grow transition-opacity duration-200"
+            class="flex-grow rounded-2xl border border-purple-100/50 bg-white/90 p-5 shadow-inner transition-opacity duration-200 dark:border-indigo-300/40 dark:bg-slate-800/40"
             :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
             :aria-labelledby="`project-title-${projectId}`"
             :aria-hidden="!readMoreStatus"
@@ -64,7 +64,7 @@
             <h3 :id="`project-title-${projectId}`" class="sr-only">
               Project Details: {{ projectTitle }}
             </h3>
-            <p class="text-gray-700 text-base h-80 overflow-y-auto">
+            <p class="h-80 overflow-y-auto text-base text-slate-700 transition-colors duration-300 dark:text-slate-200">
               {{ description }}
             </p>
           </div>
@@ -74,33 +74,33 @@
             :aria-hidden="!readMoreStatus"
             :tabindex="readMoreStatus ? '0' : '-1'"
           >
-            <ul class="list-none p-0 m-0">
+            <ul class="m-0 list-none p-0">
               <li 
                 v-for="(tec, index) in technologiesUsed"
                 :key="index"
-                class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2"
+                class="mr-2 mb-2 inline-block rounded-full bg-purple-100/80 px-3 py-1 text-sm font-semibold text-purple-800 transition-colors duration-300 dark:bg-indigo-900/40 dark:text-indigo-100"
               >
                 #{{ tec }}
               </li>
             </ul>
-            <p class="text-gray-900 leading-none mt-2">
+            <p class="mt-2 leading-none text-slate-900 dark:text-slate-100">
               <span class="font-bold">Role:</span> Developer
             </p>
-            <p class="text-gray-600">
+            <p class="text-slate-600 dark:text-slate-300">
               <span class="font-bold">Completed:</span> January 2024
             </p>
           </div>
           <div 
-            class="gray-bg-card mt-5 transition-opacity duration-200"
+            class="mt-5 rounded-2xl border border-purple-100/50 bg-white/90 p-5 shadow-inner transition-opacity duration-200 dark:border-indigo-300/40 dark:bg-slate-800/45"
             :class="{ 'opacity-0 h-0 overflow-hidden': !readMoreStatus, 'opacity-100': readMoreStatus }"
             :aria-hidden="!readMoreStatus"
             :tabindex="readMoreStatus ? '0' : '-1'"
           >
-            <h3 class="font-bold text-lg mb-2 text-blue-700">
+            <h3 class="mb-2 text-lg font-semibold text-purple-700 dark:text-indigo-200">
               Highlights
             </h3>
             <div 
-              class="h-48 overflow-y-auto p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+              class="h-48 overflow-y-auto rounded border border-purple-100/40 p-2 focus:outline-none focus:ring-2 focus:ring-purple-400 dark:border-indigo-300/40 dark:focus:ring-indigo-300"
               tabindex="0"
               aria-label="Project highlights"
             >
@@ -108,7 +108,7 @@
                 <li 
                   v-for="(highlight, index) in highlights" 
                   :key="index"
-                  class="text-gray-700"
+                  class="text-slate-700 transition-colors duration-300 dark:text-slate-200"
                 >
                   {{ highlight }}
                 </li>
@@ -236,14 +236,6 @@ summary {
   cursor: pointer; /* Optional: change the cursor to pointer */
   margin-block: 1rem;
   margin-inline: 1rem;
-}
-
-details[open] > summary::before {
-  display: none; /* Hide the default triangle when the details element is open */
-}
-
-details summary::-webkit-details-marker {
-  display: none; /* Hide the default triangle in WebKit browsers (Chrome, Safari) */
 }
 
 .slide-fade-enter-active,

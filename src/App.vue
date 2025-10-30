@@ -224,6 +224,26 @@ const checkMobile = () => {
 };
 </script>
 
+<style>
+/* Global transition for theme switching */
+html {
+  transition: color 500ms, background-color 500ms;
+}
+
+/* Smooth transitions for dark mode specific elements */
+.dark {
+  --transition-bg: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+  transition: var(--transition-bg);
+}
+
+/* Apply transitions to all elements when theme changes */
+*,
+*::before,
+*::after {
+  transition: var(--transition-bg, none);
+}
+</style>
+
 <style scoped>
 /* Secret tap areas for mobile */
 .secret-tap-areas {
