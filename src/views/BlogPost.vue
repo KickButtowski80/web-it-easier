@@ -1156,12 +1156,12 @@ body {
 .post-title {
   font-size: clamp(1.4rem, 4vw + 0.6rem, 2.9rem);
   font-weight: 900;
-  margin: 2.5rem 0 2rem;
+  margin: clamp(1.5rem, 1rem + 2vw, 2.25rem) 0 clamp(1.25rem, 0.75rem + 1.5vw, 1.75rem);
   line-height: 1.1;
   color: #0f172a;
 
   letter-spacing: clamp(0.5px, 0.15vw + 0.2px, 1px);
-  padding: clamp(1rem, 3vw + 0.5rem, 1.5rem) clamp(1.25rem, 4vw + 0.5rem, 2rem);
+  padding: clamp(0.875rem, 2.5vw + 0.4rem, 1.35rem) clamp(1rem, 3vw + 0.35rem, 1.75rem);
   border-radius: 1.5rem;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.14));
   box-shadow: 0 18px 40px -22px rgba(59, 130, 246, 0.35);
@@ -1191,8 +1191,10 @@ body {
 #post-content h2 {
   font-size: clamp(1.75rem, 4.8vw, 2.6rem);
   font-weight: 800;
-  margin: 2rem 0 1rem;
-  padding: 1.5rem 1.5rem 3rem;
+  /* margin: 2rem 0 1rem; */
+  margin: clamp(1.5rem, 4vw, 2rem) 0 1.5rem;
+  /* padding: 1.5rem 1.5rem 3rem; */
+  padding: 1.25rem 1.5rem 2rem;
   line-height: 1.3;
   display: inline-block;
   position: relative;
@@ -1229,8 +1231,10 @@ body {
   font-size: clamp(1.35rem, 3.8vw, 1.9rem);
   font-weight: 700;
   color: #0f172a;
-  margin: 1.75rem 0 0.9rem;
-  padding: 1.5rem 1rem 2rem;
+  /* margin: 1.75rem 0 0.9rem; */
+  margin: 1.5rem 0 0.75rem;
+  /* padding: 1.5rem 1rem 2rem; */
+  padding: 1.25rem 1rem 1.5rem;
   display: inline-block;
   box-sizing: border-box;
   position: relative;
@@ -1261,7 +1265,8 @@ body {
 }
 
 #post-content p {
-  margin: 1.25em 0;
+  /* margin: 1.25em 0; */
+  margin: clamp(1rem, 0.6vw + 0.9rem, 1.35rem) 0;
   line-height: 1.7;
   color: #1f2937;
   font-size: clamp(1rem, 0.7vw + 0.95rem, 1.2rem);
@@ -1278,8 +1283,10 @@ body {
 #post-content blockquote {
   position: relative;
   display: block;
-  margin: 1rem 0;
-  padding: 1.25rem 1.5rem 1.25rem 2.5rem;
+  /* margin: 1rem 0; */
+  margin: 1.5rem 0;
+  /* padding: 1.25rem 1.5rem 1.25rem 2.5rem; */
+  padding: 1.25rem 1.75rem 1.25rem 2.25rem;
   color: #374151;
   font-style: normal;
   background: #f3f4f6;
@@ -1306,7 +1313,7 @@ body {
   background: #e5e7eb;
   border-left-color: #2563eb;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transform: translateY(-2px);
+  /* transform: translateY(-2px); */
 }
 
 #post-content blockquote p {
@@ -1345,9 +1352,10 @@ body {
 #post-content h4:has(+ ol),
 #post-content p:has(+ h2) {
   position: relative;
-  top: 2rem;
+  /* top: 2rem; */
   margin-bottom: 0;
-  padding: 1.25rem 1.5rem 0.75rem 3rem;
+  /* padding: 1.25rem 1.5rem 0.75rem 3rem; */
+  padding: 1rem 1.5rem 0.5rem 2.5rem;
   /* Increased padding for custom marker */
   background: rgba(249, 250, 251, 0.9);
   border-radius: 0.5rem 0.5rem 0 0;
@@ -1384,7 +1392,8 @@ body {
 #post-content p:has(+ ul):hover,
 #post-content p:has(+ ol):hover {
   background: rgba(239, 246, 255, 0.9);
-  transform: translateX(4px) scale(1.05);
+  /* transform: translateX(4px) scale(1.05); */
+  transform: translateX(6px);
 }
 
 #post-content p:has(+ ul):focus-visible,
@@ -1408,7 +1417,8 @@ body {
 #post-content h4:has(+ ul):hover,
 #post-content h4:has(+ ol):hover {
   background: rgba(239, 246, 255, 0.9);
-  transform: translateX(10px) scale(1.05);
+  /* transform: translateX(10px) scale(1.05); */
+  transform: translateX(6px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -1418,7 +1428,8 @@ body {
 #post-content h4+ul,
 #post-content h4+ol {
   margin-top: 0;
-  padding: 0.25rem 1.5rem 1.25rem 3rem;
+  /* padding: 0.25rem 1.5rem 1.25rem 3rem; */
+  padding: 0.25rem 1.5rem 1rem 2.5rem;
   background: rgba(249, 250, 251, 0.9);
   border-radius: 0 0 0.5rem 0.5rem;
   border-left: 3px solid #3b82f6;
@@ -1428,7 +1439,8 @@ body {
 
 /* Table Styling */
 #post-content {
-  margin: 2rem 0;
+  /* margin: 2rem 0; */
+  margin: clamp(1.5rem, 4vw, 2rem) 0;
   max-width: 100%;
   width: 100%;
 }
