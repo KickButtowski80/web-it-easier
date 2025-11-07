@@ -1829,7 +1829,10 @@ body {
 /* Hover effect for list items */
 .prose ul > li:hover,
 .prose ol > li:hover {
-  background-color: rgba(226, 232, 240, 0.7);
+  background-color: rgba(203, 213, 225, 0.8);
+  transform: translateX(4px);
+  box-shadow: 2px 0 0 0 #3b82f6;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Dark mode adjustments */
@@ -1848,7 +1851,10 @@ body {
 
 .dark .prose ul > li:hover,
 .dark .prose ol > li:hover {
-  background-color: rgba(51, 65, 85, 0.5);
+  background-color: rgba(71, 85, 105, 0.6);
+  transform: translateX(4px);
+  box-shadow: 2px 0 0 0 #60a5fa;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark .prose ul > li::before {
