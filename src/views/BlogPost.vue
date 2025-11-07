@@ -704,9 +704,6 @@ onUnmounted(() => {
   }
 });
 
-function deslugify(slug) {
-  return slug.replace(/-/g, ' ');
-}
 
 </script>
 <!-- Externalized styles -->
