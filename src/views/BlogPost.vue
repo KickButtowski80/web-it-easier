@@ -1777,36 +1777,94 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Base list styling */
+.prose ul,
+.prose ol {
+  margin: 1.25rem 0;
+  padding: 0.75rem 1.25rem 0.75rem 1.75rem;
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Unordered list specific */
 .prose ul {
   list-style: none;
-  margin: 1.5rem 0;
-  padding: 1.5rem;
-  background-color: #e2e8f0;
-  border-radius: 0.5rem;
-  box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 0, 0, 0.1);
 }
 
-.prose ul>li {
+/* Ordered list specific */
+.prose ol {
+  list-style-type: decimal;
+  padding-left: 2.5rem;
+}
+
+/* Nested lists */
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+  margin: 0.75rem 0;
+  padding: 0.5rem 0.75rem 0.5rem 1.5rem;
+  background-color: rgba(241, 245, 249, 0.5);
+  box-shadow: none;
+}
+
+/* List items */
+.prose ul > li,
+.prose ol > li {
   position: relative;
-  padding: 0.5rem 0.5rem 0.5rem 2rem;
-  line-height: 1.6;
+  padding: 0.4rem 0.5rem 0.4rem 1.75rem;
+  line-height: 1.7;
   border-radius: 0.25rem;
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
 }
 
-.dark .prose ul {
+/* Remove bottom margin from last list item */
+.prose ul > li:last-child,
+.prose ol > li:last-child {
+  margin-bottom: 0;
+}
+
+/* Hover effect for list items */
+.prose ul > li:hover,
+.prose ol > li:hover {
+  background-color: rgba(226, 232, 240, 0.7);
+}
+
+/* Dark mode adjustments */
+.dark .prose ul,
+.dark .prose ol {
   background-color: #1e293b;
-  box-shadow: 0 0.125rem 0.25rem 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
 }
 
-.prose ul>li::before {
+.dark .prose ul ul,
+.dark .prose ol ol,
+.dark .prose ul ol,
+.dark .prose ol ul {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+.dark .prose ul > li:hover,
+.dark .prose ol > li:hover {
+  background-color: rgba(51, 65, 85, 0.5);
+}
+
+.dark .prose ul > li::before {
+  color: #60a5fa;
+}
+
+/* Custom bullet for unordered lists */
+.prose ul > li::before {
   content: '•';
   position: absolute;
-  left: 0;
+  left: 0.5rem;
   color: #3b82f6;
   font-weight: bold;
-  font-size: 1.2em;
-  line-height: 1.2;
+  font-size: 1.4em;
+  line-height: 1.3;
+  transition: color 0.2s ease;
 }
 
 .prose ul ul {
