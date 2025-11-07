@@ -1,6 +1,6 @@
 
 @media (min-width: 1024px) {
-  .container.blog-container {
+  .blog-container {
     display: grid;
     grid-template-columns: 1fr 300px;
     gap: 2rem;

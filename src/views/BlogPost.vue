@@ -1,28 +1,31 @@
 <template>
 
   <section class="blog-post-section relative py-28">
-    <!-- Top diagonal hero decorations with enhanced design -->
-    <div class="blog-hero-pattern blog-hero-pattern--left" aria-hidden="true"></div>
-    <div class="blog-hero-pattern blog-hero-pattern--center" aria-hidden="true"></div>
-    <div class="blog-hero-pattern blog-hero-pattern--right" aria-hidden="true"></div>
-    
-    <!-- Floating geometric shapes -->
-    <div class="blog-geometric blog-geometric--triangle" aria-hidden="true"></div>
-    <div class="blog-geometric blog-geometric--hexagon" aria-hidden="true"></div>
-    <div class="blog-geometric blog-geometric--circle" aria-hidden="true"></div>
-    
-    <!-- Animated gradient orbs -->
-    <div class="blog-gradient-orb blog-gradient-orb--primary" aria-hidden="true"></div>
-    <div class="blog-gradient-orb blog-gradient-orb--secondary" aria-hidden="true"></div>
-    <div class="blog-gradient-orb blog-gradient-orb--tertiary" aria-hidden="true"></div>
-    
-    <!-- Side accent panels -->
-    <div class="blog-side-panel blog-side-panel--left" aria-hidden="true"></div>
-    <div class="blog-side-panel blog-side-panel--right" aria-hidden="true"></div>
-    
-    <!-- Bottom anchored tilted box -->
-    <div class="blog-footer-pattern blog-footer-pattern--left" aria-hidden="true"></div>
-    <div class="blog-footer-pattern blog-footer-pattern--right" aria-hidden="true"></div>
+    <!-- Bounded decorative layer -->
+    <div class="blog-deco-layer" aria-hidden="true">
+      <!-- Top diagonal hero decorations with enhanced design -->
+      <div class="blog-hero-pattern blog-hero-pattern--left"></div>
+      <div class="blog-hero-pattern blog-hero-pattern--center"></div>
+      <div class="blog-hero-pattern blog-hero-pattern--right"></div>
+      
+      <!-- Floating geometric shapes -->
+      <div class="blog-geometric blog-geometric--triangle"></div>
+      <div class="blog-geometric blog-geometric--hexagon"></div>
+      <div class="blog-geometric blog-geometric--circle"></div>
+      
+      <!-- Animated gradient orbs -->
+      <div class="blog-gradient-orb blog-gradient-orb--primary"></div>
+      <div class="blog-gradient-orb blog-gradient-orb--secondary"></div>
+      <div class="blog-gradient-orb blog-gradient-orb--tertiary"></div>
+      
+      <!-- Side accent panels -->
+      <div class="blog-side-panel blog-side-panel--left"></div>
+      <div class="blog-side-panel blog-side-panel--right"></div>
+      
+      <!-- Bottom anchored tilted box -->
+      <div class="blog-footer-pattern blog-footer-pattern--left"></div>
+      <div class="blog-footer-pattern blog-footer-pattern--right"></div>
+    </div>
 
     <div class="container blog-container relative z-10 mx-auto px-4">
     <div class="blog-layout">
@@ -714,6 +717,15 @@ function deslugify(slug) {
 /* ======================================= */
 /* INNOVATIVE BLOG POST TILTED BOX DESIGN */
 /* ======================================= */
+
+/* Bounded decorative layer */
+.blog-deco-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* CSS Variables for consistent theming */
 .blog-post-section {
