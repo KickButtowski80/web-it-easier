@@ -1,8 +1,8 @@
 <template>
   <section
     id="hero"
-    class="bg-purple-500 h-[90vh] md:mt-[4.5rem] md:h-[40rem] text-white flex flex-col items-center justify-center
-     md:flex-row md:gap-20 md:text-9xl mx-auto diagonal"
+    class="h-[90vh] md:mt-[4.5rem] md:h-[40rem] text-white flex flex-col items-center justify-center
+     md:flex-row md:gap-20 md:text-9xl mx-auto diagonal relative overflow-hidden"
   >
     <div class="relative" style="perspective: 1000px">
       <div
@@ -49,10 +49,10 @@
       </div>
     </div>
     <div class="text-center">
-      <h1 class="text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan">
+      <h1 class="hero-slogan text-3xl md:text-4xl font-semibold md:leading-[4rem] opacity-0 animate-slogan text-slate-900 dark:text-slate-100">
         The Door to an easier digital future
       </h1>
-      <p class="font-thin text-xl opacity-0 animate-slogan-tagline">
+      <p class="hero-tagline font-thin text-xl opacity-0 animate-slogan-tagline text-slate-700 dark:text-slate-200">
         one website at a time
       </p>
     </div>
@@ -105,7 +105,33 @@ export default {
 .diagonal {
   position: relative;
   isolation: isolate;
-  background-image: linear-gradient(315deg, #7612e9, #c471ed, #f64f59);
+  --hero-primary: #7c3aed;
+  --hero-primary-soft: rgba(124, 58, 237, 0.28);
+  --hero-secondary: #a855f7;
+  --hero-secondary-soft: rgba(168, 85, 247, 0.24);
+  --hero-accent: #f472b6;
+  --hero-accent-soft: rgba(244, 114, 182, 0.32);
+  --hero-gold: rgba(255, 236, 204, 0.96);
+  --hero-blue: rgba(211, 164, 255, 0.35);
+  
+  background-image: linear-gradient(24deg, var(--hero-primary) 0%, var(--hero-secondary) 25%, var(--hero-accent) 62%, #fb7185 100%);
+  transition: background 0.3s ease, background-color 0.3s ease;
+}
+
+.dark .diagonal {
+  --hero-primary: #140a2d;
+  --hero-primary-soft: rgba(99, 102, 241, 0.42);
+  --hero-secondary: #27115a;
+  --hero-secondary-soft: rgba(192, 132, 252, 0.35);
+  --hero-accent: #4c1d95;
+  --hero-accent-soft: rgba(244, 114, 182, 0.24);
+  --hero-gold: rgba(255, 236, 204, 0.42);
+  --hero-blue: rgba(211, 164, 255, 0.35);
+  
+  background-image:
+    radial-gradient(circle at 14% 34%, var(--hero-gold) 0%, rgba(255, 236, 204, 0.12) 64%, rgba(255, 236, 204, 0) 80%),
+    radial-gradient(circle at 22% 18%, var(--hero-blue), rgba(211, 164, 255, 0) 78%),
+    linear-gradient(320deg, var(--hero-primary), var(--hero-secondary), var(--hero-accent));
 }
 
 .diagonal::before,
@@ -117,9 +143,52 @@ export default {
 }
 
 .diagonal::after {
-  bottom: -75px;
-  background: linear-gradient(-145deg, #7612e9, #c471ed, #f64f59);
-  transform: skewY(-538deg);
-  z-index: -2;
+  bottom: -110px;
+  height: 200px;
+  background: linear-gradient(45deg, var(--hero-primary-soft), var(--hero-secondary-soft), var(--hero-accent-soft));
+  transform: skewY(185deg);
+  opacity: 0.75;
+  z-index: 60;
+  pointer-events: none;
+  transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+.dark .diagonal::after {
+  background: linear-gradient(18deg,
+      var(--hero-primary-soft),
+      var(--hero-secondary-soft),
+      var(--hero-accent-soft));
+  opacity: 0.58;
+}
+
+.diagonal::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 -14rem 0;
+  height: 18rem;
+  background: linear-gradient(
+    174deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(245, 240, 255, 0.32) 24%,
+    rgba(196, 181, 253, 0.58) 52%,
+    rgba(144, 118, 220, 0.78) 74%,
+    rgba(78, 52, 145, 0.9) 100%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.95;
+  pointer-events: none;
+  z-index: -1;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.dark .diagonal::before {
+  background: linear-gradient(
+    176deg,
+    rgba(32, 6, 85, 0) 0%,
+    rgba(50, 14, 112, 0.16) 32%,
+    rgba(60, 20, 132, 0.38) 58%,
+    rgba(38, 18, 98, 0.66) 78%,
+    rgba(18, 8, 54, 0.88) 100%
+  );
 }
 </style>

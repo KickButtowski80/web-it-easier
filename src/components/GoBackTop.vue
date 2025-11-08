@@ -173,7 +173,7 @@ export default {
   cursor: pointer;
   display: inline-flex;
   position: fixed;
-  z-index: 2; 
+  z-index: 6; 
   isolation: isolate; /* Create new stacking context */
   bottom: 3.5rem;
   right: 1rem;
