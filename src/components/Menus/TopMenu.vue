@@ -27,8 +27,6 @@
           type="button"
           class="doorgroup"
           @click="isDark = !isDark"
-          @keydown.enter="isDark = !isDark"
-          @keydown.space="isDark = !isDark"
           :aria-pressed="isDark"
           aria-label="isDark ? 'Return to the night' : 'Step into the light'"
           :title="isDark ? 'Return to the night' : 'Step into the light'">
