@@ -2,7 +2,13 @@
   <section class="bg-purple-400 fixed top-0 
   w-full z-50 h-md-navbar-height" :class="{ 'bg-purple-950': isDark }">
     <div class="p-2 flex h-md-navbar-height items-center gap-4">
-      <span class="font-semibold text-5xl"> IT 🚪 </span>
+      <RouterLink
+        :to="{ name: 'Home' }"
+        class="font-semibold text-5xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:focus-visible:outline-indigo-300"
+        aria-label="Go to homepage"
+      >
+        IT 🚪
+      </RouterLink>
       <div class="flex items-center gap-4 ml-auto">
         <nav class="hidden md:flex md:items-center md:gap-6" aria-label="main">
           <RouterLink 
