@@ -28,7 +28,7 @@
           class="doorgroup"
           @click="isDark = !isDark"
           :aria-pressed="isDark"
-          aria-label="isDark ? 'Return to the night' : 'Step into the light'"
+          :aria-label="isDark ? 'Return to the night' : 'Step into the light'"
           :title="isDark ? 'Return to the night' : 'Step into the light'">
           <div
             class="doorway border-2 border-purple-500 bg-purple-200 transition-colors dark:border-indigo-200 dark:bg-indigo-900"
