@@ -27,7 +27,7 @@
           type="button"
           class="doorgroup"
           @click="isDark = !isDark"
-          :aria-pressed="isDark"
+          :aria-pressed="isDark ? 'true' : 'false'"
           :aria-label="isDark ? 'Return to the night' : 'Step into the light'"
           :title="isDark ? 'Return to the night' : 'Step into the light'">
           <div
