@@ -29,15 +29,15 @@
         <nav class="hidden md:flex md:items-center md:gap-6" aria-label="main">
           <RouterLink 
             :to="{ name: 'Home' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white"
+            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
           >Home</RouterLink>
           <RouterLink 
             :to="{ name: 'Blog' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white"
+            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
           >Blog</RouterLink>
           <RouterLink 
             :to="{ name: 'Home', hash: '#our-works' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white"
+            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
           >Our Works</RouterLink>
           <RouterLink
             :to="{ name: 'Home', hash: '#hire-us' }"
