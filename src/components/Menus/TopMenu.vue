@@ -228,6 +228,21 @@ watch(isDark, () => {
   box-shadow: 0 14px 24px -16px rgba(56, 189, 248, 0.65);
 }
 
+.brand-link:focus-visible .brand-link__icon-door {
+  transform: rotateY(45deg);
+}
+
+.brand-link:focus-visible .brand-link__badge {
+  box-shadow: 0 14px 24px -16px rgba(56, 189, 248, 0.65);
+}
+
+@media (hover: none) {
+  .brand-link:active .brand-link__icon-door,
+  .brand-link:focus-visible .brand-link__icon-door {
+    transform: rotateY(32deg);
+  }
+}
+
 .dark .brand-link {
   color: #e2e8f0;
   background: linear-gradient(135deg, rgba(30, 41, 59, 0.62), rgba(30, 41, 59, 0.35));
@@ -270,7 +285,7 @@ watch(isDark, () => {
 
 @media (prefers-reduced-motion: reduce) {
   .brand-link,
-  .brand-link__door,
+  .brand-link__icon-door,
   .brand-link__word--bottom {
     transition: none;
   }
@@ -280,7 +295,9 @@ watch(isDark, () => {
     box-shadow: 0 12px 24px -20px rgba(15, 23, 42, 0.45);
   }
 
-  .brand-link:hover .brand-link__door {
+  .brand-link:hover .brand-link__icon-door,
+  .brand-link:focus-visible .brand-link__icon-door,
+  .brand-link:active .brand-link__icon-door {
     transform: none;
   }
 
