@@ -146,7 +146,7 @@ watch(isDark, () => {
   border-radius: 0.15rem;
   transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
   transform: rotateY(0deg);
-  transform-origin: right center;
+  transform-origin: left center;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -164,7 +164,7 @@ watch(isDark, () => {
 
 .brand-link__icon-knob {
   position: absolute;
-  left: 18%;
+  right: 18%;
   top: 50%;
   width: 0.4rem;
   height: 0.4rem;
@@ -221,7 +221,7 @@ watch(isDark, () => {
 }
 
 .brand-link:hover .brand-link__icon-door {
-  transform: rotateY(-45deg);
+  transform: rotateY(45deg);
 }
 
 .brand-link:hover .brand-link__badge {
