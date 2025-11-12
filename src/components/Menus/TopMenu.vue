@@ -183,11 +183,8 @@ watch(isDark, () => {
   opacity: 1;
 }
 
-.brand-link:hover .brand-link__word {
-  opacity: 1;
-  transform: translateX(0);
-}
 
+.brand-link:hover .brand-link__word,
 .brand-link:focus-visible .brand-link__word {
   opacity: 1;
   transform: translateX(0);
@@ -196,11 +193,6 @@ watch(isDark, () => {
 .brand-link:hover .brand-link__icon-door,
 .brand-link:focus-visible .brand-link__icon-door {
   transform: rotateY(45deg);
-}
-
-.brand-link:focus-visible .brand-link__word {
-  opacity: 1;
-  transform: translateX(0);
 }
 
 @media (hover: none) {
