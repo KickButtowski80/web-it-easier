@@ -10,9 +10,9 @@
         <span class="brand-link__inner" aria-hidden="true" role="presentation">
           <span class="brand-link__brand">
             <span class="brand-link__icon" role="img" aria-label="Interactive door icon">
-              <span class="brand-link__icon-doorway">
-                <span class="brand-link__icon-door">
-                  <span class="brand-link__icon-knob"></span>
+              <span class="brand-link__icon-doorway" aria-hidden="true">
+                <span class="brand-link__icon-door" aria-hidden="true">
+                  <span class="brand-link__icon-knob" aria-hidden="true"></span>
                 </span>
               </span>
             </span>
@@ -94,6 +94,10 @@ watch(isDark, () => {
   align-items: center;
   justify-content: center;
   gap: 0;
+  --motion-fast: 0.28s ease;
+  --motion-medium: 0.4s ease;
+  --motion-slow: 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --motion-reveal: 0.5s ease;
   width: clamp(3.9rem, 5vw + 0.5rem, 4.5rem);
   height: clamp(3.9rem, 5vw + 0.5rem, 4.5rem);
   padding: clamp(0.35rem, 0.6vw + 0.2rem, 0.45rem);
@@ -105,11 +109,11 @@ watch(isDark, () => {
   letter-spacing: 0.08em;
   overflow: hidden;
   transition:
-    transform 0.28s ease,
-    box-shadow 0.28s ease,
-    background 0.28s ease,
-    width 0.4s ease,
-    padding 0.4s ease;
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast),
+    background var(--motion-fast),
+    width var(--motion-medium),
+    padding var(--motion-medium);
 }
 
 .brand-link:hover,
@@ -140,7 +144,9 @@ watch(isDark, () => {
   line-height: 1rem;
   max-width: 0;
   opacity: 0;
-  transition: max-width 0.45s ease, opacity 0.3s ease;
+  transition:
+    max-width var(--motion-medium),
+    opacity var(--motion-fast);
   overflow: hidden;
 }
 
@@ -150,7 +156,8 @@ watch(isDark, () => {
   text-shadow: 0 0.15rem 0.4rem rgba(59, 7, 100, 0.3);
   opacity: 0;
   transform: translateX(-100%);
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition: transform var(--motion-reveal), opacity var(--motion-reveal);
+  will-change: transform, opacity;
 }
 
 .brand-link__word--1 {
@@ -247,7 +254,7 @@ watch(isDark, () => {
   height: 100%;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(226, 232, 240, 0.42) 40%, rgba(167, 139, 250, 0.68) 68%, rgba(109, 76, 200, 0.82) 86%, rgba(59, 7, 100, 0.95) 100%);
   border-radius: 0.15rem;
-  transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: transform var(--motion-slow);
   transform: rotateY(0deg);
   transform-origin: left center;
   display: grid;
