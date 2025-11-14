@@ -1,6 +1,10 @@
 <template>
-  <section class="bg-purple-400 fixed top-0 
-  w-full z-50 h-md-navbar-height" :class="{ 'bg-purple-950': isDark }">
+  <section
+    ref="navbarEl"
+    class="bg-purple-400 fixed top-0 
+    w-full z-50 h-md-navbar-height"
+    :class="{ 'bg-purple-950': isDark }"
+  >
     <div class="p-2 flex h-md-navbar-height items-center gap-4">
       <RouterLink
         :to="{ name: 'Home' }"
@@ -28,20 +32,35 @@
         <nav class="hidden md:flex md:items-center md:gap-6" aria-label="main">
           <RouterLink 
             :to="{ name: 'Home' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            class="nav-link  rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            :class="{ 'nav-link--active': activeSection === 'home' }"
+            data-scrollspy-link="home"
+            :data-scrollspy-active="activeSection === 'home'"
           >Home</RouterLink>
-          <RouterLink 
-            :to="{ name: 'Blog' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
-          >Blog</RouterLink>
+   
           <RouterLink 
             :to="{ name: 'Home', hash: '#our-works' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            class="nav-link  rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            :class="{ 'nav-link--active': activeSection === 'our-works' }"
+            data-scrollspy-link="our-works"
+            :data-scrollspy-active="activeSection === 'our-works'"
           >Our Works</RouterLink>
           <RouterLink
             :to="{ name: 'Home', hash: '#hire-us' }"
-            class="rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
+            class="nav-link  nav-link--cta rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
+            :class="{ 'nav-link--active': activeSection === 'hire-us' }"
+            data-scrollspy-link="hire-us"
+            :data-scrollspy-active="activeSection === 'hire-us'"
           >Hire Us
+          </RouterLink>
+          <RouterLink 
+            :to="{ name: 'Blog' }" 
+            class="nav-link nav-link--blog rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:focus-visible:outline-indigo-300"
+            :class="{ 'nav-link--blog-active': isBlogRoute }"
+            data-scrollspy-ignore="true"
+          >
+            Blog
+            <span class="nav-link__glyph" aria-hidden="true">↗</span>
           </RouterLink>
         </nav>
         <button
@@ -68,11 +87,18 @@
   </section>
 </template>
 <script setup lang="js">
-import { RouterLink } from 'vue-router';
-import { ref, onMounted, watch } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue';
+import useSectionHighlight from '@/composables/useSectionHighlight.js';
 
 let isDark = ref(false);
+const route = useRoute();
+const isBlogRoute = computed(() => route.name === 'Blog');
+const navbarEl = ref(null);
 
+// Use section highlighting for Home, Our Works, and Hire Us sections
+const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(['home', 'our-works', 'hire-us']);
+console.log(activeSection.value)
 onMounted(() => {
   const stored = localStorage.getItem('theme');
   if (stored) {
@@ -81,11 +107,17 @@ onMounted(() => {
     isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
   document.documentElement.classList.toggle('dark', isDark.value);
+
+  startHighlighting();
 });
 
 watch(isDark, () => {
   document.documentElement.classList.toggle('dark', isDark.value);
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
+});
+
+onBeforeUnmount(() => {
+  stopHighlighting();
 });
 </script>
 <style scoped>
@@ -443,5 +475,46 @@ watch(isDark, () => {
 
 .dark .door {
   background: linear-gradient(180deg, rgba(148, 163, 184, 0.2) 0%, rgba(76, 29, 149, 0.85) 40%, rgba(59, 7, 100, 0.95) 100%);
+}
+
+/* Navigation link styles */
+.nav-link--active {
+  background-color: rgba(99, 102, 241, 0.2) !important;
+  color: rgb(79, 70, 229) !important;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15) !important;
+  border: 1px solid rgba(79, 70, 229, 0.3) !important;
+}
+
+.nav-link--blog.nav-link--blog-active {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+  color: rgb(22, 163, 74) !important;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+.nav-link__glyph {
+  font-size: 0.8em;
+  margin-left: 0.25rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.nav-link--blog:hover .nav-link__glyph {
+  opacity: 1;
+}
+
+/* Dark mode styles for active states */
+.dark .nav-link--section.nav-link--active {
+  background-color: rgba(139, 92, 246, 0.25) !important;
+  color: rgb(167, 139, 250) !important;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2) !important;
+  border: 1px solid rgba(139, 92, 246, 0.4) !important;
+}
+
+.dark .nav-link--blog.nav-link--blog-active {
+  background-color: rgba(74, 222, 128, 0.25) !important;
+  color: rgb(134, 239, 172) !important;
+  box-shadow: 0 2px 8px rgba(74, 222, 128, 0.2) !important;
+  border: 1px solid rgba(74, 222, 128, 0.4) !important;
 }
 </style>
