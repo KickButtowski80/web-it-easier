@@ -479,17 +479,31 @@ onBeforeUnmount(() => {
 
 /* Navigation link styles */
 .nav-link--active {
-  background-color: rgba(99, 102, 241, 0.2) !important;
-  color: rgb(79, 70, 229) !important;
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15) !important;
-  border: 1px solid rgba(79, 70, 229, 0.3) !important;
+  background-color: rgba(99, 102, 241, 0.14);
+  color: rgb(67, 56, 202);
+  box-shadow: 0 3px 8px rgba(79, 70, 229, 0.16);
+  border: 1px solid rgba(99, 102, 241, 0.28);
 }
 
 .nav-link--blog.nav-link--blog-active {
-  background-color: rgba(34, 197, 94, 0.2) !important;
-  color: rgb(22, 163, 74) !important;
-  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15) !important;
-  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  background-color: rgba(45, 212, 191, 0.12);
+  color: rgb(15, 118, 110);
+  box-shadow: 0 3px 8px rgba(13, 148, 136, 0.18);
+  border: 1px solid rgba(20, 184, 166, 0.32);
+}
+
+.dark .nav-link--active {
+  background-color: rgba(165, 180, 252, 0.22);
+  color: rgb(224, 231, 255);
+  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.35);
+  border: 1px solid rgba(129, 140, 248, 0.45);
+}
+
+.dark .nav-link--blog.nav-link--blog-active {
+  background-color: rgba(134, 239, 172, 0.25);
+  color: rgb(240, 253, 244);
+  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.38);
+  border: 1px solid rgba(134, 239, 172, 0.5);
 }
 
 .nav-link__glyph {
