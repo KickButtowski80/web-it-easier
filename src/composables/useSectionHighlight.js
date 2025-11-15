@@ -13,8 +13,7 @@ export default function useSectionHighlight(sectionIds = []) {
       threshold: [0.1, 0.3, 0.4, 0.5],
     };
 
-    observer = new IntersectionObserver((entries) => {
-      console.log('entries', entries);
+    observer = new IntersectionObserver((entries) => {    
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           visibleSections.set(entry.target.id, entry.intersectionRatio);
@@ -29,7 +28,6 @@ export default function useSectionHighlight(sectionIds = []) {
           curr[1] > prev[1] ? curr : prev
         );
         activeSection.value = mostVisible[0];
-        console.log('mostVisible', mostVisible, 'activeSection', activeSection.value);
       }
     }, options);
 
