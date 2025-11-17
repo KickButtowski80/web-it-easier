@@ -40,16 +40,36 @@
   </footer>
 </template>
 <script>
-import { computed } from 'vue';
+import { computed, watch, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import useSectionHighlight from '@/composables/useSectionHighlight.js';
 
 export default {
   props: ["hideIt"],
   setup() {
-    const { activeSection } = useSectionHighlight(['home', 'our-works', 'hire-us']);
+    const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(
+      ['home', 'our-works', 'hire-us'],
+      { autoStart: false }
+    );
     const route = useRoute();
     const isBlogRoute = computed(() => route.name === 'Blog');
+
+    watch(
+      () => route.name,
+      (name) => {
+        if (name === 'Blog') {
+          stopHighlighting();
+          activeSection.value = null;
+        } else {
+          startHighlighting();
+        }
+      },
+      { immediate: true }
+    );
+
+    onBeforeUnmount(() => {
+      stopHighlighting();
+    });
 
     return {
       activeSection,

@@ -97,8 +97,10 @@ const isBlogRoute = computed(() => route.name === 'Blog');
 const navbarEl = ref(null);
 
 // Use section highlighting for Home, Our Works, and Hire Us sections
-const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(['home', 'our-works', 'hire-us']);
-console.log(activeSection.value)
+const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(
+  ['home', 'our-works', 'hire-us'],
+  { autoStart: false }
+);
 onMounted(() => {
   const stored = localStorage.getItem('theme');
   if (stored) {
@@ -115,6 +117,19 @@ watch(isDark, () => {
   document.documentElement.classList.toggle('dark', isDark.value);
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
 });
+
+watch(
+  () => route.name,
+  (name) => {
+    if (name === 'Blog') {
+      stopHighlighting();
+      activeSection.value = null;
+    } else {
+      startHighlighting();
+    }
+  },
+  { immediate: true }
+);
 
 onBeforeUnmount(() => {
   stopHighlighting();
