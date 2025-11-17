@@ -1,6 +1,11 @@
 <template>
   <!-- Native button keeps semantics while the animation lives inside -->
-  <button type="button" class="doorgroup" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
+  <button type="button" class="
+   go-top-button
+  fixed z-50 isolate inline-flex cursor-pointer right-4 bottom-[6.5rem] md:bottom-14
+  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4
+  focus-visible:outline-purple-600 dark:focus-visible:outline-indigo-200
+" ref="doorGroup" @click="scrollToTop" aria-label="Go to top of page">
     <div class="doorway" ref="doorWay">
       <div id="openDoor" class="door" ref="door">
         <div ref="openDoor" class="mx-auto text-center mt-2 w-full h-full text-xl">
@@ -168,25 +173,8 @@ export default {
 .show {
   display: block;
 }
-
-.doorgroup {
-  cursor: pointer;
-  display: inline-flex;
-  position: fixed;
-  z-index: 6; 
-  isolation: isolate; /* Create new stacking context */
-  bottom: 3.5rem;
-  right: 1rem;
+.go-top-button {
   touch-action: manipulation;
-}
-
-.doorgroup:focus-visible {
-  outline: 3px solid #4f46e5;
-  outline-offset: 4px;
-}
-
-.dark .doorgroup:focus-visible {
-  outline-color: #c7d2fe;
 }
 
 .doorway {
@@ -194,8 +182,8 @@ export default {
   height: 110px;
   width: 66px;
   position: relative;
-  perspective: 200px;
   /* Apply perspective to the parent */
+  perspective: 200px;
 }
 
 .door {
