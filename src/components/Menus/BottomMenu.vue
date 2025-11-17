@@ -4,38 +4,39 @@
       :class="{ hidden: hideIt }"
       class="bottom-nav md:hidden flex items-stretch justify-between gap-2 px-3 py-3"
     >
-      <RouterLink
+      <DoorNavLink
         :to="{ name: 'Home' }"
         class="bottom-nav__link"
-        :class="{ 'bottom-nav__link--active': activeSection === 'home' }"
+        :active="activeSection === 'home'"
       >
         <span class="bottom-nav__icon" aria-hidden="true">🏠</span>
         <span class="bottom-nav__label">Home</span>
-      </RouterLink>
-      <RouterLink
+      </DoorNavLink>
+      <DoorNavLink
         :to="{ name: 'Home', hash: '#our-works' }"
         class="bottom-nav__link"
-        :class="{ 'bottom-nav__link--active': activeSection === 'our-works' }"
+        :active="activeSection === 'our-works'"
       >
         <span class="bottom-nav__icon" aria-hidden="true">🖥️</span>
         <span class="bottom-nav__label">Our Works</span>
-      </RouterLink>
-      <RouterLink
+      </DoorNavLink>
+      <DoorNavLink
         :to="{ name: 'Home', hash: '#hire-us' }"
         class="bottom-nav__link bottom-nav__link--cta"
-        :class="{ 'bottom-nav__link--active': activeSection === 'hire-us' }"
+        :active="activeSection === 'hire-us'"
       >
         <span class="bottom-nav__icon" aria-hidden="true">🔈</span>
         <span class="bottom-nav__label">Hire Us</span>
-      </RouterLink>
-      <RouterLink
+      </DoorNavLink>
+      <DoorNavLink
         :to="{ name: 'Blog' }"
-        class="bottom-nav__link bottom-nav__link--blog"
-        :class="{ 'bottom-nav__link--blog-active': isBlogRoute }"
+        class="bottom-nav__link"
+        :active="isBlogRoute"
+        variant="blog"
       >
         <span class="bottom-nav__icon" aria-hidden="true">📝</span>
         <span class="bottom-nav__label">Blog</span>
-      </RouterLink>
+      </DoorNavLink>
     </nav>
   </footer>
 </template>
@@ -43,8 +44,12 @@
 import { computed, watch, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import useSectionHighlight from '@/composables/useSectionHighlight.js';
+import DoorNavLink from '@/components/Menus/DoorNavLink.vue';
 
 export default {
+  components: {
+    DoorNavLink,
+  },
   props: ["hideIt"],
   setup() {
     const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(
@@ -108,58 +113,8 @@ export default {
     color 0.2s ease,
     transform 0.3s ease;
 }
-
-.bottom-nav__link::after {
-  content: "";
-  position: absolute;
-  inset: 0.15rem;
-  border-radius: 0.75rem;
-  opacity: 0.15;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(99, 102, 241, 0.12));
-  border: 1px solid rgba(99, 102, 241, 0.35);
-  transform-origin: left center;
-  transform: perspective(120px) rotateY(0deg);
-  transition: transform 0.35s ease, opacity 0.2s ease;
-  pointer-events: none;
-}
-
-.bottom-nav__link::before {
-  content: "";
-  position: absolute;
-  inset: -0.1rem;
-  border-radius: inherit;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  opacity: 0.35;
-  pointer-events: none;
-}
-
-.bottom-nav__link--active,
-.bottom-nav__link--blog-active {
-  color: #ffffff;
-  transform: translateY(-2px);
-}
-
-.bottom-nav__link--active::after,
-.bottom-nav__link--blog-active::after {
-  opacity: 0.9;
-  transform: perspective(120px) rotateY(-45deg);
-}
-
 .bottom-nav__link--cta {
   border: 1px solid rgba(248, 250, 252, 0.3);
-}
-
-.bottom-nav__link--blog {
-  color: #ccfbf1;
-}
-
-.bottom-nav__link--blog::after {
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.25), rgba(59, 130, 246, 0.2));
-  border-color: rgba(20, 184, 166, 0.4);
-}
-
-.bottom-nav__link--blog-active {
-  color: #d1fae5;
 }
 
 .bottom-nav__label {
@@ -178,14 +133,6 @@ export default {
 
 .dark .bottom-nav__link {
   color: #c7d2fe;
-}
-
-.dark .bottom-nav__link--active {
-  color: #f4f3ff;
-}
-
-.dark .bottom-nav__link--blog-active {
-  color: #ecfdf5;
 }
 
 .dark .bottom-nav__link--cta {

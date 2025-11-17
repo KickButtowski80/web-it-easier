@@ -30,38 +30,49 @@
       </RouterLink>
       <div class="flex items-center gap-4 ml-auto">
         <nav class="hidden md:flex md:items-center md:gap-6" aria-label="main">
-          <RouterLink 
-            :to="{ name: 'Home' }" 
-            class="nav-link  rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
-            :class="{ 'nav-link--active': activeSection === 'home' }"
+          <DoorNavLink
+            :to="{ name: 'Home' }"
+            class="nav-link rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            :active="activeSection === 'home'"
+            variant="top"
             data-scrollspy-link="home"
             :data-scrollspy-active="activeSection === 'home'"
-          >Home</RouterLink>
-   
-          <RouterLink 
-            :to="{ name: 'Home', hash: '#our-works' }" 
-            class="nav-link  rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
-            :class="{ 'nav-link--active': activeSection === 'our-works' }"
+          >
+            Home
+          </DoorNavLink>
+
+          <DoorNavLink
+            :to="{ name: 'Home', hash: '#our-works' }"
+            class="nav-link rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            :active="activeSection === 'our-works'"
+            variant="top"
             data-scrollspy-link="our-works"
             :data-scrollspy-active="activeSection === 'our-works'"
-          >Our Works</RouterLink>
-          <RouterLink
+          >
+            Our Works
+          </DoorNavLink>
+
+          <DoorNavLink
             :to="{ name: 'Home', hash: '#hire-us' }"
-            class="nav-link  nav-link--cta rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
-            :class="{ 'nav-link--active': activeSection === 'hire-us' }"
+            class="nav-link nav-link--cta rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
+            :active="activeSection === 'hire-us'"
+            variant="top"
             data-scrollspy-link="hire-us"
             :data-scrollspy-active="activeSection === 'hire-us'"
-          >Hire Us
-          </RouterLink>
-          <RouterLink 
-            :to="{ name: 'Blog' }" 
+          >
+            Hire Us
+          </DoorNavLink>
+
+          <DoorNavLink
+            :to="{ name: 'Blog' }"
             class="nav-link nav-link--blog rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:focus-visible:outline-indigo-300"
-            :class="{ 'nav-link--blog-active': isBlogRoute }"
+            :active="isBlogRoute"
+            variant="blog"
             data-scrollspy-ignore="true"
           >
             Blog
             <span class="nav-link__glyph" aria-hidden="true">↗</span>
-          </RouterLink>
+          </DoorNavLink>
         </nav>
         <button
           type="button"
@@ -89,6 +100,7 @@
 <script setup lang="js">
 import { RouterLink, useRoute } from 'vue-router';
 import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue';
+import DoorNavLink from '@/components/Menus/DoorNavLink.vue';
 import useSectionHighlight from '@/composables/useSectionHighlight.js';
 
 let isDark = ref(false);
@@ -493,34 +505,6 @@ onBeforeUnmount(() => {
 }
 
 /* Navigation link styles */
-.nav-link--active {
-  background-color: rgba(99, 102, 241, 0.14);
-  color: rgb(67, 56, 202);
-  box-shadow: 0 3px 8px rgba(79, 70, 229, 0.16);
-  border: 1px solid rgba(99, 102, 241, 0.28);
-}
-
-.nav-link--blog.nav-link--blog-active {
-  background-color: rgba(45, 212, 191, 0.12);
-  color: rgb(15, 118, 110);
-  box-shadow: 0 3px 8px rgba(13, 148, 136, 0.18);
-  border: 1px solid rgba(20, 184, 166, 0.32);
-}
-
-.dark .nav-link--active {
-  background-color: rgba(165, 180, 252, 0.22);
-  color: rgb(224, 231, 255);
-  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.35);
-  border: 1px solid rgba(129, 140, 248, 0.45);
-}
-
-.dark .nav-link--blog.nav-link--blog-active {
-  background-color: rgba(134, 239, 172, 0.25);
-  color: rgb(240, 253, 244);
-  box-shadow: 0 4px 12px rgba(74, 222, 128, 0.38);
-  border: 1px solid rgba(134, 239, 172, 0.5);
-}
-
 .nav-link__glyph {
   font-size: 0.8em;
   margin-left: 0.25rem;
@@ -530,20 +514,5 @@ onBeforeUnmount(() => {
 
 .nav-link--blog:hover .nav-link__glyph {
   opacity: 1;
-}
-
-/* Dark mode styles for active states */
-.dark .nav-link--section.nav-link--active {
-  background-color: rgba(139, 92, 246, 0.25) !important;
-  color: rgb(167, 139, 250) !important;
-  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2) !important;
-  border: 1px solid rgba(139, 92, 246, 0.4) !important;
-}
-
-.dark .nav-link--blog.nav-link--blog-active {
-  background-color: rgba(74, 222, 128, 0.25) !important;
-  color: rgb(134, 239, 172) !important;
-  box-shadow: 0 2px 8px rgba(74, 222, 128, 0.2) !important;
-  border: 1px solid rgba(74, 222, 128, 0.4) !important;
 }
 </style>
