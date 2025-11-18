@@ -4,7 +4,10 @@
     class="door-nav-link"
     :class="computedClasses"
   >
-    <slot />
+    <span class="door-nav-link__label">
+      <slot />
+    </span>
+    <span class="door-nav-link__knob" aria-hidden="true"></span>
   </RouterLink>
 </template>
 
@@ -41,6 +44,7 @@ const computedClasses = computed(() => ({
 .door-nav-link {
   position: relative;
   border-radius: 0.95rem;
+  border: 1px solid transparent;
   overflow: visible; /* Allow 3D door to extend beyond bounds */
   transition:
     color 0.2s ease,
@@ -49,19 +53,51 @@ const computedClasses = computed(() => ({
     box-shadow 0.2s ease;
 }
 
+.door-nav-link__label {
+  position: relative;
+  z-index: 1; /* keep text above the glass door panel */
+}
+
+.door-nav-link__knob {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: radial-gradient(circle,
+    rgba(253, 224, 71, 0.95),
+    rgba(251, 191, 36, 0.9) 50%,
+    rgba(217, 119, 6, 0.85) 100%);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.6);
+  box-shadow: 0 0 0 rgba(253, 224, 71, 0);
+  z-index: 2; /* ensure knob is above glass and label */
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
 .door-nav-link::after {
   content: "";
   position: absolute;
-  inset: 0.25rem 0.35rem;
+  inset: 0.18rem 0.28rem;
   border-radius: 0.9rem;
   opacity: 0;
-  background: linear-gradient(90deg, rgba(250, 250, 255, 0.35), rgba(191, 219, 254, 0.18), rgba(129, 140, 248, 0));
-  border: none;
+  background: linear-gradient(135deg,
+    rgba(168, 85, 247, 0.35),   /* soft purple near the hinge */
+    rgba(255, 255, 255, 0.16));
+  border: none; /* no inner outline, outer border handled by .door-nav-link */
+  backdrop-filter: blur(10px);
   /* CONSISTENT door effect: always open from left */
   transform-origin: left center;
-  transform: scaleX(0) translateX(-30%);
-  transition: opacity 0.15s ease;
+  transform: scaleX(0.4) translateX(-20%);
+  transition:
+    opacity 0.25s ease,
+    transform 0.4s ease;
   pointer-events: none;
+  z-index: 0;
 }
 
 .door-nav-link::before {
@@ -85,18 +121,30 @@ const computedClasses = computed(() => ({
 .door-nav-link--active,
 .door-nav-link--blog-active,
 .door-nav-link--top-active {
-  color: #ffffff;
+  color: #f5f3ff; /* soft but slightly brighter */
   transform: translateY(-1px);
-  background: radial-gradient(circle at left, rgba(239, 246, 255, 0.24), transparent 70%);
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.3);
+  background: radial-gradient(circle at left,
+    rgba(168, 85, 247, 0.45),   /* color residue on left */
+    rgba(196, 181, 253, 0.32) 50%,
+    rgba(255, 255, 255, 0.06) 85%);
+  box-shadow: 0 14px 30px rgba(76, 29, 149, 0.45);
+  border-color: rgba(255, 255, 255, 0.95);
+}
+
+.door-nav-link--active .door-nav-link__knob,
+.door-nav-link--blog-active .door-nav-link__knob,
+.door-nav-link--top-active .door-nav-link__knob,
+.door-nav-link--cta.door-nav-link--active .door-nav-link__knob {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+  box-shadow: 0 0 0.55rem rgba(253, 224, 71, 0.9);
 }
 
 .door-nav-link--active::after,
 .door-nav-link--blog-active::after,
 .door-nav-link--top-active::after {
   opacity: 1;
-  /* Same door opening angle for all variants */
-  animation: nav-door-beam 0.7s ease-out forwards;
+  transform: scaleX(1) translateX(0);
 }
 
 .door-nav-link--active::before,
@@ -109,6 +157,25 @@ const computedClasses = computed(() => ({
 
 .door-nav-link--blog {
   color: #ccfbf1;
+}
+
+/* CTA variant: warmer inner door colours for "Hire Us" */
+.door-nav-link--cta::before {
+  background: linear-gradient(180deg, rgba(251, 191, 36, 0.8), rgba(244, 114, 182, 0.95));
+  box-shadow: 0 0 0.45rem rgba(251, 191, 36, 0.85);
+}
+
+.door-nav-link--cta::after {
+  background: linear-gradient(130deg,
+    rgba(251, 191, 36, 0.32),
+    rgba(244, 114, 182, 0.4),
+    rgba(196, 181, 253, 0.25));
+}
+
+.door-nav-link--cta.door-nav-link--active {
+  background: linear-gradient(135deg,
+    rgba(251, 191, 36, 0.3),
+    rgba(244, 114, 182, 0.85));
 }
 
 .door-nav-link--blog::after {
@@ -171,15 +238,15 @@ const computedClasses = computed(() => ({
 @keyframes nav-door-beam {
   0% {
     opacity: 0;
-    transform: scaleX(0) translateX(-30%);
+    transform: scaleX(0.4) translateX(-20%);
   }
   40% {
     opacity: 0.9;
-    transform: scaleX(0.9) translateX(0);
+    transform: scaleX(1) translateX(0);
   }
   100% {
-    opacity: 0;
-    transform: scaleX(1.1) translateX(5%);
+    opacity: 0.9;
+    transform: scaleX(1) translateX(0);
   }
 }
 </style>

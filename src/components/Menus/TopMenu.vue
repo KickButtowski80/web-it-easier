@@ -56,7 +56,7 @@
             :to="{ name: 'Home', hash: '#hire-us' }"
             class="nav-link nav-link--cta rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
             :active="activeSection === 'hire-us'"
-            variant="top"
+            variant="cta"
             data-scrollspy-link="hire-us"
             :data-scrollspy-active="activeSection === 'hire-us'"
           >
