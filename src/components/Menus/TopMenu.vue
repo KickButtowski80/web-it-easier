@@ -1,6 +1,10 @@
 <template>
-  <section class="bg-purple-400 fixed top-0 
-  w-full z-50 h-md-navbar-height" :class="{ 'bg-purple-950': isDark }">
+  <section
+    ref="navbarEl"
+    class="bg-purple-400 fixed top-0 
+    w-full z-50 h-md-navbar-height"
+    :class="{ 'bg-purple-950': isDark }"
+  >
     <div class="p-2 flex h-md-navbar-height items-center gap-4">
       <RouterLink
         :to="{ name: 'Home' }"
@@ -26,23 +30,49 @@
       </RouterLink>
       <div class="flex items-center gap-4 ml-auto">
         <nav class="hidden md:flex md:items-center md:gap-6" aria-label="main">
-          <RouterLink 
-            :to="{ name: 'Home' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
-          >Home</RouterLink>
-          <RouterLink 
-            :to="{ name: 'Blog' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
-          >Blog</RouterLink>
-          <RouterLink 
-            :to="{ name: 'Home', hash: '#our-works' }" 
-            class="rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
-          >Our Works</RouterLink>
-          <RouterLink
+          <DoorNavLink
+            :to="{ name: 'Home' }"
+            class="nav-link rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            :active="activeSection === 'home'"
+            variant="top"
+            data-scrollspy-link="home"
+            :data-scrollspy-active="activeSection === 'home'"
+          >
+            Home
+          </DoorNavLink>
+
+          <DoorNavLink
+            :to="{ name: 'Home', hash: '#our-works' }"
+            class="nav-link rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors hover:bg-purple-100 hover:text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:hover:bg-indigo-800 dark:hover:text-white dark:focus-visible:outline-indigo-300"
+            :active="activeSection === 'our-works'"
+            variant="top"
+            data-scrollspy-link="our-works"
+            :data-scrollspy-active="activeSection === 'our-works'"
+          >
+            Work
+          </DoorNavLink>
+
+          <DoorNavLink
             :to="{ name: 'Home', hash: '#hire-us' }"
-            class="rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
-          >Hire Us
-          </RouterLink>
+            class="nav-link nav-link--cta rounded-xl border border-purple-900 bg-purple-900 px-6 py-4 text-white text-2xl font-semibold transition-colors hover:bg-purple-500 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:border-indigo-500 dark:bg-indigo-700 dark:hover:bg-indigo-600 dark:hover:text-white"
+            :active="activeSection === 'hire-us'"
+            variant="cta"
+            data-scrollspy-link="hire-us"
+            :data-scrollspy-active="activeSection === 'hire-us'"
+          >
+            Hire Us
+          </DoorNavLink>
+
+          <DoorNavLink
+            :to="{ name: 'Blog' }"
+            class="nav-link nav-link--blog rounded-xl px-5 py-2 text-2xl font-semibold text-purple-900 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-200 dark:text-indigo-100 dark:focus-visible:outline-indigo-300"
+            :active="isBlogRoute"
+            variant="blog"
+            data-scrollspy-ignore="true"
+          >
+            Blog
+            <span class="nav-link__glyph" aria-hidden="true">↗</span>
+          </DoorNavLink>
         </nav>
         <button
           type="button"
@@ -68,11 +98,21 @@
   </section>
 </template>
 <script setup lang="js">
-import { RouterLink } from 'vue-router';
-import { ref, onMounted, watch } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue';
+import DoorNavLink from '@/components/Menus/DoorNavLink.vue';
+import useSectionHighlight from '@/composables/useSectionHighlight.js';
 
 let isDark = ref(false);
+const route = useRoute();
+const isBlogRoute = computed(() => route.name === 'Blog');
+const navbarEl = ref(null);
 
+// Use section highlighting for Home, Our Works, and Hire Us sections
+const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(
+  ['home', 'our-works', 'hire-us'],
+  { autoStart: false }
+);
 onMounted(() => {
   const stored = localStorage.getItem('theme');
   if (stored) {
@@ -81,11 +121,30 @@ onMounted(() => {
     isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
   document.documentElement.classList.toggle('dark', isDark.value);
+
+  startHighlighting();
 });
 
 watch(isDark, () => {
   document.documentElement.classList.toggle('dark', isDark.value);
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
+});
+
+watch(
+  () => route.name,
+  (name) => {
+    if (name === 'Blog') {
+      stopHighlighting();
+      activeSection.value = null;
+    } else {
+      startHighlighting();
+    }
+  },
+  { immediate: true }
+);
+
+onBeforeUnmount(() => {
+  stopHighlighting();
 });
 </script>
 <style scoped>
@@ -443,5 +502,18 @@ watch(isDark, () => {
 
 .dark .door {
   background: linear-gradient(180deg, rgba(148, 163, 184, 0.2) 0%, rgba(76, 29, 149, 0.85) 40%, rgba(59, 7, 100, 0.95) 100%);
+}
+
+/* Navigation link styles */
+.nav-link__glyph {
+  font-size: 0.8em;
+  margin-left: 0.25rem;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+  display: inline-block;
+}
+
+.nav-link--blog:hover .nav-link__glyph {
+  opacity: 1;
 }
 </style>
