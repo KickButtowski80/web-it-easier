@@ -1781,10 +1781,17 @@ body {
 .prose ul,
 .prose ol {
   margin: 1.25rem 0;
-  padding: 0.75rem 1.25rem 0.75rem 1.75rem;
+  padding: 0.75rem 1.25rem 0.75rem 1.5rem;
   background-color: #f1f5f9;
   border-radius: 0.5rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  list-style-position: outside;
+}
+
+/* Add breathing space when list follows paragraph */
+.prose p + ul,
+.prose p + ol {
+  margin-top: 1.75rem;
 }
 
 /* Unordered list specific */
@@ -1792,11 +1799,6 @@ body {
   list-style: none;
 }
 
-/* Ordered list specific */
-.prose ol {
-  list-style-type: decimal;
-  padding-left: 2.5rem;
-}
 
 /* Nested lists */
 .prose ul ul,
@@ -1809,6 +1811,11 @@ body {
   box-shadow: none;
 }
 
+/* Ordered list specific */
+.prose ol {
+  list-style-type: decimal;
+}
+
 /* List items */
 .prose ul > li,
 .prose ol > li {
@@ -1818,6 +1825,10 @@ body {
   border-radius: 0.25rem;
   transition: all 0.2s ease;
   margin-bottom: 0.25rem;
+}
+
+.prose ol > li {
+  padding-left: 0.6rem;
 }
 
 /* Remove bottom margin from last list item */
@@ -1873,24 +1884,14 @@ body {
   transition: color 0.2s ease;
 }
 
-.prose ul ul {
-  margin: 0.5rem 0 0.5rem 1.5rem;
-  padding-left: 1rem;
-}
 
 .prose ul ul>li::before {
   content: '◦';
   color: #60a5fa;
 }
 
-.prose ul>li:hover {
-  transform: translateX(2px);
-}
 
-.prose ul+p,
-.prose p+ul {
-  margin-top: 1.25rem;
-}
+
 
 #post-content :not(pre)>code {
   background-color: #e0e7ff;
@@ -1912,14 +1913,8 @@ body {
   }
 }
 
-.prose ul>li {
-  position: relative;
-  padding-left: 1.75rem;
-  text-indent: -0.5rem;
-}
-
 .prose ul>li:has(> code:first-child) {
-  padding-left: 0.5rem;
+  padding-left: 1.75rem;
   text-indent: 0;
 }
 
@@ -1930,7 +1925,7 @@ body {
 
 @media (max-width: 320px) {
   .prose ul>li:has(> code:first-child) {
-    padding-left: 0.25rem;
+    padding-left: 1.5rem;
   }
 
   .prose ul>li>code:first-child {
