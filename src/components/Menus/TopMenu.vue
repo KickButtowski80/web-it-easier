@@ -49,7 +49,7 @@
             data-scrollspy-link="our-works"
             :data-scrollspy-active="activeSection === 'our-works'"
           >
-            Our Works
+            Work
           </DoorNavLink>
 
           <DoorNavLink

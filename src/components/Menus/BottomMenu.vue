@@ -18,7 +18,7 @@
         :active="activeSection === 'our-works'"
       >
         <span class="bottom-nav__icon" aria-hidden="true">🖥️</span>
-        <span class="bottom-nav__label">Our Works</span>
+        <span class="bottom-nav__label">Work</span>
       </DoorNavLink>
       <DoorNavLink
         :to="{ name: 'Home', hash: '#hire-us' }"
@@ -26,7 +26,7 @@
         :active="activeSection === 'hire-us'"
       >
         <span class="bottom-nav__icon" aria-hidden="true">🔈</span>
-        <span class="bottom-nav__label">Hire Us</span>
+        <span class="bottom-nav__label">Hire&nbsp;Us</span>
       </DoorNavLink>
       <DoorNavLink
         :to="{ name: 'Blog' }"
