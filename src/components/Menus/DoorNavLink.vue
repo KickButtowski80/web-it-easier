@@ -60,10 +60,10 @@ const computedClasses = computed(() => ({
 
 .door-nav-link__knob {
   position: absolute;
-  right: 0.8rem;
+  right: 0.5rem;
   top: 50%;
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.6rem;
+  height: 0.6rem;
   border-radius: 999px;
   background: radial-gradient(circle,
     rgba(253, 224, 71, 0.95),
@@ -156,7 +156,7 @@ const computedClasses = computed(() => ({
 }
 
 .door-nav-link--blog {
-  color: #ccfbf1;
+  color: #0f766e; /* teal tone for blog label in light mode */
 }
 
 /* CTA variant: warmer inner door colors for "Hire Us" */
@@ -184,7 +184,13 @@ const computedClasses = computed(() => ({
 }
 
 .door-nav-link--blog-active {
-  color: #d1fae5;
+  color: #ecfdf5; /* minty active label */
+  background: radial-gradient(circle at left,
+    rgba(34, 197, 94, 0.55),
+    rgba(45, 212, 191, 0.42) 55%,
+    rgba(255, 255, 255, 0.08) 90%);
+  box-shadow: 0 14px 30px rgba(15, 118, 110, 0.45);
+  border-color: rgba(153, 246, 228, 0.95);
 }
 
 .dark .door-nav-link {
