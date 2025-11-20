@@ -1814,7 +1814,7 @@ body {
 /* Ordered list specific */
 .prose ol {
   list-style-type: decimal;
-  padding-left: 2.5rem;
+  padding-left: 2rem;
 }
 
 /* List items */
@@ -1826,6 +1826,10 @@ body {
   border-radius: 0.25rem;
   transition: all 0.2s ease;
   margin-bottom: 0.25rem;
+}
+
+.prose ol > li {
+  padding-left: 1rem;
 }
 
 /* Remove bottom margin from last list item */
