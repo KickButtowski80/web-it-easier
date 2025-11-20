@@ -159,23 +159,23 @@ const computedClasses = computed(() => ({
   color: #ccfbf1;
 }
 
-/* CTA variant: warmer inner door colours for "Hire Us" */
+/* CTA variant: warmer inner door colors for "Hire Us" */
 .door-nav-link--cta::before {
-  background: linear-gradient(180deg, rgba(251, 191, 36, 0.8), rgba(244, 114, 182, 0.95));
-  box-shadow: 0 0 0.45rem rgba(251, 191, 36, 0.85);
+  background: linear-gradient(180deg, rgba(129, 140, 248, 0.9), rgba(168, 85, 247, 0.98));
+  box-shadow: 0 0 0.55rem rgba(129, 140, 248, 0.95);
 }
 
 .door-nav-link--cta::after {
-  background: linear-gradient(130deg,
-    rgba(251, 191, 36, 0.32),
-    rgba(244, 114, 182, 0.4),
-    rgba(196, 181, 253, 0.25));
+  background: linear-gradient(135deg,
+    rgba(165, 180, 252, 0.45),
+    rgba(196, 181, 253, 0.42));
 }
 
 .door-nav-link--cta.door-nav-link--active {
-  background: linear-gradient(135deg,
-    rgba(251, 191, 36, 0.3),
-    rgba(244, 114, 182, 0.85));
+  background: radial-gradient(circle at left,
+    rgba(129, 140, 248, 0.55),
+    rgba(196, 181, 253, 0.42) 55%,
+    rgba(255, 255, 255, 0.08) 90%);
 }
 
 .door-nav-link--blog::after {
