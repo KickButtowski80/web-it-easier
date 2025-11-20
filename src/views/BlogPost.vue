@@ -1814,7 +1814,6 @@ body {
 /* Ordered list specific */
 .prose ol {
   list-style-type: decimal;
-  padding-left: 2rem;
 }
 
 /* List items */
