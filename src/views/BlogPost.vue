@@ -1781,7 +1781,7 @@ body {
 .prose ul,
 .prose ol {
   margin: 1.25rem 0;
-  padding: 0.75rem 1.25rem 0.75rem 2rem;
+  padding: 0.75rem 1.25rem 0.75rem 1.5rem;
   background-color: #f1f5f9;
   border-radius: 0.5rem;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -1829,7 +1829,7 @@ body {
 }
 
 .prose ol > li {
-  padding-left: 1rem;
+  padding-left: 0.6rem;
 }
 
 /* Remove bottom margin from last list item */
