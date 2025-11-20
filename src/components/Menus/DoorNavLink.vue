@@ -159,10 +159,10 @@ const computedClasses = computed(() => ({
 }
 
 .door-nav-link--blog {
-  color: #0f766e;
-  /* teal tone for blog label in light mode */
-  border: 1px solid green;
-  padding: 1rem;
+  /* Blog: elegant rose-pink pill that complements purple background */
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.95), rgba(219, 39, 119, 0.95));
+  border: 1px solid rgba(236, 72, 153, 0.85);
 }
 
 /* CTA variant: warmer inner door colors for "Hire Us" */
@@ -184,20 +184,15 @@ const computedClasses = computed(() => ({
       rgba(255, 255, 255, 0.08) 90%);
 }
 
-.door-nav-link--blog::after {
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.25), rgba(59, 130, 246, 0.2));
-  border-color: rgba(20, 184, 166, 0.4);
-}
-
 .door-nav-link--blog-active {
-  color: #ecfdf5;
-  /* minty active label */
+  /* Blog active: rose-pink glass door effect */
+  color: #ffffff;
   background: radial-gradient(circle at left,
-      rgba(34, 197, 94, 0.55),
-      rgba(45, 212, 191, 0.42) 55%,
-      rgba(255, 255, 255, 0.08) 90%);
-  box-shadow: 0 14px 30px rgba(15, 118, 110, 0.45);
-  border-color: rgba(153, 246, 228, 0.95);
+      rgba(236, 72, 153, 0.75),
+      rgba(244, 114, 182, 0.62) 55%,
+      rgba(255, 255, 255, 0.12) 90%);
+  box-shadow: 0 14px 30px rgba(219, 39, 119, 0.55);
+  border-color: rgba(244, 114, 182, 0.95);
 }
 
 .dark .door-nav-link {

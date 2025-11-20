@@ -507,10 +507,10 @@ onBeforeUnmount(() => {
 /* Navigation link styles */
 .nav-link__glyph {
   font-size: 0.8em;
-  margin-left: 0.15rem;
-  margin-right: 0.35rem;
-  opacity: 0.7;
+  margin-left: 0.25rem;
+  opacity: 0.85;
   transition: opacity 0.2s ease;
+  display: inline-block;
 }
 
 .nav-link--blog:hover .nav-link__glyph {
