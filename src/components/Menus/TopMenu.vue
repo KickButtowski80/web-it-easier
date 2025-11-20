@@ -507,7 +507,8 @@ onBeforeUnmount(() => {
 /* Navigation link styles */
 .nav-link__glyph {
   font-size: 0.8em;
-  margin-left: 0.25rem;
+  margin-left: 0.15rem;
+  margin-right: 0.35rem;
   opacity: 0.7;
   transition: opacity 0.2s ease;
 }

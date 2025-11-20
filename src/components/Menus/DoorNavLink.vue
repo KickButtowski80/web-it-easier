@@ -1,9 +1,5 @@
 <template>
-  <RouterLink
-    :to="to"
-    class="door-nav-link"
-    :class="computedClasses"
-  >
+  <RouterLink :to="to" class="door-nav-link" :class="computedClasses">
     <span class="door-nav-link__label">
       <slot />
     </span>
@@ -45,7 +41,8 @@ const computedClasses = computed(() => ({
   position: relative;
   border-radius: 0.95rem;
   border: 1px solid transparent;
-  overflow: visible; /* Allow 3D door to extend beyond bounds */
+  overflow: visible;
+  /* Allow 3D door to extend beyond bounds */
   transition:
     color 0.2s ease,
     transform 0.2s ease,
@@ -55,7 +52,8 @@ const computedClasses = computed(() => ({
 
 .door-nav-link__label {
   position: relative;
-  z-index: 1; /* keep text above the glass door panel */
+  z-index: 1;
+  /* keep text above the glass door panel */
 }
 
 .door-nav-link__knob {
@@ -66,13 +64,14 @@ const computedClasses = computed(() => ({
   height: 0.6rem;
   border-radius: 999px;
   background: radial-gradient(circle,
-    rgba(253, 224, 71, 0.95),
-    rgba(251, 191, 36, 0.9) 50%,
-    rgba(217, 119, 6, 0.85) 100%);
+      rgba(253, 224, 71, 0.95),
+      rgba(251, 191, 36, 0.9) 50%,
+      rgba(217, 119, 6, 0.85) 100%);
   opacity: 0;
   transform: translateY(-50%) scale(0.6);
   box-shadow: 0 0 0 rgba(253, 224, 71, 0);
-  z-index: 2; /* ensure knob is above glass and label */
+  z-index: 2;
+  /* ensure knob is above glass and label */
   transition:
     opacity 0.25s ease,
     transform 0.25s ease,
@@ -86,9 +85,11 @@ const computedClasses = computed(() => ({
   border-radius: 0.9rem;
   opacity: 0;
   background: linear-gradient(135deg,
-    rgba(168, 85, 247, 0.35),   /* soft purple near the hinge */
-    rgba(255, 255, 255, 0.16));
-  border: none; /* no inner outline, outer border handled by .door-nav-link */
+      rgba(168, 85, 247, 0.35),
+      /* soft purple near the hinge */
+      rgba(255, 255, 255, 0.16));
+  border: none;
+  /* no inner outline, outer border handled by .door-nav-link */
   backdrop-filter: blur(10px);
   /* CONSISTENT door effect: always open from left */
   transform-origin: left center;
@@ -121,12 +122,14 @@ const computedClasses = computed(() => ({
 .door-nav-link--active,
 .door-nav-link--blog-active,
 .door-nav-link--top-active {
-  color: #f5f3ff; /* soft but slightly brighter */
+  color: #f5f3ff;
+  /* soft but slightly brighter */
   transform: translateY(-1px);
   background: radial-gradient(circle at left,
-    rgba(168, 85, 247, 0.45),   /* color residue on left */
-    rgba(196, 181, 253, 0.32) 50%,
-    rgba(255, 255, 255, 0.06) 85%);
+      rgba(168, 85, 247, 0.45),
+      /* color residue on left */
+      rgba(196, 181, 253, 0.32) 50%,
+      rgba(255, 255, 255, 0.06) 85%);
   box-shadow: 0 14px 30px rgba(76, 29, 149, 0.45);
   border-color: rgba(255, 255, 255, 0.95);
 }
@@ -156,7 +159,10 @@ const computedClasses = computed(() => ({
 }
 
 .door-nav-link--blog {
-  color: #0f766e; /* teal tone for blog label in light mode */
+  color: #0f766e;
+  /* teal tone for blog label in light mode */
+  border: 1px solid green;
+  padding: 1rem;
 }
 
 /* CTA variant: warmer inner door colors for "Hire Us" */
@@ -167,15 +173,15 @@ const computedClasses = computed(() => ({
 
 .door-nav-link--cta::after {
   background: linear-gradient(135deg,
-    rgba(165, 180, 252, 0.45),
-    rgba(196, 181, 253, 0.42));
+      rgba(165, 180, 252, 0.45),
+      rgba(196, 181, 253, 0.42));
 }
 
 .door-nav-link--cta.door-nav-link--active {
   background: radial-gradient(circle at left,
-    rgba(129, 140, 248, 0.55),
-    rgba(196, 181, 253, 0.42) 55%,
-    rgba(255, 255, 255, 0.08) 90%);
+      rgba(129, 140, 248, 0.55),
+      rgba(196, 181, 253, 0.42) 55%,
+      rgba(255, 255, 255, 0.08) 90%);
 }
 
 .door-nav-link--blog::after {
@@ -184,11 +190,12 @@ const computedClasses = computed(() => ({
 }
 
 .door-nav-link--blog-active {
-  color: #ecfdf5; /* minty active label */
+  color: #ecfdf5;
+  /* minty active label */
   background: radial-gradient(circle at left,
-    rgba(34, 197, 94, 0.55),
-    rgba(45, 212, 191, 0.42) 55%,
-    rgba(255, 255, 255, 0.08) 90%);
+      rgba(34, 197, 94, 0.55),
+      rgba(45, 212, 191, 0.42) 55%,
+      rgba(255, 255, 255, 0.08) 90%);
   box-shadow: 0 14px 30px rgba(15, 118, 110, 0.45);
   border-color: rgba(153, 246, 228, 0.95);
 }
@@ -246,10 +253,12 @@ const computedClasses = computed(() => ({
     opacity: 0;
     transform: scaleX(0.4) translateX(-20%);
   }
+
   40% {
     opacity: 0.9;
     transform: scaleX(1) translateX(0);
   }
+
   100% {
     opacity: 0.9;
     transform: scaleX(1) translateX(0);
