@@ -160,7 +160,7 @@ const computedClasses = computed(() => ({
 
 .door-nav-link--blog {
   /* Blog: elegant rose-pink pill that complements purple background */
-  color: #ffffff;
+  color: #fee2f5;
   background: linear-gradient(135deg, rgba(236, 72, 153, 0.95), rgba(219, 39, 119, 0.95));
   border: 1px solid rgba(236, 72, 153, 0.85);
 }
