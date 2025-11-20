@@ -188,11 +188,11 @@ const computedClasses = computed(() => ({
   /* Blog active: rose-pink glass door effect */
   color: #ffffff;
   background: radial-gradient(circle at left,
-      rgba(236, 72, 153, 0.75),
-      rgba(244, 114, 182, 0.62) 55%,
-      rgba(255, 255, 255, 0.12) 90%);
-  box-shadow: 0 14px 30px rgba(219, 39, 119, 0.55);
-  border-color: rgba(244, 114, 182, 0.95);
+      rgba(236, 72, 153, 0.58),
+      rgba(244, 114, 182, 0.4) 55%,
+      rgba(255, 255, 255, 0.08) 90%);
+  box-shadow: 0 12px 26px rgba(219, 39, 119, 0.35);
+  border-color: rgba(244, 114, 182, 0.78);
 }
 
 .dark .door-nav-link {
