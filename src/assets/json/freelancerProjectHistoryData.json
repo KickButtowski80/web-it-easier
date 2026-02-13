@@ -20,23 +20,24 @@
       "privateRepo": true
     },
     {
-      "projectId": 2,
-      "image": "/images/acme-rocket.webp",
-      "imageAlt": "Acme Rocket screen shot picture",
-      "projectTitle": "Acme Rocket",
-      "clientName": "Acme Rocket",
-      "description": "Developed an informative static website for a imaginary rocket company aimed at helping its customer to  understand the services and types of rockets are offered.They're building rockets for the next century today. From the moon to Mars, Jupiter and beyond ...🚀 Think Acme Rockets. The website includes comprehensive information on various rocket models, and a user-friendly interface to facilitate easy navigation and access to resources of the company.",
-      "technologiesUsed": ["Vue 3.js", "JavaScript", "Tailwind.css", "HTML"],
+      "projectId": 5,
+      "image": "/images/salud-clinical.webp",
+      "imageAlt": "Salud Clinical Solutions website screenshot",
+      "projectTitle": "Salud Clinical Solutions",
+      "clientName": "Salud Clinical Solutions",
+      "description": "Connecting Behavioral and Mental Health providers with the roles that matter most. We specialize in behavioral and mental health locum tenens across California. From major metro areas to underserved communities, our team can help clinicians find the right fit. The website features a modern, professional design that effectively communicates their healthcare staffing services and helps clinicians find the right behavioral health roles quickly. The platform provides comprehensive resources for healthcare professionals seeking locum tenens opportunities, with detailed information about available positions, requirements, and the application process. The site emphasizes Salud Clinical's commitment to quality healthcare staffing and their expertise in matching qualified clinicians with appropriate healthcare facilities throughout California.",
+      "technologiesUsed": ["Parcel.js", "HTML", "CSS", "JavaScript"],
       "startDate": "",
       "endDate": "",
       "highlights": [
-        "Add animation to enhance user experience by make pages more dynamic and engaging",
-        "Mobile first design",
-        "Optimized website accessability and performance."
+        "Professional healthcare staffing website design",
+        "Mobile-responsive layout for healthcare professionals",
+        "Optimized for search engines and accessibility",
+        "Clean, modern UI focused on user experience"
       ],
-      "liveView": "https://acme-rockets-eight.vercel.app/#hero",
-      "codeView": "https://github.com/KickButtowski80/acme-rockets",
-      "privateRepo": false
+      "liveView": "https://saludclinical.com/",
+      "codeView": "",
+      "privateRepo": true
     },
     {
       "projectId": 3,
@@ -79,24 +80,23 @@
       "privateRepo": false
     },
     {
-      "projectId": 5,
-      "image": "/images/salud-clinical.webp",
-      "imageAlt": "Salud Clinical Solutions website screenshot",
-      "projectTitle": "Salud Clinical Solutions",
-      "clientName": "Salud Clinical Solutions",
-      "description": "Connecting Behavioral and Mental Health providers with the roles that matter most. We specialize in behavioral and mental health locum tenens across California. From major metro areas to underserved communities, our team can help clinicians find the right fit. The website features a modern, professional design that effectively communicates their healthcare staffing services and helps clinicians find the right behavioral health roles quickly. The platform provides comprehensive resources for healthcare professionals seeking locum tenens opportunities, with detailed information about available positions, requirements, and the application process. The site emphasizes Salud Clinical's commitment to quality healthcare staffing and their expertise in matching qualified clinicians with appropriate healthcare facilities throughout California.",
-      "technologiesUsed": ["Parcel.js", "HTML", "CSS", "JavaScript"],
+      "projectId": 2,
+      "image": "/images/acme-rocket.webp",
+      "imageAlt": "Acme Rocket screen shot picture",
+      "projectTitle": "Acme Rocket",
+      "clientName": "Acme Rocket",
+      "description": "Developed an informative static website for a imaginary rocket company aimed at helping its customer to  understand the services and types of rockets are offered.They're building rockets for the next century today. From the moon to Mars, Jupiter and beyond ...🚀 Think Acme Rockets. The website includes comprehensive information on various rocket models, and a user-friendly interface to facilitate easy navigation and access to resources of the company.",
+      "technologiesUsed": ["Vue 3.js", "JavaScript", "Tailwind.css", "HTML"],
       "startDate": "",
       "endDate": "",
       "highlights": [
-        "Professional healthcare staffing website design",
-        "Mobile-responsive layout for healthcare professionals",
-        "Optimized for search engines and accessibility",
-        "Clean, modern UI focused on user experience"
+        "Add animation to enhance user experience by make pages more dynamic and engaging",
+        "Mobile first design",
+        "Optimized website accessability and performance."
       ],
-      "liveView": "https://saludclinical.com/",
-      "codeView": "",
-      "privateRepo": true
+      "liveView": "https://acme-rockets-eight.vercel.app/#hero",
+      "codeView": "https://github.com/KickButtowski80/acme-rockets",
+      "privateRepo": false
     }
   ]
 }
