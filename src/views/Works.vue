@@ -5,8 +5,7 @@
     <div class="works-section__decor works-section__decor--grid" aria-hidden="true"></div>
     <div class="works-section__divider works-section__divider--top" aria-hidden="true"></div>
     <div class="container relative z-10 mx-auto px-4 lg:px-8">
-      <p class="works-kicker">Featured Projects</p>
-      <h1 class="works-title">Our Works</h1>
+      <h1 class="works-title">Featured Works</h1>
       <p class="works-subtitle">
         Crafted partnerships that blend strategy, design, and performant code. Here are a few highlights.
       </p>
@@ -436,22 +435,7 @@ export default {
 /* ======================================= */
 /* 4. CONTENT & CARD STYLES */
 /* ======================================= */
-.works-kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--works-primary);
-    background: rgba(255, 255, 255, 0.65);
-    border-radius: 999px;
-    padding: 0.35rem 1.1rem;
-    margin: 0 auto 1.5rem;
-    width: max-content;
-    box-shadow: 0 1rem 2.5rem var(--works-primary-soft);
-}
+
 .dark .works-kicker {
     background: rgba(30, 27, 75, 0.65);
     box-shadow: 0 1.2rem 3rem var(--works-primary-soft);
