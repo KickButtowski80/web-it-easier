@@ -1,19 +1,8 @@
 # robots.txt for Web It Easier
 # https://web-it-easier.vercel.app/
 
-# Default rule for all crawlers
 User-agent: *
-
-# Explicitly allow important pages
-Allow: /$
-Allow: /blog/$
-Allow: /blog/*
-Allow: /works/$
-Allow: /contact/$
-Allow: /og-image.png$
-Allow: /og-image.webp$
-
-# Disallow sensitive areas
+Allow: /
 Disallow: /admin/
 Disallow: /api/
 Disallow: /*?*
@@ -21,19 +10,4 @@ Disallow: /*.json$
 Disallow: /*.php$
 Disallow: /*.log$
 
-# Special rules for search engines
-User-agent: Googlebot
-Allow: /*.css$
-Allow: /*.js$
-Allow: /*.webp$
-Allow: /*.png$
-Allow: /*.jpg$
-Allow: /*.svg$
-
-# Sitemap location
 Sitemap: https://web-it-easier.vercel.app/sitemap.xml
-
-# Host directive (not all crawlers support this)
-Host: web-it-easier.vercel.app
-
-# Crawl-delay: 10  # Uncomment if needed to limit crawl rate

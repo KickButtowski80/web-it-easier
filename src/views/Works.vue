@@ -5,17 +5,157 @@
     <div class="works-section__decor works-section__decor--grid" aria-hidden="true"></div>
     <div class="works-section__divider works-section__divider--top" aria-hidden="true"></div>
     <div class="container relative z-10 mx-auto px-4 lg:px-8">
-      <p class="works-kicker">Featured Projects</p>
-      <h1 class="works-title">Our Works</h1>
+      <h1 class="works-title">Featured Works</h1>
       <p class="works-subtitle">
         Crafted partnerships that blend strategy, design, and performant code. Here are a few highlights.
       </p>
-      <div class="relative z-10 container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 px-0">
-        <div v-for="project in freelancerProjectHistory" :key="project.projectId"
-          class="works-card">
+      <div class="relative z-10 container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 px-0 items-start">
+        <!-- Universal Pain Management -->
+        <div class="works-card">
           <Suspense>
             <template #default>
-              <Work :projectInfo="project" />
+              <Work :projectInfo="{
+                projectId: 1,
+                image: '/images/universal-pain.webp',
+                imageAlt: 'universal pain management screen shot picture',
+                projectTitle: 'Universal Pain Management',
+                clientName: 'Universal Pain Management',
+                description: 'Developed an informative website for a pain clinic aimed at helping patients understand the services and treatments offered. The website includes comprehensive information on various pain management options, and a user-friendly interface to facilitate easy navigation and access to resources. Additionally, the website supports accessibility features to ensure it is usable by all patients, including those with disabilities.',
+                technologiesUsed: ['Parcel.js', 'JavaScript', 'Tailwind.css', 'HTML'],
+                startDate: '',
+                endDate: '',
+                highlights: [
+                  'Add  comprehensive library of educational resources including videos with full explanation on pain management and treatment options.(ViewMedica)',
+                  'Mobile first design',
+                  'Optimized website for SEO, and accessability and performance.'
+                ],
+                liveView: 'https://www.universalpain.com/',
+                codeView: 'https://github.com/KickButtowski80/universal-pain',
+                privateRepo: true
+              }" />
+            </template>
+            <template #fallback>
+              <div>Loading project...</div>
+            </template>
+          </Suspense>
+        </div>
+
+        <!-- Salud Clinical Solutions -->
+        <div class="works-card">
+          <Suspense>
+            <template #default>
+              <Work :projectInfo="{
+                projectId: 5,
+                image: '/images/salud-clinical.webp',
+                imageAlt: 'Salud Clinical Solutions website screenshot',
+                projectTitle: 'Salud Clinical Solutions',
+                clientName: 'Salud Clinical Solutions',
+                description: 'Connecting Behavioral and Mental Health providers with the roles that matter most. We specialize in behavioral and mental health locum tenens across California. From major metro areas to underserved communities, our team can help clinicians find the right fit. The website features a modern, professional design that effectively communicates their healthcare staffing services and helps clinicians find the right behavioral health roles quickly. The platform provides comprehensive resources for healthcare professionals seeking locum tenens opportunities, with detailed information about available positions, requirements, and the application process. The site emphasizes Salud Clinical\'s commitment to quality healthcare staffing and their expertise in matching qualified clinicians with appropriate healthcare facilities throughout California.',
+                technologiesUsed: ['Parcel.js', 'HTML', 'CSS', 'JavaScript'],
+                startDate: '',
+                endDate: '',
+                highlights: [
+                  'Professional healthcare staffing website design',
+                  'Mobile-responsive layout for healthcare professionals',
+                  'Optimized for search engines and accessibility',
+                  'Clean, modern UI focused on user experience'
+                ],
+                liveView: 'https://saludclinical.com/',
+                codeView: '',
+                privateRepo: true
+              }" />
+            </template>
+            <template #fallback>
+              <div>Loading project...</div>
+            </template>
+          </Suspense>
+        </div>
+
+        <!-- Cicero Pizza -->
+        <div class="works-card">
+          <Suspense>
+            <template #default>
+              <Work :projectInfo="{
+                projectId: 3,
+                image: '/images/cicceropizza-hero.webp',
+                imageAlt: 'slice of pizza was lift off from the plate',
+                projectTitle: 'Cicero Pizza',
+                clientName: 'Cicero Pizza',
+                description: 'Cicero Pizzeria is a dynamic and user-friendly web application that offers a seamless online pizza ordering experience. Built with modern web technologies, the website showcases a clean and intuitive interface that makes navigation effortless. The project demonstrates proficiency in js for frontend development and Tailwind CSS for responsive and modern design. The website features an interactive menu, secure online payment system, and a user-friendly order tracking feature. It stands as a testament to my ability to create engaging, efficient, and scalable web applications',
+                technologiesUsed: ['Parcel.js', 'JavaScript', 'Tailwind.css', 'HTML'],
+                startDate: '',
+                endDate: '',
+                highlights: [
+                  'Designed a modern, responsive layout compatible with all devices.',
+                  'Integrated contact form with backend email service.',
+                  'Implemented interactive hero section illustration with animated elements.',
+                  'Achieved high scores in Lighthouse audits for performance and accessibility.'
+                ],
+                liveView: 'https://cicero-pizzeria.vercel.app/',
+                codeView: 'https://github.com/KickButtowski80/cicero-pizzeria',
+                privateRepo: false
+              }" />
+            </template>
+            <template #fallback>
+              <div>Loading project...</div>
+            </template>
+          </Suspense>
+        </div>
+
+        <!-- Jane Doe Portfolio -->
+        <div class="works-card">
+          <Suspense>
+            <template #default>
+              <Work :projectInfo="{
+                projectId: 4,
+                image: '/images/jane-doe-portfolio.webp',
+                imageAlt: 'Jane Doe Portfolio workspace illustration and some info about her work experience and skills',
+                projectTitle: 'Jane Doe Portfolio',
+                clientName: 'Jane Doe',
+                description: 'The website is Jane Doe\'s professional portfolio, showcasing her 2 years of experience as a full-stack developer. It features an interactive workspace illustration with animated elements, a dark mode toggle, and responsive navigation. The site highlights her skills in HTML, CSS, JavaScript, Java, Node.js, and SVG through visually appealing cards, and showcases her project experience with IBM Cloud and Watson Services. With sections like About Me, Skills, Projects, and Recommendations, the portfolio emphasizes accessibility and user experience, including skip links and ARIA labels, reflecting her commitment to web development best practices.',
+                technologiesUsed: ['HTML', 'CSS', 'JavaScript', 'firebase.js'],
+                startDate: '',
+                endDate: '',
+                highlights: [
+                  'Designed a modern, responsive layout compatible with all devices.',
+                  'Implemented interactive workspace illustration with animated elements.',
+                  'Integrated recommendation form with backend abilities.',
+                  'Achieved high scores in Lighthouse audits for performance and accessibility.'
+                ],
+                liveView: 'https://portfolio-it-rouge.vercel.app/',
+                codeView: 'https://github.com/KickButtowski80/portfolio-coursera',
+                privateRepo: false
+              }" />
+            </template>
+            <template #fallback>
+              <div>Loading project...</div>
+            </template>
+          </Suspense>
+        </div>
+
+        <!-- Acme Rocket -->
+        <div class="works-card">
+          <Suspense>
+            <template #default>
+              <Work :projectInfo="{
+                projectId: 2,
+                image: '/images/acme-rocket.webp',
+                imageAlt: 'Acme Rocket screen shot picture',
+                projectTitle: 'Acme Rocket',
+                clientName: 'Acme Rocket',
+                description: 'Developed an informative static website for a imaginary rocket company aimed at helping its customer to  understand the services and types of rockets are offered.They\'re building rockets for the next century today. From the moon to Mars, Jupiter and beyond ...🚀 Think Acme Rockets. The website includes comprehensive information on various rocket models, and a user-friendly interface to facilitate easy navigation and access to resources of the company.',
+                technologiesUsed: ['Vue 3.js', 'JavaScript', 'Tailwind.css', 'HTML'],
+                startDate: '',
+                endDate: '',
+                highlights: [
+                  'Add animation to enhance user experience by make pages more dynamic and engaging',
+                  'Mobile first design',
+                  'Optimized website accessability and performance.'
+                ],
+                liveView: 'https://acme-rockets-eight.vercel.app/#hero',
+                codeView: 'https://github.com/KickButtowski80/acme-rockets',
+                privateRepo: false
+              }" />
             </template>
             <template #fallback>
               <div>Loading project...</div>
@@ -30,26 +170,12 @@
 </template>
 
 <script>
-import { ref, onMounted, defineAsyncComponent } from "vue";
-import freelancerProjectHistoryData from "../assets/json/freelancerProjectHistoryData.json";
-
+import { defineAsyncComponent } from "vue";
 
 export default {
   components: {
     Work: defineAsyncComponent(() => import('../components/Work.vue'))
-  },
-  setup() {
-    const freelancerProjectHistory = ref([]);
-
-    onMounted(() => {
-      freelancerProjectHistory.value =
-        freelancerProjectHistoryData.freelancerProjectHistory;
-    });
-
-    return {
-      freelancerProjectHistory,
-    };
-  },
+  }
 };
 </script>
 
@@ -309,22 +435,7 @@ export default {
 /* ======================================= */
 /* 4. CONTENT & CARD STYLES */
 /* ======================================= */
-.works-kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.9rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--works-primary);
-    background: rgba(255, 255, 255, 0.65);
-    border-radius: 999px;
-    padding: 0.35rem 1.1rem;
-    margin: 0 auto 1.5rem;
-    width: max-content;
-    box-shadow: 0 1rem 2.5rem var(--works-primary-soft);
-}
+
 .dark .works-kicker {
     background: rgba(30, 27, 75, 0.65);
     box-shadow: 0 1.2rem 3rem var(--works-primary-soft);
