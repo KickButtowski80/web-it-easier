@@ -77,6 +77,26 @@
       "liveView": "https://portfolio-it-rouge.vercel.app/",
       "codeView": "https://github.com/KickButtowski80/portfolio-coursera",
       "privateRepo": false
+    },
+    {
+      "projectId": 5,
+      "image": "/images/salud-clinical.webp",
+      "imageAlt": "Salud Clinical Solutions website screenshot",
+      "projectTitle": "Salud Clinical Solutions",
+      "clientName": "Salud Clinical Solutions",
+      "description": "Connecting Behavioral and Mental Health providers with the roles that matter most. We specialize in behavioral and mental health locum tenens across California. From major metro areas to underserved communities, our team can help clinicians find the right fit. The website features a modern, professional design that effectively communicates their healthcare staffing services and helps clinicians find the right behavioral health roles quickly. The platform provides comprehensive resources for healthcare professionals seeking locum tenens opportunities, with detailed information about available positions, requirements, and the application process. The site emphasizes Salud Clinical's commitment to quality healthcare staffing and their expertise in matching qualified clinicians with appropriate healthcare facilities throughout California.",
+      "technologiesUsed": ["Parcel.js", "HTML", "CSS", "JavaScript"],
+      "startDate": "",
+      "endDate": "",
+      "highlights": [
+        "Professional healthcare staffing website design",
+        "Mobile-responsive layout for healthcare professionals",
+        "Optimized for search engines and accessibility",
+        "Clean, modern UI focused on user experience"
+      ],
+      "liveView": "https://saludclinical.com/",
+      "codeView": "",
+      "privateRepo": true
     }
   ]
 }
