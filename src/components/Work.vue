@@ -23,6 +23,7 @@
         </h2>
       </Transition>
       <section
+        ref="readMoreSec"
         class="mb-2 flex items-center justify-center text-xl font-semibold text-purple-700 dark:text-indigo-100"
       >
         <button
@@ -134,6 +135,7 @@ export default {
   },
   setup(props) {
     const readMoreStatus = ref(false);
+    const readMoreSec = ref(null);
     const cardInfo = ref(null);
     if (props.projectInfo) {
       const {
@@ -141,11 +143,8 @@ export default {
         image,
         imageAlt,
         projectTitle,
-        clientName,
         description,
         technologiesUsed,
-        startDate,
-        endDate,
         highlights,
         liveView,
         codeView,
@@ -155,6 +154,7 @@ export default {
       const readMoreText = computed(() => {
         return !readMoreStatus.value ? "Read More" : "Read Less";
       });
+      
       const toggleReadMoreStatus = (event) => {
         // Prevent default only for keyboard events to avoid double-triggering with click
         if (event.type === 'keydown') {
@@ -166,11 +166,10 @@ export default {
         
         nextTick(() => {
           if (!wasExpanded) {
-            // Smoothly scroll the top of the card content into view.
-            // The browser's natural tab order will handle focusing the first interactive element.
-            cardInfo.value?.scrollIntoView({
+            // Smoothly scroll to the toggle button section so "Read Less" is visible
+            readMoreSec.value?.scrollIntoView({
               behavior: "smooth",
-              block: "start"
+              block: "center"
             });
           } else {
             // When collapsing, return focus to the toggle button
@@ -184,11 +183,8 @@ export default {
         image,
         imageAlt,
         projectTitle,
-        clientName,
         description,
         technologiesUsed,
-        startDate,
-        endDate,
         highlights,
         liveView,
         codeView,
@@ -196,6 +192,7 @@ export default {
         readMoreText,
         readMoreStatus,
         toggleReadMoreStatus,
+        readMoreSec,
         cardInfo,
       };
     }
@@ -215,6 +212,7 @@ export default {
       readMoreText: 'Read More',
       readMoreStatus: false,
       toggleReadMoreStatus: () => {},
+      readMoreSec: null,
       cardInfo: null
     };
   },
@@ -231,13 +229,6 @@ export default {
     scroll-margin-top: 5.5rem; /* 88px - space for sticky header + padding on mobile */
   }
 }
-summary {
-  list-style: none; /* Remove the default list-style */
-  cursor: pointer; /* Optional: change the cursor to pointer */
-  margin-block: 1rem;
-  margin-inline: 1rem;
-}
-
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
