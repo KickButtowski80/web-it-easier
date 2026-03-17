@@ -10,7 +10,7 @@
       <div id="openDoor" class="door" ref="door">
         <div ref="openDoor" class="mx-auto text-center mt-2 w-full h-full text-xl">
           <span class="text-2xl" aria-hidden="true">⬆️</span>
-          <span class="flex justify-end items-center mt-3 text-sm" aria-hidden="true">
+          <span class="flex justify-end items-center md:mt-3 text-sm" aria-hidden="true">
             🟣</span>
         </div>
       </div>
