@@ -178,23 +178,25 @@ export default {
 }
 
 .doorway {
-  border: 5px solid black;
-  height: 110px;
-  width: 66px;
+  border: 0.3125rem solid black;
+  /* Smooth scaling: 3rem-4.125rem width, 5rem-6.875rem height */
+  width: clamp(3rem, 4vw + 2.25rem, 4.125rem);
+  height: clamp(5rem, 6vw + 3.5rem, 6.875rem);
   position: relative;
   /* Apply perspective to the parent */
-  perspective: 200px;
+  perspective: 12.5rem;
 }
 
 .door {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background: rgb(146, 47, 153);
   color: #ffffff; /* High contrast against the violet door */
-  font-size: 24px;
+  /* Smooth font scaling: 1.125rem-1.5rem */
+  font-size: clamp(1.125rem, 1.5vw + 1.03125rem, 1.5rem);
   border-left: none;
   transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
   transform: rotateY(0deg);
