@@ -963,6 +963,13 @@ onUnmounted(() => {
   transform-origin: top right;
 }
 
+/* Hide side panels on mobile to prevent horizontal overflow */
+@media (max-width: 768px) {
+  .blog-side-panel {
+    display: none;
+  }
+}
+
 /* Bottom Footer Pattern - Subtle grounding effect */
 .blog-footer-pattern {
   position: absolute;
