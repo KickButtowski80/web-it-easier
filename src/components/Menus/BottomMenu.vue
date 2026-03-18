@@ -41,7 +41,7 @@
   </footer>
 </template>
 <script>
-import { computed, watch, onBeforeUnmount } from 'vue';
+import { computed, watch, onBeforeUnmount, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import useSectionHighlight from '@/composables/useSectionHighlight.js';
 import DoorNavLink from '@/components/Menus/DoorNavLink.vue';
@@ -58,18 +58,22 @@ export default {
     const route = useRoute();
     const isBlogRoute = computed(() => route.name === 'Blog');
 
-    watch(
-      () => route.name,
-      (name) => {
-        if (name === 'Blog') {
-          stopHighlighting();
-          activeSection.value = null;
-        } else {
-          startHighlighting();
-        }
-      },
-      { immediate: true }
-    );
+
+watch(
+  () => route.name,
+  async (name) => {
+    if (name === 'Blog') {
+      stopHighlighting();
+      activeSection.value = null;
+    } else {
+      // Wait for the component to mount and sections to be available
+      await new Promise(resolve => setTimeout(resolve, 500));
+      startHighlighting();
+    }
+  },
+  { immediate: true }
+);
+
 
     onBeforeUnmount(() => {
       stopHighlighting();
