@@ -63,14 +63,19 @@ watch(
   () => route.name,
   async (name) => {
     if (name === 'Blog') {
-      console.log('BottomMenu: Stopping highlighting for Blog');
+      // Add visual indicator for debugging
+      document.body.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+      setTimeout(() => document.body.style.backgroundColor = '', 2000);
+      
       stopHighlighting();
       activeSection.value = null;
     } else {
-      console.log('BottomMenu: Starting 500ms wait for', name);
+      // Add visual indicator for debugging
+      document.body.style.backgroundColor = 'rgba(0, 255, 0, 0.1)';
+      setTimeout(() => document.body.style.backgroundColor = '', 2000);
+      
       // Wait for the component to mount and sections to be available
       await new Promise(resolve => setTimeout(resolve, 500));
-      console.log('BottomMenu: Wait complete, calling startHighlighting');
       startHighlighting();
     }
   },
