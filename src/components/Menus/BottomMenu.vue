@@ -53,8 +53,7 @@ export default {
   props: ["hideIt"],
   setup() {
     const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(
-      ['home', 'our-works', 'hire-us'],
-      { autoStart: false }
+      ['home', 'our-works', 'hire-us']
     );
     const route = useRoute();
     const isBlogRoute = computed(() => route.name === 'Blog');
