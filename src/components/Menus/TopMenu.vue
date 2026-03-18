@@ -110,8 +110,7 @@ const navbarEl = ref(null);
 
 // Use section highlighting for Home, Our Works, and Hire Us sections
 const { activeSection, startHighlighting, stopHighlighting } = useSectionHighlight(
-  ['home', 'our-works', 'hire-us'],
-  { autoStart: false }
+  ['home', 'our-works', 'hire-us']
 );
 onMounted(() => {
   const stored = localStorage.getItem('theme');
