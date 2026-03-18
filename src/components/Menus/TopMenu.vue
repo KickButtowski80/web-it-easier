@@ -99,7 +99,7 @@
 </template>
 <script setup lang="js">
 import { RouterLink, useRoute } from 'vue-router';
-import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue';
+import { ref, onMounted, watch, computed, onBeforeUnmount, nextTick } from 'vue';
 import DoorNavLink from '@/components/Menus/DoorNavLink.vue';
 import useSectionHighlight from '@/composables/useSectionHighlight.js';
 
@@ -131,11 +131,13 @@ watch(isDark, () => {
 
 watch(
   () => route.name,
-  (name) => {
+  async (name) => {
     if (name === 'Blog') {
       stopHighlighting();
       activeSection.value = null;
     } else {
+      // Wait for the component to mount and sections to be available
+      await new Promise(resolve => setTimeout(resolve, 500));
       startHighlighting();
     }
   },
