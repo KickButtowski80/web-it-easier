@@ -94,20 +94,22 @@ export default {
 
 .bottom-nav__link {
   position: relative;
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex: 1 1 0;
+  flex: 1;
   min-width: 0;
-  padding: 0.55rem 0.6rem 0.65rem;
+  max-width: 25%;
+  padding: 0.55rem 0.3rem 0.65rem;
   border-radius: 0.95rem;
   font-weight: 600;
   font-size: 0.92rem;
   color: #ede9fe;
   gap: 0.25rem;
   text-align: center;
-  white-space: normal;
+  white-space: nowrap;
+  overflow: clip;
   transition:
     color 0.2s ease,
     transform 0.3s ease;
@@ -119,6 +121,9 @@ export default {
 .bottom-nav__label {
   font-size: 0.78rem;
   line-height: 1.1;
+  overflow: clip;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .bottom-nav__icon {
