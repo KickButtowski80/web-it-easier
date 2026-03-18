@@ -1,20 +1,31 @@
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+/**
+ * useSectionHighlight - Simple Intersection Observer for navigation highlighting
+ * 
+ * Automatically highlights the currently visible section on the page.
+ * Perfect for sticky navigation menus that need to show which section is active.
+ * 
+ * @param {string[]} sectionIds - Array of section IDs to observe (e.g., ['home', 'our-works', 'hire-us'])
+ * @returns {Object} { activeSection, startHighlighting, stopHighlighting }
+ * 
+ * @example
+ * const { activeSection } = useSectionHighlight(['home', 'our-works', 'hire-us']);
+ * 
+ * // In template:
+ * <a :class="{ active: activeSection === 'home' }" href="#home">Home</a>
+ * <a :class="{ active: activeSection === 'our-works' }" href="#our-works">Work</a>
+ */
+import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue';
 
-export default function useSectionHighlight(sectionIds = [], options = {}) {
-  const { autoStart = true } = options;
+export default function useSectionHighlight(sectionIds = []) {
   const activeSection = ref(null);
   let observer = null;
-  let retryHandle = null;
+  
 
-  // Option A: ID-based auto observer with retry
-  // -------------------------------------------
-  // This version:
-  // - Accepts an array of section IDs (['home', 'our-works', 'hire-us'])
-  // - Tries to find matching DOM elements and attach a single IntersectionObserver
-  // - If none of the sections exist yet, it schedules a retry on the next frame
-  //   so that late-mounted sections can still be observed
+  /**
+   * Start observing sections for intersection changes
+   * Uses "most visible wins" logic when multiple sections are intersecting
+   */
   const startHighlighting = () => {
-    stopHighlighting();
     const visibleSections = new Map();
 
     const options = {
@@ -32,7 +43,7 @@ export default function useSectionHighlight(sectionIds = [], options = {}) {
         }
       });
 
-      // Find the section with the highest intersection ratio
+      // Pick the section with the highest visibility ratio
       if (visibleSections.size > 0) {
         const mostVisible = Array.from(visibleSections.entries()).reduce((prev, curr) =>
           curr[1] > prev[1] ? curr : prev
@@ -41,37 +52,36 @@ export default function useSectionHighlight(sectionIds = [], options = {}) {
       }
     }, options);
 
-    let hasObservedAnySection = false;
     sectionIds.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
         observer.observe(element);
-        hasObservedAnySection = true;
       }
     });
-
-    if (!hasObservedAnySection && typeof window !== 'undefined') {
-      retryHandle = window.requestAnimationFrame(startHighlighting);
-    }
   };
 
+  /**
+   * Stop observing all sections and clean up the observer
+   */
   const stopHighlighting = () => {
     if (observer) {
       observer.disconnect();
       observer = null;
     }
-    if (retryHandle) {
-      window.cancelAnimationFrame(retryHandle);
-      retryHandle = null;
-    }
   };
 
-  onMounted(() => {
-    if (autoStart) {
+  /**
+   * Wait for DOM to be ready, then start observing
+   * Uses nextTick to ensure all child components (like router-view) are mounted
+   */
+  onMounted(async () => {
+      await nextTick(); 
       startHighlighting();
-    }
   });
 
+  /**
+   * Clean up observer when component is destroyed
+   */
   onBeforeUnmount(() => {
     stopHighlighting();
   });
@@ -82,43 +92,3 @@ export default function useSectionHighlight(sectionIds = [], options = {}) {
     stopHighlighting,
   };
 }
-
-/*
- * Option B: Alternative pattern (manual start from the owning view)
- * -----------------------------------------------------------------
- * Instead of letting the menus own the observer and query the DOM by ID,
- * the Home view (where the sections actually live) can control when
- * highlighting starts. This removes the need for the retry logic above
- * because we only start once we know the sections are rendered.
- *
- * Example sketch (HomeView.vue):
- *
- * <script setup>
- * import { onMounted, onBeforeUnmount, nextTick, provide } from 'vue';
- * import useSectionHighlight from '@/composables/useSectionHighlight.js';
- *
- * const { activeSection, startHighlighting, stopHighlighting } =
- *   useSectionHighlight(['home', 'our-works', 'hire-us'], { autoStart: false });
- *
- * // Make activeSection available to menus via provide/inject
- * provide('activeSection', activeSection);
- *
- * onMounted(async () => {
- *   // Wait for this view's DOM (sections) to be in place
- *   await nextTick();
- *   startHighlighting();
- * });
- *
- * onBeforeUnmount(() => {
- *   stopHighlighting();
- * });
- * </script>
- *
- * Then, in TopMenu/BottomMenu you could inject activeSection instead of
- * creating their own observers:
- *
- * const activeSection = inject('activeSection', ref(null));
- *
- * This keeps the observer logic close to the sections themselves and
- * demonstrates an alternative to the ID + retry approach.
- */
