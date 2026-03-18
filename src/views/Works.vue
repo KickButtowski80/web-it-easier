@@ -14,7 +14,7 @@
         <div class="works-card">
           <Suspense>
             <template #default>
-              <Work :projectInfo="{
+              <Work :projectInfo="reactive({
                 projectId: 1,
                 image: '/images/universal-pain.webp',
                 imageAlt: 'universal pain management screen shot picture',
@@ -32,7 +32,7 @@
                 liveView: 'https://www.universalpain.com/',
                 codeView: 'https://github.com/KickButtowski80/universal-pain',
                 privateRepo: true
-              }" />
+              })" />
             </template>
             <template #fallback>
               <div>Loading project...</div>
@@ -44,7 +44,7 @@
         <div class="works-card">
           <Suspense>
             <template #default>
-              <Work :projectInfo="{
+              <Work :projectInfo="reactive({
                 projectId: 5,
                 image: '/images/salud-clinical.webp',
                 imageAlt: 'Salud Clinical Solutions website screenshot',
@@ -63,7 +63,7 @@
                 liveView: 'https://saludclinical.com/',
                 codeView: '',
                 privateRepo: true
-              }" />
+              })" />
             </template>
             <template #fallback>
               <div>Loading project...</div>
@@ -75,7 +75,7 @@
         <div class="works-card">
           <Suspense>
             <template #default>
-              <Work :projectInfo="{
+              <Work :projectInfo="reactive({
                 projectId: 3,
                 image: '/images/cicceropizza-hero.webp',
                 imageAlt: 'slice of pizza was lift off from the plate',
@@ -94,7 +94,7 @@
                 liveView: 'https://cicero-pizzeria.vercel.app/',
                 codeView: 'https://github.com/KickButtowski80/cicero-pizzeria',
                 privateRepo: false
-              }" />
+              })" />
             </template>
             <template #fallback>
               <div>Loading project...</div>
@@ -106,7 +106,7 @@
         <div class="works-card">
           <Suspense>
             <template #default>
-              <Work :projectInfo="{
+              <Work :projectInfo="reactive({
                 projectId: 4,
                 image: '/images/jane-doe-portfolio.webp',
                 imageAlt: 'Jane Doe Portfolio workspace illustration and some info about her work experience and skills',
@@ -137,7 +137,7 @@
         <div class="works-card">
           <Suspense>
             <template #default>
-              <Work :projectInfo="{
+              <Work :projectInfo="reactive({
                 projectId: 2,
                 image: '/images/acme-rocket.webp',
                 imageAlt: 'Acme Rocket screen shot picture',
@@ -155,7 +155,7 @@
                 liveView: 'https://acme-rockets-eight.vercel.app/#hero',
                 codeView: 'https://github.com/KickButtowski80/acme-rockets',
                 privateRepo: false
-              }" />
+              })" />
             </template>
             <template #fallback>
               <div>Loading project...</div>
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from "vue";
+import { defineAsyncComponent, reactive } from "vue";
 
 export default {
   components: {
