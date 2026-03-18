@@ -26,6 +26,7 @@ export default function useSectionHighlight(sectionIds = []) {
    * Uses "most visible wins" logic when multiple sections are intersecting
    */
   const startHighlighting = () => {
+    console.log('useSectionHighlight: Starting highlighting for sections:', sectionIds);
     const visibleSections = new Map();
 
     const options = {
@@ -48,16 +49,24 @@ export default function useSectionHighlight(sectionIds = []) {
         const mostVisible = Array.from(visibleSections.entries()).reduce((prev, curr) =>
           curr[1] > prev[1] ? curr : prev
         );
+        console.log('useSectionHighlight: Setting activeSection to:', mostVisible[0]);
         activeSection.value = mostVisible[0];
+      } else {
+        console.log('useSectionHighlight: No visible sections found');
       }
     }, options);
 
+    let foundCount = 0;
     sectionIds.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
         observer.observe(element);
+        foundCount++;
+      } else {
+        console.log('useSectionHighlight: Element NOT found:', id);
       }
     });
+    console.log(`useSectionHighlight: Found ${foundCount}/${sectionIds.length} elements`);
   };
 
   /**

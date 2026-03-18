@@ -63,11 +63,14 @@ watch(
   () => route.name,
   async (name) => {
     if (name === 'Blog') {
+      console.log('BottomMenu: Stopping highlighting for Blog');
       stopHighlighting();
       activeSection.value = null;
     } else {
+      console.log('BottomMenu: Starting 500ms wait for', name);
       // Wait for the component to mount and sections to be available
       await new Promise(resolve => setTimeout(resolve, 500));
+      console.log('BottomMenu: Wait complete, calling startHighlighting');
       startHighlighting();
     }
   },
