@@ -20,6 +20,25 @@ export default function useSectionHighlight(sectionIds = []) {
   const activeSection = ref(null);
   let observer = null;
   
+  /**
+   * Get adaptive thresholds based on viewport height
+   * Smaller viewports get more granular detection for better accuracy
+   */
+  const getThresholdsForViewport = () => {
+    const h = window.innerHeight || document.documentElement.clientHeight || 0;
+    
+    // Very small heights (e.g., landscape phones)
+    if (h <= 400) return [0.05, 0.15, 0.25];
+    
+    // Small mobiles (e.g., iPhone SE portrait and similar)
+    if (h <= 667) return [0.1, 0.3, 0.5, 0.7, 0.9];
+    
+    // Modern mobiles (e.g., iPhone 15, Samsung Galaxy, etc.) - need even more granularity
+    if (h <= 926) return [0.08, 0.2, 0.35, 0.5, 0.65, 0.8, 0.95];
+    
+    // Default for larger tablets/desktops
+    return [0.2, 0.4, 0.6, 0.8];
+  };
 
   /**
    * Start observing sections for intersection changes
@@ -27,16 +46,18 @@ export default function useSectionHighlight(sectionIds = []) {
    */
   const startHighlighting = () => {
     const visibleSections = new Map();
+    const thresholds = getThresholdsForViewport();
 
     const options = {
       root: null,
       rootMargin: "0px 0px 0px 0px",
-      threshold: [0.1, 0.3, 0.4, 0.5],
+      threshold: thresholds,
     };
 
     observer = new IntersectionObserver((entries) => {    
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
+         console.log('Entry:', entry.target.id, entry.intersectionRatio);
           visibleSections.set(entry.target.id, entry.intersectionRatio);
         } else {
           visibleSections.delete(entry.target.id);
