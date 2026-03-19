@@ -1,5 +1,6 @@
 <template lang="">
   <footer class="fixed bottom-0 w-full z-50">
+ 
     <nav
       :class="{ hidden: hideIt }"
       class="bottom-nav md:hidden flex items-stretch justify-between gap-2 px-3 py-3"

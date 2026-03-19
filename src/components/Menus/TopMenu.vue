@@ -29,6 +29,7 @@
         </span>
       </RouterLink>
       <div class="flex items-center gap-4 ml-auto">
+  
         <nav class="hidden md:flex md:items-center md:gap-6" aria-label="main">
           <DoorNavLink
             :to="{ name: 'Home' }"
