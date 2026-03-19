@@ -63,17 +63,9 @@ watch(
   () => route.name,
   async (name) => {
     if (name === 'Blog') {
-      // Add visual indicator for debugging
-      document.body.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
-      setTimeout(() => document.body.style.backgroundColor = '', 2000);
-      
       stopHighlighting();
       activeSection.value = null;
     } else {
-      // Add visual indicator for debugging
-      document.body.style.backgroundColor = 'rgba(0, 255, 0, 0.1)';
-      setTimeout(() => document.body.style.backgroundColor = '', 2000);
-      
       // Wait for the component to mount and sections to be available
       await new Promise(resolve => setTimeout(resolve, 500));
       startHighlighting();
