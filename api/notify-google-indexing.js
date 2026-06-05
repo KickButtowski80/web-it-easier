@@ -133,13 +133,11 @@ export default async function handler(req, res) {
       keyLength: privateKey?.length || 0
     });
 
-    const jwtClient = new google.auth.JWT(
-      clientEmail,
-      null,
-      privateKey,
-      ['https://www.googleapis.com/auth/indexing'],
-      null
-    );
+    const jwtClient = new google.auth.JWT({
+      email: clientEmail,
+      key: privateKey,
+      scopes: ['https://www.googleapis.com/auth/indexing']
+    });
 
     // Authorize the client
     console.log('Authorizing JWT client...');
