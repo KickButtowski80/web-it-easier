@@ -51,8 +51,10 @@ export function updateMetaDescriptions(description) {
  * @param {string} title - Page title
  * @param {string} [url] - Optional URL (defaults to current URL)
  * @param {string} [type] - Optional OG type (defaults to 'website')
+ * @param {string} [description] - Optional description for Twitter cards
+ * @param {string} [imageUrl] - Optional image URL for OG/Twitter cards
  */
-export function updateMetaSocialTags(title, url, type = 'website', description = '') {
+export function updateMetaSocialTags(title, url, type = 'website', description = '', imageUrl = null) {
   try {
     if (typeof window === 'undefined' || !document || !document.head) {
       return;
@@ -86,6 +88,17 @@ export function updateMetaSocialTags(title, url, type = 'website', description =
       const twitterDescription = description.length > 200 ? description.substring(0, 197) + '...' : description;
       ensureTag('meta[name="twitter:description"]', { name: 'twitter:description' })
         .setAttribute('content', twitterDescription);
+    }
+
+    // Add image if provided
+    if (imageUrl) {
+      // Open Graph image
+      ensureTag('meta[property="og:image"]', { property: 'og:image' }).setAttribute('content', imageUrl);
+      ensureTag('meta[property="og:image:alt"]', { property: 'og:image:alt' }).setAttribute('content', pageTitle);
+      
+      // Twitter Card image
+      ensureTag('meta[name="twitter:image"]', { name: 'twitter:image' }).setAttribute('content', imageUrl);
+      ensureTag('meta[name="twitter:image:alt"]', { name: 'twitter:image:alt' }).setAttribute('content', pageTitle);
     }
   } catch (e) {
     console.error('Error updating social meta tags:', e);

@@ -264,7 +264,9 @@ const fetchPost = async (slugArg = null) => {
       updateMetaSocialTags(
         pageTitle,
         canonicalUrl.value || window.location.href,
-        // Add other necessary parameters
+        'article',
+        '',
+        post.value?.featuredImage || post.value?.coverImage || 'https://web-it-easier.vercel.app/og-image.webp'
       );
     }
 
@@ -469,7 +471,8 @@ onMounted(async () => {
         post.value?.title ? `${post.value.title} | Web It Easier` : document.title,
         canonicalUrl.value || window.location.href,
         'article', // Use 'article' type for blog posts
-        post.value?.description || '' // Pass description or empty string
+        post.value?.description || '', // Pass description or empty string
+        post.value?.featuredImage || post.value?.coverImage || 'https://web-it-easier.vercel.app/og-image.webp' // Use post-specific image or fallback
       );
 
       // Initialize structured data after content is loaded
